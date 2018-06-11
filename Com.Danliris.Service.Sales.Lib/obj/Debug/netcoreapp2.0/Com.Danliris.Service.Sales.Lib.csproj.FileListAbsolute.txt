@@ -1,6 +1,0 @@
-D:\danliris\Com.Danliris.Service.Sales\Com.Danliris.Service.Sales.Lib\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.deps.json
-D:\danliris\Com.Danliris.Service.Sales\Com.Danliris.Service.Sales.Lib\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.dll
-D:\danliris\Com.Danliris.Service.Sales\Com.Danliris.Service.Sales.Lib\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.csprojResolveAssemblyReference.cache
-D:\danliris\Com.Danliris.Service.Sales\Com.Danliris.Service.Sales.Lib\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.csproj.CoreCompileInputs.cache
-D:\danliris\Com.Danliris.Service.Sales\Com.Danliris.Service.Sales.Lib\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.AssemblyInfoInputs.cache
-D:\danliris\Com.Danliris.Service.Sales\Com.Danliris.Service.Sales.Lib\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.AssemblyInfo.cs
