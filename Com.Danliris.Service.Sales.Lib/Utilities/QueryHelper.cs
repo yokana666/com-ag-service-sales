@@ -1,16 +1,16 @@
-﻿using Com.Moonlay.Models;
+﻿using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.Helpers
+namespace Com.Danliris.Service.Sales.Lib.Utilities
 {
     public static class QueryHelper<TModel>
-           where TModel : StandardEntity
+           where TModel : BaseModel
     {
-        public static IQueryable<TModel> ConfigureSearch(IQueryable<TModel> Query, List<string> SearchAttributes, string Keyword)
+        public static IQueryable<TModel> Search(IQueryable<TModel> Query, List<string> SearchAttributes, string Keyword)
         {
             /* Search with Keyword */
             if (Keyword != null)
@@ -36,7 +36,7 @@ namespace Com.Danliris.Service.Sales.Lib.Helpers
             return Query;
         }
 
-        public static IQueryable<TModel> ConfigureFilter(IQueryable<TModel> Query, Dictionary<string, string> FilterDictionary)
+        public static IQueryable<TModel> Filter(IQueryable<TModel> Query, Dictionary<string, object> FilterDictionary)
         {
             if (FilterDictionary != null && !FilterDictionary.Count.Equals(0))
             {
@@ -52,7 +52,7 @@ namespace Com.Danliris.Service.Sales.Lib.Helpers
             return Query;
         }
 
-        public static IQueryable<TModel> ConfigureOrder(IQueryable<TModel> Query, Dictionary<string, string> OrderDictionary)
+        public static IQueryable<TModel> Order(IQueryable<TModel> Query, Dictionary<string, string> OrderDictionary)
         {
             /* Default Order */
             if (OrderDictionary.Count.Equals(0))

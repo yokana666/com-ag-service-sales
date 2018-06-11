@@ -1,11 +1,13 @@
-﻿using Com.Danliris.Service.Sales.Lib.Utilities;
+﻿using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Sales.Lib.Models.Weaving
-{
+{    
     public class WeavingSalesContractModel : BaseModel
     {
+        [MaxLength(255)]
+        public string Code { get; set; }
         [MaxLength(255)]
         public string SalesContractNo { get; set; }
         [MaxLength(255)]

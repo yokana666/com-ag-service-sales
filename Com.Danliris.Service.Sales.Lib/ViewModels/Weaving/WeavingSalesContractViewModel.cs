@@ -10,6 +10,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
     public class WeavingSalesContractViewModel : BaseViewModel, IValidatableObject
     {
         [MaxLength(255)]
+        public string Code { get; set; }
+        [MaxLength(255)]
         public string SalesContractNo { get; set; }
         [MaxLength(255)]
         public string DispositionNumber { get; set; }
@@ -40,6 +42,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
         [MaxLength(1000)]
         public string PieceLength { get; set; }
 
+        /* integration vm*/
         public BuyerViewModel Buyer { get; set; }
         public ProductViewModel Product { get; set; }
         public UomViewModel Uom { get; set; }
@@ -53,9 +56,24 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-
             if (this.Buyer == null || this.Buyer.Id.Equals(0))
+            {
                 yield return new ValidationResult("Buyer harus di isi", new List<string> { "Buyer" });
+            }
+            else if (this.Buyer != null && !this.Buyer.Id.Equals(0))
+            {
+                if (this.Buyer.Type.ToLower() == "ekspor")
+                {
+                    if (string.IsNullOrWhiteSpace(this.TermOfShipment))
+                        yield return new ValidationResult("harus di isi", new List<string> { "TermOfShipment" });
+                }
+                if (this.Agent != null && !this.Agent.Id.Equals(0))
+                {
+                    if (string.IsNullOrWhiteSpace(this.Comission))
+                        yield return new ValidationResult("harus di isi", new List<string> { "Comission" });
+                }
+            }
+
             if (this.Product == null || this.Product.Id.Equals(0))
                 yield return new ValidationResult("Product harus di isi", new List<string> { "Product" });
             if (this.Uom == null || this.Uom.Id.Equals(0))
@@ -75,15 +93,16 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
             if (this.Agent == null || this.Agent.Id.Equals(0))
                 yield return new ValidationResult("Agent harus di isi", new List<string> { "Agent" });
 
-            if (string.IsNullOrWhiteSpace(this.DispositionNumber))
-                yield return new ValidationResult("DispositionNumber harus lebih di isi", new List<string> { "DispositionNumber" });
-
-            //if (this.Operator == null || string.IsNullOrWhiteSpace(this.Operator))
-            //    yield return new ValidationResult("Operator harus di isi", new List<string> { "Operator" });
-
-            //if (this.Date == null)
-            //    yield return new ValidationResult("Tanggal harus di isi", new List<string> { "Date" });
-
+            if (string.IsNullOrWhiteSpace(this.MaterialWidth))
+                yield return new ValidationResult("MaterialWidth harus di isi", new List<string> { "MaterialWidth" });
+            if (this.OrderQuantity.Equals(0))
+                yield return new ValidationResult("OrderQuantity harus lebih dari 0", new List<string> { "OrderQuantity" });
+            if (string.IsNullOrWhiteSpace(this.DeliveredTo))
+                yield return new ValidationResult("harus di isi", new List<string> { "DeliveredTo" });
+            if (this.Price <= 0)
+                yield return new ValidationResult("harus lebih dari 0", new List<string> { "Price" });
+            if (this.DeliverySchedule == null)
+                yield return new ValidationResult("harus di isi", new List<string> { "DeliverySchedule" });
         }
     }
 }

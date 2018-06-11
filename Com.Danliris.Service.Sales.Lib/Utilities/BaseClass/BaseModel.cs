@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.Utilities
+namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
 {
     public abstract class BaseModel : StandardEntity<long>
     {
