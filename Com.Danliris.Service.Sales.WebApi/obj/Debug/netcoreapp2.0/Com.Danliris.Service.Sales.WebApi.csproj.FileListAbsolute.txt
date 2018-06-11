@@ -1,0 +1,13 @@
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.deps.json
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.runtimeconfig.json
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.runtimeconfig.dev.json
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.dll
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.pdb
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.csprojResolveAssemblyReference.cache
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.csproj.CoreCompileInputs.cache
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.AssemblyInfoInputs.cache
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.AssemblyInfo.cs
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.dll
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\obj\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.WebApi.pdb
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.dll
+D:\danliris\com-danliris-service-sales\Com.Danliris.Service.Sales.WebApi\bin\Debug\netcoreapp2.0\Com.Danliris.Service.Sales.Lib.pdb

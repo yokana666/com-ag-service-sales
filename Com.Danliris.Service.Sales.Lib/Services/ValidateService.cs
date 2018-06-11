@@ -1,4 +1,4 @@
-﻿using Com.Moonlay.NetCore.Lib.Service;
+﻿using Com.Danliris.Service.Sales.Lib.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,13 +15,13 @@ namespace Com.Danliris.Service.Sales.Lib.Services
             this.serviceProvider = serviceProvider;
         }
 
-        public void Validate(dynamic viewModel)
+        public void Validate(dynamic model)
         {
             List<ValidationResult> validationResults = new List<ValidationResult>();
-            ValidationContext validationContext = new ValidationContext(viewModel, serviceProvider, null);
+            ValidationContext validationContext = new ValidationContext(model, serviceProvider, null);
 
-            if (!Validator.TryValidateObject(viewModel, validationContext, validationResults, true))
-                throw new ServiceValidationExeption(validationContext, validationResults);
+            if (!Validator.TryValidateObject(model, validationContext, validationResults, true))
+                throw new ServiceValidationException(validationContext, validationResults);
         }
     }
 }
