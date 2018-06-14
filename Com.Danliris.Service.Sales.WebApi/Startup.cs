@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Com.Danliris.Service.Sales.Lib;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Weaving;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,13 +39,15 @@ namespace Com.Danliris.Service.Sales.WebApi
         private void RegisterFacades(IServiceCollection services)
         {
             services
-                .AddTransient<WeavingSalesContractFacade>();
+                .AddTransient<WeavingSalesContractFacade>()
+                .AddTransient<SpinningSalesContractFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
         {
             services
-                .AddTransient<WeavingSalesContractLogic>();
+                .AddTransient<WeavingSalesContractLogic>()
+                .AddTransient<SpinningSalesContractLogic>();
         }
 
         private void RegisterServices(IServiceCollection services)

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
+namespace Com.Danliris.Service.Sales.Lib.ViewModels.Spinning
 {
-    public class WeavingSalesContractViewModel : BaseViewModel, IValidatableObject
+    public class SpinningSalesContractViewModel : BaseViewModel, IValidatableObject
     {
         [MaxLength(255)]
         public string Code { get; set; }
@@ -16,8 +16,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
         [MaxLength(255)]
         public string DispositionNumber { get; set; }
         public bool FromStock { get; set; }
-        [MaxLength(255)]
-        public string MaterialWidth { get; set; }
         public double OrderQuantity { get; set; }
         public double ShippingQuantityTolerance { get; set; }
         public string ComodityDescription { get; set; }
@@ -46,10 +44,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
 
         /* integration vm*/
         public BuyerViewModel Buyer { get; set; }
-        public ProductViewModel Product { get; set; }
-        public UomViewModel Uom { get; set; }
-        public MaterialConstructionViewModel MaterialConstruction { get; set; }
-        public YarnMaterialViewModel YarnMaterial { get; set; }
         public ComodityViewModel Comodity { get; set; }
         public QualityViewModel Quality { get; set; }
         public TermOfPaymentViewModel TermOfPayment { get; set; }
@@ -76,14 +70,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
                 }
             }
 
-            if (this.Product == null || this.Product.Id.Equals(0))
-                yield return new ValidationResult("Product harus di isi", new List<string> { "Product" });
-            if (this.Uom == null || this.Uom.Id.Equals(0))
-                yield return new ValidationResult("Uom harus di isi", new List<string> { "Uom" });
-            if (this.MaterialConstruction == null || this.MaterialConstruction.Id.Equals(0))
-                yield return new ValidationResult("MaterialConstruction harus di isi", new List<string> { "MaterialConstruction" });
-            if (this.YarnMaterial == null || this.YarnMaterial.Id.Equals(0))
-                yield return new ValidationResult("YarnMaterial harus di isi", new List<string> { "YarnMaterial" });
+           
             if (this.Comodity == null || this.Comodity.Id.Equals(0))
                 yield return new ValidationResult("Comodity harus di isi", new List<string> { "Comodity" });
             if (this.Quality == null || this.Quality.Id.Equals(0))
@@ -95,8 +82,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
             if (this.Agent == null || this.Agent.Id.Equals(0))
                 yield return new ValidationResult("Agent harus di isi", new List<string> { "Agent" });
 
-            if (string.IsNullOrWhiteSpace(this.MaterialWidth))
-                yield return new ValidationResult("MaterialWidth harus di isi", new List<string> { "MaterialWidth" });
             if (this.OrderQuantity.Equals(0))
                 yield return new ValidationResult("OrderQuantity harus lebih dari 0", new List<string> { "OrderQuantity" });
             if (string.IsNullOrWhiteSpace(this.DeliveredTo))
