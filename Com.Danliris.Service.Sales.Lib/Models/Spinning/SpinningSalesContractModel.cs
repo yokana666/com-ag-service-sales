@@ -1,10 +1,12 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.Models.Weaving
-{    
-    public class WeavingSalesContractModel : BaseModel
+namespace Com.Danliris.Service.Sales.Lib.Models.Spinning
+{
+    public class SpinningSalesContractModel : BaseModel
     {
         [MaxLength(255)]
         public string Code { get; set; }
@@ -13,8 +15,6 @@ namespace Com.Danliris.Service.Sales.Lib.Models.Weaving
         [MaxLength(255)]
         public string DispositionNumber { get; set; }
         public bool FromStock { get; set; }
-        [MaxLength(255)]
-        public string MaterialWidth { get; set; }
         public double OrderQuantity { get; set; }
         public double ShippingQuantityTolerance { get; set; }
         public string ComodityDescription { get; set; }
@@ -49,36 +49,6 @@ namespace Com.Danliris.Service.Sales.Lib.Models.Weaving
         [MaxLength(255)]
         public string BuyerType { get; set; }
 
-        /*Product material*/
-        public long ProductId { get; set; }
-        [MaxLength(255)]
-        public string ProductCode { get; set; }
-        [MaxLength(1000)]
-        public string ProductName { get; set; }
-        public double ProductPrice { get; set; }
-        [MaxLength(255)]
-        public string ProductTags { get; set; }
-
-        /*Uom*/
-        public long UomId { get; set; }
-        [MaxLength(255)]
-        public string UomUnit { get; set; }
-
-        /*material construction*/
-        public long MaterialConstructionId { get; set; }
-        [MaxLength(1000)]
-        public string MaterialConstructionName { get; set; }
-        [MaxLength(255)]
-        public string MaterialConstructionCode { get; set; }
-        public string MaterialConstructionRemark { get; set; }
-
-        /*yarn material*/
-        public long YarnMaterialId { get; set; }
-        [MaxLength(1000)]
-        public string YarnMaterialName { get; set; }
-        [MaxLength(255)]
-        public string YarnMaterialCode { get; set; }
-        public string YarnMaterialRemark { get; set; }
 
         /*Comodity*/
         public long ComodityId { get; set; }

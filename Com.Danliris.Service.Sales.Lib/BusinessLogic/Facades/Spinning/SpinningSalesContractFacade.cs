@@ -1,6 +1,6 @@
-﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Weaving;
-using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Weaving;
-using Com.Danliris.Service.Sales.Lib.Models.Weaving;
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Spinning;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Spinning;
+using Com.Danliris.Service.Sales.Lib.Models.Spinning;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -11,24 +11,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
+namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning
 {
-    public class WeavingSalesContractFacade : IWeavingSalesContract
+    public class SpinningSalesContractFacade : ISpinningSalesContract
     {
         private readonly SalesDbContext DbContext;
-        private readonly DbSet<WeavingSalesContractModel> DbSet;
+        private readonly DbSet<SpinningSalesContractModel> DbSet;
         private IdentityService IdentityService;
-        private WeavingSalesContractLogic WeavingSalesContractLogic;
-
-        public WeavingSalesContractFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
+        private SpinningSalesContractLogic SpinningSalesContractLogic;
+        public SpinningSalesContractFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             this.DbContext = dbContext;
-            this.DbSet = this.DbContext.Set<WeavingSalesContractModel>();
+            this.DbSet = this.DbContext.Set<SpinningSalesContractModel>();
             this.IdentityService = serviceProvider.GetService<IdentityService>();
-            this.WeavingSalesContractLogic = serviceProvider.GetService<WeavingSalesContractLogic>();
+            this.SpinningSalesContractLogic = serviceProvider.GetService<SpinningSalesContractLogic>();
         }
-
-        public async Task<int> CreateAsync(WeavingSalesContractModel model)
+        public async Task<int> CreateAsync(SpinningSalesContractModel model)
         {
             do
             {
@@ -37,37 +35,37 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
             while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
 
             var data = await CustomCodeGenerator(model);
-            WeavingSalesContractLogic.Create(data);
+            SpinningSalesContractLogic.Create(data);
 
-            return await DbContext.SaveChangesAsync();
-        }
-
-        public Tuple<List<WeavingSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
-        {
-            return WeavingSalesContractLogic.Read(page, size, order, select, keyword, filter);
-        }
-
-        public async Task<WeavingSalesContractModel> ReadById(int id)
-        {
-            return await WeavingSalesContractLogic.ReadById(id);
-        }
-
-        public async Task<int> Update(int id, WeavingSalesContractModel model)
-        {
-            WeavingSalesContractLogic.Update(id, model);
             return await DbContext.SaveChangesAsync();
         }
 
         public async Task<int> DeleteAsync(int id)
         {
-            await WeavingSalesContractLogic.Delete(id);
+            await SpinningSalesContractLogic.Delete(id);
             return await DbContext.SaveChangesAsync();
         }
 
-        public async Task<WeavingSalesContractModel> CustomCodeGenerator(WeavingSalesContractModel Model)
+        public Tuple<List<SpinningSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            return SpinningSalesContractLogic.Read(page, size, order, select, keyword, filter);
+        }
+
+        public async Task<SpinningSalesContractModel> ReadById(int id)
+        {
+            return await SpinningSalesContractLogic.ReadById(id);
+        }
+
+        public async Task<int> Update(int id, SpinningSalesContractModel model)
+        {
+            SpinningSalesContractLogic.Update(id, model);
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<SpinningSalesContractModel> CustomCodeGenerator(SpinningSalesContractModel Model)
         {
 
-            string type = Model.BuyerType.ToLower() == "export" ? "WVE" : "WVL";
+            string type = Model.BuyerType.ToLower() == "export" ? "SPE" : "SPL";
 
             var lastData = await this.DbSet.Where(w => w.BuyerType == Model.BuyerType).OrderByDescending(o => o.CreatedUtc).FirstOrDefaultAsync();
 
@@ -96,7 +94,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
                     Model.SalesContractNo = $"{Number}{type}{Number}{month}{Year}";
                 }
             }
-
             return Model;
         }
     }

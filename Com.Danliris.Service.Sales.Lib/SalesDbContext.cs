@@ -1,4 +1,5 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.Weaving;
+﻿using Com.Danliris.Service.Sales.Lib.Models.Spinning;
+using Com.Danliris.Service.Sales.Lib.Models.Weaving;
 using Com.Moonlay.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,7 +15,7 @@ namespace Com.Danliris.Service.Sales.Lib
 
 
         public DbSet<WeavingSalesContractModel> WeavingSalesContract { get; set; }
-
+        public DbSet<SpinningSalesContractModel> SpinningSalesContract { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -83,7 +83,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
                 ValidateViewModel(viewModel);
 
                 TModel model = Mapper.Map<TModel>(viewModel);
-                await Facade.Create(model);
+                await Facade.CreateAsync(model);
 
                 Dictionary<string, object> Result =
                     new ResultFormatter(ApiVersion, Common.CREATED_STATUS_CODE, Common.OK_MESSAGE)
@@ -204,7 +204,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
             try
             {
                 ValidateUser();
-                await Facade.Delete(id);
+                await Facade.DeleteAsync(id);
 
                 return NoContent();
             }

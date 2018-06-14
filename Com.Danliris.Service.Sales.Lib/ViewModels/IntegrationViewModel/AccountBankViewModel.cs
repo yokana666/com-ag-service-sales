@@ -12,8 +12,12 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
         public string Code { get; set; }
         [MaxLength(1000)]
         public string AccountName { get; set; }
-        public int AccountNumber { get; set; }
+        public string AccountNumber { get; set; }
         [MaxLength(255)]
         public string BankName { get; set; }
+        [MaxLength(255)]
+        public string AccountCurrencyId { get; set; }
+        [MaxLength(255)]
+        public string AccountCurrencyCode { get; set; }
     }
 }
