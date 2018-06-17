@@ -9,8 +9,8 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface
     {
         Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Read(int Page, int Size, string Order, List<string> Select, string Keyword, string Filter);
         Task<int> CreateAsync(TModel model);
-        Task<TModel> ReadByIdAsync(int id);
-        Task<int> UpdateAsync(int id, TModel model);
+        Task<TModel> ReadById(int id);
+        Task<int> Update(int id, TModel model);
         Task<int> DeleteAsync(int id);
     }
 }

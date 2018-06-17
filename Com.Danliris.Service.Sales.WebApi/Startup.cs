@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Com.Danliris.Service.Sales.Lib;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Weaving;
 using Com.Danliris.Service.Sales.Lib.Services;
@@ -40,12 +42,16 @@ namespace Com.Danliris.Service.Sales.WebApi
         {
             services
                 .AddTransient<WeavingSalesContractFacade>()
+                .AddTransient<SpinningSalesContractFacade>();
+                .AddTransient<WeavingSalesContractFacade>()
                 .AddTransient<FinishingPrintingSalesContractFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
         {
             services
+                .AddTransient<WeavingSalesContractLogic>()
+                .AddTransient<SpinningSalesContractLogic>();
                 .AddTransient<WeavingSalesContractLogic>()
                 .AddTransient<FinishingPrintingSalesContractLogic>()
                 .AddTransient<FinishingPrintingSalesContractDetailLogic>();

@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.Weaving;
+﻿using Com.Danliris.Service.Sales.Lib.Models.Spinning;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Newtonsoft.Json;
@@ -7,26 +7,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Weaving
+namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Spinning
 {
-    public class WeavingSalesContractLogic : BaseLogic<WeavingSalesContractModel>
+    public class SpinningSalesContractLogic : BaseLogic<SpinningSalesContractModel>
     {
-        public WeavingSalesContractLogic(IServiceProvider serviceProvider, SalesDbContext dbContext) : base(serviceProvider, dbContext)
+        public SpinningSalesContractLogic(IServiceProvider serviceProvider, SalesDbContext dbContext) : base(serviceProvider, dbContext)
         {
         }
-        public override Tuple<List<WeavingSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        public override Tuple<List<SpinningSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
-            IQueryable<WeavingSalesContractModel> Query = this.DbSet;
+            IQueryable<SpinningSalesContractModel> Query = this.DbSet;
 
             List<string> SearchAttributes = new List<string>()
             {
                 "SalesContractNo","BuyerName"
             };
 
-            Query = QueryHelper<WeavingSalesContractModel>.Search(Query, SearchAttributes, keyword);
+            Query = QueryHelper<SpinningSalesContractModel>.Search(Query, SearchAttributes, keyword);
 
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
-            Query = QueryHelper<WeavingSalesContractModel>.Filter(Query, FilterDictionary);
+            Query = QueryHelper<SpinningSalesContractModel>.Filter(Query, FilterDictionary);
 
             List<string> SelectedFields = new List<string>()
             {
@@ -34,7 +34,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Weaving
             };
 
             Query = Query
-                .Select(field => new WeavingSalesContractModel
+                .Select(field => new SpinningSalesContractModel
                 {
                     Id = field.Id,
                     Code = field.Code,
@@ -48,9 +48,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Weaving
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
-            Query = QueryHelper<WeavingSalesContractModel>.Order(Query, OrderDictionary);
+            Query = QueryHelper<SpinningSalesContractModel>.Order(Query, OrderDictionary);
 
-            List<WeavingSalesContractModel> Data = Query.Skip((page - 1) * size).Take(size).ToList();
+            List<SpinningSalesContractModel> Data = Query.Skip((page - 1) * size).Take(size).ToList();
             int TotalData = DbSet.Count();
 
             return Tuple.Create(Data, TotalData, OrderDictionary, SelectedFields);
