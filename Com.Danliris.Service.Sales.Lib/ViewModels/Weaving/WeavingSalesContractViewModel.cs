@@ -48,7 +48,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
         public UomViewModel Uom { get; set; }
         public MaterialConstructionViewModel MaterialConstruction { get; set; }
         public YarnMaterialViewModel YarnMaterial { get; set; }
-        public ComodityViewModel Comodity { get; set; }
+        public CommodityViewModel Comodity { get; set; }
         public QualityViewModel Quality { get; set; }
         public TermPaymentViewModel TermPayment { get; set; }
         public AccountBankViewModel AccountBank { get; set; }

@@ -45,21 +45,26 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
             return WeavingSalesContractLogic.Read(page, size, order, select, keyword, filter);
         }
 
-        public async Task<WeavingSalesContractModel> ReadById(int id)
+        public async Task<WeavingSalesContractModel> ReadByIdAsync(int id)
         {
-            return await WeavingSalesContractLogic.ReadById(id);
+            return await WeavingSalesContractLogic.ReadByIdAsync(id);
         }
 
-        public async Task<int> Update(int id, WeavingSalesContractModel model)
+        public async Task<int> UpdateAsync(int id, WeavingSalesContractModel model)
         {
             WeavingSalesContractLogic.Update(id, model);
             return await DbContext.SaveChangesAsync();
         }
 
-        public async Task<int> Delete(int id)
+        public async Task<int> DeleteAsync(int id)
         {
-            await WeavingSalesContractLogic.Delete(id);
+            await WeavingSalesContractLogic.DeleteAsync(id);
             return await DbContext.SaveChangesAsync();
+        }
+
+        public Task<int> CreateAsync(WeavingSalesContractModel model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

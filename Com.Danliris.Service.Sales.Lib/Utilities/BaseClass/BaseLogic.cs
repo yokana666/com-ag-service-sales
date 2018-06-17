@@ -30,7 +30,7 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
             DbSet.Add(model);
         }
 
-        public virtual Task<TModel> ReadById(int id)
+        public virtual Task<TModel> ReadByIdAsync(int id)
         {
             return DbSet.FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
         }
@@ -41,9 +41,9 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
             DbSet.Update(model);
         }
 
-        public virtual async Task Delete(int id)
+        public virtual async Task DeleteAsync(int id)
         {
-            TModel model = await ReadById(id);
+            TModel model = await ReadByIdAsync(id);
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
             DbSet.Update(model);
         }

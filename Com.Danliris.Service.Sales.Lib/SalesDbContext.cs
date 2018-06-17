@@ -1,4 +1,5 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Models.Weaving;
+using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
 using Com.Moonlay.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,6 +15,8 @@ namespace Com.Danliris.Service.Sales.Lib
 
 
         public DbSet<WeavingSalesContractModel> WeavingSalesContract { get; set; }
+        public DbSet<FinishingPrintingSalesContractModel> FinishingPrintingSalesContracts { get; set; }
+        public DbSet<FinishingPrintingSalesContractDetailModel> FinishingPrintingSalesContractDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,6 +27,11 @@ namespace Com.Danliris.Service.Sales.Lib
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            modelBuilder.Entity<FinishingPrintingSalesContractModel>()
+                .Ignore(I => I.IsDeleted)
+                .HasIndex(h => h.SalesContractNo)
+                .IsUnique();
         }
     }
 }

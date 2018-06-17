@@ -6442,8 +6442,6 @@
       "type": "package",
       "path": "microsoft.data.edm/5.8.2",
       "files": [
-        "Microsoft.Data.Edm.5.8.2.nupkg.sha512",
-        "Microsoft.Data.Edm.nuspec",
         "lib/net40/Microsoft.Data.Edm.dll",
         "lib/net40/Microsoft.Data.Edm.xml",
         "lib/net40/de/Microsoft.Data.Edm.resources.dll",
@@ -6498,7 +6496,9 @@
         "lib/sl4/ko/Microsoft.Data.Edm.resources.dll",
         "lib/sl4/ru/Microsoft.Data.Edm.resources.dll",
         "lib/sl4/zh-Hans/Microsoft.Data.Edm.resources.dll",
-        "lib/sl4/zh-Hant/Microsoft.Data.Edm.resources.dll"
+        "lib/sl4/zh-Hant/Microsoft.Data.Edm.resources.dll",
+        "microsoft.data.edm.5.8.2.nupkg.sha512",
+        "microsoft.data.edm.nuspec"
       ]
     },
     "Microsoft.Data.OData/5.8.2": {
@@ -6506,8 +6506,6 @@
       "type": "package",
       "path": "microsoft.data.odata/5.8.2",
       "files": [
-        "Microsoft.Data.OData.5.8.2.nupkg.sha512",
-        "Microsoft.Data.OData.nuspec",
         "lib/net40/Microsoft.Data.OData.dll",
         "lib/net40/Microsoft.Data.OData.xml",
         "lib/net40/de/Microsoft.Data.OData.resources.dll",
@@ -6562,7 +6560,9 @@
         "lib/sl4/ko/Microsoft.Data.OData.resources.dll",
         "lib/sl4/ru/Microsoft.Data.OData.resources.dll",
         "lib/sl4/zh-Hans/Microsoft.Data.OData.resources.dll",
-        "lib/sl4/zh-Hant/Microsoft.Data.OData.resources.dll"
+        "lib/sl4/zh-Hant/Microsoft.Data.OData.resources.dll",
+        "microsoft.data.odata.5.8.2.nupkg.sha512",
+        "microsoft.data.odata.nuspec"
       ]
     },
     "Microsoft.Data.Sqlite/2.0.0": {
@@ -7454,14 +7454,14 @@
       "type": "package",
       "path": "microsoft.identitymodel.logging/1.1.4",
       "files": [
-        "Microsoft.IdentityModel.Logging.1.1.4.nupkg.sha512",
-        "Microsoft.IdentityModel.Logging.nuspec",
         "lib/net45/Microsoft.IdentityModel.Logging.dll",
         "lib/net45/Microsoft.IdentityModel.Logging.xml",
         "lib/net451/Microsoft.IdentityModel.Logging.dll",
         "lib/net451/Microsoft.IdentityModel.Logging.xml",
         "lib/netstandard1.4/Microsoft.IdentityModel.Logging.dll",
-        "lib/netstandard1.4/Microsoft.IdentityModel.Logging.xml"
+        "lib/netstandard1.4/Microsoft.IdentityModel.Logging.xml",
+        "microsoft.identitymodel.logging.1.1.4.nupkg.sha512",
+        "microsoft.identitymodel.logging.nuspec"
       ]
     },
     "Microsoft.IdentityModel.Protocols/2.1.4": {
@@ -7499,14 +7499,14 @@
       "type": "package",
       "path": "microsoft.identitymodel.tokens/5.1.4",
       "files": [
-        "Microsoft.IdentityModel.Tokens.5.1.4.nupkg.sha512",
-        "Microsoft.IdentityModel.Tokens.nuspec",
         "lib/net45/Microsoft.IdentityModel.Tokens.dll",
         "lib/net45/Microsoft.IdentityModel.Tokens.xml",
         "lib/net451/Microsoft.IdentityModel.Tokens.dll",
         "lib/net451/Microsoft.IdentityModel.Tokens.xml",
         "lib/netstandard1.4/Microsoft.IdentityModel.Tokens.dll",
-        "lib/netstandard1.4/Microsoft.IdentityModel.Tokens.xml"
+        "lib/netstandard1.4/Microsoft.IdentityModel.Tokens.xml",
+        "microsoft.identitymodel.tokens.5.1.4.nupkg.sha512",
+        "microsoft.identitymodel.tokens.nuspec"
       ]
     },
     "Microsoft.Net.Http.Headers/2.0.0": {
@@ -10063,14 +10063,14 @@
       "type": "package",
       "path": "system.identitymodel.tokens.jwt/5.1.4",
       "files": [
-        "System.IdentityModel.Tokens.Jwt.5.1.4.nupkg.sha512",
-        "System.IdentityModel.Tokens.Jwt.nuspec",
         "lib/net45/System.IdentityModel.Tokens.Jwt.dll",
         "lib/net45/System.IdentityModel.Tokens.Jwt.xml",
         "lib/net451/System.IdentityModel.Tokens.Jwt.dll",
         "lib/net451/System.IdentityModel.Tokens.Jwt.xml",
         "lib/netstandard1.4/System.IdentityModel.Tokens.Jwt.dll",
-        "lib/netstandard1.4/System.IdentityModel.Tokens.Jwt.xml"
+        "lib/netstandard1.4/System.IdentityModel.Tokens.Jwt.xml",
+        "system.identitymodel.tokens.jwt.5.1.4.nupkg.sha512",
+        "system.identitymodel.tokens.jwt.nuspec"
       ]
     },
     "System.Interactive.Async/3.1.1": {
@@ -12438,8 +12438,6 @@
       "type": "package",
       "path": "system.spatial/5.8.2",
       "files": [
-        "System.Spatial.5.8.2.nupkg.sha512",
-        "System.Spatial.nuspec",
         "lib/net40/System.Spatial.dll",
         "lib/net40/System.Spatial.xml",
         "lib/net40/de/System.Spatial.resources.dll",
@@ -12494,7 +12492,9 @@
         "lib/sl4/ko/System.Spatial.resources.dll",
         "lib/sl4/ru/System.Spatial.resources.dll",
         "lib/sl4/zh-Hans/System.Spatial.resources.dll",
-        "lib/sl4/zh-Hant/System.Spatial.resources.dll"
+        "lib/sl4/zh-Hant/System.Spatial.resources.dll",
+        "system.spatial.5.8.2.nupkg.sha512",
+        "system.spatial.nuspec"
       ]
     },
     "System.Text.Encoding/4.3.0": {
@@ -13516,30 +13516,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\aditya.henanda\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\leslie.aula\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
-      "projectUniqueName": "D:\\danliris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.WebApi\\Com.Danliris.Service.Sales.WebApi.csproj",
+      "projectUniqueName": "D:\\Workspace\\Dan Liris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.WebApi\\Com.Danliris.Service.Sales.WebApi.csproj",
       "projectName": "Com.Danliris.Service.Sales.WebApi",
-      "projectPath": "D:\\danliris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.WebApi\\Com.Danliris.Service.Sales.WebApi.csproj",
-      "packagesPath": "C:\\Users\\aditya.henanda\\.nuget\\packages\\",
-      "outputPath": "D:\\danliris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.WebApi\\obj\\",
+      "projectPath": "D:\\Workspace\\Dan Liris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.WebApi\\Com.Danliris.Service.Sales.WebApi.csproj",
+      "packagesPath": "C:\\Users\\leslie.aula\\.nuget\\packages\\",
+      "outputPath": "D:\\Workspace\\Dan Liris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\aditya.henanda\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\leslie.aula\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
@@ -13551,8 +13545,8 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "D:\\danliris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.Lib\\Com.Danliris.Service.Sales.Lib.csproj": {
-              "projectPath": "D:\\danliris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.Lib\\Com.Danliris.Service.Sales.Lib.csproj"
+            "D:\\Workspace\\Dan Liris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.Lib\\Com.Danliris.Service.Sales.Lib.csproj": {
+              "projectPath": "D:\\Workspace\\Dan Liris\\com-danliris-service-sales\\Com.Danliris.Service.Sales.Lib\\Com.Danliris.Service.Sales.Lib.csproj"
             }
           }
         }

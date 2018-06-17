@@ -15,5 +15,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
         public int AccountNumber { get; set; }
         [MaxLength(255)]
         public string BankName { get; set; }
+        public CurrencyViewModel Currency { get; set; }
     }
 }
