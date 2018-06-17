@@ -44,7 +44,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
         {
             return finishingPrintingSalesContractLogic.Read(Page, Size, Order, Select, Keyword, Filter);
         }
-
         public async Task<FinishingPrintingSalesContractModel> ReadByIdAsync(int id)
         {
             return await finishingPrintingSalesContractLogic.ReadByIdAsync(id);

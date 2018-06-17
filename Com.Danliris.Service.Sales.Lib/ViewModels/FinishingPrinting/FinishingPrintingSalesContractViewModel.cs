@@ -37,7 +37,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
         public string SalesContractNo { get; set; }
         public string ShipmentDescription { get; set; }
         public double ShippingQuantityTolerance { get; set; }
-        public TermPaymentViewModel TermOfPayment { get; set; }
+        public TermOfPaymentViewModel TermOfPayment { get; set; }
         public string TermOfShipment { get; set; }
         public string TransportFee { get; set; }
         public bool UseIncomeTax { get; set; }
@@ -133,9 +133,21 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
                 yield return new ValidationResult("Tujuan Kirim harus diisi", new List<string> { "DeliveredTo" });
             }
 
-            if (DeliverySchedule == null || DeliverySchedule <= DateTimeOffset.Now )
+            if (DeliverySchedule == null || DeliverySchedule <= DateTimeOffset.Now)
             {
                 yield return new ValidationResult("Jadwal Pengiriman harus diisi", new List<string> { "DeliverySchedule" });
+            }
+
+            if (PointSystem != 10 && PointSystem != 4)
+            {
+                yield return new ValidationResult("Point sistem tidak valid", new List<string> { "PointSystem" });
+            }
+            else if (PointSystem == 4)
+            {
+                if (PointLimit <= 0)
+                {
+                    yield return new ValidationResult("Point limit harus lebih besar dari 0", new List<string> { "PointLimit" });
+                }
             }
 
             if (Details == null || Details.Count.Equals(0))

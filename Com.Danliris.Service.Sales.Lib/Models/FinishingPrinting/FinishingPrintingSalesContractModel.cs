@@ -8,6 +8,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting
     public class FinishingPrintingSalesContractModel : BaseModel
     {
         #region Account Bank
+        public string AccountBankAccountName { get; set; }
         public int AccountBankID { get; set; }
         [MaxLength(25)]
         public string AccountBankCode { get; set; }
@@ -46,7 +47,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting
         [MaxLength(25)]
         public string Code { get; set; }
         [MaxLength(255)]
-        public string Commision { get; set; }
+        public string Commission { get; set; }
         #region Commodity
         public int CommodityID { get; set; }
         [MaxLength(25)]

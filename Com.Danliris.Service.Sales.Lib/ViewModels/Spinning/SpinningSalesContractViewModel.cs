@@ -44,7 +44,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Spinning
 
         /* integration vm*/
         public BuyerViewModel Buyer { get; set; }
-        public ComodityViewModel Comodity { get; set; }
+        public CommodityViewModel Comodity { get; set; }
         public QualityViewModel Quality { get; set; }
         public TermOfPaymentViewModel TermOfPayment { get; set; }
         public AccountBankViewModel AccountBank { get; set; }

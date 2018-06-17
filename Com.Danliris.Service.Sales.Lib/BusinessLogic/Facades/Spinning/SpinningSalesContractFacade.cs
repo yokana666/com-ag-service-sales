@@ -42,7 +42,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning
 
         public async Task<int> DeleteAsync(int id)
         {
-            await SpinningSalesContractLogic.Delete(id);
+            await SpinningSalesContractLogic.DeleteAsync(id);
             return await DbContext.SaveChangesAsync();
         }
 
@@ -51,12 +51,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning
             return SpinningSalesContractLogic.Read(page, size, order, select, keyword, filter);
         }
 
-        public async Task<SpinningSalesContractModel> ReadById(int id)
+        public async Task<SpinningSalesContractModel> ReadByIdAsync(int id)
         {
-            return await SpinningSalesContractLogic.ReadById(id);
+            return await SpinningSalesContractLogic.ReadByIdAsync(id);
         }
 
-        public async Task<int> Update(int id, SpinningSalesContractModel model)
+        public async Task<int> UpdateAsync(int id, SpinningSalesContractModel model)
         {
             SpinningSalesContractLogic.Update(id, model);
             return await DbContext.SaveChangesAsync();

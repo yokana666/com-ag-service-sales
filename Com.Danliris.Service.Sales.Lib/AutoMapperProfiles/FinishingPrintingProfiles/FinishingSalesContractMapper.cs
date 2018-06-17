@@ -11,6 +11,7 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingPro
             CreateMap<FinishingPrintingSalesContractModel, FinishingPrintingSalesContractViewModel>()
                 .ForPath(d => d.AccountBank.Id, opt => opt.MapFrom(s => s.AccountBankID))
                 .ForPath(d => d.AccountBank.Code, opt => opt.MapFrom(s => s.AccountBankCode))
+                .ForPath(d => d.AccountBank.AccountName, opt => opt.MapFrom(s => s.AccountBankAccountName))
                 .ForPath(d => d.AccountBank.BankName, opt => opt.MapFrom(s => s.AccountBankName))
                 .ForPath(d => d.AccountBank.AccountNumber, opt => opt.MapFrom(s => s.AccountBankNumber))
                 .ForPath(d => d.AccountBank.Currency.Id, opt => opt.MapFrom(s => s.AccountBankCurrencyID))
