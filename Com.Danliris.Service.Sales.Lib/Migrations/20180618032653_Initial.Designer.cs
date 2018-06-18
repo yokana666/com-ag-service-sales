@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    [Migration("20180617195419_UpdateFPSalesContractAccountBankAccountName")]
-    partial class UpdateFPSalesContractAccountBankAccountName
+    [Migration("20180618032653_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -148,7 +148,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("Code")
                         .HasMaxLength(25);
 
-                    b.Property<string>("Commision")
+                    b.Property<string>("Commission")
                         .HasMaxLength(255);
 
                     b.Property<string>("CommodityCode")
