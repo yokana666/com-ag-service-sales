@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
 {
-    public class ComodityViewModel
+    public class CommodityViewModel
     {
         public long Id { get; set; }
         [MaxLength(255)]

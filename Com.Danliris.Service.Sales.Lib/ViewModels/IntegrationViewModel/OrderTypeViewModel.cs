@@ -1,0 +1,9 @@
+﻿namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
+{
+    public class OrderTypeViewModel
+    {
+        public string Code { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
+    }
+}

@@ -116,7 +116,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
 
             try
             {
-                TModel model = await Facade.ReadById(id);
+                TModel model = await Facade.ReadByIdAsync(id);
 
                 if (model == null)
                 {
@@ -166,7 +166,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
                     return BadRequest(Result);
                 }
 
-                await Facade.Update(id, model);
+                await Facade.UpdateAsync(id, model);
 
                 return NoContent();
             }
