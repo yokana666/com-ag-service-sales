@@ -31,7 +31,6 @@ namespace Com.Danliris.Service.Sales.Lib
             }
 
             modelBuilder.Entity<FinishingPrintingSalesContractModel>()
-                .Ignore(I => I.IsDeleted)
                 .HasIndex(h => h.SalesContractNo)
                 .IsUnique();
         }
