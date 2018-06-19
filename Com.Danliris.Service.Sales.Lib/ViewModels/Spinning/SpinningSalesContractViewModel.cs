@@ -60,6 +60,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Spinning
             {
                 if (this.Buyer.Type.ToLower() == "ekspor")
                 {
+                    if (this.Agent == null || this.Agent.Id.Equals(0))
+                        yield return new ValidationResult("Agent harus di isi", new List<string> { "Agent" });
                     if (string.IsNullOrWhiteSpace(this.TermOfShipment))
                         yield return new ValidationResult("harus di isi", new List<string> { "TermOfShipment" });
                 }
@@ -79,8 +81,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Spinning
                 yield return new ValidationResult("TermPayment harus di isi", new List<string> { "TermPayment" });
             if (this.AccountBank == null || this.AccountBank.Id.Equals(0))
                 yield return new ValidationResult("AccountBank harus di isi", new List<string> { "AccountBank" });
-            if (this.Agent == null || this.Agent.Id.Equals(0))
-                yield return new ValidationResult("Agent harus di isi", new List<string> { "Agent" });
 
             if (this.OrderQuantity.Equals(0))
                 yield return new ValidationResult("OrderQuantity harus lebih dari 0", new List<string> { "OrderQuantity" });
