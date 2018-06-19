@@ -66,6 +66,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
             {
                 if (this.Buyer.Type.ToLower() == "ekspor")
                 {
+                    if (this.Agent == null || this.Agent.Id.Equals(0))
+                        yield return new ValidationResult("Agent harus di isi", new List<string> { "Agent" });
                     if (string.IsNullOrWhiteSpace(this.TermOfShipment))
                         yield return new ValidationResult("harus di isi", new List<string> { "TermOfShipment" });
                 }
@@ -92,8 +94,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
                 yield return new ValidationResult("TermPayment harus di isi", new List<string> { "TermPayment" });
             if (this.AccountBank == null || this.AccountBank.Id.Equals(0))
                 yield return new ValidationResult("AccountBank harus di isi", new List<string> { "AccountBank" });
-            if (this.Agent == null || this.Agent.Id.Equals(0))
-                yield return new ValidationResult("Agent harus di isi", new List<string> { "Agent" });
 
             if (string.IsNullOrWhiteSpace(this.MaterialWidth))
                 yield return new ValidationResult("MaterialWidth harus di isi", new List<string> { "MaterialWidth" });
