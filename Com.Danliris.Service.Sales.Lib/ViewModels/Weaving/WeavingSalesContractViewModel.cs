@@ -94,7 +94,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
                 yield return new ValidationResult("TermPayment harus di isi", new List<string> { "TermPayment" });
             if (this.AccountBank == null || this.AccountBank.Id.Equals(0))
                 yield return new ValidationResult("AccountBank harus di isi", new List<string> { "AccountBank" });
-
             if (string.IsNullOrWhiteSpace(this.MaterialWidth))
                 yield return new ValidationResult("MaterialWidth harus di isi", new List<string> { "MaterialWidth" });
             if (this.OrderQuantity.Equals(0))
