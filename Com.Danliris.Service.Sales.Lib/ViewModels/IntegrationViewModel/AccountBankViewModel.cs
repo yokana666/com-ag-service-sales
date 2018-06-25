@@ -15,6 +15,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
         public string AccountNumber { get; set; }
         [MaxLength(255)]
         public string BankName { get; set; }
+        public string BankAddress { get; set; }
         [MaxLength(255)]
         public string AccountCurrencyId { get; set; }
         [MaxLength(255)]

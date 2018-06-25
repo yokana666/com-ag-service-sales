@@ -23,6 +23,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
+using Com.Danliris.Service.Sales.WebApi.Utilities;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -62,6 +63,13 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddScoped<ValidateService>();
         }
 
+        private void RegisterEndpoint()
+        {
+            APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+        }
+
+
+
         #endregion Register
         public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -74,6 +82,7 @@ namespace Com.Danliris.Service.Sales.WebApi
             RegisterFacades(services);
             RegisterLogic(services);
             RegisterServices(services);
+            RegisterEndpoint();
             services.AddAutoMapper();
 
             /* Versioning */
