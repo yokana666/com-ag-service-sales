@@ -14,5 +14,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
         public string Name { get; set; }
         [MaxLength(255)]
         public string Type { get; set; }
+        [MaxLength(1000)]
+        public string Address { get; set; }
+        [MaxLength(255)]
+        public string City { get; set; }
     }
 }
