@@ -12,5 +12,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
         public string Name { get; set; }
         [MaxLength(255)]
         public string Code { get; set; }
+
     }
 }
