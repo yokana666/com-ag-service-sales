@@ -64,7 +64,7 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities
             if (x != Convert.ToString(s).Length)
             {
                 var y = s.ToString().Length;
-                str += " point ";
+                str += "point ";
                 for (var i = x + 1; i < y; i++)
                     str += dg[Convert.ToInt16(n.ToString()[i].ToString())] + " ";
             }

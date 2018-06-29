@@ -75,7 +75,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(bankSpace);
 
 
-            string codeNoString = "FM-PJ-00-03-004";
+            string codeNoString = "FM-PJ-00-03-003";
             Paragraph codeNo = new Paragraph(codeNoString, bold_font) { Alignment = Element.ALIGN_RIGHT };
             document.Add(codeNo);
 
