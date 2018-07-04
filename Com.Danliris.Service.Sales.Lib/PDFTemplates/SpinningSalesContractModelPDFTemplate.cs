@@ -33,7 +33,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 ppn = "Include PPn 10%";
             }
 
-            var detailprice = viewModel.AccountBank.AccountCurrencyCode + " " + viewModel.Price + " / " + ppn;
+            var detailprice = viewModel.AccountBank.AccountCurrencyCode + " " + string.Format("{0:n2}", viewModel.Price) + " / " + ppn;
 
             var appxLocal = "";
             var date = (viewModel.DeliverySchedule.Value.Day);
@@ -143,7 +143,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             PdfPCell bodyContentRight = new PdfPCell() { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT };
             bodyContentLeft.Phrase = new Phrase("Jenis", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Comodity.Name + " " + viewModel.ComodityDescription, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Comodity.Name, normal_font);
+            tableBody.AddCell(bodyContentLeft);
+            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+            tableBody.AddCell(bodyContentLeft);
+            bodyContentLeft.Phrase = new Phrase("  " + viewModel.ComodityDescription, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Jumlah", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -179,7 +183,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Ongkos Angkut", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.TransportFee, normal_font);
+            bodyContentLeft.Phrase = new Phrase(string.Format(": {0:n2}", Convert.ToDouble(viewModel.TransportFee)), normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Dikirim Ke", normal_font);
             tableBody.AddCell(bodyContentLeft);
