@@ -165,7 +165,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("  " + viewModel.ComodityDescription, normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("Konstruksi / Material", normal_font);
+            bodyContentLeft.Phrase = new Phrase("Material / Konstruksi", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.Product.Name + " " + viewModel.MaterialConstruction.Name + " " + viewModel.YarnMaterial.Name + " " + viewModel.MaterialWidth, normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -179,7 +179,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Harga", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.AccountCurrencyCode + " " + String.Format("{0:n}", viewModel.Price) + " / " + uomLocal + " " + tax, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.AccountCurrencyCode + " " + string.Format("{0:n}", viewModel.Price) + " / " + uomLocal + " " + tax, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Syarat Pembayaran", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -203,7 +203,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Ongkos Angkut", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.TransportFee, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + string.Format("{0:n2}",viewModel.TransportFee), normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Dikirim Ke", normal_font);
             tableBody.AddCell(bodyContentLeft);

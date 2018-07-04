@@ -48,7 +48,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             var tax = viewModel.IncomeTax == "Include PPn" ? "Include PPn 10%" : viewModel.IncomeTax;
 
-            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + viewModel.Price + " / KG";
+            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}",viewModel.Price) + " / KG";
 
             var appx = "";
             var date = viewModel.DeliverySchedule.Value.Day;
@@ -163,7 +163,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Comodity", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Comodity.Name + " " + viewModel.ComodityDescription, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Comodity.Name, normal_font);
+            tableBody.AddCell(bodyContentLeft);
+            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+            tableBody.AddCell(bodyContentLeft);
+            bodyContentLeft.Phrase = new Phrase("  " +viewModel.ComodityDescription, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Quality", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -187,7 +191,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Amount", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.AccountCurrencyCode + " " + amount + " ( " + AmountToText + " " + viewModel.AccountBank.Currency.Description.ToUpper() + " ) (APPROXIMATELLY)", normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.AccountCurrencyCode + " " + string.Format("{0:n2}",amount) + " ( " + AmountToText + " " + viewModel.AccountBank.Currency.Description.ToUpper() + " ) (APPROXIMATELLY)", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Shipment", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -283,7 +287,6 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(signature);
             #endregion
 
-
             #region ConditionPage
             document.NewPage();
 
@@ -324,7 +327,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(viewModel.AccountBank.BankName, normal_font);
+            cellIdentityContentLeft.Phrase = new Phrase("PAYMENT TO BE TRANSFERRED TO BANK : "+viewModel.AccountBank.BankName, normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
@@ -459,10 +462,13 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 #endregion
 
                 #region agentBody
-                string agentFirstParagraphString = "This is to confirm that your order for " + viewModel.Buyer.Name + " concerning " + viewModel.OrderQuantity + " ( " + QuantityToText + ") " + uom + " ( ABOUT: " + convertion.ToString("N2") + " KG ) of "+ viewModel.Comodity.Name +" "+ viewModel.ComodityDescription;
+                string agentFirstParagraphString = "This is to confirm that your order for " + viewModel.Buyer.Name + " concerning " + viewModel.OrderQuantity + " ( " + QuantityToText + ") " + uom + " ( ABOUT: " + convertion.ToString("N2") + " KG ) of " + viewModel.Comodity.Name;
                 Paragraph agentFirstParagraph = new Paragraph(agentFirstParagraphString, normal_font) { Alignment = Element.ALIGN_JUSTIFIED };
-                agentFirstParagraph.SpacingAfter = 10f;
                 document.Add(agentFirstParagraph);
+                string agentFirstParagraphStringDescription = viewModel.ComodityDescription;
+                Paragraph agentFirstParagraphDescription = new Paragraph(agentFirstParagraphStringDescription, normal_font) { Alignment = Element.ALIGN_JUSTIFIED };
+                agentFirstParagraphDescription.SpacingAfter = 10f;
+                document.Add(agentFirstParagraphDescription);
                 string agentSecondParagraphString = "Placed with us, P.T. DAN LIRIS - SOLO INDONESIA, is inclusive of " + viewModel.Comission + " sales commission each KG on " + viewModel.TermOfShipment + " value, payable to you upon final negotiation and clearance of " + viewModel.TermOfPayment.Name + '.';
                 Paragraph agentSecondParagraph = new Paragraph(agentSecondParagraphString, normal_font) { Alignment = Element.ALIGN_JUSTIFIED };
                 agentSecondParagraph.SpacingAfter = 10f;
