@@ -20,6 +20,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
         public string AccountCurrencyId { get; set; }
         [MaxLength(255)]
         public string AccountCurrencyCode { get; set; }
+        [MaxLength(255)]
+        public string SwiftCode { get; set; }
         public CurrencyViewModel Currency { get; set; }
     }
 }

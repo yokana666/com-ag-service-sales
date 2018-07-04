@@ -94,6 +94,8 @@ namespace Com.Danliris.Service.Sales.Lib.Models.Spinning
         public string AgentName { get; set; }
         [MaxLength(255)]
         public string AgentCode { get; set; }
+        [MaxLength(255)]
+        public string UomUnit { get; set; }
 
     }
 }

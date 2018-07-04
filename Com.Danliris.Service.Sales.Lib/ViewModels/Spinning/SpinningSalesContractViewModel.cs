@@ -32,6 +32,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.Spinning
         public double Price { get; set; }
         [MaxLength(1000)]
         public string Comission { get; set; }
+        public string UomUnit { get; set; }
         public DateTimeOffset? DeliverySchedule { get; set; }
         public string ShipmentDescription { get; set; }
         [MaxLength(1000)]

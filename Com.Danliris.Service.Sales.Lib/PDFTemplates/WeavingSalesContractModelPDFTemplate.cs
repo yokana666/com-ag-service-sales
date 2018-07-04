@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Nut;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 
 namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 {
@@ -22,6 +24,49 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = PdfWriter.GetInstance(document, stream);
             document.Open();
+
+            #region customViewModel
+
+            var uomLocal = "";
+            if (viewModel.Uom.Unit.ToLower() == "yds")
+            {
+                uomLocal = "YARD";
+            }
+            else if (viewModel.Uom.Unit.ToLower() == "mtr")
+            {
+                uomLocal = "METER";
+            }
+            else
+            {
+                uomLocal = viewModel.Uom.Unit;
+            }
+
+            var ppn = viewModel.IncomeTax;
+            if (ppn == "Include PPn")
+            {
+                ppn = "Include PPn 10%";
+            }
+
+            string QuantityToText = NumberToTextIDN.terbilang(viewModel.OrderQuantity);
+
+            var tax = viewModel.IncomeTax == "Include PPn" ? "Include PPn 10%" : viewModel.IncomeTax;
+
+            var appxLocal = "";
+            var date = viewModel.DeliverySchedule.Value.Day;
+            if (date >= 1 && date <= 10)
+            {
+                appxLocal = "AWAL";
+            }
+            else if (date >= 11 && date <= 20)
+            {
+                appxLocal = "PERTENGAHAN";
+            }
+            else if (date >= 21 && date <= 31)
+            {
+                appxLocal = "AKHIR";
+            }
+
+            #endregion
 
             #region Header
 
@@ -67,7 +112,6 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(tableIdentity);
 
             PdfPTable tableIdentityOpeningLetter = new PdfPTable(3);
-            tableIdentity.SetWidths(new float[] { 2f, 4.5f, 2.5f });
             cellIdentityContentLeft.Phrase = new Phrase("Kepada Yth :", normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
             cellIdentityContentRight.Phrase = new Phrase("");
@@ -90,6 +134,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
             cellIdentityContentRight.Phrase = new Phrase("");
             tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             PdfPCell cellIdentityOpeningLetter = new PdfPCell(tableIdentityOpeningLetter); // dont remove
             tableIdentityOpeningLetter.ExtendLastRow = false;
             tableIdentityOpeningLetter.SpacingAfter = 10f;
@@ -108,20 +154,24 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region body
             PdfPTable tableBody = new PdfPTable(2);
-            tableBody.SetWidths(new float[] { 0.75f, 2f });
+            tableBody.SetWidths(new float[] { 0.75f, 1f });
             PdfPCell bodyContentLeft = new PdfPCell() { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_LEFT };
             PdfPCell bodyContentRight = new PdfPCell() { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT };
             bodyContentLeft.Phrase = new Phrase("Jenis", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Product.Name + " " + viewModel.MaterialConstruction.Name + " " + viewModel.YarnMaterial.Name + " " + viewModel.MaterialWidth, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Comodity.Name + " " + viewModel.ComodityDescription, normal_font);
+            tableBody.AddCell(bodyContentLeft);
+            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+            tableBody.AddCell(bodyContentLeft);
+            bodyContentLeft.Phrase = new Phrase("  " + viewModel.ComodityDescription, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Konstruksi / Material", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.MaterialConstruction.Name + " " + viewModel.ComodityDescription, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Product.Name + " " + viewModel.MaterialConstruction.Name + " " + viewModel.YarnMaterial.Name + " " + viewModel.MaterialWidth, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Jumlah", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity + " (" + QuantityToText + ") " + uomLocal, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Kualitas", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -129,7 +179,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Harga", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.Price, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.AccountCurrencyCode + " " + String.Format("{0:n}", viewModel.Price) + " / " + uomLocal + " " + tax, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Syarat Pembayaran", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -145,11 +195,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.AccountBank.AccountNumber, normal_font);
+            bodyContentLeft.Phrase = new Phrase("  A/C. " + viewModel.AccountBank.AccountNumber, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.AccountBank.AccountName, normal_font);
+            bodyContentLeft.Phrase = new Phrase("  A/N. " + viewModel.AccountBank.AccountName, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Ongkos Angkut", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -161,7 +211,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Jadwal Pengiriman", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.DeliverySchedule, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + appxLocal + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("id-ID"))).ToUpper(), normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Piece length", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -231,14 +281,13 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(signature);
             #endregion
 
-
             #region ConditionPage
             document.NewPage();
 
             string blankSpaceCondition = " ";
-            Paragraph blankConditionSpace = new Paragraph(blankString, normal_font);
-            bankSpace.SpacingAfter = 100f;
-            document.Add(bankSpace);
+            Paragraph blankConditionSpace = new Paragraph(blankSpaceCondition, normal_font);
+            blankConditionSpace.SpacingAfter = 100f;
+            document.Add(blankConditionSpace);
 
             string ConditionString = "Kondisi";
             Paragraph ConditionName = new Paragraph(ConditionString, header_font) { Alignment = Element.ALIGN_LEFT };
@@ -337,12 +386,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #endregion
 
-
             document.Close();
             byte[] byteInfo = stream.ToArray();
             stream.Write(byteInfo, 0, byteInfo.Length);
             stream.Position = 0;
-
             return stream;
         }
     }
