@@ -7,7 +7,7 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface
 {
     public interface IBaseFacade<TModel>
     {
-        Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Read(int Page, int Size, string Order, List<string> Select, string Keyword, string Filter);
+        ReadResponse<TModel> Read(int page, int size, string order, List<string> select, string keyword, string filter);
         Task<int> CreateAsync(TModel model);
         Task<TModel> ReadByIdAsync(int id);
         Task<int> UpdateAsync(int id, TModel model);

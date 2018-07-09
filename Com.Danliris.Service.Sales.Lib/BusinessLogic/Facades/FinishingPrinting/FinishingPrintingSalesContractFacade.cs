@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
@@ -40,10 +38,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
             return await DbContext.SaveChangesAsync();
         }
 
-        public Tuple<List<FinishingPrintingSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int Page, int Size, string Order, List<string> Select, string Keyword, string Filter)
+        public ReadResponse<FinishingPrintingSalesContractModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
-            return finishingPrintingSalesContractLogic.Read(Page, Size, Order, Select, Keyword, Filter);
+            return finishingPrintingSalesContractLogic.Read(page, size, order, select, keyword, filter);
         }
+
         public async Task<FinishingPrintingSalesContractModel> ReadByIdAsync(int id)
         {
             return await finishingPrintingSalesContractLogic.ReadByIdAsync(id);

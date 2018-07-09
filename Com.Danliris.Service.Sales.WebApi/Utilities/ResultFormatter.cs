@@ -1,4 +1,5 @@
-﻿using Com.Danliris.Service.Sales.Lib.Utilities;
+﻿using AutoMapper;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,8 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
             return Result;
         }
 
-        public Dictionary<string, object> Ok<TViewModel>(List<TViewModel> Data, int Page, int Size, int TotalData, int TotalPageData, Dictionary<string, string> Order, List<string> Select)
+
+        public Dictionary<string, object> Ok<TViewModel>(IMapper mapper, List<TViewModel> Data, int Page, int Size, int TotalData, int TotalPageData, Dictionary<string, string> Order, List<string> Select)
         {
             Dictionary<string, object> Info = new Dictionary<string, object>
             {
@@ -52,6 +54,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
             }
 
             Result.Add("info", Info);
+
             return Result;
         }
 

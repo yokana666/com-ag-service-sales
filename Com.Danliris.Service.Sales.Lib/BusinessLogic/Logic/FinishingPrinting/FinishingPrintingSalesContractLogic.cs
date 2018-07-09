@@ -1,7 +1,9 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
+using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Moonlay.Models;
+using Com.Moonlay.NetCore.Lib;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -14,11 +16,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 {
     public class FinishingPrintingSalesContractLogic : BaseLogic<FinishingPrintingSalesContractModel>
     {
-        public FinishingPrintingSalesContractLogic(IServiceProvider serviceProvider, SalesDbContext dbContext) : base(serviceProvider, dbContext)
+        private FinishingPrintingSalesContractDetailLogic FinishingPrintingSalesContractDetailLogic;
+        public FinishingPrintingSalesContractLogic(FinishingPrintingSalesContractDetailLogic finishingPrintingSalesContractDetailLogic, IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService, serviceProvider, dbContext)
         {
+            this.FinishingPrintingSalesContractDetailLogic = finishingPrintingSalesContractDetailLogic;
         }
 
-        public override Tuple<List<FinishingPrintingSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        public override ReadResponse<FinishingPrintingSalesContractModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             IQueryable<FinishingPrintingSalesContractModel> Query = DbSet;
 
@@ -52,10 +56,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
             Query = QueryHelper<FinishingPrintingSalesContractModel>.Order(Query, OrderDictionary);
 
-            List<FinishingPrintingSalesContractModel> Data = Query.Skip((page - 1) * size).Take(size).ToList();
-            int TotalData = DbSet.Count();
 
-            return Tuple.Create(Data, TotalData, OrderDictionary, SelectedFields);
+            Pageable<FinishingPrintingSalesContractModel> pageable = new Pageable<FinishingPrintingSalesContractModel>(Query, page - 1, size);
+            List<FinishingPrintingSalesContractModel> data = pageable.Data.ToList<FinishingPrintingSalesContractModel>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<FinishingPrintingSalesContractModel>(data, totalData, OrderDictionary, SelectedFields);
         }
 
         public override void Create(FinishingPrintingSalesContractModel model)
@@ -63,7 +69,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             SalesContractNumberGenerator(model);
             foreach (var detail in model.Details)
             {
-                EntityExtension.FlagForCreate(detail, IdentityService.Username, "sales-service");
+                FinishingPrintingSalesContractDetailLogic.Create(detail);
+                //EntityExtension.FlagForCreate(detail, IdentityService.Username, "sales-service");
             }
 
             EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
@@ -77,11 +84,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             return finishingPrintingSalesContract;
         }
 
-        public override void Update(int id, FinishingPrintingSalesContractModel model)
+        public override async void Update(int id, FinishingPrintingSalesContractModel model)
         {
-            foreach (var item in model.Details)
+            if (model.Details != null)
             {
-                EntityExtension.FlagForUpdate(item, IdentityService.Username, "sales-service");
+                HashSet<long> detailIds = FinishingPrintingSalesContractDetailLogic.GetFPSalesContractIds(id);
+                foreach (var itemId in detailIds)
+                {
+                    FinishingPrintingSalesContractDetailModel data = model.Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                    if (data == null)
+                        await FinishingPrintingSalesContractDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
+                    else
+                    {
+                        FinishingPrintingSalesContractDetailLogic.Update(Convert.ToInt32(itemId), data);
+                    }
+
+                    foreach (FinishingPrintingSalesContractDetailModel item in model.Details)
+                    {
+                        if (item.Id == 0)
+                            FinishingPrintingSalesContractDetailLogic.Create(item);
+                    }
+                }
             }
 
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");

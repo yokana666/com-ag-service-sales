@@ -1,8 +1,6 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.Models.Spinning
 {
@@ -96,6 +94,5 @@ namespace Com.Danliris.Service.Sales.Lib.Models.Spinning
         public string AgentCode { get; set; }
         [MaxLength(255)]
         public string UomUnit { get; set; }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Spinning;
 using Com.Danliris.Service.Sales.Lib.Models.Spinning;
 using Com.Danliris.Service.Sales.Lib.PDFTemplates;
 using Com.Danliris.Service.Sales.Lib.Services;
@@ -23,10 +24,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/sales/spinning-sales-contracts")]
     [Authorize]
-    public class SpinningSalesContractController : BaseController<SpinningSalesContractModel, SpinningSalesContractViewModel, SpinningSalesContractFacade>
+    public class SpinningSalesContractController : BaseController<SpinningSalesContractModel, SpinningSalesContractViewModel, ISpinningSalesContract>
     {
         private readonly static string apiVersion = "1.0";
-        public SpinningSalesContractController(IMapper mapper, IdentityService identityService, ValidateService validateService, SpinningSalesContractFacade spinningSalesContractFacade) : base(mapper, identityService, validateService, spinningSalesContractFacade, apiVersion)
+        public SpinningSalesContractController(IIdentityService identityService, IValidateService validateService, ISpinningSalesContract spinningSalesContractFacade,IMapper mapper) : base(identityService, validateService, spinningSalesContractFacade, mapper, apiVersion)
         {
         }
 
