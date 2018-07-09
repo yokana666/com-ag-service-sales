@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.Services
 {
-    public class ValidateService
+    public class ValidateService : IValidateService
     {
         private readonly IServiceProvider serviceProvider;
 

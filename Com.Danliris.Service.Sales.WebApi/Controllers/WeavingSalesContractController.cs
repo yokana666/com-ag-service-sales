@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Weaving;
 using Com.Danliris.Service.Sales.Lib.Models.Weaving;
 using Com.Danliris.Service.Sales.Lib.PDFTemplates;
 using Com.Danliris.Service.Sales.Lib.Services;
@@ -23,10 +24,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/sales/weaving-sales-contracts")]
     [Authorize]
-    public class WeavingSalesContractController : BaseController<WeavingSalesContractModel, WeavingSalesContractViewModel, WeavingSalesContractFacade>
+    public class WeavingSalesContractController : BaseController<WeavingSalesContractModel, WeavingSalesContractViewModel, IWeavingSalesContract>
     {
         private readonly static string apiVersion = "1.0";
-        public WeavingSalesContractController(IMapper mapper, IdentityService identityService, ValidateService validateService, WeavingSalesContractFacade weavingSalesContractFacade) : base(mapper, identityService, validateService, weavingSalesContractFacade, apiVersion)
+        public WeavingSalesContractController(IIdentityService identityService, IValidateService validateService, IWeavingSalesContract weavingSalesContractFacade, IMapper mapper) : base(identityService, validateService, weavingSalesContractFacade, mapper, apiVersion)
         {
         }
 

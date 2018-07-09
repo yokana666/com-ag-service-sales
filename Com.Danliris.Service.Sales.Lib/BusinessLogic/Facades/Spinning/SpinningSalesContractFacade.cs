@@ -46,11 +46,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning
             return await DbContext.SaveChangesAsync();
         }
 
-        public Tuple<List<SpinningSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
-        {
-            return SpinningSalesContractLogic.Read(page, size, order, select, keyword, filter);
-        }
-
         public async Task<SpinningSalesContractModel> ReadByIdAsync(int id)
         {
             return await SpinningSalesContractLogic.ReadByIdAsync(id);
@@ -95,6 +90,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning
                 }
             }
             return Model;
+        }
+
+        public ReadResponse<SpinningSalesContractModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            return SpinningSalesContractLogic.Read(page, size, order, select, keyword, filter);
         }
     }
 }

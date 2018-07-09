@@ -1,6 +1,9 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Models.Spinning;
+using Com.Danliris.Service.Sales.Lib.Models.Weaving;
+using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
+using Com.Moonlay.NetCore.Lib;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,10 +14,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Spinning
 {
     public class SpinningSalesContractLogic : BaseLogic<SpinningSalesContractModel>
     {
-        public SpinningSalesContractLogic(IServiceProvider serviceProvider, SalesDbContext dbContext) : base(serviceProvider, dbContext)
+        public SpinningSalesContractLogic(IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService,serviceProvider, dbContext)
         {
         }
-        public override Tuple<List<SpinningSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        public override ReadResponse<SpinningSalesContractModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             IQueryable<SpinningSalesContractModel> Query = this.DbSet;
 
@@ -50,10 +53,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Spinning
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
             Query = QueryHelper<SpinningSalesContractModel>.Order(Query, OrderDictionary);
 
-            List<SpinningSalesContractModel> Data = Query.Skip((page - 1) * size).Take(size).ToList();
-            int TotalData = DbSet.Count();
+            Pageable<SpinningSalesContractModel> pageable = new Pageable<SpinningSalesContractModel>(Query, page - 1, size);
+            List<SpinningSalesContractModel> data = pageable.Data.ToList<SpinningSalesContractModel>();
+            int totalData = pageable.TotalCount;
 
-            return Tuple.Create(Data, TotalData, OrderDictionary, SelectedFields);
+            return new ReadResponse<SpinningSalesContractModel>(data, totalData, OrderDictionary, SelectedFields);
         }
     }
 }

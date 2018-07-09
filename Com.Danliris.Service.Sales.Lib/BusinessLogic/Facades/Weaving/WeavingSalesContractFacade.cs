@@ -3,6 +3,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Weaving;
 using Com.Danliris.Service.Sales.Lib.Models.Weaving;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
+using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -40,11 +41,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
             WeavingSalesContractLogic.Create(data);
 
             return await DbContext.SaveChangesAsync();
-        }
-
-        public Tuple<List<WeavingSalesContractModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter)
-        {
-            return WeavingSalesContractLogic.Read(page, size, order, select, keyword, filter);
         }
 
         public async Task<WeavingSalesContractModel> ReadByIdAsync(int id)
@@ -98,6 +94,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
             }
 
             return Model;
+        }
+
+        public ReadResponse<WeavingSalesContractModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            return WeavingSalesContractLogic.Read(page, size, order, select, keyword, filter);
         }
     }
 }

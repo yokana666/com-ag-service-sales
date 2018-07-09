@@ -14,15 +14,15 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
        where TModel : BaseModel
     {
         protected DbSet<TModel> DbSet;
-        protected IdentityService IdentityService;
+        protected IIdentityService IdentityService;
 
-        public BaseLogic(IServiceProvider serviceProvider, SalesDbContext dbContext)
+        public BaseLogic(IIdentityService IdentityService,IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             this.DbSet = dbContext.Set<TModel>();
-            this.IdentityService = serviceProvider.GetService<IdentityService>();
+            this.IdentityService = IdentityService;
         }
 
-        public abstract Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Read(int page, int size, string order, List<string> select, string keyword, string filter);
+        public abstract ReadResponse<TModel> Read(int page, int size, string order, List<string> select, string keyword, string filter);
 
         public virtual void Create(TModel model)
         {

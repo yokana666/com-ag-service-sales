@@ -24,6 +24,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Com.Danliris.Service.Sales.WebApi.Utilities;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Weaving;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Spinning;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrinting;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -42,9 +45,9 @@ namespace Com.Danliris.Service.Sales.WebApi
         private void RegisterFacades(IServiceCollection services)
         {
             services
-                .AddTransient<WeavingSalesContractFacade>()
-                .AddTransient<SpinningSalesContractFacade>()
-                .AddTransient<FinishingPrintingSalesContractFacade>();
+                .AddTransient<IWeavingSalesContract, WeavingSalesContractFacade>()
+                .AddTransient<ISpinningSalesContract,SpinningSalesContractFacade>()
+                .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -59,8 +62,8 @@ namespace Com.Danliris.Service.Sales.WebApi
         private void RegisterServices(IServiceCollection services)
         {
             services
-                .AddScoped<IdentityService>()
-                .AddScoped<ValidateService>();
+                .AddScoped<IIdentityService,IdentityService>()
+                .AddScoped<IValidateService,ValidateService>();
         }
 
         private void RegisterEndpoint()
