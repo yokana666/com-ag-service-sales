@@ -53,7 +53,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning
 
         public async Task<int> UpdateAsync(int id, SpinningSalesContractModel model)
         {
-            SpinningSalesContractLogic.Update(id, model);
+            SpinningSalesContractLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
 

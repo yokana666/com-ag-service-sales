@@ -43,6 +43,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
         public bool UseIncomeTax { get; set; }
         public UomViewModel UOM { get; set; }
         public YarnMaterialViewModel YarnMaterial { get; set; }
+        public double RemainingQuantity { get; set; }
         public List<FinishingPrintingSalesContractDetailViewModel> Details { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

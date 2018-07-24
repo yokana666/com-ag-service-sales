@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using Nut;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 
 namespace Com.Danliris.Service.Sales.Lib.PDFTemplates

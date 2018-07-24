@@ -128,6 +128,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting
         [MaxLength(1000)]
         public string TransportFee { get; set; }
         public bool UseIncomeTax { get; set; }
+        public double RemainingQuantity { get; set; }
         #region UOM
         public int UOMID { get; set; }
         [MaxLength(255)]

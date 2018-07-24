@@ -28,7 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             List<string> SearchAttributes = new List<string>()
             {
-                "SalesContractNo", "Buyer.Type", "Buyer.Name"
+                "SalesContractNo"
             };
 
             Query = QueryHelper<FinishingPrintingSalesContractModel>.Search(Query, SearchAttributes, keyword);
@@ -38,7 +38,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer", "DeliverySchedule", "SalesContractNo", "LastModifiedUtc"
+                "Id", "Code", "Buyer", "DeliverySchedule","OrderType", "SalesContractNo","YarnMaterial", "LastModifiedUtc","Material","DesignMotive","MaterialWidth"
             };
 
             Query = Query
@@ -47,15 +47,30 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
                     Id = field.Id,
                     Code = field.Code,
                     SalesContractNo = field.SalesContractNo,
+                    BuyerCode = field.BuyerCode,
                     BuyerType = field.BuyerType,
                     BuyerName = field.BuyerName,
+                    BuyerID = field.BuyerID,
+                    DesignMotiveID = field.DesignMotiveID,
+                    DesignMotiveCode = field.DesignMotiveCode,
+                    DesignMotiveName = field.DesignMotiveName,
+                    MaterialCode = field.MaterialCode,
+                    MaterialID = field.MaterialID,
+                    MaterialName = field.MaterialName,
+                    OrderQuantity = field.OrderQuantity,
+                    OrderTypeCode = field.OrderTypeCode,
+                    OrderTypeID = field.OrderTypeID,
+                    OrderTypeName = field.OrderTypeName,
                     DeliverySchedule = field.DeliverySchedule,
+                    YarnMaterialID = field.YarnMaterialID,
+                    YarnMaterialCode = field.YarnMaterialCode,
+                    YarnMaterialName = field.YarnMaterialName,
+                    MaterialWidth = field.MaterialWidth,
                     LastModifiedUtc = field.LastModifiedUtc
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
             Query = QueryHelper<FinishingPrintingSalesContractModel>.Order(Query, OrderDictionary);
-
 
             Pageable<FinishingPrintingSalesContractModel> pageable = new Pageable<FinishingPrintingSalesContractModel>(Query, page - 1, size);
             List<FinishingPrintingSalesContractModel> data = pageable.Data.ToList<FinishingPrintingSalesContractModel>();
@@ -84,7 +99,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             return finishingPrintingSalesContract;
         }
 
-        public override async void Update(int id, FinishingPrintingSalesContractModel model)
+        public override async void UpdateAsync(int id, FinishingPrintingSalesContractModel model)
         {
             if (model.Details != null)
             {
@@ -93,10 +108,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
                 {
                     FinishingPrintingSalesContractDetailModel data = model.Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
                     if (data == null)
-                        await FinishingPrintingSalesContractDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
+                    await FinishingPrintingSalesContractDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
                     else
                     {
-                        FinishingPrintingSalesContractDetailLogic.Update(Convert.ToInt32(itemId), data);
+                        FinishingPrintingSalesContractDetailLogic.UpdateAsync(Convert.ToInt32(itemId), data);
                     }
 
                     foreach (FinishingPrintingSalesContractDetailModel item in model.Details)

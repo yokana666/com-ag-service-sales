@@ -5,6 +5,7 @@ using Com.Moonlay.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -20,6 +21,13 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<FinishingPrintingSalesContractModel> FinishingPrintingSalesContracts { get; set; }
         public DbSet<FinishingPrintingSalesContractDetailModel> FinishingPrintingSalesContractDetails { get; set; }
 
+        #region PRODUCTION ORDER DBSET
+        public DbSet<ProductionOrderModel> ProductionOrder { get; set; }
+        public DbSet<ProductionOrder_DetailModel> ProductionOrder_Details { get; set; }
+        public DbSet<ProductionOrder_LampStandardModel> ProductionOrder_LampStandard { get; set; }
+        public DbSet<ProductionOrder_RunWidthModel> ProductionOrder_RunWidth { get; set; }
+
+        #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -50,7 +50,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
 
         public async Task<int> UpdateAsync(int id, WeavingSalesContractModel model)
         {
-            WeavingSalesContractLogic.Update(id, model);
+            WeavingSalesContractLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
 
