@@ -80,15 +80,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
 
                         productionOrderModel.LampStandards = LampStandardsTemp;
 
-                        productionOrderModel.Details.Clear();
-                        productionOrderModel.Details.Add(DetailsTemp.ElementAt(i));
-                        if (i > 0)
-                        {
-                            productionOrderModel.LampStandards.Clear();
-                            productionOrderModel.RunWidths.Clear();
-                            productionOrderModel.LampStandards.Clear();
-                        }
-
                         do
                         {
                             productionOrderModel.Code = CodeGenerator.Generate();
