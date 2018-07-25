@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
@@ -28,6 +29,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
 
         public async Task<int> CreateAsync(FinishingPrintingSalesContractModel model)
         {
+            do
+            {
+                model.Code = CodeGenerator.Generate();
+            }
+            while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
+
             finishingPrintingSalesContractLogic.Create(model);
             return await DbContext.SaveChangesAsync();
         }
@@ -50,7 +57,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
 
         public async Task<int> UpdateAsync(int id, FinishingPrintingSalesContractModel model)
         {
-            finishingPrintingSalesContractLogic.Update(id, model);
+            finishingPrintingSalesContractLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
     }

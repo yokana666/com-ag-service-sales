@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
+using System.Linq;
 
 namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
 {
@@ -35,7 +36,7 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
             return DbSet.FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
         }
 
-        public virtual void Update(int id, TModel model)
+        public virtual void UpdateAsync(int id, TModel model)
         {
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);

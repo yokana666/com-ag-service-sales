@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180723123300_addKeyModel")]
+    partial class addKeyModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -427,7 +429,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
-                    b.Property<long?>("ProductionOrderModelId");
+                    b.Property<long>("ProductionOrderModelId");
 
                     b.Property<double>("Quantity");
 
@@ -482,8 +484,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<long>("LampStandardId");
-
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -497,7 +497,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(1000);
 
-                    b.Property<long?>("ProductionOrderModelId");
+                    b.Property<long>("ProductionOrderModelId");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
@@ -561,6 +561,67 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasIndex("ProductionOrderModelId");
 
                     b.ToTable("ProductionOrder_RunWidth");
+                });
+
+            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.ProductionOrder.ProductionOrder_StandardTestsModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("CreatedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("CreatedUtc");
+
+                    b.Property<string>("DeletedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("DeletedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("DeletedUtc");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("LastModifiedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("LastModifiedUtc");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(1000);
+
+                    b.Property<long?>("ProductionOrderModelId");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(1000);
+
+                    b.Property<string>("UId")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductionOrderModelId");
+
+                    b.ToTable("ProductionOrder_StandardTests");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.ProductionOrder.ProductionOrderModel", b =>
@@ -1203,6 +1264,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                 {
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.ProductionOrder.ProductionOrderModel", "ProductionOrderModel")
                         .WithMany("RunWidths")
+                        .HasForeignKey("ProductionOrderModelId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.ProductionOrder.ProductionOrder_StandardTestsModel", b =>
+                {
+                    b.HasOne("Com.Danliris.Service.Sales.Lib.Models.ProductionOrder.ProductionOrderModel", "ProductionOrderModel")
+                        .WithMany()
                         .HasForeignKey("ProductionOrderModelId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

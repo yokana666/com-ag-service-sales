@@ -7,7 +7,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
 {
     public class UomViewModel
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         [MaxLength(255)]
         public string Unit { get; set; }
     }
