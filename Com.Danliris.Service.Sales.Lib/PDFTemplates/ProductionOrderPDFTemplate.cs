@@ -158,7 +158,23 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             if (!string.IsNullOrWhiteSpace(viewModel.Run) && (viewModel.RunWidths.Count > 0))
             {
-
+                var index = 0;
+                foreach (ProductionOrder_RunWidthViewModel runwidths in viewModel.RunWidths)
+                {
+                    index++;
+                    cellIdentityContentLeft.Phrase = new Phrase("Lebar RUN (cm)", normal_font);
+                    tableIdentity1.AddCell(cellIdentityContentLeft);
+                    if (index > 1)
+                    {
+                        cellIdentityContentLeft.Phrase = new Phrase("  " + runwidths.Value, normal_font);
+                        tableIdentity1.AddCell(cellIdentityContentLeft);
+                    }
+                    else
+                    {
+                        cellIdentityContentLeft.Phrase = new Phrase(": " + runwidths.Value, normal_font);
+                        tableIdentity1.AddCell(cellIdentityContentLeft);
+                    }
+                }
             }
 
             cellIdentityContentLeft.Phrase = new Phrase("Standar Shrinkage", normal_font);
@@ -250,7 +266,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             cellIdentityContentCenterWithBorder.Phrase = new Phrase("Total", normal_font);
             tableBody2.AddCell(new PdfPCell(cellIdentityContentCenterWithBorder) { Colspan = 3 });
-            cellIdentityContentCenterWithBorder.Phrase = new Phrase(string.Format("{0:n2}", Total) +" "+ uom, normal_font);
+            cellIdentityContentCenterWithBorder.Phrase = new Phrase(string.Format("{0:n2}", Total) + " " + uom, normal_font);
             tableBody2.AddCell(cellIdentityContentCenterWithBorder);
 
 
