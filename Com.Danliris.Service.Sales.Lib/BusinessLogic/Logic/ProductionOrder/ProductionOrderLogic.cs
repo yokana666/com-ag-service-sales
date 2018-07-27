@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer", "LastModifiedUtc","SalesContractNo","OrderNo"
+                "Id", "Code", "Buyer","ProcessType", "LastModifiedUtc","FinishingPrintingSalesContract","OrderNo"
             };
 
             Query = Query
@@ -56,7 +56,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     SalesContractNo = field.SalesContractNo,
                     BuyerType = field.BuyerType,
                     BuyerName = field.BuyerName,
-                    //DeliverySchedule = field.DeliverySchedule,
+                    OrderNo = field.OrderNo,
+                    ProcessTypeName = field.ProcessTypeName,
                     LastModifiedUtc = field.LastModifiedUtc
                 });
 
@@ -149,7 +150,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                 }
             }
 
-            if (model.LampStandards.Count>0) {
+            if (model.LampStandards.Count > 0)
+            {
                 foreach (var lampStandards in model.LampStandards)
                 {
                     lampStandards.Id = 0;
@@ -195,6 +197,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
             DbSet.Update(model);
+        }
+
+        public override async Task<ProductionOrderModel> ReadByIdAsync(int id)
+        {
+            var ProductionOrder = await DbSet.Include(p => p.Details).Include(p => p.LampStandards).Include(p => p.RunWidths).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
+            ProductionOrder.Details = ProductionOrder.Details.OrderBy(s => s.Id).ToArray();
+            ProductionOrder.LampStandards = ProductionOrder.LampStandards.OrderBy(s => s.Id).ToArray();
+            ProductionOrder.RunWidths = ProductionOrder.RunWidths.OrderBy(s => s.Id).ToArray();
+            return ProductionOrder;
         }
     }
 }
