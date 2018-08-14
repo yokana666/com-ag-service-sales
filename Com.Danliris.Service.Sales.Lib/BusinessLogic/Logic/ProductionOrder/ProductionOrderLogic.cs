@@ -35,7 +35,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SearchAttributes = new List<string>()
             {
-              ""
+              "OrderNo", "SalesContractNo", "BuyerType", "BuyerName", "ProcessTypeName"
             };
 
             Query = QueryHelper<ProductionOrderModel>.Search(Query, SearchAttributes, keyword);
