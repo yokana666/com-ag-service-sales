@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer","ProcessType", "LastModifiedUtc","FinishingPrintingSalesContract","OrderNo"
+                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "Material"
             };
 
             Query = Query
@@ -53,12 +53,28 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                 {
                     Id = field.Id,
                     Code = field.Code,
+                    HandlingStandard = field.HandlingStandard,
+                    MaterialId = field.MaterialId,
+                    MaterialCode = field.MaterialCode,
+                    MaterialName = field.MaterialName,
+                    MaterialConstructionId = field.MaterialConstructionId,
+                    MaterialConstructionCode = field.MaterialConstructionCode,
+                    MaterialConstructionName = field.MaterialConstructionName,
                     SalesContractNo = field.SalesContractNo,
                     BuyerType = field.BuyerType,
                     BuyerName = field.BuyerName,
                     OrderNo = field.OrderNo,
+                    ProcessTypeId = field.ProcessTypeId,
+                    ProcessTypeCode = field.ProcessTypeCode,
                     ProcessTypeName = field.ProcessTypeName,
-                    LastModifiedUtc = field.LastModifiedUtc
+                    YarnMaterialId = field.YarnMaterialId,
+                    YarnMaterialCode = field.YarnMaterialCode,
+                    YarnMaterialName = field.YarnMaterialName,
+                    OrderTypeId = field.OrderTypeId,
+                    OrderTypeCode = field.OrderTypeCode,
+                    OrderTypeName = field.OrderTypeName,
+                    LastModifiedUtc = field.LastModifiedUtc,
+                    Details = field.Details
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
