@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial"
+                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate"
             };
 
             Query = Query
@@ -53,6 +53,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                 {
                     Id = field.Id,
                     Code = field.Code,
+                    DeliveryDate = field.DeliveryDate,
                     HandlingStandard = field.HandlingStandard,
                     MaterialId = field.MaterialId,
                     MaterialCode = field.MaterialCode,
