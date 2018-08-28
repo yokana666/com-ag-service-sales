@@ -24,8 +24,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region customViewModel
 
-            double spelling = viewModel.ShippingQuantityTolerance;
-            double spellOrder = ((spelling / 100) * viewModel.OrderQuantity) + viewModel.OrderQuantity;
+            double spelling = (double)viewModel.ShippingQuantityTolerance;
+            double spellOrder = ((spelling / 100) * (double)viewModel.OrderQuantity) + (double)viewModel.OrderQuantity;
 
             #endregion
 
@@ -260,7 +260,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                     tableBody2.AddCell(cellIdentityContentCenterWithBorder);
                     cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.Quantity.ToString() + " " + detail.Uom.Unit, normal_font);
                     tableBody2.AddCell(cellIdentityContentCenterWithBorder);
-                    Total += detail.Quantity;
+                    Total += (double)detail.Quantity;
                 }
             }
 

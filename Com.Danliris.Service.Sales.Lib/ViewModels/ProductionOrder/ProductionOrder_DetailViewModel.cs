@@ -15,7 +15,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
         public string ColorTemplate { get; set; }
         [MaxLength(255)]
         public ColorTypeViewModel ColorType { get; set; }
-        public double Quantity { get; set; }
+        public double? Quantity { get; set; }
 
         public UomViewModel Uom { get; set; }
 

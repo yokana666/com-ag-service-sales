@@ -15,8 +15,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
         public string Code { get; set; }
         [MaxLength(255)]
         public string OrderNo { get; set; }
-        public double OrderQuantity { get; set; }
-        public double ShippingQuantityTolerance { get; set; }
+        public double? OrderQuantity { get; set; }
+        public double? ShippingQuantityTolerance { get; set; }
         [MaxLength(255)]
         public string MaterialOrigin { get; set; }
         [MaxLength(255)]
@@ -227,7 +227,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
 
                     foreach (ProductionOrder_DetailViewModel data in this.Details)
                     {
-                        totalqty += data.Quantity;
+                        totalqty += (double)data.Quantity;
                     }
 
                     if (!this.OrderQuantity.Equals(totalqty))
