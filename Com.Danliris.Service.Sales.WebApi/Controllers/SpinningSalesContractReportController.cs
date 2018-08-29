@@ -1,7 +1,6 @@
 ﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning;
 using Com.Danliris.Service.Sales.Lib.Services;
-using Com.Danliris.Service.Sales.WebApi.Helper;
-using Com.Danliris.Service.Sales.WebApi.Utilities;
+using Com.Danliris.Service.Sales.WebApi.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
