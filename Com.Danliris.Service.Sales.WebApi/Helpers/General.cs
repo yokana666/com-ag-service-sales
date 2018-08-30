@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Com.Danliris.Service.Sales.WebApi.Helper
+namespace Com.Danliris.Service.Sales.WebApi.Helpers
 {
     public static class General
     {
