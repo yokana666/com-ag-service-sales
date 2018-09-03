@@ -124,7 +124,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving
                     DateTimeOffset date = item.deliverySchedule ?? new DateTime(1970, 1, 1);
                     string deliverySchedule = date == new DateTime(1970, 1, 1) ? "-" : date.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                     result.Rows.Add(index, item.salesContractNo, item.CreatedUtc.ToString("dd MMM yyyy", new CultureInfo("id-ID")), item.buyerName, item.buyerType, item.dispositionNo, item.comodityName, item.orderQuantity,
-                        item.uomUnit, item.shippingQuantityTolerance, item.qualityName, item.price, item.accountCurrencyCode, item.paymentTo, deliverySchedule, item.agentName, item.comission);
+                        item.uomUnit, item.shippingQuantityTolerance, item.qualityName, item.price, item.accountCurrencyCode, item.termOfPaymentName, item.paymentTo, deliverySchedule, item.agentName, item.comission);
                 }
             }
 
