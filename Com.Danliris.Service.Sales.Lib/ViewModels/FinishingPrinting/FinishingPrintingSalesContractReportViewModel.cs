@@ -16,6 +16,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
         public string yarnMaterialName { get; set; }
         public string materialWidth { get; set; }
         public double orderQuantity { get; set; }
+        public double productionOrderQuantity { get; set; }
         public string uomUnit { get; set; }
         public double shippingQuantityTolerance { get; set; }
         public string qualityName { get; set; }
@@ -28,5 +29,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
         public string comission { get; set; }
         public string color { get; set; }
         public string useIncomeTax { get; set; }
+        public string status { get; set; }
     }
 }
