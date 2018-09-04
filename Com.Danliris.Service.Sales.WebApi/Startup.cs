@@ -50,9 +50,11 @@ namespace Com.Danliris.Service.Sales.WebApi
         {
             services
                 .AddTransient<IWeavingSalesContract, WeavingSalesContractFacade>()
-                .AddTransient<ISpinningSalesContract,SpinningSalesContractFacade>()
+                .AddTransient<ISpinningSalesContract, SpinningSalesContractFacade>()
+                .AddTransient<SpinningSalesContractReportFacade>()
                 .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>()
-                .AddTransient<IProductionOrder, ProductionOrderFacade>();
+                .AddTransient<IProductionOrder, ProductionOrderFacade>()
+                .AddTransient<WeavingSalesContractReportFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
