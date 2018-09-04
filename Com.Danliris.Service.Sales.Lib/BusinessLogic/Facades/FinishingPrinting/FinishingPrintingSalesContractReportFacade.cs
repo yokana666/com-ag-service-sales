@@ -37,9 +37,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
 
             var Query = (from a in DbContext.FinishingPrintingSalesContracts
                          join b in DbContext.FinishingPrintingSalesContractDetails on a.Id equals b.FinishingPrintingSalesContract.Id
-                             //Conditions
+                         //join c in DbContext.ProductionOrder on a.Id equals c.SalesContractId into d
+                         //from po in d.DefaultIfEmpty()
+                         //join e in DbContext.ProductionOrder_Details on po.Id equals e.ProductionOrderModel.Id into f
+                         //from poDetail in f.DefaultIfEmpty()
+                         //Conditions
                          where a.IsDeleted == false
-                         && b.IsDeleted==false
+                             && b.IsDeleted == false
+                             //&& po.IsDeleted==false
+                             //&& poDetail.IsDeleted==false
                              && a.SalesContractNo == (string.IsNullOrWhiteSpace(no) ? a.SalesContractNo : no)
                              && a.BuyerCode == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
                              && a.OrderTypeCode == (string.IsNullOrWhiteSpace(orderTypeCode) ? a.OrderTypeCode : orderTypeCode)
@@ -60,19 +66,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
                              deliverySchedule = a.DeliverySchedule,
                              dispositionNo = a.DispositionNumber,
                              orderQuantity = a.OrderQuantity,
-                             price=b.Price,
+                             price = b.Price,
                              qualityName = a.QualityName,
                              shippingQuantityTolerance = a.ShippingQuantityTolerance,
                              termOfPaymentName = a.TermOfPaymentName,
                              uomUnit = a.UOMUnit,
                              LastModifiedUtc = a.LastModifiedUtc,
-                             materialConstructionName=a.MaterialConstructionName,
-                             materialName=a.MaterialName,
-                             materialWidth=a.MaterialWidth,
-                             orderType=a.OrderTypeName,
-                             yarnMaterialName=a.YarnMaterialName,
-                             color=b.Color,
-                             useIncomeTax=a.UseIncomeTax==false? "Tanpa PPN": b.UseIncomeTax==true? "Including PPN" : "Excluding PPN" 
+                             materialConstructionName = a.MaterialConstructionName,
+                             materialName = a.MaterialName,
+                             materialWidth = a.MaterialWidth,
+                             orderType = a.OrderTypeName,
+                             yarnMaterialName = a.YarnMaterialName,
+                             color = b.Color,
+                             useIncomeTax = a.UseIncomeTax == false ? "Tanpa PPN" : b.UseIncomeTax == true ? "Including PPN" : "Excluding PPN",
+                             productionOrderQuantity = (from d in DbContext.ProductionOrder
+                                                        join e in DbContext.ProductionOrder_Details
+                                                        on d.Id equals e.ProductionOrderModel.Id
+                                                        where d.SalesContractId == a.Id
+                                                        && d.IsDeleted==false
+                                                        && e.IsDeleted==false
+                                                        select e.Quantity).Sum(),
+                             status = DbContext.ProductionOrder.Count(c => c.SalesContractId == a.Id && c.IsDeleted == false) > 0 ? "Sudah dibuat SPP" : "Belum dibuat SPP"
                          });
             return Query;
         }
@@ -141,8 +155,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
                     string deliverySchedule = date == new DateTime(1970, 1, 1) ? "-" : date.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                     result.Rows.Add(index, item.salesContractNo, item.CreatedUtc.ToString("dd MMM yyyy", new CultureInfo("id-ID")), item.buyerName, item.buyerType, 
                         item.dispositionNo,item.orderType, item.comodityName, item.materialName, item.materialConstructionName,item.yarnMaterialName,item.materialWidth,
-                        item.qualityName, item.orderQuantity, 0, item.uomUnit, item.shippingQuantityTolerance, item.termOfPaymentName, item.paymentTo, deliverySchedule,
-                        item.agentName, item.comission, item.color, item.price, item.accountCurrencyCode, item.useIncomeTax, "");
+                        item.qualityName, item.orderQuantity, item.productionOrderQuantity, item.uomUnit, item.shippingQuantityTolerance, item.termOfPaymentName, item.paymentTo, deliverySchedule,
+                        item.agentName, item.comission, item.color, item.price, item.accountCurrencyCode, item.useIncomeTax, item.status);
                 }
             }
 
