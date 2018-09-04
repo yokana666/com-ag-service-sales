@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth"
+                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber"
             };
 
             Query = Query
@@ -65,6 +65,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     SalesContractNo = field.SalesContractNo,
                     BuyerType = field.BuyerType,
                     BuyerName = field.BuyerName,
+                    BuyerId = field.BuyerId,
                     OrderNo = field.OrderNo,
                     ProcessTypeId = field.ProcessTypeId,
                     ProcessTypeCode = field.ProcessTypeCode,
@@ -76,7 +77,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     OrderTypeCode = field.OrderTypeCode,
                     OrderTypeName = field.OrderTypeName,
                     LastModifiedUtc = field.LastModifiedUtc,
-                    Details = field.Details
+                    Details = field.Details,
+                    DesignCode = field.DesignCode,
+                    DesignNumber = field.DesignNumber
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
