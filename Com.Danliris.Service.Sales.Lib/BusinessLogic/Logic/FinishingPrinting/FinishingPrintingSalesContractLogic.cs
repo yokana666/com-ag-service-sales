@@ -163,7 +163,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
                 else
                 {
                     model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
-                    model.SalesContractNo = $"{lastData.AutoIncrementNumber.ToString().PadLeft(4, '0')}/{DocumentType}/{MonthNow}/{YearNow}";
+                    model.SalesContractNo = $"{model.AutoIncrementNumber.ToString().PadLeft(4, '0')}/{DocumentType}/{MonthNow}/{YearNow}";
                 }
             }
         }

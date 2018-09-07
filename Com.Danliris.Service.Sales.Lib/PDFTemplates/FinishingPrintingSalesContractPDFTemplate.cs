@@ -24,7 +24,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region customViewModel
 
-            string jumlahTerbilang = NumberToTextIDN.terbilang(viewModel.OrderQuantity);
+            string jumlahTerbilang = NumberToTextIDN.terbilang((double)viewModel.OrderQuantity);
             List<string> details = new List<string>();
 
             var uomLocal = "";
@@ -44,7 +44,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             foreach (var i in viewModel.Details)
             {
                 var ppn = "";
-                if (viewModel.UseIncomeTax)
+                if ((bool)viewModel.UseIncomeTax)
                 {
                     if (i.UseIncomeTax)
                     {

@@ -10,9 +10,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
     public class FinishingPrintingSalesContractViewModel : BaseViewModel, IValidatableObject
     {
         public AccountBankViewModel AccountBank { get; set; }
-        public double Amount { get; set; }
+        public double? Amount { get; set; }
         public AgentViewModel Agent { get; set; }
-        public int AutoIncrementNumber { get; set; }
+        public int? AutoIncrementNumber { get; set; }
         public BuyerViewModel Buyer { get; set; }
         public string Code { get; set; }
         public string Commission { get; set; }
@@ -23,27 +23,27 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
         public DateTimeOffset? DeliverySchedule { get; set; }
         public OrderTypeViewModel DesignMotive { get; set; }
         public string DispositionNumber { get; set; }
-        public bool FromStock { get; set; }
+        public bool? FromStock { get; set; }
         public ProductViewModel Material { get; set; }
         public MaterialConstructionViewModel MaterialConstruction { get; set; }
         public string MaterialWidth { get; set; }
-        public double OrderQuantity { get; set; }
+        public double? OrderQuantity { get; set; }
         public OrderTypeViewModel OrderType { get; set; }
         public string Packing { get; set; }
         public string PieceLength { get; set; }
-        public double PointLimit { get; set; }
-        public int PointSystem { get; set; }
+        public double? PointLimit { get; set; }
+        public int? PointSystem { get; set; }
         public QualityViewModel Quality { get; set; }
         public string SalesContractNo { get; set; }
         public string ShipmentDescription { get; set; }
-        public double ShippingQuantityTolerance { get; set; }
+        public double? ShippingQuantityTolerance { get; set; }
         public TermOfPaymentViewModel TermOfPayment { get; set; }
         public string TermOfShipment { get; set; }
         public string TransportFee { get; set; }
-        public bool UseIncomeTax { get; set; }
+        public bool? UseIncomeTax { get; set; }
         public UomViewModel UOM { get; set; }
         public YarnMaterialViewModel YarnMaterial { get; set; }
-        public double RemainingQuantity { get; set; }
+        public double? RemainingQuantity { get; set; }
         public List<FinishingPrintingSalesContractDetailViewModel> Details { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

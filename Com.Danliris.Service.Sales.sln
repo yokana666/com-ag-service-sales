@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Service.Sales.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Service.Sales.WebApi", "Com.Danliris.Service.Sales.WebApi\Com.Danliris.Service.Sales.WebApi.csproj", "{05D6FFA2-22A5-4A84-9ECC-4C630CACFF81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Danliris.Sales.Test", "Com.Danliris.Sales.Test\Com.Danliris.Sales.Test.csproj", "{FE0C17EA-33A4-42DD-A794-72CCBEC113E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Sales.Test", "Com.Danliris.Sales.Test\Com.Danliris.Sales.Test.csproj", "{FE0C17EA-33A4-42DD-A794-72CCBEC113E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -35,7 +35,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SearchAttributes = new List<string>()
             {
-              ""
+              "OrderNo", "SalesContractNo", "BuyerType", "BuyerName", "ProcessTypeName"
             };
 
             Query = QueryHelper<ProductionOrderModel>.Search(Query, SearchAttributes, keyword);
@@ -45,7 +45,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer","ProcessType","OrderType","Account", "LastModifiedUtc","FinishingPrintingSalesContract","OrderNo"
+
+                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber"
+
             };
 
             Query = Query
@@ -53,16 +55,34 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                 {
                     Id = field.Id,
                     Code = field.Code,
+                    DeliveryDate = field.DeliveryDate,
+                    HandlingStandard = field.HandlingStandard,
+                    FinishWidth = field.FinishWidth,
+                    MaterialId = field.MaterialId,
+                    MaterialCode = field.MaterialCode,
+                    MaterialName = field.MaterialName,
+                    MaterialConstructionId = field.MaterialConstructionId,
+                    MaterialConstructionCode = field.MaterialConstructionCode,
+                    MaterialConstructionName = field.MaterialConstructionName,
                     SalesContractNo = field.SalesContractNo,
                     BuyerType = field.BuyerType,
                     BuyerName = field.BuyerName,
+                    BuyerId = field.BuyerId,
                     OrderNo = field.OrderNo,
+                    ProcessTypeId = field.ProcessTypeId,
+                    ProcessTypeCode = field.ProcessTypeCode,
                     ProcessTypeName = field.ProcessTypeName,
-                    OrderTypeName=field.OrderTypeName,
-                    OrderTypeCode=field.OrderTypeCode,
-                    AccountUserName=field.AccountUserName,
-                    ProfileFirstName=field.ProfileFirstName,                 
-                    LastModifiedUtc = field.LastModifiedUtc
+
+                    YarnMaterialId = field.YarnMaterialId,
+                    YarnMaterialCode = field.YarnMaterialCode,
+                    YarnMaterialName = field.YarnMaterialName,
+                    OrderTypeId = field.OrderTypeId,
+                    OrderTypeCode = field.OrderTypeCode,
+                    OrderTypeName = field.OrderTypeName,
+                    LastModifiedUtc = field.LastModifiedUtc,
+                    Details = field.Details,
+                    DesignCode = field.DesignCode,
+                    DesignNumber = field.DesignNumber
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);

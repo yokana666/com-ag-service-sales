@@ -1,22 +1,18 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
+namespace Com.Danliris.Service.Sales.Lib.ViewModels.Weaving
 {
-    public class FinishingPrintingSalesContractReportViewModel : BaseViewModel
+    public class WeavingSalesContractReportViewModel : BaseViewModel
     {
         public string salesContractNo { get; set; }
         public string buyerName { get; set; }
         public string buyerType { get; set; }
         public string dispositionNo { get; set; }
-        public string orderType { get; set; }
         public string comodityName { get; set; }
-        public string materialName { get; set; }
-        public string materialConstructionName { get; set; }
-        public string yarnMaterialName { get; set; }
-        public string materialWidth { get; set; }
         public double orderQuantity { get; set; }
-        public double productionOrderQuantity { get; set; }
         public string uomUnit { get; set; }
         public double shippingQuantityTolerance { get; set; }
         public string qualityName { get; set; }
@@ -27,8 +23,5 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
         public DateTimeOffset? deliverySchedule { get; set; }
         public string agentName { get; set; }
         public string comission { get; set; }
-        public string color { get; set; }
-        public string useIncomeTax { get; set; }
-        public string status { get; set; }
     }
 }
