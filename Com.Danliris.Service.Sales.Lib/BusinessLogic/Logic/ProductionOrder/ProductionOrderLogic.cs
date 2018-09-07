@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer","ProcessType", "LastModifiedUtc","FinishingPrintingSalesContract","OrderNo"
+                "Id", "Code", "Buyer","ProcessType","OrderType","Account", "LastModifiedUtc","FinishingPrintingSalesContract","OrderNo"
             };
 
             Query = Query
@@ -58,6 +58,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     BuyerName = field.BuyerName,
                     OrderNo = field.OrderNo,
                     ProcessTypeName = field.ProcessTypeName,
+                    OrderTypeName=field.OrderTypeName,
+                    OrderTypeCode=field.OrderTypeCode,
+                    AccountUserName=field.AccountUserName,
+                    ProfileFirstName=field.ProfileFirstName,                 
                     LastModifiedUtc = field.LastModifiedUtc
                 });
 
@@ -201,7 +205,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
         public override async Task<ProductionOrderModel> ReadByIdAsync(int id)
         {
-            var ProductionOrder = await DbSet.Include(p => p.Details).Include(p => p.LampStandards).Include(p => p.RunWidths).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
+            var ProductionOrder = await DbSet.Where(p=>p.Details.Select(d=>d.ProductionOrderModel.Id).Contains(p.Id)).Include(p => p.Details)
+                .Include(p => p.LampStandards).Include(p => p.RunWidths).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
             ProductionOrder.Details = ProductionOrder.Details.OrderBy(s => s.Id).ToArray();
             ProductionOrder.LampStandards = ProductionOrder.LampStandards.OrderBy(s => s.Id).ToArray();
             ProductionOrder.RunWidths = ProductionOrder.RunWidths.OrderBy(s => s.Id).ToArray();

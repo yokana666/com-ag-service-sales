@@ -15,7 +15,6 @@ namespace Com.Danliris.Service.Sales.Lib
         {
         }
 
-
         public DbSet<WeavingSalesContractModel> WeavingSalesContract { get; set; }
         public DbSet<SpinningSalesContractModel> SpinningSalesContract { get; set; }
         public DbSet<FinishingPrintingSalesContractModel> FinishingPrintingSalesContracts { get; set; }

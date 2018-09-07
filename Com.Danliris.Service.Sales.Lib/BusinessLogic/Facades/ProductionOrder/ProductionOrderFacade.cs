@@ -36,7 +36,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             this.identityService = serviceProvider.GetService<IIdentityService>();
             this.productionOrderLogic = serviceProvider.GetService<ProductionOrderLogic>();
             this.finishingPrintingSalesContractLogic = serviceProvider.GetService<FinishingPrintingSalesContractLogic>();
-
         }
 
         public async Task<int> CreateAsync(ProductionOrderModel model)
@@ -45,7 +44,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             {
                 try
                 {
-
                     List<object> productionOrderModelTemp = new List<object>();
 
                     List<ProductionOrder_DetailModel> DetailsTemp = new List<ProductionOrder_DetailModel>();
@@ -55,6 +53,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                     }
                     ProductionOrderModel productionOrderModel = new ProductionOrderModel();
                     productionOrderModel = model;
+
+                    int index = 0;
 
                     for (int i = 0; i < DetailsTemp.Count; i++)
                     {
@@ -86,15 +86,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                         }
                         while (DbSet.Any(d => d.Code.Equals(productionOrderModel.Code)));
 
-                        ProductionOrderNumberGenerator(productionOrderModel);
+                        index += i;
+                        ProductionOrderNumberGenerator(productionOrderModel, index);
 
                         var temp = productionOrderModel.Clone();
 
                         productionOrderLogic.Create(temp);
-
                     }
-
-
 
                     FinishingPrintingSalesContractModel dataFPSalesContract = await finishingPrintingSalesContractLogic.ReadByIdAsync(Convert.ToInt32(productionOrderModel.SalesContractId));
                     if (dataFPSalesContract != null)
@@ -102,11 +100,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                         dataFPSalesContract.RemainingQuantity = dataFPSalesContract.RemainingQuantity - model.OrderQuantity;
                         this.finishingPrintingSalesContractLogic.UpdateAsync(Convert.ToInt32(dataFPSalesContract.Id), dataFPSalesContract);
                     }
-
                 }
                 catch (Exception e)
                 {
-
                     transaction.Rollback();
                     throw new Exception(e.Message);
                 }
@@ -181,7 +177,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             return await DbContext.SaveChangesAsync();
         }
 
-        private void ProductionOrderNumberGenerator(ProductionOrderModel model)
+        private void ProductionOrderNumberGenerator(ProductionOrderModel model, int index)
         {
             ProductionOrderModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.OrderTypeName.Equals(model.OrderTypeName)).OrderByDescending(o => o.AutoIncreament).FirstOrDefault();
 
@@ -192,20 +188,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
 
             if (lastData == null)
             {
-                model.AutoIncreament = 1;
+                model.AutoIncreament = 1 + index;
                 model.OrderNo = $"{DocumentType}/{YearNow}/0001";
             }
             else
             {
                 if (YearNow > lastData.CreatedUtc.Year)
                 {
-                    model.AutoIncreament = 1;
+                    model.AutoIncreament = 1 + index;
                     model.OrderNo = $"{DocumentType}/{YearNow}/0001";
                 }
                 else
                 {
-                    model.AutoIncreament = lastData.AutoIncreament + 1;
-                    model.OrderNo = $"{DocumentType}/{YearNow}/{lastData.AutoIncreament.ToString().PadLeft(4, '0')}";
+                    model.AutoIncreament = lastData.AutoIncreament + (1 + index);
+                    model.OrderNo = $"{DocumentType}/{YearNow}/{model.AutoIncreament.ToString().PadLeft(4, '0')}";
                 }
             }
         }

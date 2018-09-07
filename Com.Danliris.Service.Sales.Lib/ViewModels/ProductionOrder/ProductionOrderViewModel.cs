@@ -49,8 +49,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
         public bool? IsCompleted { get; set; }
         public long? AutoIncreament { get; set; }
 
-
-
         public virtual ICollection<ProductionOrder_DetailViewModel> Details { get; set; }
         public virtual ICollection<ProductionOrder_RunWidthViewModel> RunWidths { get; set; }
         public virtual ICollection<ProductionOrder_LampStandardViewModel> LampStandards { get; set; }
@@ -67,7 +65,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
         public StandardTestsViewModel StandardTests { get; set; }
         public FinishTypeViewModel FinishType { get; set; }
         public AccountViewModel Account { get; set; }
-
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -124,6 +121,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
                             {
                                 if (data.Value <= 0)
                                 {
+
                                     Count++;
                                     RunWidths += "{ 'RunWidth harus lebih besar dari 0' }, ";
                                 }
