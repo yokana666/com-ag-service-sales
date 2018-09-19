@@ -31,6 +31,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentSalesContractInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -54,6 +57,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<SpinningSalesContractReportFacade>()
                 .AddTransient<FinishingPrintingSalesContractReportFacade>()
                 .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>()
+                .AddTransient<IGarmentSalesContract, GarmentSalesContractFacade>()
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
                 .AddTransient<WeavingSalesContractReportFacade>();
         }
@@ -65,6 +69,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<SpinningSalesContractLogic>()
                 .AddTransient<FinishingPrintingSalesContractLogic>()
                 .AddTransient<FinishingPrintingSalesContractDetailLogic>()
+                .AddTransient<GarmentSalesContractLogic>()
+                .AddTransient<GarmentSalesContractItemLogic>()
                 .AddTransient<ProductionOrder_DetailLogic>()
                 .AddTransient<ProductionOrder_LampStandardLogic>()
                 .AddTransient<ProductionOrder_RunWidthLogic>()
@@ -81,6 +87,8 @@ namespace Com.Danliris.Service.Sales.WebApi
         private void RegisterEndpoint()
         {
             APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+            APIEndpoint.AzureCore = Configuration.GetValue<string>("AzureCoreEndpoint") ?? Configuration["AzureCoreEndpoint"];
+
         }
 
 
