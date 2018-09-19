@@ -8,5 +8,6 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
     public static class APIEndpoint
     {
         public static string Core { get; set; }
+        public static string AzureCore { get; set; }
     }
 }
