@@ -1,0 +1,111 @@
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.Utilities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments
+{
+    public class CostCalculationGarmentFacade : ICostCalculationGarment
+	{
+		private readonly SalesDbContext DbContext;
+		private readonly DbSet<CostCalculationGarment> DbSet;
+		private readonly IdentityService identityService;
+		private readonly CostCalculationGarmentLogic costCalculationGarmentLogic ;
+		public IServiceProvider ServiceProvider;
+
+		public CostCalculationGarmentFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
+		{
+			DbContext = dbContext;
+			DbSet = DbContext.Set<CostCalculationGarment>();
+			identityService = serviceProvider.GetService<IdentityService>();
+			costCalculationGarmentLogic = serviceProvider.GetService<CostCalculationGarmentLogic>();
+		}
+
+		public async Task<CostCalculationGarment> CustomCodeGenerator(CostCalculationGarment Model)
+		{
+			List<string> convectionOption = new List<string> { "C2a", "C2B", "C2C", "C1A", "C1B" };
+			int convectionCode = convectionOption.IndexOf(Model.UnitCode) + 1;
+
+			var lastData = await this.DbSet.Where(w => w.IsDeleted == false && w.UnitCode == Model.UnitCode).OrderByDescending(o => o.CreatedUtc).FirstOrDefaultAsync();
+
+			DateTime Now = DateTime.Now;
+			string Year = Now.ToString("yy");
+
+			if (lastData == null)
+			{
+				Model.AutoIncrementNumber = 1;
+				string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+				Model.RO_Number = $"{Year}{convectionCode.ToString()}{Number}";
+			}
+			else
+			{
+				if (lastData.CreatedUtc.Year < Now.Year)
+				{
+					Model.AutoIncrementNumber = 1;
+					string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+					Model.RO_Number = $"{Year}{convectionCode.ToString()}{Number}";
+				}
+				else
+				{
+					Model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
+					string Number = Model.AutoIncrementNumber.ToString().PadLeft(4, '0');
+					Model.RO_Number = $"{Year}{convectionCode.ToString()}{Number}";
+				}
+			}
+
+			return Model;
+		}
+		public async Task<int> CreateAsync(CostCalculationGarment model)
+		{
+			do
+			{
+				model.Code = CodeGenerator.Generate();
+				await CustomCodeGenerator(model);
+			}
+			while (this.DbSet.Any(d => d.Code.Equals(model.Code)));			 
+			costCalculationGarmentLogic.Create(model);
+			return await DbContext.SaveChangesAsync();
+		}
+		public async Task<int> DeleteAsync(int id)
+		{
+			await costCalculationGarmentLogic.DeleteAsync(id);
+			return await DbContext.SaveChangesAsync();
+		}
+
+		public ReadResponse<CostCalculationGarment> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+		{
+			return costCalculationGarmentLogic.Read(page, size, order, select, keyword, filter);
+		}
+		private AzureImageFacade AzureImageFacade
+		{
+			get { return this.ServiceProvider.GetService<AzureImageFacade>(); }
+		}
+		public async Task<CostCalculationGarment> ReadByIdAsync(int id)
+		{
+			CostCalculationGarment read = await this.DbSet
+			   .Where(d => d.Id.Equals(id) && d.IsDeleted.Equals(false))
+			   .Include(d => d.CostCalculationGarment_Materials)
+			   .FirstOrDefaultAsync();
+
+			//read.ImageFile = await this.AzureImageFacade.DownloadImage(read.GetType().Name, read.ImagePath);
+
+			return read;
+		}
+
+		public async Task<int> UpdateAsync(int id, CostCalculationGarment model)
+		{
+			costCalculationGarmentLogic.UpdateAsync(id, model);
+			return await DbContext.SaveChangesAsync();
+		}
+
+	
+	}
+}

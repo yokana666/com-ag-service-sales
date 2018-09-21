@@ -31,6 +31,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -55,20 +58,24 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<FinishingPrintingSalesContractReportFacade>()
                 .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>()
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
-                .AddTransient<WeavingSalesContractReportFacade>();
+                .AddTransient<WeavingSalesContractReportFacade>()
+				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
         {
-            services
-                .AddTransient<WeavingSalesContractLogic>()
-                .AddTransient<SpinningSalesContractLogic>()
-                .AddTransient<FinishingPrintingSalesContractLogic>()
-                .AddTransient<FinishingPrintingSalesContractDetailLogic>()
-                .AddTransient<ProductionOrder_DetailLogic>()
-                .AddTransient<ProductionOrder_LampStandardLogic>()
-                .AddTransient<ProductionOrder_RunWidthLogic>()
-                .AddTransient<ProductionOrderLogic>();
+			services
+				.AddTransient<WeavingSalesContractLogic>()
+				.AddTransient<SpinningSalesContractLogic>()
+				.AddTransient<FinishingPrintingSalesContractLogic>()
+				.AddTransient<FinishingPrintingSalesContractDetailLogic>()
+				.AddTransient<ProductionOrder_DetailLogic>()
+				.AddTransient<ProductionOrder_LampStandardLogic>()
+				.AddTransient<ProductionOrder_RunWidthLogic>()
+				.AddTransient<ProductionOrderLogic>()
+				.AddTransient<CostCalculationGarmentLogic>()
+				.AddTransient<CostCalculationGarmentMaterialLogic>();
+				
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -118,9 +125,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                         IssuerSigningKey = Key
                     };
                 });
-
-            /* CORS */
-            services.AddCors(options => options.AddPolicy(SALES_POLICY, builder =>
+		 
+			/* CORS */
+			services.AddCors(options => options.AddPolicy(SALES_POLICY, builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()
