@@ -31,9 +31,15 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
+<<<<<<< HEAD
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
+=======
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentSalesContractInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
+>>>>>>> upstream/dev
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -57,6 +63,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<SpinningSalesContractReportFacade>()
                 .AddTransient<FinishingPrintingSalesContractReportFacade>()
                 .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>()
+                .AddTransient<IGarmentSalesContract, GarmentSalesContractFacade>()
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
                 .AddTransient<WeavingSalesContractReportFacade>()
 				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>();
@@ -64,6 +71,7 @@ namespace Com.Danliris.Service.Sales.WebApi
 
         private void RegisterLogic(IServiceCollection services)
         {
+<<<<<<< HEAD
 			services
 				.AddTransient<WeavingSalesContractLogic>()
 				.AddTransient<SpinningSalesContractLogic>()
@@ -76,6 +84,19 @@ namespace Com.Danliris.Service.Sales.WebApi
 				.AddTransient<CostCalculationGarmentLogic>()
 				.AddTransient<CostCalculationGarmentMaterialLogic>();
 				
+=======
+            services
+                .AddTransient<WeavingSalesContractLogic>()
+                .AddTransient<SpinningSalesContractLogic>()
+                .AddTransient<FinishingPrintingSalesContractLogic>()
+                .AddTransient<FinishingPrintingSalesContractDetailLogic>()
+                .AddTransient<GarmentSalesContractLogic>()
+                .AddTransient<GarmentSalesContractItemLogic>()
+                .AddTransient<ProductionOrder_DetailLogic>()
+                .AddTransient<ProductionOrder_LampStandardLogic>()
+                .AddTransient<ProductionOrder_RunWidthLogic>()
+                .AddTransient<ProductionOrderLogic>();
+>>>>>>> upstream/dev
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -88,6 +109,8 @@ namespace Com.Danliris.Service.Sales.WebApi
         private void RegisterEndpoint()
         {
             APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+            APIEndpoint.AzureCore = Configuration.GetValue<string>("AzureCoreEndpoint") ?? Configuration["AzureCoreEndpoint"];
+
         }
 
 
