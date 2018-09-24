@@ -52,15 +52,14 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 		public double NETFOBP { get; set; }
 		public string ImagePath { get; set; }
 		public int? RO_RetailId { get; set; }
-		public int UnitId { get; set; }
-		public string UnitCode { get; set; }
-		public string UnitName { get; set; }
+		public  UnitViewModel   Unit { get; set; }
+		 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
 			if (string.IsNullOrWhiteSpace(this.Article))
 				yield return new ValidationResult("Nama Artikel harus diisi", new List<string> { "Article" });
-			if (string.IsNullOrWhiteSpace(this.UnitCode))
-				yield return new ValidationResult("Konveksi harus diisi", new List<string> { "Convection" });
+			if (string.IsNullOrWhiteSpace(this.Unit.Code))
+				yield return new ValidationResult("Konveksi harus diisi", new List<string> { "Unit" });
 			if (Comodity == null || string.IsNullOrWhiteSpace(Comodity.code))
 				yield return new ValidationResult("Komoditi harus diisi", new List<string> { "Commodity" });
 
@@ -74,7 +73,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 			else if (this.AccessoriesAllowance <= 0)
 				yield return new ValidationResult("Access harus lebih besar dari 0", new List<string> { "AccessoriesAllowance" });
 
-			if (UOM == null || string.IsNullOrWhiteSpace(UOM.unit))
+			if (UOM == null || string.IsNullOrWhiteSpace(UOM.Unit))
 				yield return new ValidationResult("Satuan harus diisi", new List<string> { "UOM" });
 
 			if (this.Quantity == null)
@@ -153,13 +152,13 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 							costCalculationGarment_MaterialsError += "Conversion: 'Konversi harus lebih besar dari 0', ";
 						}
 
-						if (costCalculation_Material.UOMQuantity == null || string.IsNullOrWhiteSpace(costCalculation_Material.UOMQuantity.unit))
+						if (costCalculation_Material.UOMQuantity == null || string.IsNullOrWhiteSpace(costCalculation_Material.UOMQuantity.Unit))
 						{
 							Count++;
 							costCalculationGarment_MaterialsError += "UOMQuantity: 'Satuan Kuantitas harus diisi', ";
 						}
 
-						if (costCalculation_Material.UOMPrice == null || string.IsNullOrWhiteSpace(costCalculation_Material.UOMPrice.unit))
+						if (costCalculation_Material.UOMPrice == null || string.IsNullOrWhiteSpace(costCalculation_Material.UOMPrice.Unit))
 						{
 							Count++;
 							costCalculationGarment_MaterialsError += "UOMPrice: 'Satuan Harga harus diisi', ";

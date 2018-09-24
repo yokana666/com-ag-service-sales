@@ -31,15 +31,13 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
-<<<<<<< HEAD
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
-=======
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentSalesContractInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
-using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
->>>>>>> upstream/dev
+
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -71,7 +69,7 @@ namespace Com.Danliris.Service.Sales.WebApi
 
         private void RegisterLogic(IServiceCollection services)
         {
-<<<<<<< HEAD
+
 			services
 				.AddTransient<WeavingSalesContractLogic>()
 				.AddTransient<SpinningSalesContractLogic>()
@@ -83,8 +81,7 @@ namespace Com.Danliris.Service.Sales.WebApi
 				.AddTransient<ProductionOrderLogic>()
 				.AddTransient<CostCalculationGarmentLogic>()
 				.AddTransient<CostCalculationGarmentMaterialLogic>();
-				
-=======
+
             services
                 .AddTransient<WeavingSalesContractLogic>()
                 .AddTransient<SpinningSalesContractLogic>()
@@ -96,7 +93,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ProductionOrder_LampStandardLogic>()
                 .AddTransient<ProductionOrder_RunWidthLogic>()
                 .AddTransient<ProductionOrderLogic>();
->>>>>>> upstream/dev
+
         }
 
         private void RegisterServices(IServiceCollection services)

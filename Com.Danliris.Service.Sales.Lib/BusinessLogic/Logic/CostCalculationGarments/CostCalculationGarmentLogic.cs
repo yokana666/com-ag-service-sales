@@ -41,8 +41,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			List<string> SelectedFields = new List<string>()
 			{
-				  "Id", "Code", "RO_Number", "Quantity", "ConfirmPrice", "Article", "UnitId","UnitCode","UnitName", "LastModifiedUtc",
-					"ComodityCode", "ComodityID","ComodityName", "UOM", "Buyer", "DeliveryDate"
+				  "Id", "Code", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc",
+					"Comodity", "UOM", "Buyer", "DeliveryDate"
 			};
 
 			Query = Query

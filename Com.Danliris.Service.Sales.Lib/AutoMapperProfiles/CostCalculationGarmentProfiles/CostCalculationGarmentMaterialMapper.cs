@@ -22,9 +22,9 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarme
 				 .ForPath(d => d.Category.code, opt => opt.MapFrom(s => s.CategoryCode))
 				 .ForPath(d => d.Category.name, opt => opt.MapFrom(s => s.CategoryName))
 				 .ForPath(d => d.UOMQuantity.Id, opt => opt.MapFrom(s => s.UOMQuantityId))
-				 .ForPath(d => d.UOMQuantity.unit, opt => opt.MapFrom(s => s.UOMQuantityName))
+				 .ForPath(d => d.UOMQuantity.Unit, opt => opt.MapFrom(s => s.UOMQuantityName))
 				 .ForPath(d => d.UOMPrice.Id, opt => opt.MapFrom(s => s.UOMPriceId))
-				 .ForPath(d => d.UOMPrice.unit, opt => opt.MapFrom(s => s.UOMPriceName))
+				 .ForPath(d => d.UOMPrice.Unit, opt => opt.MapFrom(s => s.UOMPriceName))
 				 .ForPath(d => d.ShippingFeePortion, opt => opt.MapFrom(s => s.ShippingFeePortion))
 				
 				 .ReverseMap();

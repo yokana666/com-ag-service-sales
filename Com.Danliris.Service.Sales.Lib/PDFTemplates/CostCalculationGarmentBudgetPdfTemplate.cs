@@ -308,7 +308,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				table_ccm.AddCell(cell_ccm);
 
 				double price = viewModel.CostCalculationGarment_Materials[i].Price ?? 0;
-				cell_ccm.Phrase = new Phrase(String.Format("{0}/{1}", Number.ToRupiahWithoutSymbol(price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.unit), normal_font);
+				cell_ccm.Phrase = new Phrase(String.Format("{0}/{1}", Number.ToRupiahWithoutSymbol(price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm);
 
 				double factor;
@@ -326,7 +326,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				table_ccm.AddCell(cell_ccm);
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_CENTER;
-				cell_ccm.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].UOMQuantity.unit, normal_font);
+				cell_ccm.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].UOMQuantity.Unit, normal_font);
 				table_ccm.AddCell(cell_ccm);
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_RIGHT;

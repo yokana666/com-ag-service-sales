@@ -13,9 +13,9 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarme
 		public CostCalculationGarmentMapper()
 		{
 			CreateMap<CostCalculationGarment, CostCalculationGarmentViewModel>()
-			  .ForPath(d => d.UnitId, opt => opt.MapFrom(s => s.UnitId))
-			  .ForPath(d => d.UnitCode, opt => opt.MapFrom(s => s.UnitCode))
-			  .ForPath(d => d.UnitName, opt => opt.MapFrom(s => s.UnitName))
+			  .ForPath(d => d.Unit.Id, opt => opt.MapFrom(s => s.UnitId))
+			  .ForPath(d => d.Unit.Code, opt => opt.MapFrom(s => s.UnitCode))
+			  .ForPath(d => d.Unit.Name, opt => opt.MapFrom(s => s.UnitName))
 
 			  .ForPath(d => d.FabricAllowance, opt => opt.MapFrom(s => s.FabricAllowance))
 			  .ForPath(d => d.AccessoriesAllowance, opt => opt.MapFrom(s => s.AccessoriesAllowance))
@@ -27,7 +27,7 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarme
 			  .ForPath(d => d.Efficiency.Value, opt => opt.MapFrom(s => Percentage.ToPercent(s.EfficiencyValue)))
 			  .ForPath(d => d.UOM.Id, opt => opt.MapFrom(s => s.UOMID))
 			  .ForPath(d => d.UOM.code, opt => opt.MapFrom(s => s.UOMCode))
-			  .ForPath(d => d.UOM.unit, opt => opt.MapFrom(s => s.UOMUnit))
+			  .ForPath(d => d.UOM.Unit, opt => opt.MapFrom(s => s.UOMUnit))
 			  .ForPath(d => d.Wage.Id, opt => opt.MapFrom(s => s.WageId))
 			  .ForPath(d => d.Wage.Value, opt => opt.MapFrom(s => s.WageRate ))
 			  .ForPath(d => d.Comodity.Id, opt => opt.MapFrom(s => s.ComodityID))
@@ -40,7 +40,7 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarme
 			  .ForPath(d => d.Rate.Value, opt => opt.MapFrom(s => s.RateValue))
 			  .ForPath(d => d.UOM.Id, opt => opt.MapFrom(s => s.UOMID))
 			  .ForPath(d => d.UOM.code, opt => opt.MapFrom(s => s.UOMCode))
-			  .ForPath(d => d.UOM.unit, opt => opt.MapFrom(s => s.UOMUnit))
+			  .ForPath(d => d.UOM.Unit, opt => opt.MapFrom(s => s.UOMUnit))
 
 
 			  .ForPath(d => d.CommissionPortion, opt => opt.MapFrom(s => Percentage.ToFraction(s.CommissionPortion)))

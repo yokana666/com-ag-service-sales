@@ -115,7 +115,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_detail1.Phrase = new Phrase("KONVEKSI", normal_font);
 			table_detail1.AddCell(cell_detail1);
 			table_detail1.AddCell(cell_colon);
-			cell_detail1.Phrase = new Phrase($"{viewModel.UnitCode}", normal_font);
+			cell_detail1.Phrase = new Phrase($"{viewModel.Unit.Code}", normal_font);
 			table_detail1.AddCell(cell_detail1);
 			cell_detail1.Phrase = new Phrase("", normal_font);
 			table_detail1.AddCell(cell_detail1);
@@ -167,7 +167,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			cell_bottom_column1_1.Phrase = new Phrase("QTY", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
-			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Quantity} {viewModel.UOM.unit}", normal_font);
+			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Quantity} {viewModel.UOM.Unit}", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
 
 			cell_bottom_column1_1.Phrase = new Phrase("DESCRIPTION", normal_font);
@@ -497,10 +497,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				cell_ccm_left.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].Description, normal_font);
 				table_ccm.AddCell(cell_ccm_left);
 
-				cell_ccm_right.Phrase = new Phrase(String.Format("{0} {1}", viewModel.CostCalculationGarment_Materials[i].Quantity, viewModel.CostCalculationGarment_Materials[i].UOMQuantity.unit), normal_font);
+				cell_ccm_right.Phrase = new Phrase(String.Format("{0} {1}", viewModel.CostCalculationGarment_Materials[i].Quantity, viewModel.CostCalculationGarment_Materials[i].UOMQuantity.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
-				cell_ccm_right.Phrase = new Phrase(String.Format("{0}/{1}", Number.ToRupiahWithoutSymbol(viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.unit), normal_font);
+				cell_ccm_right.Phrase = new Phrase(String.Format("{0}/{1}", Number.ToRupiahWithoutSymbol(viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
 				cell_ccm_right.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(viewModel.CostCalculationGarment_Materials[i].Total), normal_font);
