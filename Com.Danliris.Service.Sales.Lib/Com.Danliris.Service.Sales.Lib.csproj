@@ -17,6 +17,7 @@
     <PackageReference Include="MlkPwgen" Version="0.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.6" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.2" />
   </ItemGroup>
 
 </Project>

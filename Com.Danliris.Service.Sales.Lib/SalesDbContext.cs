@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -19,9 +20,11 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<SpinningSalesContractModel> SpinningSalesContract { get; set; }
         public DbSet<FinishingPrintingSalesContractModel> FinishingPrintingSalesContracts { get; set; }
         public DbSet<FinishingPrintingSalesContractDetailModel> FinishingPrintingSalesContractDetails { get; set; }
+		public DbSet<CostCalculationGarment> CostCalculationGarments { get; set; }
+		public DbSet<CostCalculationGarment_Material> CostCalculationGarment_Materials { get; set; }
 
-        #region PRODUCTION ORDER DBSET
-        public DbSet<ProductionOrderModel> ProductionOrder { get; set; }
+		#region PRODUCTION ORDER DBSET
+		public DbSet<ProductionOrderModel> ProductionOrder { get; set; }
         public DbSet<ProductionOrder_DetailModel> ProductionOrder_Details { get; set; }
         public DbSet<ProductionOrder_LampStandardModel> ProductionOrder_LampStandard { get; set; }
         public DbSet<ProductionOrder_RunWidthModel> ProductionOrder_RunWidth { get; set; }

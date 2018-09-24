@@ -1,10 +1,11 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Utilities;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
 {
     public class FinishingPrintingSalesContractReportViewModel : BaseViewModel
-    {
+	{
         public string salesContractNo { get; set; }
         public string buyerName { get; set; }
         public string buyerType { get; set; }
