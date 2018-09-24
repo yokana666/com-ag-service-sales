@@ -8,8 +8,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 {
 	public class BuyerViewModel : BaseViewModel, IValidatableObject
 	{
-		public string code { get; set; }
-		public string name { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
 		public string email { get; set; }
 		public string address1 { get; set; }
 		public string address2 { get; set; }

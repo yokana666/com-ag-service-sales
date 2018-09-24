@@ -104,7 +104,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_detail1.Phrase = new Phrase("COMMODITY", normal_font);
 			table_detail1.AddCell(cell_detail1);
 			table_detail1.AddCell(cell_colon);
-			cell_detail1.Phrase = new Phrase($"{viewModel.Comodity.name}", normal_font);
+			cell_detail1.Phrase = new Phrase($"{viewModel.Comodity.Name}", normal_font);
 			table_detail1.AddCell(cell_detail1);
 			cell_detail1.Phrase = new Phrase("ACC", normal_font);
 			table_detail1.AddCell(cell_detail1);
@@ -182,7 +182,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			cell_bottom_column1_1.Phrase = new Phrase("BUYER", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
-			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Buyer.name}", normal_font);
+			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Buyer.Name}", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
 
 			cell_bottom_column1_1.Phrase = new Phrase("DELIVERY", normal_font);
