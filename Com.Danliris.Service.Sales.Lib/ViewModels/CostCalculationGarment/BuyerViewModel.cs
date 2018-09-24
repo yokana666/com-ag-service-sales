@@ -16,7 +16,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
-			if (string.IsNullOrWhiteSpace(this.name))
+			if (string.IsNullOrWhiteSpace(this.Name))
 				yield return new ValidationResult("Nama Pembeli harus diisi", new List<string> { "Name" });
 
 			if (string.IsNullOrWhiteSpace(this.email))
