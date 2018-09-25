@@ -36,7 +36,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades
 			return filePath[filePath.Length - 1];
 		}
 
-		public string GenerateFileName(Int64 id, DateTime _createdUtc)
+		public string GenerateFileName(long id, DateTime _createdUtc)
 		{
 			return String.Format("IMG_{0}_{1}", id, Timestamp.Generate(_createdUtc));
 		}
@@ -105,7 +105,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades
 			return imageSrc;
 		}
 
-		public async Task<string> UploadImage(string moduleName, Int64 id, DateTime _createdUtc, string imageBase64)
+		public async Task<string> UploadImage(string moduleName, long id, DateTime _createdUtc, string imageBase64)
 		{
 			string imageName = this.GenerateFileName(id, _createdUtc);
 			return await this.UploadBase64Image(moduleName, imageBase64, imageName);

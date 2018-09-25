@@ -27,6 +27,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 			DbSet = DbContext.Set<CostCalculationGarment>();
 			identityService = serviceProvider.GetService<IdentityService>();
 			costCalculationGarmentLogic = serviceProvider.GetService<CostCalculationGarmentLogic>();
+			ServiceProvider = serviceProvider;
 		}
 
 		public async Task<CostCalculationGarment> CustomCodeGenerator(CostCalculationGarment Model)
@@ -70,8 +71,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 				model.Code = CodeGenerator.Generate();
 				await CustomCodeGenerator(model);
 			}
-			while (this.DbSet.Any(d => d.Code.Equals(model.Code)));			 
+			while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
+			var a = model.GetType().Name;
+			var b = model.Id;
+			var c = model.CreatedUtc;
+			var dS = model.ImageFile;
+			model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
 			costCalculationGarmentLogic.Create(model);
+			
+			
 			return await DbContext.SaveChangesAsync();
 		}
 		public async Task<int> DeleteAsync(int id)
@@ -95,7 +103,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 			   .Include(d => d.CostCalculationGarment_Materials)
 			   .FirstOrDefaultAsync();
 
-			//read.ImageFile = await this.AzureImageFacade.DownloadImage(read.GetType().Name, read.ImagePath);
+			read.ImageFile = await this.AzureImageFacade.DownloadImage(read.GetType().Name, read.ImagePath);
 
 			return read;
 		}

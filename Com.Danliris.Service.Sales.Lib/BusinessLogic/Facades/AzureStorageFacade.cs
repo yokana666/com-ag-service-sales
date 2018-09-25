@@ -1,4 +1,6 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿
+using Com.Danliris.Service.Sales.Lib.Helpers;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -16,8 +18,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades
 
 		public AzureStorageFacade(IServiceProvider serviceProvider)
 		{
-			string storageAccountName = Environment.GetEnvironmentVariable("StorageAccountName");
-			string storageAccountKey = Environment.GetEnvironmentVariable("StorageAccountKey");
+
+			string storageAccountName = APIEndpoint.StorageAccountName;
+			string storageAccountKey = APIEndpoint.StorageAccountKey;
 			string storageContainer = "sales";
 
 			this.ServiceProvider = serviceProvider;

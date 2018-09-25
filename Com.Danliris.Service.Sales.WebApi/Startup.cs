@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Com.Danliris.Service.Sales.Lib;
+using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving;
@@ -37,7 +38,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentSalesContractInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
-
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -64,7 +65,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IGarmentSalesContract, GarmentSalesContractFacade>()
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
                 .AddTransient<WeavingSalesContractReportFacade>()
-				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>();
+				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>()
+				.AddTransient<AzureImageFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -105,10 +107,12 @@ namespace Com.Danliris.Service.Sales.WebApi
 
         private void RegisterEndpoint()
         {
-            APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
-            APIEndpoint.AzureCore = Configuration.GetValue<string>("AzureCoreEndpoint") ?? Configuration["AzureCoreEndpoint"];
+            Com.Danliris.Service.Sales.WebApi.Utilities. APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+			Com.Danliris.Service.Sales.WebApi.Utilities.APIEndpoint.AzureCore = Configuration.GetValue<string>("AzureCoreEndpoint") ?? Configuration["AzureCoreEndpoint"];
+			Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.StorageAccountName = Configuration.GetValue<string>("StorageAccountName") ?? Configuration["StorageAccountName"];
+			Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.StorageAccountKey = Configuration.GetValue<string>("StorageAccountKey") ?? Configuration["StorageAccountKey"];
 
-        }
+		}
 
 
 

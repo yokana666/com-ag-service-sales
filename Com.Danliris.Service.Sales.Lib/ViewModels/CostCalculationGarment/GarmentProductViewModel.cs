@@ -8,11 +8,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 {
 	public class GarmentProductViewModel : BaseViewModel, IValidatableObject
 	{
-		public string code { get; set; }
-		public string composition { get; set; }
-		public string construction { get; set; }
-		public string yarn { get; set; }
-		public string width { get; set; }
+		public string Code { get; set; }
+		public string Composition { get; set; }
+		public string Const { get; set; }
+		public string Yarn { get; set; }
+		public string Width { get; set; }
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
 			throw new NotImplementedException();

@@ -16,7 +16,8 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarme
 			  .ForPath(d => d.Unit.Id, opt => opt.MapFrom(s => s.UnitId))
 			  .ForPath(d => d.Unit.Code, opt => opt.MapFrom(s => s.UnitCode))
 			  .ForPath(d => d.Unit.Name, opt => opt.MapFrom(s => s.UnitName))
-
+			  .ForPath(d => d.ImageFile, opt => opt.MapFrom(s => s.ImageFile))
+			  .ForPath(d => d.ImagePath, opt => opt.MapFrom(s => s.ImagePath))
 			  .ForPath(d => d.FabricAllowance, opt => opt.MapFrom(s => s.FabricAllowance))
 			  .ForPath(d => d.AccessoriesAllowance, opt => opt.MapFrom(s => s.AccessoriesAllowance))
 			  .ForPath(d => d.SizeRange, opt => opt.MapFrom(s => s.SizeRange))
