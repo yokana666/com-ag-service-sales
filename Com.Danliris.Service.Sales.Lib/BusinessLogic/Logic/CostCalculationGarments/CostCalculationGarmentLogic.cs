@@ -57,6 +57,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 					 UnitName=ccg.UnitName,
 					 Quantity = ccg.Quantity,
 					 ConfirmPrice = ccg.ConfirmPrice,
+                     BuyerCode=ccg.BuyerCode,
+                     BuyerId=ccg.BuyerId,
+                     BuyerName=ccg.BuyerName,
+                     Commodity=ccg.Commodity,
+                     ComodityCode=ccg.ComodityCode,
+                     CommodityDescription=ccg.CommodityDescription,
+                     ComodityID=ccg.ComodityID,
+                     DeliveryDate=ccg.DeliveryDate,
+                     UOMCode=ccg.UOMCode,
+                     UOMID=ccg.UOMID,
+                     UOMUnit=ccg.UOMUnit,
 					 LastModifiedUtc = ccg.LastModifiedUtc
 				 });
 

@@ -60,7 +60,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 				yield return new ValidationResult("Nama Artikel harus diisi", new List<string> { "Article" });
 			if (string.IsNullOrWhiteSpace(this.Unit.Code))
 				yield return new ValidationResult("Konveksi harus diisi", new List<string> { "Unit" });
-			if (Comodity == null || string.IsNullOrWhiteSpace(Comodity.code))
+			if (Comodity == null || string.IsNullOrWhiteSpace(Comodity.Code))
 				yield return new ValidationResult("Komoditi harus diisi", new List<string> { "Commodity" });
 
 			if (this.FabricAllowance.Equals(0))
@@ -100,7 +100,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 				yield return new ValidationResult("SMV Finishing harus diisi", new List<string> { "SMV_Finishing" });
 			else if (this.SMV_Finishing <= 0)
 				yield return new ValidationResult("SMV Finishing harus lebih besar dari 0", new List<string> { "SMV_Finishing" });
-			if (Buyer == null || string.IsNullOrWhiteSpace(Buyer.code))
+			if (Buyer == null || string.IsNullOrWhiteSpace(Buyer.Code))
 				yield return new ValidationResult("Buyer harus diisi", new List<string> { "Buyer" });
 			if (this.ConfirmPrice == null)
 				yield return new ValidationResult("Confirm Price harus diisi", new List<string> { "ConfirmPrice" });
