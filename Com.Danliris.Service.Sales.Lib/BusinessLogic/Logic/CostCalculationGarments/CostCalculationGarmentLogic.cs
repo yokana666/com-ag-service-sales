@@ -1,4 +1,5 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
@@ -18,11 +19,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 	{ 
 		private CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic;
 
-		private readonly SalesDbContext DbContext;
+		private readonly SalesDbContext DbContext; 
 		public CostCalculationGarmentLogic(CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic, IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService, serviceProvider, dbContext)
 		{
 			this.costCalculationGarmentMaterialLogic = costCalculationGarmentMaterialLogic;
-			this.DbContext = dbContext;
+			this.DbContext = dbContext; 
 		}
 
 		public override ReadResponse<CostCalculationGarment> Read(int page, int size, string order, List<string> select, string keyword, string filter)
@@ -69,7 +70,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
 		}
-		
+
+		 
 		public override void Create(CostCalculationGarment model)
 		{
 			GeneratePONumbers(model);

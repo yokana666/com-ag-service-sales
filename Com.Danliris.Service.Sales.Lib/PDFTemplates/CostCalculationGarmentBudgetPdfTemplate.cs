@@ -84,7 +84,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			cell_detail2.Phrase = new Phrase("BUYER", normal_font);
 			table_detail2.AddCell(cell_detail2);
-			cell_detail2.Phrase = new Phrase($"{viewModel.Buyer.name}", normal_font);
+			cell_detail2.Phrase = new Phrase($"{viewModel.Buyer.Name}", normal_font);
 			table_detail2.AddCell(cell_detail2);
 
 			cell_detail2.Phrase = new Phrase("ARTICLE", normal_font);
@@ -294,7 +294,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				table_ccm.AddCell(cell_ccm);
 
 				//KODE PRODUK
-				cell_ccm.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].Product.code, normal_font);
+				cell_ccm.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].Product.Code, normal_font);
 				table_ccm.AddCell(cell_ccm);
 
 				//DESCRIPTION

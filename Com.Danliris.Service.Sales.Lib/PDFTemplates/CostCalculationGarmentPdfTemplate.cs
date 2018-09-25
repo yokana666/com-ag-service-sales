@@ -490,7 +490,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				table_ccm.AddCell(cell_ccm_left);
 
 				//KODE PRODUK
-				cell_ccm_left.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].Product.code, normal_font);
+				cell_ccm_left.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].Product.Code, normal_font);
 				table_ccm.AddCell(cell_ccm_left);
 
 				//DESKRIPSI
