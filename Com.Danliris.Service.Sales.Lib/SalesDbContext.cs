@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -22,9 +23,11 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<FinishingPrintingSalesContractDetailModel> FinishingPrintingSalesContractDetails { get; set; }
 		public DbSet<CostCalculationGarment> CostCalculationGarments { get; set; }
 		public DbSet<CostCalculationGarment_Material> CostCalculationGarment_Materials { get; set; }
+        public DbSet<GarmentSalesContract> GarmentSalesContracts { get; set; }
+        public DbSet<GarmentSalesContractItem> GarmentSalesContractItems { get; set; }
 
-		#region PRODUCTION ORDER DBSET
-		public DbSet<ProductionOrderModel> ProductionOrder { get; set; }
+        #region PRODUCTION ORDER DBSET
+        public DbSet<ProductionOrderModel> ProductionOrder { get; set; }
         public DbSet<ProductionOrder_DetailModel> ProductionOrder_Details { get; set; }
         public DbSet<ProductionOrder_LampStandardModel> ProductionOrder_LampStandard { get; set; }
         public DbSet<ProductionOrder_RunWidthModel> ProductionOrder_RunWidth { get; set; }
