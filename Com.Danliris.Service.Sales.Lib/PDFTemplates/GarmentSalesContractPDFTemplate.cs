@@ -67,7 +67,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableHeader.AddCell(cellHeaderContentLeft);
             cellHeaderContentLeft.Phrase=new Phrase("", normal_font);
             tableHeader.AddCell(cellHeaderContentLeft);
-            cellHeaderContentLeft.Phrase=new Phrase("  "+buyer["Address"].ToString(), normal_font);
+            string buyerAddress = buyer["Address"] !=null? buyer["Address"].ToString() : "";
+            cellHeaderContentLeft.Phrase=new Phrase("  "+ buyerAddress, normal_font);
             tableHeader.AddCell(cellHeaderContentLeft);
 
             cellHeaderContentLeft.Phrase = new Phrase("", normal_font);
@@ -165,11 +166,12 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Bank Detail", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + bank["BankName"], normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.BankName, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  ADDRESS : " + bank["BankAddress"], normal_font);
+            string bankAddress = bank["BankAddress"] != null ? bank["BankAddress"].ToString() : "";
+            bodyContentLeft.Phrase = new Phrase("  ADDRESS : " + bankAddress, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -236,6 +238,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             if (!viewModel.IsTTPayment)
             {
                 document.NewPage();
+                document.Add(bankSpace);
 
                 Paragraph LocTitle = new Paragraph("CONDITION OF LETTER OF CREDIT (L/C)", bold_font) { Alignment = Element.ALIGN_CENTER };
                 LocTitle.SpacingAfter = 5f;
