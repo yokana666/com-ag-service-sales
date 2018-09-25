@@ -77,6 +77,8 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     Dictionary<string, object> bank = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBank.ToString());
 
                     MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel,Facade, timeoffsset, buyer, bank);
+                   // model.DocPrinted = true;
+                   // await Facade.UpdatePrinted(Id, model);
                     return new FileStreamResult(stream, "application/pdf")
                     {
                         FileDownloadName = "Garment Sales Contract" + viewModel.SalesContractNo + ".pdf"

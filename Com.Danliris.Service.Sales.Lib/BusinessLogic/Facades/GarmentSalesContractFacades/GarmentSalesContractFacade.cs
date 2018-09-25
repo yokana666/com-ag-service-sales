@@ -69,5 +69,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContr
             return await DbContext.SaveChangesAsync();
         }
 
+        public async Task<int> UpdatePrinted(int id, GarmentSalesContract model)
+        {
+            //garmentSalesContractLogic.UpdateAsync(id, model);
+            model.DocPrinted = true;
+            DbSet.Update(model);
+            return await DbContext.SaveChangesAsync();
+        }
     }
 }
