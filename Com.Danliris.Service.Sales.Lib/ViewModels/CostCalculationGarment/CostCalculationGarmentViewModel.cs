@@ -58,7 +58,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 		{
 			if (string.IsNullOrWhiteSpace(this.Article))
 				yield return new ValidationResult("Nama Artikel harus diisi", new List<string> { "Article" });
-			if (string.IsNullOrWhiteSpace(this.Unit.Code))
+			if (Unit == null || string.IsNullOrWhiteSpace(this.Unit.Code))
 				yield return new ValidationResult("Konveksi harus diisi", new List<string> { "Unit" });
 			if (Comodity == null || string.IsNullOrWhiteSpace(Comodity.Code))
 				yield return new ValidationResult("Komoditi harus diisi", new List<string> { "Commodity" });
