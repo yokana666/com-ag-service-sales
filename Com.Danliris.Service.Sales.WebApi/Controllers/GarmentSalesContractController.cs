@@ -65,13 +65,13 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 
                     /* Get Buyer */
-                    var response = httpClient.GetAsync($@"{APIEndpoint.AzureCore}{BuyerUri}/" + viewModel.BuyerId).Result.Content.ReadAsStringAsync();
+                    var response = httpClient.GetAsync($@"{APIEndpoint.Core}{BuyerUri}/" + viewModel.BuyerId).Result.Content.ReadAsStringAsync();
                     Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
                     var json = result.Single(p => p.Key.Equals("data")).Value;
                     Dictionary<string, object> buyer = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
 
                     /* Get AccountBank */
-                    var responseBank = httpClient.GetAsync($@"{APIEndpoint.AzureCore}{BankUri}/" + viewModel.AccountBank.Id).Result.Content.ReadAsStringAsync();
+                    var responseBank = httpClient.GetAsync($@"{APIEndpoint.Core}{BankUri}/" + viewModel.AccountBank.Id).Result.Content.ReadAsStringAsync();
                     Dictionary<string, object> resultBank = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBank.Result);
                     var jsonBank = resultBank.Single(p => p.Key.Equals("data")).Value;
                     Dictionary<string, object> bank = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBank.ToString());
