@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.ROGarments;
+﻿//using Com.Danliris.Service.Sales.Lib.Models.ROGarments;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Moonlay.Models;
 using System;
@@ -71,9 +71,11 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
 		public string UnitCode { get; set; }
 		public string UnitName { get; set; }
 		public int AutoIncrementNumber { get; set; }
-		[ForeignKey("RO_GarmentId")]
-		public virtual RO_Garment RO_Garment { get; set; }
+        //[ForeignKey("RO_GarmentId")]
+        //public virtual RO_Garment RO_Garment { get; set; }
 
-
-	}
+        public int BuyerBrandId { get; set; }
+        public string BuyerBrandCode { get; set; }
+        public string BuyerBrandName { get; set; }
+    }
 }
