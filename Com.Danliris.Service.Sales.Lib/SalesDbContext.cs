@@ -8,6 +8,7 @@ using System.Linq;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
+using Com.Danliris.Service.Sales.Lib.Models.ROGarments;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -34,6 +35,10 @@ namespace Com.Danliris.Service.Sales.Lib
 
         #endregion
 
+        public DbSet<RO_Garment> RO_Garments { get; set; }
+        public DbSet<RO_Garment_SizeBreakdown> RO_Garment_SizeBreakdowns { get; set; }
+        public DbSet<RO_Garment_SizeBreakdown_Detail> RO_Garment_SizeBreakdown_Details { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -46,6 +51,9 @@ namespace Com.Danliris.Service.Sales.Lib
             modelBuilder.Entity<FinishingPrintingSalesContractModel>()
                 .HasIndex(h => h.SalesContractNo)
                 .IsUnique();
+
+            modelBuilder.Entity<RO_Garment>()
+            .Ignore(c => c.ImagesFile);
         }
     }
 }

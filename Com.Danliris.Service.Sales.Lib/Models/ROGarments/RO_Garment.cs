@@ -1,21 +1,24 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Moonlay.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.Models.ROGarments
 {
-	public class RO_Garment : StandardEntity//, IValidatableObject
-	{
-		public int CostCalculationGarmentId { get; set; }
-		public virtual CostCalculationGarment CostCalculationGarment { get; set; }
+	public class RO_Garment : BaseModel
+    {
+		public long CostCalculationGarmentId { get; set; }
+        [ForeignKey("CostCalculationGarmentId")]
+        public virtual CostCalculationGarment CostCalculationGarment { get; set; }
 		public string Code { get; set; }
 		public ICollection<RO_Garment_SizeBreakdown> RO_Garment_SizeBreakdowns { get; set; }
 		public string Instruction { get; set; }
 		public int Total { get; set; }
-		//public List< string> ImagesFile { get; set; }
+		public List< string> ImagesFile { get; set; }
 		public string ImagesPath { get; set; }
 		public string ImagesName { get; set; }
 

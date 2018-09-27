@@ -1,15 +1,18 @@
-﻿using Com.Moonlay.Models;
+﻿using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
+using Com.Moonlay.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.Models.ROGarments
 {
-	public class RO_Garment_SizeBreakdown_Detail : StandardEntity//, IValidatableObject
-	{
-		public int RO_Garment_SizeBreakdownId { get; set; }
-		public virtual RO_Garment_SizeBreakdown RO_Garment_SizeBreakdown { get; set; }
+	public class RO_Garment_SizeBreakdown_Detail : BaseModel
+    {
+		public long RO_Garment_SizeBreakdownId { get; set; }
+        [ForeignKey("RO_Garment_SizeBreakdownId")]
+        public virtual RO_Garment_SizeBreakdown RO_Garment_SizeBreakdown { get; set; }
 		public string Code { get; set; }
 		public string Information { get; set; }
 		public string Size { get; set; }
