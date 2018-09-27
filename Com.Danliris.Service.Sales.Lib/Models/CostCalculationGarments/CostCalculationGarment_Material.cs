@@ -3,14 +3,16 @@ using Com.Moonlay.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
 {
 	public class CostCalculationGarment_Material : BaseModel 
 	{
-		public int CostCalculationGarmentId { get; set; }
-		public virtual CostCalculationGarment CostCalculationGarment { get; set; }
+		public long CostCalculationGarmentId { get; set; }
+        [ForeignKey("CostCalculationGarmentId")]
+        public virtual CostCalculationGarment CostCalculationGarment { get; set; }
 		public string Code { get; set; }
 		public string PO_SerialNumber { get; set; }
 		public string PO { get; set; }
