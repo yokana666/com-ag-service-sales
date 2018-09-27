@@ -4,40 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
-    public partial class addCostCalculationGarmentANDaddROGarment : Migration
+    public partial class AddCostCalculationGarment : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
-            migrationBuilder.CreateTable(
-                name: "RO_Garment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Active = table.Column<bool>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
-                    DeletedUtc = table.Column<DateTime>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    LastModifiedUtc = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    CreatedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    LastModifiedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    LastModifiedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    DeletedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    DeletedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    CostCalculationGarmentId = table.Column<int>(nullable: false),
-                    Code = table.Column<string>(nullable: true),
-                    Instruction = table.Column<string>(nullable: true),
-                    Total = table.Column<int>(nullable: false),
-                    ImagesPath = table.Column<string>(nullable: true),
-                    ImagesName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RO_Garment", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "CostCalculationGarments",
                 columns: table => new
@@ -118,46 +88,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CostCalculationGarments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CostCalculationGarments_RO_Garment_RO_GarmentId",
-                        column: x => x.RO_GarmentId,
-                        principalTable: "RO_Garment",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RO_Garment_SizeBreakdown",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Active = table.Column<bool>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
-                    DeletedUtc = table.Column<DateTime>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    LastModifiedUtc = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    CreatedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    LastModifiedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    LastModifiedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    DeletedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    DeletedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    RO_GarmentId = table.Column<int>(nullable: false),
-                    Code = table.Column<string>(nullable: true),
-                    ColorId = table.Column<int>(nullable: false),
-                    ColorName = table.Column<string>(nullable: true),
-                    Total = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RO_Garment_SizeBreakdown", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RO_Garment_SizeBreakdown_RO_Garment_RO_GarmentId",
-                        column: x => x.RO_GarmentId,
-                        principalTable: "RO_Garment",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,61 +150,10 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "RO_Garment_SizeBreakdown_Detail",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Active = table.Column<bool>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
-                    DeletedUtc = table.Column<DateTime>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    LastModifiedUtc = table.Column<DateTime>(nullable: false),
-                    CreatedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    CreatedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    LastModifiedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    LastModifiedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    DeletedBy = table.Column<string>(maxLength: 255, nullable: false),
-                    DeletedAgent = table.Column<string>(maxLength: 255, nullable: false),
-                    RO_Garment_SizeBreakdownId = table.Column<int>(nullable: false),
-                    Code = table.Column<string>(nullable: true),
-                    Information = table.Column<string>(nullable: true),
-                    Size = table.Column<string>(nullable: true),
-                    Quantity = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RO_Garment_SizeBreakdown_Detail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RO_Garment_SizeBreakdown_Detail_RO_Garment_SizeBreakdown_RO_Garment_SizeBreakdownId",
-                        column: x => x.RO_Garment_SizeBreakdownId,
-                        principalTable: "RO_Garment_SizeBreakdown",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_CostCalculationGarment_Materials_CostCalculationGarmentId1",
                 table: "CostCalculationGarment_Materials",
                 column: "CostCalculationGarmentId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CostCalculationGarments_RO_GarmentId",
-                table: "CostCalculationGarments",
-                column: "RO_GarmentId",
-                unique: true,
-                filter: "[RO_GarmentId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RO_Garment_SizeBreakdown_RO_GarmentId",
-                table: "RO_Garment_SizeBreakdown",
-                column: "RO_GarmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RO_Garment_SizeBreakdown_Detail_RO_Garment_SizeBreakdownId",
-                table: "RO_Garment_SizeBreakdown_Detail",
-                column: "RO_Garment_SizeBreakdownId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -283,18 +162,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                 name: "CostCalculationGarment_Materials");
 
             migrationBuilder.DropTable(
-                name: "RO_Garment_SizeBreakdown_Detail");
-
-            migrationBuilder.DropTable(
                 name: "CostCalculationGarments");
-
-            migrationBuilder.DropTable(
-                name: "RO_Garment_SizeBreakdown");
-
-            migrationBuilder.DropTable(
-                name: "RO_Garment");
-
-            
         }
     }
 }
