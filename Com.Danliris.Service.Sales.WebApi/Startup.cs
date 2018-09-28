@@ -44,6 +44,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -73,7 +76,8 @@ namespace Com.Danliris.Service.Sales.WebApi
 				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>()
                 .AddTransient<IROGarment, ROGarmentFacade>()
                 .AddTransient<IArticleColor, ArticleColorFacade>()
-                .AddTransient<AzureImageFacade>();
+				.AddTransient<AzureImageFacade>()
+                .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -95,8 +99,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ArticleColorLogic>()
                 .AddTransient<ROGarmentLogic>()
                 .AddTransient<ROGarmentSizeBreakdownLogic>()
-                .AddTransient<ROGarmentSizeBreakdownDetailLogic>();
-
+                .AddTransient<ROGarmentSizeBreakdownDetailLogic>()
+                .AddTransient<RO_Garment_ValidationLogic>();
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -113,7 +117,10 @@ namespace Com.Danliris.Service.Sales.WebApi
 			Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.StorageAccountName = Configuration.GetValue<string>("StorageAccountName") ?? Configuration["StorageAccountName"];
 			Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.StorageAccountKey = Configuration.GetValue<string>("StorageAccountKey") ?? Configuration["StorageAccountKey"];
 
-		}
+            Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.Purchasing = Configuration.GetValue<string>("PurchasingEndpoint") ?? Configuration["PurchasingEndpoint"];
+            Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.AzureCore = Configuration.GetValue<string>("AzureCoreEndpoint") ?? Configuration["AzureCoreEndpoint"];
+
+        }
 
 
 
