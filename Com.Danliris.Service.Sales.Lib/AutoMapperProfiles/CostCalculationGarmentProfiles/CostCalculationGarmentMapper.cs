@@ -42,18 +42,19 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarme
 			  .ForPath(d => d.UOM.Id, opt => opt.MapFrom(s => s.UOMID))
 			  .ForPath(d => d.UOM.code, opt => opt.MapFrom(s => s.UOMCode))
 			  .ForPath(d => d.UOM.Unit, opt => opt.MapFrom(s => s.UOMUnit))
-
-
-			  .ForPath(d => d.CommissionPortion, opt => opt.MapFrom(s => Percentage.ToFraction(s.CommissionPortion)))
-			  .ForPath(d => d.Risk, opt => opt.MapFrom(s => Percentage.ToFraction(s.Risk)))
+              .ForPath(d => d.BuyerBrand.Id, opt => opt.MapFrom(s => s.BuyerBrandId))
+              .ForPath(d => d.BuyerBrand.Code, opt => opt.MapFrom(s => s.BuyerBrandCode))
+              .ForPath(d => d.BuyerBrand.Name, opt => opt.MapFrom(s => s.BuyerBrandName))
+              .ForPath(d => d.CommissionPortion, opt => opt.MapFrom(s =>(s.CommissionPortion)))
+			  .ForPath(d => d.Risk, opt => opt.MapFrom(s => (s.Risk)))
 			  .ForPath(d => d.OTL1.Id, opt => opt.MapFrom(s => s.OTL1Id))
 			  .ForPath(d => d.OTL1.Value, opt => opt.MapFrom(s => s.OTL1Rate))
 			  .ForPath(d => d.OTL1.CalculatedValue, opt => opt.MapFrom(s => s.OTL1CalculatedRate))
-
-			  .ForPath(d => d.OTL2.Id, opt => opt.MapFrom(s => s.OTL2Id))
+              .ForPath(d => d.LeadTime, opt => opt.MapFrom(s => s.LeadTime))
+              .ForPath(d => d.OTL2.Id, opt => opt.MapFrom(s => s.OTL2Id))
 			  .ForPath(d => d.OTL2.Value, opt => opt.MapFrom(s => s.OTL2Rate))
 			  .ForPath(d => d.OTL2.CalculatedValue, opt => opt.MapFrom(s => s.OTL2CalculatedRate))
-			  .ForPath(d => d.NETFOBP, opt => opt.MapFrom(s => Percentage.ToFraction(s.NETFOBP))) 
+			  .ForPath(d => d.NETFOBP, opt => opt.MapFrom(s => Percentage.ToPercent(s.NETFOBP))) 
 			  .ReverseMap();
 		}
 	}

@@ -15,8 +15,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 		public double? CommissionPortion { get; set; }
 		public double CommissionRate { get; set; }
 		public UOMViewModel UOM { get; set; }
-
-		public DateTimeOffset ConfirmDate { get; set; }
+        public BuyerBrandViewModel BuyerBrand { get; set; }
+        public DateTimeOffset ConfirmDate { get; set; }
 		public MasterPlanComodityViewModel Comodity { get; set; }
 		public string CommodityDescription { get; set; }
 		public double? ConfirmPrice { get; set; }

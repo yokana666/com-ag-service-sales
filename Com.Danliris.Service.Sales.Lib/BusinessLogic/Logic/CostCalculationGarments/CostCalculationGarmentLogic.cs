@@ -100,9 +100,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 		{
 			int lastFabricNumber = GetLastMaterialFabricNumberByCategoryName(model.UnitCode);
 			int lastNonFabricNumber = GetLastMaterialNonFabricNumberByCategoryName(model.UnitCode);
-			int convectionCode = model.UnitId;
+            List<string> convectionOption = new List<string> { "C2A", "C2B", "C2C", "C1A", "C1B" };
+            int convectionCode = convectionOption.IndexOf(model.UnitCode) + 1;
 
-			DateTime Now = DateTime.Now;
+            DateTime Now = DateTime.Now;
 			string Year = Now.ToString("yy");
 
 			foreach (CostCalculationGarment_Material item in model.CostCalculationGarment_Materials)
@@ -113,14 +114,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 					if (item.CategoryName.ToUpper().Equals("FABRIC"))
 					{
 						lastFabricNumber += 1;
-						Number = lastFabricNumber.ToString().PadLeft(4, '0');
+						Number = lastFabricNumber.ToString().PadLeft(5, '0');
 						item.PO_SerialNumber = $"PM{Year}{convectionCode}{Number}";
 						item.AutoIncrementNumber = lastFabricNumber;
 					}
 					else
 					{
 						lastNonFabricNumber += 1;
-						Number = lastNonFabricNumber.ToString().PadLeft(4, '0');
+						Number = lastNonFabricNumber.ToString().PadLeft(5, '0');
 						item.PO_SerialNumber = $"PA{Year}{convectionCode}{Number}";
 						item.AutoIncrementNumber = lastNonFabricNumber;
 					}
