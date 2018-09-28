@@ -39,6 +39,11 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLog
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentSalesContractInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ROGarmentInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -66,7 +71,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
                 .AddTransient<WeavingSalesContractReportFacade>()
 				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>()
-				.AddTransient<AzureImageFacade>();
+                .AddTransient<IROGarment, ROGarmentFacade>()
+                .AddTransient<IArticleColor, ArticleColorFacade>()
+                .AddTransient<AzureImageFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -82,19 +89,13 @@ namespace Com.Danliris.Service.Sales.WebApi
 				.AddTransient<ProductionOrder_RunWidthLogic>()
 				.AddTransient<ProductionOrderLogic>()
 				.AddTransient<CostCalculationGarmentLogic>()
-				.AddTransient<CostCalculationGarmentMaterialLogic>();
-
-            services
-                .AddTransient<WeavingSalesContractLogic>()
-                .AddTransient<SpinningSalesContractLogic>()
-                .AddTransient<FinishingPrintingSalesContractLogic>()
-                .AddTransient<FinishingPrintingSalesContractDetailLogic>()
+				.AddTransient<CostCalculationGarmentMaterialLogic>()
                 .AddTransient<GarmentSalesContractLogic>()
                 .AddTransient<GarmentSalesContractItemLogic>()
-                .AddTransient<ProductionOrder_DetailLogic>()
-                .AddTransient<ProductionOrder_LampStandardLogic>()
-                .AddTransient<ProductionOrder_RunWidthLogic>()
-                .AddTransient<ProductionOrderLogic>();
+                .AddTransient<ArticleColorLogic>()
+                .AddTransient<ROGarmentLogic>()
+                .AddTransient<ROGarmentSizeBreakdownLogic>()
+                .AddTransient<ROGarmentSizeBreakdownDetailLogic>();
 
         }
 
