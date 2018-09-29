@@ -40,6 +40,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
             get { return this.ServiceProvider.GetService<AzureImageFacade>(); }
         }
 
+        
+
         public async Task<int> CreateAsync(RO_Garment Model)
         {
             do
@@ -72,7 +74,21 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
 
         public async Task<int> DeleteAsync(int id)
         {
+            RO_Garment deletedImage = await this.ReadByIdAsync(id);
+            await this.AzureImageFacade.RemoveMultipleImage(deletedImage.GetType().Name, deletedImage.ImagesPath);
+
             await roGarmentLogic.DeleteAsync(id);
+            await DbContext.SaveChangesAsync();
+
+            return await DeletedROCostCalAsync(deletedImage.CostCalculationGarment, (int)deletedImage.CostCalculationGarmentId);
+        }
+
+        public async Task<int> DeletedROCostCalAsync(CostCalculationGarment costCalculationGarment, int Id)
+        {
+            costCalculationGarment.RO_GarmentId = null;
+            costCalculationGarment.ImageFile = string.IsNullOrWhiteSpace(costCalculationGarment.ImageFile) ? "#" : costCalculationGarment.ImageFile;
+            await costCalGarmentLogic.UpdateAsync((int)costCalculationGarment.Id, costCalculationGarment);
+
             return await DbContext.SaveChangesAsync();
         }
 
@@ -104,12 +120,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
 
             Model.ImagesPath = await this.AzureImageFacade.UploadMultipleImage(Model.GetType().Name, (int)Model.Id, Model.CreatedUtc, Model.ImagesFile, Model.ImagesPath);
 
-            int updated = await this.UpdateAsync(id, Model);
+            roGarmentLogic.UpdateAsync(id,Model);
+            await DbContext.SaveChangesAsync();
 
-            costCalculationGarment.RO_GarmentId = (int)Model.Id;
-            await this.costCalGarmentLogic.UpdateAsync((int)costCalculationGarment.Id, costCalculationGarment);
-
-            return updated;
+            return await UpdateCostCalAsync(costCalculationGarment, (int)Model.Id);
         }
 
     }
