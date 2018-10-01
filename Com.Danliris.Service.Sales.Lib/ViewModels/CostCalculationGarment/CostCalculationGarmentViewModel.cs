@@ -75,8 +75,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 
 			if (UOM == null || string.IsNullOrWhiteSpace(UOM.Unit))
 				yield return new ValidationResult("Satuan harus diisi", new List<string> { "UOM" });
+            if (BuyerBrand == null || string.IsNullOrWhiteSpace(BuyerBrand.Code))
+                yield return new ValidationResult("Brand Buyer harus diisi", new List<string> { "BuyerBrand" });
 
-			if (this.Quantity == null)
+            if (this.Quantity == null)
 				yield return new ValidationResult("Kuantitas harus diisi", new List<string> { "Quantity" });
 			else if (this.Quantity <= 0)
 				yield return new ValidationResult("Kuantitas harus lebih besar dari 0", new List<string> { "Quantity" });
@@ -140,8 +142,17 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 							Count++;
 							costCalculationGarment_MaterialsError += "Quantity: 'Kuantitas harus lebih besar dari 0', ";
 						}
-
-						if (costCalculation_Material.Conversion == null)
+                        if (costCalculation_Material.Price == null)
+                        {
+                            Count++;
+                            costCalculationGarment_MaterialsError += "Price: 'Harga harus diisi', ";
+                        }
+                        else if (costCalculation_Material.Price <= 0)
+                        {
+                            Count++;
+                            costCalculationGarment_MaterialsError += "Price: 'Harga harus lebih besar dari 0', ";
+                        }
+                        if (costCalculation_Material.Conversion == null)
 						{
 							Count++;
 							costCalculationGarment_MaterialsError += "Conversion: 'Konversi harus diisi', ";
@@ -157,13 +168,25 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 							Count++;
 							costCalculationGarment_MaterialsError += "UOMQuantity: 'Satuan Kuantitas harus diisi', ";
 						}
-
+                        if (costCalculation_Material.UOMPrice != null && costCalculation_Material.UOMQuantity != null && costCalculation_Material.Conversion !=null && costCalculation_Material.Conversion >0)
+                        {
+                            if(costCalculation_Material.UOMPrice.Unit == costCalculation_Material.UOMQuantity.Unit && costCalculation_Material.Conversion >1)
+                            {
+                                Count++;
+                                costCalculationGarment_MaterialsError += "Conversion: 'Satuan Sama, Konversi harus 1', ";
+                            }
+                        }
 						if (costCalculation_Material.UOMPrice == null || string.IsNullOrWhiteSpace(costCalculation_Material.UOMPrice.Unit))
 						{
 							Count++;
 							costCalculationGarment_MaterialsError += "UOMPrice: 'Satuan Harga harus diisi', ";
 						}
-					}
+                        if (costCalculation_Material.Description == null || string.IsNullOrWhiteSpace(costCalculation_Material.Description))
+                        {
+                            Count++;
+                            costCalculationGarment_MaterialsError += "Description: 'Deskripsi harus diisi', ";
+                        }
+                    }
 					costCalculationGarment_MaterialsError += "},";
 				}
 			}

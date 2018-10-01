@@ -69,7 +69,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      UOMCode=ccg.UOMCode,
                      UOMID=ccg.UOMID,
                      UOMUnit=ccg.UOMUnit,
-					 LastModifiedUtc = ccg.LastModifiedUtc
+					 LastModifiedUtc = ccg.LastModifiedUtc              
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -155,16 +155,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 				foreach (var itemId in detailIds)
 				{
 					CostCalculationGarment_Material data = model.CostCalculationGarment_Materials.FirstOrDefault(prop => prop.Id.Equals(itemId));
-					if (data == null)
-						await costCalculationGarmentMaterialLogic.DeleteAsync(Convert.ToInt32(itemId));
-					else
-					{
-						costCalculationGarmentMaterialLogic.UpdateAsync(Convert.ToInt32(itemId), data);
-					}
+                    if (data == null)
+                    {
+                        CostCalculationGarment_Material dataItem = DbContext.CostCalculationGarment_Materials.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                        //await costCalculationGarmentMaterialLogic.DeleteAsync(Convert.ToInt32(itemId));
+                    }
+                    else
+                    {
+                        costCalculationGarmentMaterialLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                    }
 
 					foreach (CostCalculationGarment_Material item in model.CostCalculationGarment_Materials)
 					{
-						if (item.Id == 0)
+						if (item.Id <= 0)
 							costCalculationGarmentMaterialLogic.Create(item);
 					}
 				}

@@ -73,6 +73,8 @@ namespace Com.Danliris.Service.Sales.WebApi
 				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>()
                 .AddTransient<IROGarment, ROGarmentFacade>()
                 .AddTransient<IArticleColor, ArticleColorFacade>()
+                .AddTransient<IRate, RateFacade>()
+                .AddTransient<IEfficiency, EfficiencyFacade>()
                 .AddTransient<AzureImageFacade>();
         }
 
@@ -95,7 +97,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ArticleColorLogic>()
                 .AddTransient<ROGarmentLogic>()
                 .AddTransient<ROGarmentSizeBreakdownLogic>()
-                .AddTransient<ROGarmentSizeBreakdownDetailLogic>();
+                .AddTransient<ROGarmentSizeBreakdownDetailLogic>()
+                .AddTransient<RateLogic>()
+                .AddTransient<EfficiencyLogic>();
 
         }
 
