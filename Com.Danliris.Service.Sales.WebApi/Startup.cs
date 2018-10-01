@@ -76,14 +76,12 @@ namespace Com.Danliris.Service.Sales.WebApi
 				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>()
                 .AddTransient<IROGarment, ROGarmentFacade>()
                 .AddTransient<IArticleColor, ArticleColorFacade>()
-<<<<<<< HEAD
                 .AddTransient<IRate, RateFacade>()
                 .AddTransient<IEfficiency, EfficiencyFacade>()
-                .AddTransient<AzureImageFacade>();
-=======
+                .AddTransient<AzureImageFacade>()
 				.AddTransient<AzureImageFacade>()
                 .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>();
->>>>>>> upstream/dev
+
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -106,13 +104,10 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ROGarmentLogic>()
                 .AddTransient<ROGarmentSizeBreakdownLogic>()
                 .AddTransient<ROGarmentSizeBreakdownDetailLogic>()
-<<<<<<< HEAD
                 .AddTransient<RateLogic>()
-                .AddTransient<EfficiencyLogic>();
-
-=======
+                .AddTransient<EfficiencyLogic>()
                 .AddTransient<RO_Garment_ValidationLogic>();
->>>>>>> upstream/dev
+
         }
 
         private void RegisterServices(IServiceCollection services)
