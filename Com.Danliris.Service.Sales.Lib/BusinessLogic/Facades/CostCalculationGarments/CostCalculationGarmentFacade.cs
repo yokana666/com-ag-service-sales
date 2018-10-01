@@ -32,7 +32,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 
 		public async Task<CostCalculationGarment> CustomCodeGenerator(CostCalculationGarment Model)
 		{
-			List<string> convectionOption = new List<string> { "C2a", "C2B", "C2C", "C1A", "C1B" };
+			List<string> convectionOption = new List<string> { "C2A", "C2B", "C2C", "C1A", "C1B" };
 			int convectionCode = convectionOption.IndexOf(Model.UnitCode) + 1;
 
 			var lastData = await this.DbSet.Where(w => w.IsDeleted == false && w.UnitCode == Model.UnitCode).OrderByDescending(o => o.CreatedUtc).FirstOrDefaultAsync();
@@ -72,17 +72,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 				await CustomCodeGenerator(model);
 			}
 			while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
-			var a = model.GetType().Name;
-			var b = model.Id;
-			var c = model.CreatedUtc;
-			var dS = model.ImageFile;
+
+			model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+			costCalculationGarmentLogic.Create(model);
             if (model.ImagePath != null)
             {
                 model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
             }
             costCalculationGarmentLogic.Create(model);
-			
-			
 			return await DbContext.SaveChangesAsync();
 		}
 		public async Task<int> DeleteAsync(int id)

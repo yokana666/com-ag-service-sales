@@ -254,7 +254,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			PdfPCell cell_bottom_column2_1_colspan2 = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 3, Colspan = 2 };
 
-			cell_bottom_column2_1.Phrase = new Phrase("TOTAL", normal_font);
+			cell_bottom_column2_1.Phrase = new Phrase("TOTAL" , normal_font);
 			table_bottom_column2_1.AddCell(cell_bottom_column2_1);
 			double total = 0;
 			foreach (CostCalculationGarment_MaterialViewModel item in viewModel.CostCalculationGarment_Materials)
@@ -318,11 +318,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_bottom_column2_1.Phrase = new Phrase($"{Number.ToRupiahWithoutSymbol(viewModel.CommissionRate)}", normal_font);
 			table_bottom_column2_1.AddCell(cell_bottom_column2_1);
 
-			cell_bottom_column2_1.Phrase = new Phrase("CONFIRM PRICE", normal_font);
+			cell_bottom_column2_1.Phrase = new Phrase("CONFIRM PRICE" , normal_font);
 			table_bottom_column2_1.AddCell(cell_bottom_column2_1); ;
 			double confirmPrice = viewModel.ConfirmPrice ?? 0 + viewModel.Rate.Value ?? 0;
 			double confirmPriceWithRate = isDollar ? confirmPrice * viewModel.Rate.Value ?? 1 : confirmPrice;
-			cell_bottom_column2_1_colspan2.Phrase = new Phrase($"{Number.ToRupiahWithoutSymbol(confirmPriceWithRate)}", normal_font);
+			cell_bottom_column2_1_colspan2.Phrase = new Phrase(string.Format("{0:n4}", confirmPriceWithRate), normal_font);
 			table_bottom_column2_1.AddCell(cell_bottom_column2_1_colspan2);
 			#endregion
 
@@ -500,10 +500,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				cell_ccm_right.Phrase = new Phrase(String.Format("{0} {1}", viewModel.CostCalculationGarment_Materials[i].Quantity, viewModel.CostCalculationGarment_Materials[i].UOMQuantity.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
-				cell_ccm_right.Phrase = new Phrase(String.Format("{0}/{1}", Number.ToRupiahWithoutSymbol(viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
+				cell_ccm_right.Phrase = new Phrase(String.Format("{0}/{1}", string.Format("{0:n4}", viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
-				cell_ccm_right.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(viewModel.CostCalculationGarment_Materials[i].Total), normal_font);
+				cell_ccm_right.Phrase = new Phrase(string.Format("{0:n2}",viewModel.CostCalculationGarment_Materials[i].Total), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
 				Total += viewModel.CostCalculationGarment_Materials[i].Total;

@@ -39,8 +39,10 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<RO_Garment> RO_Garments { get; set; }
         public DbSet<RO_Garment_SizeBreakdown> RO_Garment_SizeBreakdowns { get; set; }
         public DbSet<RO_Garment_SizeBreakdown_Detail> RO_Garment_SizeBreakdown_Details { get; set; }
-
+        public DbSet<Rate> Rates { get; set; }
         public DbSet<ArticleColor> ArticleColors { get; set; }
+        public DbSet<Efficiency> Efficiencies { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -69,7 +69,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      UOMCode=ccg.UOMCode,
                      UOMID=ccg.UOMID,
                      UOMUnit=ccg.UOMUnit,
-					 LastModifiedUtc = ccg.LastModifiedUtc
+					 LastModifiedUtc = ccg.LastModifiedUtc              
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -100,9 +100,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 		{
 			int lastFabricNumber = GetLastMaterialFabricNumberByCategoryName(model.UnitCode);
 			int lastNonFabricNumber = GetLastMaterialNonFabricNumberByCategoryName(model.UnitCode);
-			int convectionCode = model.UnitId;
+            List<string> convectionOption = new List<string> { "C2A", "C2B", "C2C", "C1A", "C1B" };
+            int convectionCode = convectionOption.IndexOf(model.UnitCode) + 1;
 
-			DateTime Now = DateTime.Now;
+            DateTime Now = DateTime.Now;
 			string Year = Now.ToString("yy");
 
 			foreach (CostCalculationGarment_Material item in model.CostCalculationGarment_Materials)
@@ -113,14 +114,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 					if (item.CategoryName.ToUpper().Equals("FABRIC"))
 					{
 						lastFabricNumber += 1;
-						Number = lastFabricNumber.ToString().PadLeft(4, '0');
+						Number = lastFabricNumber.ToString().PadLeft(5, '0');
 						item.PO_SerialNumber = $"PM{Year}{convectionCode}{Number}";
 						item.AutoIncrementNumber = lastFabricNumber;
 					}
 					else
 					{
 						lastNonFabricNumber += 1;
-						Number = lastNonFabricNumber.ToString().PadLeft(4, '0');
+						Number = lastNonFabricNumber.ToString().PadLeft(5, '0');
 						item.PO_SerialNumber = $"PA{Year}{convectionCode}{Number}";
 						item.AutoIncrementNumber = lastNonFabricNumber;
 					}
@@ -154,16 +155,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 				foreach (var itemId in detailIds)
 				{
 					CostCalculationGarment_Material data = model.CostCalculationGarment_Materials.FirstOrDefault(prop => prop.Id.Equals(itemId));
-					if (data == null)
-						await costCalculationGarmentMaterialLogic.DeleteAsync(Convert.ToInt32(itemId));
-					else
-					{
-						costCalculationGarmentMaterialLogic.UpdateAsync(Convert.ToInt32(itemId), data);
-					}
+                    if (data == null)
+                    {
+                        CostCalculationGarment_Material dataItem = DbContext.CostCalculationGarment_Materials.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                        //await costCalculationGarmentMaterialLogic.DeleteAsync(Convert.ToInt32(itemId));
+                    }
+                    else
+                    {
+                        costCalculationGarmentMaterialLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                    }
 
 					foreach (CostCalculationGarment_Material item in model.CostCalculationGarment_Materials)
 					{
-						if (item.Id == 0)
+						if (item.Id <= 0)
 							costCalculationGarmentMaterialLogic.Create(item);
 					}
 				}
