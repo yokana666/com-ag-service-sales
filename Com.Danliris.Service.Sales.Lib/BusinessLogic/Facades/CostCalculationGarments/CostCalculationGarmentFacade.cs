@@ -72,10 +72,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 				await CustomCodeGenerator(model);
 			}
 			while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
+
 			model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
 			costCalculationGarmentLogic.Create(model);
-			
-			
+            if (model.ImagePath != null)
+            {
+                model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+            }
+            costCalculationGarmentLogic.Create(model);
 			return await DbContext.SaveChangesAsync();
 		}
 		public async Task<int> DeleteAsync(int id)
@@ -99,9 +103,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 			   .Include(d => d.CostCalculationGarment_Materials)
 			   .FirstOrDefaultAsync();
 
-			read.ImageFile = await this.AzureImageFacade.DownloadImage(read.GetType().Name, read.ImagePath);
+            if (read.ImagePath != null)
+            {
+                read.ImageFile = await this.AzureImageFacade.DownloadImage(read.GetType().Name, read.ImagePath);
+            }
 
-			return read;
+            return read;
 		}
 
 		public async Task<int> UpdateAsync(int id, CostCalculationGarment model)

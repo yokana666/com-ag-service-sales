@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Com.Moonlay.NetCore.Lib;
 using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Moonlay.Models;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
 {
@@ -46,14 +47,24 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                   "Id", "Code", "CostCalculationGarment", "Total"
             };
 
-            Query = Query
-                 .Select(ccg => new RO_Garment
+            Query = Query.Join(DbContext.CostCalculationGarments, ro=>ro.CostCalculationGarmentId, ccg=>ccg.Id, (ro,ccg)=>
+             new RO_Garment
                  {
-                     Id = ccg.Id,
-                     Code = ccg.Code,
-                     CostCalculationGarment=ccg.CostCalculationGarment,
-                     CostCalculationGarmentId=ccg.CostCalculationGarmentId,
-                     LastModifiedUtc = ccg.LastModifiedUtc
+                     Id = ro.Id,
+                     Code = ro.Code,
+                     CostCalculationGarment = new CostCalculationGarment()
+                     {
+                         Id = ccg.Id,
+                         Code = ccg.Code,
+                         RO_Number = ccg.RO_Number,
+                         Article = ccg.Article,
+                         UnitCode = ccg.UnitCode,
+                         UnitName = ccg.UnitName
+                         //LineId = ro.CostCalculationGarment.LineId,
+                         //LineName = ro.CostCalculationGarment.LineName,
+                     },
+                     Total = ro.Total,
+                     LastModifiedUtc = ro.LastModifiedUtc
                  });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);

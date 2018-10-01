@@ -43,6 +43,6 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
 		public double TotalShippingFee { get; set; }
 		public double BudgetQuantity { get; set; }
 		public string Information { get; set; }
-		
+		public bool IsPosted { get; set; }
 	}
 }
