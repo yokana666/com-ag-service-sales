@@ -44,7 +44,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 
             var stringContent = JsonConvert.SerializeObject(FillGarmentPurchaseRequest(costCalculationGarment));
             var httpContent = new StringContent(stringContent, Encoding.UTF8, General.JsonMediaType);
-            var httpResponseMessage = await httpClient.PostAsync($@"{APIEndpoint.Purchasing}{GarmentPurchaseRequestUri}", httpContent);
+            var httpResponseMessage = await httpClient.PostAsync($@"{APIEndpoint.AzurePurchasing}{GarmentPurchaseRequestUri}", httpContent);
 
             CheckResponse(httpResponseMessage);
         }
@@ -65,14 +65,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
             var stringContent = JsonConvert.SerializeObject(oldGarmentPurchaseRequest);
             var httpContent = new StringContent(stringContent, Encoding.UTF8, General.JsonMediaType);
 
-            var httpResponseMessage = await httpClient.PutAsync($@"{APIEndpoint.Purchasing}{GarmentPurchaseRequestUri}/{oldGarmentPurchaseRequest.Id}", httpContent);
+            var httpResponseMessage = await httpClient.PutAsync($@"{APIEndpoint.AzurePurchasing}{GarmentPurchaseRequestUri}/{oldGarmentPurchaseRequest.Id}", httpContent);
 
             CheckResponse(httpResponseMessage);
         }
 
         private async Task<GarmentPurchaseRequestViewModel> GetGarmentPurchaseRequestByRONo(string roNo)
         {
-            var httpResponseMessage = await httpClient.GetAsync($@"{APIEndpoint.Purchasing}{GarmentPurchaseRequestUri}/by-rono/{roNo}");
+            var httpResponseMessage = await httpClient.GetAsync($@"{APIEndpoint.AzurePurchasing}{GarmentPurchaseRequestUri}/by-rono/{roNo}");
 
             if (httpResponseMessage.StatusCode.Equals(HttpStatusCode.OK))
             {
@@ -168,7 +168,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
         private ProductViewModel GetProduct(string ProductId)
         {
             SetHttpClient();
-            var httpResponseMessage = httpClient.GetAsync($@"{APIEndpoint.AzureCore}{ProductUri}/{ProductId}").Result;
+            var httpResponseMessage = httpClient.GetAsync($@"{APIEndpoint.Core}{ProductUri}/{ProductId}").Result;
 
             if (httpResponseMessage.StatusCode.Equals(HttpStatusCode.OK))
             {
