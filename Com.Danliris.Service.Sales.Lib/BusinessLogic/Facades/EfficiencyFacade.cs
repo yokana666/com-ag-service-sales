@@ -60,6 +60,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades
 
         public async Task<int> UpdateAsync(int id, Efficiency model)
         {
+            model.Value /= 100;
             efficiencyLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
