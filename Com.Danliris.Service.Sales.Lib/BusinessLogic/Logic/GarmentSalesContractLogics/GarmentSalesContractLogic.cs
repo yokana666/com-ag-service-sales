@@ -40,7 +40,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "BuyerName", "SalesContractNo", "LastModifiedUtc","CreatedUtc","Comodity","Article","RONumber"
+                "Id", "BuyerBrandName", "BuyerBrandCode", "SalesContractNo", "LastModifiedUtc","CreatedUtc","ComodityCode","ComodityName","Article","RONumber"
             };
 
             Query = Query
@@ -49,9 +49,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
                     Id = sc.Id,
                     RONumber=sc.RONumber,
                     SalesContractNo = sc.SalesContractNo,
-                    BuyerName = sc.BuyerName,
-                    BuyerId = sc.BuyerId,
-                    CreatedUtc= sc.CreatedUtc,
+                    BuyerBrandCode = sc.BuyerBrandCode,
+                    BuyerBrandId = sc.BuyerBrandId,
+                    BuyerBrandName = sc.BuyerBrandName,
+                    CreatedUtc = sc.CreatedUtc,
                     LastModifiedUtc = sc.LastModifiedUtc,
                     AccountBankId=sc.AccountBankId,
                     AccountBankName=sc.AccountBankName,
@@ -59,8 +60,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
                     Amount=sc.Amount,
                     IsDeleted=sc.IsDeleted,
                     IsEmbrodiary=sc.IsEmbrodiary,
-                    Comodity=sc.Comodity,
-                    Article=sc.Article,
+                    ComodityCode=sc.ComodityCode,
+                    ComodityName = sc.ComodityName,
+                    Article =sc.Article,
                     DocPrinted=sc.DocPrinted
                 }).OrderByDescending(s=>s.LastModifiedUtc);
 
@@ -92,6 +94,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
         {
             var garmentSalesContract = await DbSet.Include(p => p.Items).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
             garmentSalesContract.Items = garmentSalesContract.Items.OrderBy(s => s.Id).ToArray();
+            return garmentSalesContract;
+        }
+
+        public GarmentSalesContract ReadByCostCal(int id)
+        {
+            var garmentSalesContract =  DbSet.Where(d => d.CostCalculationId.Equals(id) && d.IsDeleted.Equals(false)).FirstOrDefault();
+            
             return garmentSalesContract;
         }
 

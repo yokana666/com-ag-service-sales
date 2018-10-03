@@ -43,8 +43,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 			List<string> SelectedFields = new List<string>()
 			{
 				  "Id", "Code", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc",
-					"Comodity", "UOM", "Buyer", "DeliveryDate"
-			};
+					"Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand"
+            };
 
 			Query = Query
 				 .Select(ccg => new CostCalculationGarment
@@ -61,6 +61,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      BuyerCode=ccg.BuyerCode,
                      BuyerId=ccg.BuyerId,
                      BuyerName=ccg.BuyerName,
+                     BuyerBrandCode=ccg.BuyerBrandCode,
+                     BuyerBrandId=ccg.BuyerBrandId,
+                     BuyerBrandName=ccg.BuyerBrandName,
                      Commodity=ccg.Commodity,
                      ComodityCode=ccg.ComodityCode,
                      CommodityDescription=ccg.CommodityDescription,
