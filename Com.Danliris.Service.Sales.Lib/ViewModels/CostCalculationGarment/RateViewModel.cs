@@ -18,9 +18,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
                 yield return new ValidationResult("Nama ongkos harus diisi", new List<string> { "Name" });
 
             if (this.Value == null)
-                yield return new ValidationResult("Tarif ongkos harus diisi", new List<string> { "Rate" });
+                yield return new ValidationResult("Tarif ongkos harus diisi", new List<string> { "Value" });
             else if (this.Value <= 0)
-                yield return new ValidationResult("Tarif ongkos harus lebih besar dari 0", new List<string> { "Rate" });
+                yield return new ValidationResult("Tarif ongkos harus lebih besar dari 0", new List<string> { "Value" });
         }
     }
 }
