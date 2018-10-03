@@ -13,12 +13,12 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel
         public int CostCalculationId { get; set; }
         [MaxLength(255)]
         public string RONumber { get; set; }
-        public string BuyerId { get; set; }
+        public int BuyerBrandId { get; set; }
+        public string BuyerBrandCode { get; set; }
+        public string BuyerBrandName { get; set; }
+        public int ComodityId { get; set; }
         [MaxLength(500)]
-        public string BuyerName { get; set; }
-        public string ComodityId { get; set; }
-        [MaxLength(500)]
-        public string Comodity { get; set; }
+        public string ComodityName { get; set; }
         [MaxLength(500)]
         public string ComodityCode { get; set; }
         [MaxLength(1000)]
