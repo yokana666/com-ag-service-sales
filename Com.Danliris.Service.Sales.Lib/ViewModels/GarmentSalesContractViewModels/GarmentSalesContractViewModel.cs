@@ -1,8 +1,12 @@
-﻿using Com.Danliris.Service.Sales.Lib.Utilities;
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentSalesContractInterface;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSalesContractViewModels
@@ -12,10 +16,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSalesContractViewMode
         public string SalesContractNo { get; set; }
         public int CostCalculationId { get; set; }
         public string RONumber { get; set; }
-        public string BuyerId { get; set; }
-        public string BuyerName { get; set; }
+        public string BuyerBrandId { get; set; }
+        public string BuyerBrandName { get; set; }
+        public string BuyerBrandCode { get; set; }
         public string ComodityId { get; set; }
-        public string Comodity { get; set; }
+        public string ComodityName { get; set; }
         public string ComodityCode { get; set; }
         public string Packing { get; set; }
         public string Article { get; set; }
@@ -45,6 +50,18 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSalesContractViewMode
         public List<GarmentSalesContractItemViewModel> Items { get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            SalesDbContext dbContext = (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
+            //var duplicateRONo = dbContext.GarmentPurchaseRequests.Where(m => m.RONo.Equals(RONo) && m.Id != Id).Count();
+            //IGarmentSalesContract Service = (IGarmentSalesContract)validationContext.GetService(typeof(IGarmentSalesContract));
+            if (CostCalculationId != 0)
+            {
+                var duplicateRONo = dbContext.GarmentSalesContracts.Where(m => m.CostCalculationId.Equals(CostCalculationId) && m.Id != Id && m.IsDeleted==false).Count();
+                if (duplicateRONo>0)
+                {
+                    yield return new ValidationResult("Nomor RO sudah dibuat Sales Contract", new List<string> { "RONumber" });
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(RONumber))
             {
                 yield return new ValidationResult("Nomor RO harus diisi", new List<string> { "RONumber" });
@@ -53,6 +70,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSalesContractViewMode
             if (string.IsNullOrWhiteSpace(Delivery))
             {
                 yield return new ValidationResult("Delivery harus diisi", new List<string> { "Delivery" });
+            }
+
+            if (string.IsNullOrWhiteSpace(Description))
+            {
+                yield return new ValidationResult("Description harus diisi", new List<string> { "Description" });
             }
 
             if (AccountBank == null || AccountBank.Id.Equals(0))
@@ -94,6 +116,20 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSalesContractViewMode
             {
                 int Count = 0;
                 string ItemError = "[";
+                double qtyTotal = 0;
+
+                foreach (GarmentSalesContractItemViewModel item in Items)
+                {
+                    if(item.Quantity > 0)
+                    {
+                        qtyTotal += item.Quantity;
+                    }
+                }
+
+                if(Quantity != qtyTotal)
+                {
+                    yield return new ValidationResult("Total Quantity harus sama dengan quantity RO", new List<string> { "TotalQuantity" });
+                }
 
                 foreach (GarmentSalesContractItemViewModel item in Items)
                 {
@@ -104,7 +140,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSalesContractViewMode
                         ItemError += " Description: 'Keterangan harus diisi' , ";
                     }
 
-                    if (item.Price <= 0)
+                    if (item.Quantity <= 0)
                     {
                         Count++;
                         ItemError += " Quantity: 'Quantity harus lebih besar dari 0' , ";

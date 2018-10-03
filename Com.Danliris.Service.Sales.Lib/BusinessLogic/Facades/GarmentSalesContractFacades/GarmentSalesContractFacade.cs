@@ -76,5 +76,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContr
             DbSet.Update(model);
             return await DbContext.SaveChangesAsync();
         }
+
+        public GarmentSalesContract ReadByCostCal(int id)
+        {
+            return  garmentSalesContractLogic.ReadByCostCal(id);
+        }
     }
 }

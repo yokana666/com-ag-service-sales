@@ -56,7 +56,9 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 
                     GarmentSalesContractPDFTemplate PdfTemplate = new GarmentSalesContractPDFTemplate();
 
+
                     string BuyerUri = "master/garment-buyers";
+                    string BuyerBrandUri = "master/garment-buyer-brands";
                     string BankUri = "master/account-banks";
 
                     string Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
@@ -64,11 +66,20 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     HttpClient httpClient = new HttpClient();
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 
-                    /* Get Buyer */
-                    var response = httpClient.GetAsync($@"{APIEndpoint.Core}{BuyerUri}/" + viewModel.BuyerId).Result.Content.ReadAsStringAsync();
+                    /* Get BuyerBrand */
+                    var response = httpClient.GetAsync($@"{APIEndpoint.Core}{BuyerBrandUri}/" + viewModel.BuyerBrandId).Result.Content.ReadAsStringAsync();
                     Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
                     var json = result.Single(p => p.Key.Equals("data")).Value;
-                    Dictionary<string, object> buyer = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+                    Dictionary<string, object> buyerBrand = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
+
+                    Dictionary<string, object> buyers = JsonConvert.DeserializeObject<Dictionary<string, object>>(buyerBrand["Buyers"].ToString());
+
+
+                    /* Get Buyer */
+                    var responseBuyer = httpClient.GetAsync($@"{APIEndpoint.Core}{BuyerUri}/" + buyers["Id"]).Result.Content.ReadAsStringAsync();
+                    Dictionary<string, object> resultBuyer = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBuyer.Result);
+                    var jsonBuyer = resultBuyer.Single(p => p.Key.Equals("data")).Value;
+                    Dictionary<string, object> buyer = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBuyer.ToString());
 
                     /* Get AccountBank */
                     var responseBank = httpClient.GetAsync($@"{APIEndpoint.Core}{BankUri}/" + viewModel.AccountBank.Id).Result.Content.ReadAsStringAsync();
