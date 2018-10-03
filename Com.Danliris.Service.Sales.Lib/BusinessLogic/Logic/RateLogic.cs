@@ -43,8 +43,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic
                     Id = b.Id,
                     Code = b.Code,
                     Name = b.Name,
-                    Value = b.Value
-                });
+                    Value = b.Value,
+                    LastModifiedUtc=b.LastModifiedUtc
+                }).OrderByDescending(b=>b.LastModifiedUtc);
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
             Query = QueryHelper<Rate>.Order(Query, OrderDictionary);
