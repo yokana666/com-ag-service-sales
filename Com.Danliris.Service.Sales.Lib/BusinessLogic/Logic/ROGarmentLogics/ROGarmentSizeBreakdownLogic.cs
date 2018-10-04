@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Text;
 using Com.Moonlay.Models;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
 {
@@ -87,7 +88,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                     RO_Garment_SizeBreakdown_Detail data = model.RO_Garment_SizeBreakdown_Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
                     if (data == null)
                     {
-                        await roGarmentSizeBreakdownDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
+                        RO_Garment_SizeBreakdown_Detail dataItem = DbContext.RO_Garment_SizeBreakdown_Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                        //await roGarmentSizeBreakdownDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
 
                     }
                     else
@@ -104,6 +107,22 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             }
 
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            DbSet.Update(model);
+        }
+
+        public override async Task DeleteAsync(int id)
+        {
+            RO_Garment_SizeBreakdown model = await ReadByIdAsync(id);
+            if (model.RO_Garment_SizeBreakdown_Details != null)
+            {
+                HashSet<long> detailIds = roGarmentSizeBreakdownDetailLogic.GetIds(id);
+                foreach (var itemId in detailIds)
+                {
+                    await roGarmentSizeBreakdownDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
+                }
+            }
+
+            EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);
         }
     }
