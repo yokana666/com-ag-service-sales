@@ -12,6 +12,7 @@ using Com.Moonlay.NetCore.Lib;
 using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Moonlay.Models;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
 {
@@ -31,13 +32,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
         public override ReadResponse<RO_Garment> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             IQueryable<RO_Garment> Query = DbSet;
-
-            List<string> SearchAttributes = new List<string>()
-            {
-                "Code"
-            };
-
-            Query = QueryHelper<RO_Garment>.Search(Query, SearchAttributes, keyword);
 
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             Query = QueryHelper<RO_Garment>.Filter(Query, FilterDictionary);
@@ -60,12 +54,19 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                          Article = ccg.Article,
                          UnitCode = ccg.UnitCode,
                          UnitName = ccg.UnitName
-                         //LineId = ro.CostCalculationGarment.LineId,
-                         //LineName = ro.CostCalculationGarment.LineName,
                      },
                      Total = ro.Total,
                      LastModifiedUtc = ro.LastModifiedUtc
                  });
+
+            //List<string> SearchAttributes = new List<string>()
+            //{
+            //    "Code","CostCalculationGarments.Article"
+            //};
+
+            //Query = QueryHelper<RO_Garment>.Search(Query, SearchAttributes, keyword);
+            if(!string.IsNullOrWhiteSpace(keyword))
+                Query = Query.Where(sc => sc.CostCalculationGarment.Article.Contains(keyword) || sc.CostCalculationGarment.RO_Number.Contains(keyword) || sc.CostCalculationGarment.UnitName.Contains(keyword));
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
             Query = QueryHelper<RO_Garment>.Order(Query, OrderDictionary);
@@ -105,7 +106,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                     RO_Garment_SizeBreakdown data = model.RO_Garment_SizeBreakdowns.FirstOrDefault(prop => prop.Id.Equals(itemId));
                     if (data == null)
                     {
-                        await roGarmentSizeBreakdownLogic.DeleteAsync(Convert.ToInt32(itemId));
+                        RO_Garment_SizeBreakdown dataItem = DbContext.RO_Garment_SizeBreakdowns.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
 
                     }
                     else
@@ -125,5 +127,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             DbSet.Update(model);
         }
 
+        //public override async void DeleteAsync(int id)
+        //{
+        //    TModel model = await ReadByIdAsync(id);
+        //    EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
+        //    DbSet.Update(model);
+        //}
+
+        public override async Task DeleteAsync(int id)
+        {
+            RO_Garment model = await ReadByIdAsync(id);
+            if (model.RO_Garment_SizeBreakdowns != null)
+            {
+                HashSet<long> detailIds = roGarmentSizeBreakdownLogic.GetIds(id);
+                foreach (var itemId in detailIds)
+                {
+                    await roGarmentSizeBreakdownLogic.DeleteAsync(Convert.ToInt32(itemId));
+                }
+            }
+
+            EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service");
+            DbSet.Update(model);
+        }
     }
 }

@@ -23,12 +23,37 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
             if (this.CostCalculationGarment == null)
                 yield return new ValidationResult("Nomor RO harus diisi", new List<string> { "CostCalculationGarment" });
 
+            if (string.IsNullOrWhiteSpace(Instruction))
+            {
+                yield return new ValidationResult("Instruksi harus diisi", new List<string> { "Instruction" });
+            }
+
+            if (ImagesFile.Count.Equals(0))
+            {
+                yield return new ValidationResult("Gambar harus Ada", new List<string> { "ImageFile" });
+            }
+            else if (ImagesName.Count.Equals(0) || ImagesName.Count!=ImagesFile.Count)
+            {
+                yield return new ValidationResult("Nama Gambar harus diisi", new List<string> { "ImageFile" });
+            }
+
             if (this.RO_Garment_SizeBreakdowns == null || this.RO_Garment_SizeBreakdowns.Count == 0)
                 yield return new ValidationResult("Size Breakdown harus diisi", new List<string> { "SizeBreakdowns" });
             else
             {
                 int Count = 0;
                 string error = "[";
+                int QtyTotal = 0;
+
+                foreach (var item in this.RO_Garment_SizeBreakdowns)
+                {
+                    QtyTotal += item.Total;
+                }
+
+                if (Total != QtyTotal)
+                {
+                    yield return new ValidationResult("Total Jumlah Size Breakdown harus sama dengan Quantity RO", new List<string> { "TotalQuantity" });
+                }
 
                 foreach (var item in this.RO_Garment_SizeBreakdowns)
                 {
@@ -45,6 +70,26 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
                     {
                         Count++;
                         error += "Detail: 'Detail is required', ";
+                    }
+                    else
+                    {
+                        int DetailCount = 0;
+                        string Detailerror = "[";
+                        foreach (var detail in item.RO_Garment_SizeBreakdown_Details)
+                        {
+                            Detailerror += " { ";
+                            if (string.IsNullOrWhiteSpace(detail.Size))
+                            {
+                                DetailCount++;
+                                Detailerror += "Size: 'Size is required', ";
+                            }
+                            Detailerror += " }, ";
+                        }
+                        Detailerror += "]";
+                        if (DetailCount > 0)
+                        {
+                            yield return new ValidationResult(Detailerror, new List<string> { "SizeBreakdownDetails" });
+                        }
                     }
 
                     error += " }, ";
