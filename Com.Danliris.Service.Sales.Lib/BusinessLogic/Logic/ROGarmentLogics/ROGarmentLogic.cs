@@ -101,14 +101,21 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             if (model.RO_Garment_SizeBreakdowns != null)
             {
                 HashSet<long> detailIds = roGarmentSizeBreakdownLogic.GetIds(id);
+
                 foreach (var itemId in detailIds)
                 {
                     RO_Garment_SizeBreakdown data = model.RO_Garment_SizeBreakdowns.FirstOrDefault(prop => prop.Id.Equals(itemId));
                     if (data == null)
                     {
                         RO_Garment_SizeBreakdown dataItem = DbContext.RO_Garment_SizeBreakdowns.FirstOrDefault(prop => prop.Id.Equals(itemId));
-                        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                        List<RO_Garment_SizeBreakdown_Detail> details = DbContext.RO_Garment_SizeBreakdown_Details.Where(a => a.RO_Garment_SizeBreakdownId.Equals(itemId)).ToList();
+                        foreach (RO_Garment_SizeBreakdown_Detail detail in details)
+                        {
+                            EntityExtension.FlagForDelete(detail, IdentityService.Username, "sales-service");
+                        }
 
+                        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                        
                     }
                     else
                     {

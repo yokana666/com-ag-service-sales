@@ -63,13 +63,13 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
                     if (item.Color == null)
                     {
                         Count++;
-                        error += "Color: 'Color is required', ";
+                        error += "Color: 'Color harus diisi', ";
                     }
 
                     if (item.RO_Garment_SizeBreakdown_Details == null || item.RO_Garment_SizeBreakdown_Details.Count == 0)
                     {
-                        Count++;
-                        error += "Detail: 'Detail is required', ";
+                        yield return new ValidationResult("Details harus diisi", new List<string> { "SizeBreakdownDetails" });
+                        
                     }
                     else
                     {
@@ -81,14 +81,26 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
                             if (string.IsNullOrWhiteSpace(detail.Size))
                             {
                                 DetailCount++;
-                                Detailerror += "Size: 'Size is required', ";
+                                Detailerror += "Size: 'Size harus diisi', ";
+                            }
+                            if (detail.Quantity<=0)
+                            {
+                                DetailCount++;
+                                Detailerror += "Quantity: 'Quantity harus lebih dari 0', ";
+                            }
+                            if (string.IsNullOrWhiteSpace(detail.Information))
+                            {
+                                DetailCount++;
+                                Detailerror += "Information: 'Keterangan harus diisi', ";
                             }
                             Detailerror += " }, ";
                         }
                         Detailerror += "]";
                         if (DetailCount > 0)
                         {
-                            yield return new ValidationResult(Detailerror, new List<string> { "SizeBreakdownDetails" });
+                            Count++;
+                            error += string.Concat("SizeBreakdownDetails: ", Detailerror);
+                            //yield return new ValidationResult(Detailerror, new List<string> { "SizeBreakdownDetails" });
                         }
                     }
 
