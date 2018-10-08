@@ -10,6 +10,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment
     {
         List<CostCalculationGarment> Read();
         CostCalculationGarment Read(int id);
-        Task<int> ValidateROGarment(CostCalculationGarment model);
+        Task<int> ValidateROGarment(CostCalculationGarment model, Dictionary<long, string> productDicts);
     }
 }

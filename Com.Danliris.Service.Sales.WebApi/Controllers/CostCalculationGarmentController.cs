@@ -106,5 +106,54 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 				return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
 			}
 		}
-	}
+
+        [HttpGet("ro-garment-validation/{Id}")]
+        public async Task<IActionResult> GetById_RO_Garment_Validation([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                Service.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+                Service.Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
+
+                CostCalculationGarment model = await Facade.ReadByIdAsync(id);
+
+                if (model == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.NOT_FOUND_STATUS_CODE, Common.NOT_FOUND_MESSAGE)
+                        .Fail();
+                    return NotFound(Result);
+                }
+                else
+                {
+                    CostCalculationGarmentViewModel viewModel = Mapper.Map<CostCalculationGarmentViewModel>(model);
+
+                    var productIds = viewModel.CostCalculationGarment_Materials.Select(m => m.Product.Id).Distinct().ToList();
+                    var productDicts = await Facade.GetProductNames(productIds);
+
+                    foreach (var material in viewModel.CostCalculationGarment_Materials)
+                    {
+                        material.Product.Name = productDicts.GetValueOrDefault(material.Product.Id);
+                    }
+
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                        .Ok<CostCalculationGarmentViewModel>(viewModel);
+                    return Ok(Result);
+                }
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+    }
 }

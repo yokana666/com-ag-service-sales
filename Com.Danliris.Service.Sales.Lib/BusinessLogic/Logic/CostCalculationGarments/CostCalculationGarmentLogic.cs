@@ -1,15 +1,20 @@
 ﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades;
+using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -180,6 +185,46 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 			EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
 			DbSet.Update(model);
 		}
-		
-	}
+
+        public async Task<Dictionary<long, string>> GetProductNames(List<long> productIds)
+        {
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, IdentityService.Token);
+
+            var param = "";
+            foreach (var id in productIds)
+            {
+                param = string.Concat(param, $"garmentProductList[]={id}&");
+            }
+            param = param.Trim('&');
+
+            var httpResponseMessage = await httpClient.GetAsync($@"{APIEndpoint.Core}master/garmentProducts/byId?{param}");
+
+            if (httpResponseMessage.StatusCode.Equals(HttpStatusCode.OK))
+            {
+                var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
+                Dictionary<string, object> resultDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(result);
+
+                var data = resultDict.SingleOrDefault(p => p.Key.Equals("data")).Value;
+
+                List<Dictionary<string, object>> dataDicts = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(data.ToString());
+
+                var productDicts = new Dictionary<long, string>();
+
+                foreach (var dataDict in dataDicts)
+                {
+                    var Id = dataDict["Id"] != null ? Convert.ToInt64(dataDict["Id"].ToString()) : 0;
+                    var Name = dataDict["Name"] != null ? dataDict["Name"].ToString() : "";
+
+                    productDicts.Add(Id, Name);
+                }
+
+                return productDicts;
+            }
+            else
+            {
+                return new Dictionary<long, string>();
+            }
+        }
+    }
 }
