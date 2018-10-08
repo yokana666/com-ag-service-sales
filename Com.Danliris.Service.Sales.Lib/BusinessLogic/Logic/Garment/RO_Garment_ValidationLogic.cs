@@ -24,7 +24,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
         private HttpClient httpClient;
         private IIdentityService IdentityService;
 
-        private string ProductUri = "master/products";
         private string GarmentPurchaseRequestUri = "garment-purchase-requests";
 
         public RO_Garment_ValidationLogic(IServiceProvider serviceProvider)
@@ -38,23 +37,24 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, IdentityService.Token);
         }
 
-        public async Task CreateGarmentPurchaseRequest(CostCalculationGarment costCalculationGarment)
+        public async Task CreateGarmentPurchaseRequest(CostCalculationGarment costCalculationGarment, Dictionary<long, string> productDicts)
         {
             SetHttpClient();
 
-            var stringContent = JsonConvert.SerializeObject(FillGarmentPurchaseRequest(costCalculationGarment));
+            var stringContent = JsonConvert.SerializeObject(FillGarmentPurchaseRequest(costCalculationGarment, productDicts));
             var httpContent = new StringContent(stringContent, Encoding.UTF8, General.JsonMediaType);
+
             var httpResponseMessage = await httpClient.PostAsync($@"{APIEndpoint.AzurePurchasing}{GarmentPurchaseRequestUri}", httpContent);
 
             CheckResponse(httpResponseMessage);
         }
 
-        public async Task AddItemsGarmentPurchaseRequest(CostCalculationGarment costCalculationGarment)
+        public async Task AddItemsGarmentPurchaseRequest(CostCalculationGarment costCalculationGarment, Dictionary<long, string> productDicts)
         {
             SetHttpClient();
 
             var oldGarmentPurchaseRequest = await GetGarmentPurchaseRequestByRONo(costCalculationGarment.RO_Number);
-            var garmentPurchaseRequest = FillGarmentPurchaseRequest(costCalculationGarment);
+            var garmentPurchaseRequest = FillGarmentPurchaseRequest(costCalculationGarment, productDicts);
             //garmentPurchaseRequest.Id = oldGarmentPurchaseRequest.Id;
 
             foreach (var item in garmentPurchaseRequest.Items)
@@ -111,7 +111,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
             }
         }
 
-        private List<GarmentPurchaseRequestItemViewModel> FillGarmentPurchaseRequestItems(List<CostCalculationGarment_Material> costCalculationGarment_Materials)
+        private List<GarmentPurchaseRequestItemViewModel> FillGarmentPurchaseRequestItems(List<CostCalculationGarment_Material> costCalculationGarment_Materials, Dictionary<long, string> productDicts)
         {
             List<GarmentPurchaseRequestItemViewModel> GarmentPurchaseRequestItems = costCalculationGarment_Materials.Select(i => new GarmentPurchaseRequestItemViewModel
             {
@@ -120,7 +120,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                 {
                     Id = Convert.ToInt64(i.ProductId),
                     Code = i.ProductCode,
-                    Name = GetProduct(i.ProductId).Name
+                    Name = productDicts.GetValueOrDefault(Convert.ToInt64(i.ProductId))
                 },
                 Quantity = i.Quantity,
                 BudgetPrice = i.BudgetQuantity,
@@ -140,7 +140,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
             return GarmentPurchaseRequestItems;
         }
 
-        private GarmentPurchaseRequestViewModel FillGarmentPurchaseRequest(CostCalculationGarment costCalculation)
+        private GarmentPurchaseRequestViewModel FillGarmentPurchaseRequest(CostCalculationGarment costCalculation, Dictionary<long, string> productDicts)
         {
             GarmentPurchaseRequestViewModel garmentPurchaseRequest = new GarmentPurchaseRequestViewModel
             {
@@ -160,35 +160,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                     Code = costCalculation.UnitCode,
                     Name = costCalculation.UnitName
                 },
-                Items = FillGarmentPurchaseRequestItems(costCalculation.CostCalculationGarment_Materials.ToList())
+                Items = FillGarmentPurchaseRequestItems(costCalculation.CostCalculationGarment_Materials.ToList(), productDicts)
             };
             return garmentPurchaseRequest;
-        }
-
-        private ProductViewModel GetProduct(string ProductId)
-        {
-            SetHttpClient();
-            var httpResponseMessage = httpClient.GetAsync($@"{APIEndpoint.Core}{ProductUri}/{ProductId}").Result;
-
-            if (httpResponseMessage.StatusCode.Equals(HttpStatusCode.OK))
-            {
-                var result = httpResponseMessage.Content.ReadAsStringAsync().Result;
-                Dictionary<string, object> resultDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(result);
-
-                var data = resultDict.SingleOrDefault(p => p.Key.Equals("data")).Value;
-
-                Dictionary<string, object> productDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.ToString());
-
-                ProductViewModel productViewModel = new ProductViewModel
-                {
-                    Name = productDict["Name"] != null ? productDict["Name"].ToString() : ""
-                };
-                return productViewModel;
-            }
-            else
-            {
-                return null;
-            }
         }
     }
 }

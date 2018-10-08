@@ -9,7 +9,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 	public class GarmentProductViewModel : BaseViewModel, IValidatableObject
 	{
 		public string Code { get; set; }
-		public string Composition { get; set; }
+		public string Name { get; set; }
+        public string Composition { get; set; }
 		public string Const { get; set; }
 		public string Yarn { get; set; }
 		public string Width { get; set; }

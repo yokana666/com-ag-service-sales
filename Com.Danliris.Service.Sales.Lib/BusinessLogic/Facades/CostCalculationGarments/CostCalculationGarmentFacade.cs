@@ -117,6 +117,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 			return await DbContext.SaveChangesAsync();
 		}
 
-	
-	}
+        public async Task<Dictionary<long, string>> GetProductNames(List<long> productIds)
+        {
+            return await costCalculationGarmentLogic.GetProductNames(productIds);
+        }
+    }
 }

@@ -56,7 +56,13 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 
                 var model = Mapper.Map<CostCalculationGarment>(viewModel);
 
-                await facade.ValidateROGarment(model);
+                var productDicts = new Dictionary<long, string>();
+                foreach (var material in viewModel.CostCalculationGarment_Materials)
+                {
+                    productDicts.Add(material.Product.Id, material.Product.Name);
+                }
+
+                await facade.ValidateROGarment(model, productDicts);
                 Dictionary<string, object> Result =
                     new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
                     .Ok();

@@ -39,7 +39,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                 .FirstOrDefault(m => m.Id == id);
         }
 
-        public async Task<int> ValidateROGarment(CostCalculationGarment CostCalculationGarment)
+        public async Task<int> ValidateROGarment(CostCalculationGarment CostCalculationGarment, Dictionary<long, string> productDicts)
         {
             int Updated = 0;
 
@@ -69,11 +69,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
 
                     if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => !m.CategoryName.ToUpper().Equals("PROCESS")))
                     {
-                        await RO_Garment_ValidationLogic.CreateGarmentPurchaseRequest(model);
+                        await RO_Garment_ValidationLogic.CreateGarmentPurchaseRequest(model, productDicts);
                     }
                     else if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => m.CategoryName.ToUpper().Equals("PROCESS")))
                     {
-                        await RO_Garment_ValidationLogic.AddItemsGarmentPurchaseRequest(model);
+                        await RO_Garment_ValidationLogic.AddItemsGarmentPurchaseRequest(model, productDicts);
                     }
                     else
                     {
