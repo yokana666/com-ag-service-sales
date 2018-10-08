@@ -44,7 +44,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region Top
             PdfPTable table_top = new PdfPTable(9);
-            float[] top_widths = new float[] { 1f, 0.1f, 2f, 1f, 0.1f, 2f, 1f, 0.1f, 2f };
+            float[] top_widths = new float[] { 1f, 0.1f, 2f, 1f, 0.1f, 2f, 1.2f, 0.1f, 2f };
 
             table_top.TotalWidth = 500f;
             table_top.SetWidths(top_widths);
@@ -53,7 +53,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 Border = Rectangle.NO_BORDER,
                 HorizontalAlignment = Element.ALIGN_LEFT,
-                VerticalAlignment = Element.ALIGN_MIDDLE,
+                VerticalAlignment = Element.ALIGN_TOP,
                 PaddingRight = 1,
                 PaddingBottom = 2,
                 PaddingTop = 2
@@ -63,14 +63,14 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 Border = Rectangle.NO_BORDER,
                 HorizontalAlignment = Element.ALIGN_LEFT,
-                VerticalAlignment = Element.ALIGN_MIDDLE
+                VerticalAlignment = Element.ALIGN_TOP
             };
 
             PdfPCell cell_top_keterangan = new PdfPCell()
             {
                 Border = Rectangle.NO_BORDER,
                 HorizontalAlignment = Element.ALIGN_LEFT,
-                VerticalAlignment = Element.ALIGN_MIDDLE,
+                VerticalAlignment = Element.ALIGN_TOP,
                 PaddingRight = 1,
                 PaddingBottom = 2,
                 PaddingTop = 2,
@@ -119,7 +119,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             cell_top.Phrase = new Phrase("QUANTITY", normal_font);
             table_top.AddCell(cell_top);
             table_top.AddCell(cell_colon);
-            cell_top.Phrase = new Phrase($"{viewModel.Total.ToString()}", normal_font);
+            cell_top.Phrase = new Phrase($"{viewModel.Total.ToString()} {viewModel.CostCalculationGarment.UOM.Unit}" , normal_font);
             table_top.AddCell(cell_top);
             cell_top.Phrase = new Phrase("SIZE RANGE", normal_font);
             table_top.AddCell(cell_top);
@@ -731,7 +731,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             table_signature.AddCell(cell_signature_noted);
             cell_signature_noted.Phrase = new Phrase("(                           )", normal_font);
             table_signature.AddCell(cell_signature_noted);
-            cell_signature_noted.Phrase = new Phrase("(Haenis Gunarto)", normal_font);
+            cell_signature_noted.Phrase = new Phrase("(                           )", normal_font);
             table_signature.AddCell(cell_signature_noted);
             cell_signature_noted.Phrase = new Phrase("(Michelle Tjokrosaputro)", normal_font);
             table_signature.AddCell(cell_signature_noted);
