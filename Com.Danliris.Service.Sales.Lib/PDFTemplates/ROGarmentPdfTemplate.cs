@@ -103,7 +103,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             cell_top.Phrase = new Phrase("BUYER", normal_font);
             table_top.AddCell(cell_top);
             table_top.AddCell(cell_colon);
-            cell_top.Phrase = new Phrase($"{viewModel.CostCalculationGarment.Buyer.Name}", normal_font);
+            cell_top.Phrase = new Phrase($"{viewModel.CostCalculationGarment.BuyerBrand.Name}", normal_font);
             table_top.AddCell(cell_top);
             cell_top.Phrase = new Phrase("DELIVERY DATE", normal_font);
             table_top.AddCell(cell_top);

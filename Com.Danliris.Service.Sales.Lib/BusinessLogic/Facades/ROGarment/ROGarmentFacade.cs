@@ -87,6 +87,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
         {
             costCalculationGarment.RO_GarmentId = null;
             costCalculationGarment.ImageFile = string.IsNullOrWhiteSpace(costCalculationGarment.ImageFile) ? "#" : costCalculationGarment.ImageFile;
+            foreach(var item in costCalculationGarment.CostCalculationGarment_Materials)
+            {
+                item.Information = null;
+            }
             await costCalGarmentLogic.UpdateAsync((int)costCalculationGarment.Id, costCalculationGarment);
 
             return await DbContext.SaveChangesAsync();
