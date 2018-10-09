@@ -140,7 +140,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             }
             else
             {
-                bodyContentLeft.Phrase = new Phrase(viewModel.FOB + " US$ " + string.Format("{0:2}", viewModel.Price) + " /" + viewModel.Uom.Unit, normal_font);
+                bodyContentLeft.Phrase = new Phrase(viewModel.FOB + " US$ " + string.Format("{0:n2}", viewModel.Price) + " /" + viewModel.Uom.Unit, normal_font);
                 tableBody.AddCell(bodyContentLeft);
             }
             
@@ -163,7 +163,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": ", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("US$ " + string.Format("{0:2}",viewModel.Amount) , normal_font);
+            bodyContentLeft.Phrase = new Phrase("US$ " + string.Format("{0:n2}",viewModel.Amount) , normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Shipment/Delivery", normal_font);
             tableBody.AddCell(bodyContentLeft);
