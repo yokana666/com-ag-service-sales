@@ -77,5 +77,8 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public int BuyerBrandId { get; set; }
         public string BuyerBrandCode { get; set; }
         public string BuyerBrandName { get; set; }
+        public long? SCGarmentId { get; set; }
+        public bool? IsValidated { get; set; }
+
     }
 }
