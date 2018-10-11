@@ -50,7 +50,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
             }
             while (this.DbSet.Any(d => d.Code.Equals(Model.Code)));
 
-            CostCalculationGarment costCalculationGarment = Model.CostCalculationGarment;
+            CostCalculationGarment costCalculationGarment = await costCalGarmentLogic.ReadByIdAsync((int)Model.CostCalculationGarment.Id); //Model.CostCalculationGarment;
             Model.CostCalculationGarment = null;
 
             Model.ImagesPath = await this.AzureImageFacade.UploadMultipleImage(Model.GetType().Name, (int)Model.Id, Model.CreatedUtc, Model.ImagesFile, Model.ImagesPath);
@@ -85,13 +85,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
 
         public async Task<int> DeletedROCostCalAsync(CostCalculationGarment costCalculationGarment, int Id)
         {
-            costCalculationGarment.RO_GarmentId = null;
-            costCalculationGarment.ImageFile = string.IsNullOrWhiteSpace(costCalculationGarment.ImageFile) ? "#" : costCalculationGarment.ImageFile;
-            foreach(var item in costCalculationGarment.CostCalculationGarment_Materials)
+            CostCalculationGarment costCal= await costCalGarmentLogic.ReadByIdAsync((int)costCalculationGarment.Id); //Model.CostCalculationGarment;
+
+            costCal.RO_GarmentId = null;
+            costCal.ImageFile = string.IsNullOrWhiteSpace(costCal.ImageFile) ? "#" : costCal.ImageFile;
+            foreach(var item in costCal.CostCalculationGarment_Materials)
             {
                 item.Information = null;
             }
-            await costCalGarmentLogic.UpdateAsync((int)costCalculationGarment.Id, costCalculationGarment);
+            await costCalGarmentLogic.UpdateAsync((int)costCal.Id, costCal);
 
             return await DbContext.SaveChangesAsync();
         }

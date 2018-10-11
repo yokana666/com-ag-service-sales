@@ -53,8 +53,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 		public string ImagePath { get; set; }
 		public int? RO_RetailId { get; set; }
 		public  UnitViewModel   Unit { get; set; }
-		 
-		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+
+        public long? SCGarmentId { get; set; }
+        public bool? IsValidated { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
 			if (string.IsNullOrWhiteSpace(this.Article))
 				yield return new ValidationResult("Nama Artikel harus diisi", new List<string> { "Article" });
