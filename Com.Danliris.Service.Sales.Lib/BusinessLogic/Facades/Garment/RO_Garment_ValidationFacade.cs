@@ -52,6 +52,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                         .FirstOrDefault(m => m.Id == CostCalculationGarment.Id);
 
                     EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+                    model.IsValidated = true;
                     foreach (var material in model.CostCalculationGarment_Materials)
                     {
                         var sentMaterial = CostCalculationGarment.CostCalculationGarment_Materials.FirstOrDefault(m => m.Id == material.Id);
