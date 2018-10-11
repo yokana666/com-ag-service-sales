@@ -16,6 +16,8 @@ using Com.Danliris.Service.Sales.Lib.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades
 {
@@ -25,6 +27,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContr
         private readonly DbSet<GarmentSalesContract> DbSet;
         private readonly IdentityService identityService;
         private readonly GarmentSalesContractLogic garmentSalesContractLogic;
+        private readonly ICostCalculationGarment costCalGarmentLogic;
 
         public GarmentSalesContractFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
@@ -32,7 +35,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContr
             DbSet = DbContext.Set<GarmentSalesContract>();
             identityService = serviceProvider.GetService<IdentityService>();
             garmentSalesContractLogic = serviceProvider.GetService<GarmentSalesContractLogic>();
-            
+            costCalGarmentLogic = serviceProvider.GetService<ICostCalculationGarment>();
         }
 
         public async Task<int> CreateAsync(GarmentSalesContract model)
@@ -42,13 +45,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContr
             //    model.Code = CodeGenerator.Generate();
             //}
             //while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
-
+            CostCalculationGarment costCal = await DbContext.CostCalculationGarments.FirstOrDefaultAsync(a => a.Id.Equals(model.CostCalculationId));
+            //costCal.SCGarmentId=
+            await DbContext.SaveChangesAsync();
             garmentSalesContractLogic.Create(model);
+            return await UpdateCostCalAsync(costCal, (int)model.Id);
+        }
+
+        public async Task<int> UpdateCostCalAsync(CostCalculationGarment costCalculationGarment, int Id)
+        {
+            costCalculationGarment.SCGarmentId = Id;
+            await costCalGarmentLogic.UpdateAsync((int)costCalculationGarment.Id, costCalculationGarment);
+
             return await DbContext.SaveChangesAsync();
         }
 
         public async Task<int> DeleteAsync(int id)
         {
+            GarmentSalesContract sc = await ReadByIdAsync(id);
+            CostCalculationGarment costCal = await DbContext.CostCalculationGarments.FirstOrDefaultAsync(a => a.Id.Equals(sc.CostCalculationId));
+            costCal.SCGarmentId = null;
+            await costCalGarmentLogic.UpdateAsync((int)sc.CostCalculationId, costCal);
             await garmentSalesContractLogic.DeleteAsync(id);
             return await DbContext.SaveChangesAsync();
         }
