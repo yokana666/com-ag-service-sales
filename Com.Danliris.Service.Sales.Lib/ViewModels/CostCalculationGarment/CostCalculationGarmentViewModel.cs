@@ -150,11 +150,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
                             Count++;
                             costCalculationGarment_MaterialsError += "Price: 'Harga harus diisi', ";
                         }
-                        else if (costCalculation_Material.Price <= 0)
-                        {
-                            Count++;
-                            costCalculationGarment_MaterialsError += "Price: 'Harga harus lebih besar dari 0', ";
-                        }
+                        //else if (costCalculation_Material.Price <= 0)
+                        //{
+                        //    Count++;
+                        //    costCalculationGarment_MaterialsError += "Price: 'Harga harus lebih besar dari 0', ";
+                        //}
                         if (costCalculation_Material.Conversion == null)
 						{
 							Count++;

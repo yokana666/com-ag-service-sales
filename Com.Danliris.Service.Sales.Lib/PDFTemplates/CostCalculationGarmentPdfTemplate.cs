@@ -235,10 +235,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_bottom_column1_3.Phrase = new Phrase("CIF PRICE", bold_font);
 			table_bottom_column1_3.AddCell(cell_bottom_column1_3);
 
-			string CNF_Price = this.GetCurrencyValue(0, isDollar);
+			string CNF_Price = this.GetCurrencyValue(Convert.ToDouble(viewModel.Freight + viewModel.ConfirmPrice), isDollar);
 			cell_bottom_column1_3.Phrase = new Phrase($"{CNF_Price}", normal_font);
 			table_bottom_column1_3.AddCell(cell_bottom_column1_3);
-			string CIF_Price = this.GetCurrencyValue(0, isDollar);
+			string CIF_Price = this.GetCurrencyValue(Convert.ToDouble(viewModel.Insurance + viewModel.ConfirmPrice), isDollar);
 			cell_bottom_column1_3.Phrase = new Phrase($"{CIF_Price}", normal_font);
 			table_bottom_column1_3.AddCell(cell_bottom_column1_3);
 			#endregion
@@ -261,7 +261,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			{
 				total += item.Total;
 			}
-			total += viewModel.ProductionCost;
+			//total += viewModel.ProductionCost;
 			cell_bottom_column2_1_colspan2.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(total), normal_font);
 			table_bottom_column2_1.AddCell(cell_bottom_column2_1_colspan2);
 
