@@ -147,9 +147,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                 RONo = costCalculation.RO_Number,
                 Buyer = new BuyerViewModel
                 {
-                    Id = Convert.ToInt64(costCalculation.BuyerId),
-                    Code = costCalculation.BuyerCode,
-                    Name = costCalculation.BuyerName
+                    Id = Convert.ToInt64(costCalculation.BuyerBrandId),
+                    Code = costCalculation.BuyerBrandCode,
+                    Name = costCalculation.BuyerBrandName
                 },
                 Article = costCalculation.Article,
                 Date = DateTimeOffset.Now,
