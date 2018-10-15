@@ -114,8 +114,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 
 		public async Task<int> UpdateAsync(int id, CostCalculationGarment model)
 		{
-			costCalculationGarmentLogic.UpdateAsync(id, model);
-			return await DbContext.SaveChangesAsync();
+            model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+            costCalculationGarmentLogic.UpdateAsync(id, model);
+            if (model.ImagePath != null)
+            {
+                model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+            }
+            return await DbContext.SaveChangesAsync();
 		}
 
         public async Task<Dictionary<long, string>> GetProductNames(List<long> productIds)
