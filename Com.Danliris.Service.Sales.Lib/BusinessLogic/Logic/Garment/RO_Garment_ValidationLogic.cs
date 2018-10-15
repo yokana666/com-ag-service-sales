@@ -122,8 +122,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                     Code = i.ProductCode,
                     Name = productDicts.GetValueOrDefault(Convert.ToInt64(i.ProductId))
                 },
-                Quantity = i.Quantity,
-                BudgetPrice = i.BudgetQuantity,
+                Quantity = i.BudgetQuantity,
+                BudgetPrice = i.Price,
                 Uom = new UomViewModel
                 {
                     Id = Convert.ToInt64(i.UOMPriceId),
