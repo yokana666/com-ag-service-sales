@@ -173,9 +173,9 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 foreach (var data in remark)
                 {
-                    fabric += "FABRIC \n"+ data + "\n";
+                    fabric += "FABRIC \n"+ data + "\n\n";
                 }
-                fabric += viewModel.Description;
+                fabric += viewModel.Description +"\n";
             }
             PdfPTable table_bottom_column1_1 = new PdfPTable(2);
 			table_bottom_column1_1.TotalWidth = 180f;
@@ -238,7 +238,15 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			double ConfirmPrice = viewModel.ConfirmPrice ?? 0;
 			double CMT = CM_Price > 0 ? ConfirmPrice : 0;
 			string CMT_Price = this.GetCurrencyValue(CMT, isDollar);
-			double FOB = ConfirmPrice + CM_Price;
+			double FOB = ConfirmPrice ;
+            double FOB_Remark = 0;
+            if (CMT > 0)
+            {
+                FOB = 0;
+                var b = Convert.ToDouble(viewModel.Rate.Value);
+                double a = (1.05 * CM_Price / Convert.ToDouble(viewModel.Rate.Value));
+                FOB_Remark = ConfirmPrice + a;
+            }
 			string FOB_Price = this.GetCurrencyValue(FOB, isDollar);
 			cell_bottom_column1_2.Phrase = new Phrase($"{FOB_Price}", normal_font);
 			table_bottom_column1_2.AddCell(cell_bottom_column1_2);
@@ -421,15 +429,15 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 
 
-            var DESC = "SIZE RANGE : " + viewModel.SizeRange + "\n" + "ALLOWANCE >> FAB = "+ viewModel.FabricAllowance + " ACC = " + viewModel.AccessoriesAllowance + "\n" + fabric;
+            var DESC = fabric + "\n" + "FOB PRICE : $ "+ Number.ToRupiahWithoutSymbol(FOB_Remark);
    //         cell_bottom_column3_1.Phrase = new Phrase("DESCRIPTION", normal_font);
-			//table_bottom_column3_1.AddCell(cell_bottom_column3_1);
-			//cell_bottom_column3_1.Phrase = new Phrase($"{viewModel.SizeRange + "\n" + viewModel.FabricAllowance + " - " + viewModel.AccessoriesAllowance + "\n" + fabric}", normal_font);
-			//table_bottom_column3_1.AddCell(cell_bottom_column3_1);
-			#endregion
+   //table_bottom_column3_1.AddCell(cell_bottom_column3_1);
+   //cell_bottom_column3_1.Phrase = new Phrase($"{viewModel.SizeRange + "\n" + viewModel.FabricAllowance + " - " + viewModel.AccessoriesAllowance + "\n" + fabric}", normal_font);
+   //table_bottom_column3_1.AddCell(cell_bottom_column3_1);
+            #endregion
 
-			#region Signature
-			PdfPTable table_signature = new PdfPTable(3);
+            #region Signature
+            PdfPTable table_signature = new PdfPTable(3);
 			table_signature.TotalWidth = 570f;
 
 			float[] signature_widths = new float[] { 1f, 1f, 1f };
@@ -474,7 +482,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             PdfPTable table_ccm = new PdfPTable(7);
 			table_ccm.TotalWidth = 520f;
 
-			float[] ccm_widths = new float[] { 1f, 2f, 1.5f, 3.5f, 2.5f, 3f, 2.5f };
+			float[] ccm_widths = new float[] { 1f, 2f, 1.5f, 3.5f, 2.5f, 3f, 2f };
 			table_ccm.SetWidths(ccm_widths);
 
 			PdfPCell cell_ccm_center = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2 };
@@ -536,7 +544,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				cell_ccm_right.Phrase = new Phrase(String.Format("{0} {1}", viewModel.CostCalculationGarment_Materials[i].Quantity, viewModel.CostCalculationGarment_Materials[i].UOMQuantity.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
-				cell_ccm_right.Phrase = new Phrase(String.Format("{0}/{1}", string.Format("{0:n4}", viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
+				cell_ccm_right.Phrase = new Phrase(String.Format("{0} / {1}", string.Format("{0:n4}", viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
 				cell_ccm_right.Phrase = new Phrase(string.Format("{0:n2}",viewModel.CostCalculationGarment_Materials[i].Total), normal_font);
@@ -581,7 +589,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 VerticalAlignment = Element.ALIGN_MIDDLE,
                 Padding = 2
             };
-            cell_breakDown_center.Phrase = new Phrase("REMARK : \n" + DESC, normal_font);
+            cell_breakDown_center.Phrase = new Phrase("REMARK : \n\n" + DESC, normal_font);
             
             table_outer.AddCell(cell_breakDown_center);
             #endregion
@@ -591,7 +599,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
            // table_ccm.WriteSelectedRows(0, -1, 10, row2Y, cb);
             table_outer.WriteSelectedRows(0, -1, 10, row2Y, cb);
 
-            float row3Y = row2Y - table_ccm.TotalHeight - 10;
+            float row3Y = row2Y - table_outer.TotalHeight - 10;
 			float row3RemainingHeight = row3Y - printedOnHeight - margin;
 			if (row3RemainingHeight < row3Height)
 			{
