@@ -53,6 +53,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 		public string ImagePath { get; set; }
 		public int? RO_RetailId { get; set; }
 		public  UnitViewModel   Unit { get; set; }
+        public string UnitName { get; set; }
 
         public long? SCGarmentId { get; set; }
         public bool? IsValidated { get; set; }

@@ -23,7 +23,7 @@ namespace Com.Danliris.Service.Sales.Lib.Helpers
 		{
 			try
 			{
-				return number.ToString("N0", CultureInfo.CreateSpecificCulture("id-ID"));
+				return number.ToString("N2", CultureInfo.CreateSpecificCulture("id-ID"));
 			}
 			catch (Exception)
 			{

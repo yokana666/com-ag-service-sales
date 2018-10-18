@@ -37,7 +37,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			List<string> SearchAttributes = new List<string>()
 			{
-				"RO_Number","Article",
+				"RO_Number","Article","UnitName"
 			};
 
 			Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
@@ -47,7 +47,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			List<string> SelectedFields = new List<string>()
 			{
-				  "Id", "Code", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc",
+				  "Id", "Code", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
 					"Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand"
             };
 
@@ -77,7 +77,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      UOMCode=ccg.UOMCode,
                      UOMID=ccg.UOMID,
                      UOMUnit=ccg.UOMUnit,
-					 LastModifiedUtc = ccg.LastModifiedUtc              
+					 LastModifiedUtc = ccg.LastModifiedUtc,
+                                          
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -157,7 +158,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 		}
 		public override async void UpdateAsync(int id, CostCalculationGarment model)
 		{
-			if (model.CostCalculationGarment_Materials != null)
+            GeneratePONumbers(model);
+            if (model.CostCalculationGarment_Materials != null)
 			{
 				HashSet<long> detailIds = costCalculationGarmentMaterialLogic.GetCostCalculationIds(id);
 				foreach (var itemId in detailIds)
