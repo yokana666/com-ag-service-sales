@@ -269,9 +269,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			table_bottom_column1_3.AddCell(cell_bottom_column1_3);
 
 			string CNF_Price = this.GetCurrencyValue(Convert.ToDouble(viewModel.Freight + viewModel.ConfirmPrice), isDollar);
+            if (viewModel.Freight == 0) CNF_Price = "$";
 			cell_bottom_column1_3.Phrase = new Phrase($"{CNF_Price}", normal_font);
 			table_bottom_column1_3.AddCell(cell_bottom_column1_3);
 			string CIF_Price = this.GetCurrencyValue(Convert.ToDouble(viewModel.Insurance + viewModel.ConfirmPrice), isDollar);
+            if (viewModel.Insurance == 0) CIF_Price = "$";
 			cell_bottom_column1_3.Phrase = new Phrase($"{CIF_Price}", normal_font);
 			table_bottom_column1_3.AddCell(cell_bottom_column1_3);
 			#endregion
@@ -283,12 +285,13 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			float[] table_bottom_column2_1_widths = new float[] { 1.5f, 1f, 1.5f };
 			table_bottom_column2_1.SetWidths(table_bottom_column2_1_widths);
 
-			PdfPCell cell_bottom_column2_1 = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 3 };
+			PdfPCell cell_bottom_column2_1 = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 3 };
 
-			PdfPCell cell_bottom_column2_1_colspan2 = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 3, Colspan = 2 };
+			PdfPCell cell_bottom_column2_1_colspan2 = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 3, Colspan = 3};
 
 			cell_bottom_column2_1.Phrase = new Phrase("TOTAL" , normal_font);
-			table_bottom_column2_1.AddCell(cell_bottom_column2_1);
+      
+            table_bottom_column2_1.AddCell(cell_bottom_column2_1);
 			double total = 0;
 			foreach (CostCalculationGarment_MaterialViewModel item in viewModel.CostCalculationGarment_Materials)
 			{
@@ -504,10 +507,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_ccm_center.Phrase = new Phrase("QUANTITY", bold_font);
 			table_ccm.AddCell(cell_ccm_center);
 
-			cell_ccm_center.Phrase = new Phrase("USD.PTC/PC", bold_font);
+			cell_ccm_center.Phrase = new Phrase("RP.PTC/PC", bold_font);
 			table_ccm.AddCell(cell_ccm_center);
 
-			cell_ccm_center.Phrase = new Phrase("USD.TOTAL", bold_font);
+			cell_ccm_center.Phrase = new Phrase("RP.TOTAL", bold_font);
 			table_ccm.AddCell(cell_ccm_center);
 
 			double Total = 0;
@@ -550,36 +553,36 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				cell_ccm_right.Phrase = new Phrase(string.Format("{0:n2}",viewModel.CostCalculationGarment_Materials[i].Total), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
-				Total += viewModel.CostCalculationGarment_Materials[i].Total;
-				float currentHeight = table_ccm.TotalHeight;
-				if (currentHeight / row2RemainingHeight > 1)
-				{
-					if (currentHeight / row2AllowedHeight > 1)
-					{
-						PdfPRow headerRow = table_ccm.GetRow(0);
-						PdfPRow lastRow = table_ccm.GetRow(table_ccm.Rows.Count - 1);
-						table_ccm.DeleteLastRow();
-						table_ccm.WriteSelectedRows(0, -1, 10, row2Y, cb);
-						table_ccm.DeleteBodyRows();
-						this.DrawPrintedOn(now, bf, cb);
-						document.NewPage();
-						table_ccm.Rows.Add(headerRow);
-						table_ccm.Rows.Add(lastRow);
-						table_ccm.CalculateHeightsFast();
-						row2Y = startY;
-						row2RemainingHeight = row2Y - 10 - row3Height - printedOnHeight - margin;
-						row2AllowedHeight = row2Y - printedOnHeight - margin;
-					}
-				}
+				//Total += viewModel.CostCalculationGarment_Materials[i].Total;
+				//float currentHeight = table_ccm.TotalHeight;
+				//if (currentHeight / row2RemainingHeight > 1)
+				//{
+				//	if (currentHeight / row2AllowedHeight > 1)
+				//	{
+				//		PdfPRow headerRow = table_ccm.GetRow(0);
+				//		PdfPRow lastRow = table_ccm.GetRow(table_ccm.Rows.Count - 1);
+				//		table_ccm.DeleteLastRow();
+				//		table_ccm.WriteSelectedRows(0, -1, 10, row2Y, cb);
+				//		table_ccm.DeleteBodyRows();
+				//		this.DrawPrintedOn(now, bf, cb);
+				//		document.NewPage();
+				//		table_ccm.Rows.Add(headerRow);
+				//		table_ccm.Rows.Add(lastRow);
+				//		table_ccm.CalculateHeightsFast();
+				//		row2Y = startY;
+				//		row2RemainingHeight = row2Y - 10 - row3Height - printedOnHeight - margin;
+				//		row2AllowedHeight = row2Y - printedOnHeight - margin;
+				//	}
+				//}
 			}
 
-			cell_ccm_right = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2, Colspan = 6 };
-			cell_ccm_right.Phrase = new Phrase("TOTAL", bold_font_8);
-			table_ccm.AddCell(cell_ccm_right);
+            cell_ccm_right = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2, Colspan = 6 };
+            cell_ccm_right.Phrase = new Phrase("", bold_font_8);
+            table_ccm.AddCell(cell_ccm_right);
 
-			cell_ccm_right = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2 };
-			cell_ccm_right.Phrase = new Phrase(Number.ToRupiah(Total), bold_font_8);
-			table_ccm.AddCell(cell_ccm_right);
+            cell_ccm_right = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2 };
+            cell_ccm_right.Phrase = new Phrase("", bold_font_8);
+            table_ccm.AddCell(cell_ccm_right);
             table_outer.AddCell(table_ccm);
 
             PdfPCell cell_breakDown_center = new PdfPCell()
