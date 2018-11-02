@@ -59,7 +59,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 var productDicts = new Dictionary<long, string>();
                 foreach (var material in viewModel.CostCalculationGarment_Materials)
                 {
-                    productDicts.Add(material.Product.Id, material.Product.Name);
+                    if (productDicts.GetValueOrDefault(material.Product.Id) == null)
+                    {
+                        productDicts.Add(material.Product.Id, material.Product.Name);
+                    }
                 }
 
                 await facade.ValidateROGarment(model, productDicts);
