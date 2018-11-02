@@ -27,7 +27,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         protected readonly IValidateService ValidateService;
         protected readonly IMapper Mapper;
 
-        public RO_Garment_ValidationController(IRO_Garment_Validation facade, IIdentityService identityService, IValidateService validateService, IMapper mapper)
+        public RO_Garment_ValidationController(IIdentityService identityService, IValidateService validateService, IRO_Garment_Validation facade, IMapper mapper)
         {
             this.facade = facade;
             this.IdentityService = identityService;
