@@ -46,12 +46,12 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             get { return new List<TViewModel>(); }
         }
 
-        protected ServiceValidationExeption GetServiceValidationExeption()
+        protected ServiceValidationException GetServiceValidationException()
         {
             Mock<IServiceProvider> serviceProvider = new Mock<IServiceProvider>();
             List<ValidationResult> validationResults = new List<ValidationResult>();
             System.ComponentModel.DataAnnotations.ValidationContext validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(this.ViewModel, serviceProvider.Object, null);
-            return new ServiceValidationExeption(validationContext, validationResults);
+            return new ServiceValidationException(validationContext, validationResults);
         }
 
         protected (Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) GetMocks()
@@ -138,7 +138,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         public async Task Post_ThrowServiceValidationExeption_ReturnBadRequest()
         {
             var mocks = this.GetMocks();
-            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationExeption());
+            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationException());
 
             int statusCode = await this.GetStatusCodePost(mocks);
             Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
@@ -238,7 +238,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         public async Task Put_ThrowServiceValidationExeption_ReturnBadRequest()
         {
             var mocks = this.GetMocks();
-            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationExeption());
+            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationException());
 
             int statusCode = await this.GetStatusCodePut(mocks, 1, this.ViewModel);
             Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
