@@ -21,7 +21,31 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             get {
                 var ViewModel = base.ViewModel;
                 ViewModel.CostCalculationGarment_Materials = new List<CostCalculationGarment_MaterialViewModel>();
+				ViewModel.CostCalculationGarment_Materials.Add(
+					new CostCalculationGarment_MaterialViewModel
+					{
 
+						Code = "code",
+						PO_SerialNumber = "possd",
+						PO = "po",
+						Category = { },
+						AutoIncrementNumber = 1,
+						Product =new GarmentProductViewModel { Id=0,Name="product"},
+						Description = "desc",
+						Quantity = 9,
+						UOMQuantity = { },
+						Price = 100,
+						UOMPrice = { },
+						Conversion = 1,
+						Total = 900,
+						isFabricCM = true,
+						CM_Price = 300,
+						ShippingFeePortion = 3,
+						TotalShippingFee = 50,
+						BudgetQuantity = 60,
+						Information = "inf",
+						IsPosted = true
+					});
                 return ViewModel;
             }
         }
@@ -35,7 +59,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 .ReturnsAsync(1);
 
             var controller = GetController(mocks);
-            var response = await controller.Post(ViewModel);
+			var response = await controller.Post(ViewModel);
 
             Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
         }
