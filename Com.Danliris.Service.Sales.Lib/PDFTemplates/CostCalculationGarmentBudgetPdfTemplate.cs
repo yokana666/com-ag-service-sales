@@ -82,9 +82,14 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			PdfPCell cell_detail2 = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_LEFT, VerticalAlignment = Element.ALIGN_MIDDLE, PaddingRight = 2, PaddingBottom = 7, PaddingLeft = 2, PaddingTop = 7 };
 
-			cell_detail2.Phrase = new Phrase("BUYER", normal_font);
+			cell_detail2.Phrase = new Phrase("BUYER AGENT", normal_font);
 			table_detail2.AddCell(cell_detail2);
 			cell_detail2.Phrase = new Phrase($"{viewModel.Buyer.Name}", normal_font);
+			table_detail2.AddCell(cell_detail2);
+
+			cell_detail2.Phrase = new Phrase("BUYER BRAND", normal_font);
+			table_detail2.AddCell(cell_detail2);
+			cell_detail2.Phrase = new Phrase($"{viewModel.BuyerBrand.Name}", normal_font);
 			table_detail2.AddCell(cell_detail2);
 
 			cell_detail2.Phrase = new Phrase("ARTICLE", normal_font);
@@ -128,7 +133,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_detail3.Border = Rectangle.TOP_BORDER | Rectangle.RIGHT_BORDER;
 			cell_detail3.Phrase = new Phrase($"{Number.ToRupiah(totalBudget)}", normal_font);
 			table_detail3.AddCell(cell_detail3);
-			cell_detail3_colspan6.Phrase = new Phrase("STANDARD HOURS", normal_font);
+			cell_detail3_colspan6.Phrase = new Phrase("STANDARD MINUTE VALUE", normal_font);
 			table_detail3.AddCell(cell_detail3_colspan6);
 
 			double freightCost = 0;
@@ -322,7 +327,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				}
 				double totalQuantity = viewModel.Quantity ?? 0;
 				double quantity = (100 + factor) / 100 * usage * totalQuantity;
-				cell_ccm.Phrase = new Phrase(quantity.ToString(), normal_font);
+				cell_ccm.Phrase = new Phrase(Math.Ceiling(viewModel.CostCalculationGarment_Materials[i].BudgetQuantity).ToString(), normal_font);
 				table_ccm.AddCell(cell_ccm);
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -330,9 +335,19 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				table_ccm.AddCell(cell_ccm);
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_RIGHT;
-				double amount = quantity * price;
-				cell_ccm.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(amount), normal_font);
-				table_ccm.AddCell(cell_ccm);
+
+				if(viewModel.CostCalculationGarment_Materials[i].isFabricCM==true)
+				{
+					cell_ccm.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(0), normal_font);
+					table_ccm.AddCell(cell_ccm);
+				}
+				else
+				{
+					double amount = quantity * price;
+					cell_ccm.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(amount), normal_font);
+					table_ccm.AddCell(cell_ccm);
+				}
+				
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_CENTER;
 				cell_ccm.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].PO_SerialNumber, normal_font);
