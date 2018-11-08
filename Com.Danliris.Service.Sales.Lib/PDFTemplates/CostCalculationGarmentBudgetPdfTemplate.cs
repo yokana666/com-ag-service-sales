@@ -343,7 +343,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				}
 				else
 				{
-					double amount = quantity * price;
+					double amount = viewModel.CostCalculationGarment_Materials[i].BudgetQuantity * price;
 					cell_ccm.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(amount), normal_font);
 					table_ccm.AddCell(cell_ccm);
 				}
