@@ -137,6 +137,7 @@ namespace Com.Danliris.Service.Sales.WebApi
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection") ?? Configuration["DefaultConnection"];
 
+            Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.ConnectionString = connectionString;
             /* Register */
             services.AddDbContext<SalesDbContext>(options => options.UseSqlServer(connectionString));
             RegisterFacades(services);
