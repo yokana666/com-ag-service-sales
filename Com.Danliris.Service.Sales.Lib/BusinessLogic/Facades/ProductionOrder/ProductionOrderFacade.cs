@@ -255,7 +255,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                         "join KanbanInstructions c on a.Id = c.KanbanId " +
                         "join KanbanSteps d on c.Id = d.InstructionId "+
                         "join Machine e on d.MachineId = e.Id "+
-                        "where a.IsDeleted = 0 and b.IsDeleted = 0 and a.ProductionOrderOrderNo = '" + no + "'", conn))
+                        "where a.IsDeleted = 0 and b.IsDeleted = 0 and c.IsDeleted=0 and d.IsDeleted=0 and e.IsDeleted=0 and a.ProductionOrderOrderNo = '" + no + "'", conn))
                         {
                             SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
                             DataSet dSet = new DataSet();
