@@ -47,6 +47,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -80,7 +83,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IEfficiency, EfficiencyFacade>()
                 .AddTransient<AzureImageFacade>()
 				.AddTransient<AzureImageFacade>()
-                .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>();
+                .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>()
+                .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>();
 
         }
 
@@ -106,7 +110,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ROGarmentSizeBreakdownDetailLogic>()
                 .AddTransient<RateLogic>()
                 .AddTransient<EfficiencyLogic>()
-                .AddTransient<RO_Garment_ValidationLogic>();
+                .AddTransient<RO_Garment_ValidationLogic>()
+                .AddTransient<GarmentBookingOrderLogic>();
 
         }
 
