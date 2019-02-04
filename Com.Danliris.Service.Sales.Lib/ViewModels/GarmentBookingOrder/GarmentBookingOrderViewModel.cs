@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder
@@ -19,7 +20,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder
         public string SectionName { get; set; }
         public double OrderQuantity { get; set; }
         public string Remark { get; set; }
-        public bool IsBookingPlan { get; set; }
+        public bool IsBlockingPlan { get; set; }
         public bool IsCanceled { get; set; }
         public DateTimeOffset? CanceledDate { get; set; }
         public double CanceledQuantity { get; set; }
@@ -30,6 +31,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            int clientTimeZoneOffset = 0;
+            DateTimeOffset dt = DateTimeOffset.Now.AddDays(45);
+            dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
             if (SectionName == null)
                 yield return new ValidationResult("Seksi harus diisi", new List<string> { "Section" });
             if (BuyerName == null)
@@ -41,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder
             else if (this.DeliveryDate < this.BookingOrderDate)
                 yield return new ValidationResult("Tanggal Pengiriman Harus lebih dari Tanggal Booking", new List<string> { "DeliveryDate" });
             else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45) )
-                yield return new ValidationResult("Tanggal Pengiriman harus lebih Dari 45 Hari", new List<string> { "DeliveryDate" });
+                yield return new ValidationResult("Tanggal Pengiriman harus lebih Dari "+ dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")), new List<string> { "DeliveryDate" });
         }
     }
 }
