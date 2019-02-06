@@ -32,7 +32,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             DateTime Now = DateTime.Now;
             string Year = Now.ToString("yy");
 
-            string no = $"{model.SectionCode}{model.BuyerCode}{Year}";
+            string no = $"{model.SectionCode}-{model.BuyerCode}-{Year}-";
             int Padding = 5;
 
             var lastData = DbSet.IgnoreQueryFilters().Where(w => w.BookingOrderNo.StartsWith(no) && !w.IsDeleted).OrderByDescending(o => o.BookingOrderNo).FirstOrDefault();
@@ -55,7 +55,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
 
             List<string> SearchAttributes = new List<string>()
             {
-                "BookingOrderNo","BuyerName","OrderQuantity"
+                "BookingOrderNo","BuyerName"
             };
 
             Query = QueryHelper<GarmentBookingOrder>.Search(Query, SearchAttributes, keyword);
@@ -66,7 +66,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             List<string> SelectedFields = new List<string>()
             {
                   "Id", "BookingOrderNo", "BookingOrderDate", "SectionName", "BuyerName", "OrderQuantity", "LastModifiedUtc","Remark",
-                    "IsBookingPlan", "IsCanceled", "CanceledDate", "DeliveryDate", "CanceledQuantity", "ExpiredBookingDate", "ExpiredBookingQuantity",
+                    "IsBlockingPlan", "IsCanceled", "CanceledDate", "DeliveryDate", "CanceledQuantity", "ExpiredBookingDate", "ExpiredBookingQuantity",
                       "ConfirmedQuantity", "HadConfirmed"
             };
 
@@ -85,7 +85,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                      DeliveryDate = bo.DeliveryDate,
                      OrderQuantity = bo.OrderQuantity,
                      Remark = bo.Remark,
-                     IsBlokingPlan = bo.IsBlokingPlan,
+                     IsBlockingPlan = bo.IsBlockingPlan,
                      IsCanceled = bo.IsCanceled,
                      CanceledDate = bo.CanceledDate,
                      CanceledQuantity = bo.CanceledQuantity,

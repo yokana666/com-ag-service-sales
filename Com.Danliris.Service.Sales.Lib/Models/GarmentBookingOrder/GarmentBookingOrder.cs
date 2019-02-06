@@ -18,7 +18,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.BookingOrder
         public string SectionName { get; set; }
         public double OrderQuantity { get; set; }
         public string Remark { get; set; }
-        public bool IsBlokingPlan { get; set; }
+        public bool IsBlockingPlan { get; set; }
         public bool IsCanceled { get; set; }
         public DateTimeOffset? CanceledDate { get; set; }
         public double CanceledQuantity { get; set; }
