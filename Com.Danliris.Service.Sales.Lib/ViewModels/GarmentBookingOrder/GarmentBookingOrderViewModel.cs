@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder
             else if (this.DeliveryDate < this.BookingOrderDate)
                 yield return new ValidationResult("Tanggal Pengiriman Harus lebih dari Tanggal Booking", new List<string> { "DeliveryDate" });
             else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45) )
-                yield return new ValidationResult("Tanggal Pengiriman harus lebih Dari "+ dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")), new List<string> { "DeliveryDate" });
+                yield return new ValidationResult("Tanggal Pengiriman harus lebih dari "+ dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")), new List<string> { "DeliveryDate" });
         }
     }
 }
