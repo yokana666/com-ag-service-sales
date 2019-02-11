@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.BookingOrder;
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
 using System;
 using System.Collections.Generic;

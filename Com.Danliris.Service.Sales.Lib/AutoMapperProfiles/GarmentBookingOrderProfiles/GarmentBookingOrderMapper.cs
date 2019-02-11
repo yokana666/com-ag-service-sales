@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Com.Danliris.Service.Sales.Lib.Models.BookingOrder;
-using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
+using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;

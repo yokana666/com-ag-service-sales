@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder
+namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels
 {
     public class GarmentBookingOrderViewModel : BaseViewModel, IValidatableObject
     {

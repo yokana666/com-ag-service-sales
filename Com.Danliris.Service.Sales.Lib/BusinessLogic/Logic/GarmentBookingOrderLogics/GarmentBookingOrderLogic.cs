@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.BookingOrder;
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
@@ -15,6 +15,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
     public class GarmentBookingOrderLogic : BaseLogic<GarmentBookingOrder>
     {
         private readonly SalesDbContext DbContext;
+        private GarmentBookingOrderItemLogic GarmentBookingOrderItemsLogic;
         public GarmentBookingOrderLogic(IIdentityService IdentityService, IServiceProvider serviceProvider, SalesDbContext dbContext) : base(IdentityService, serviceProvider, dbContext)
         {
         }
@@ -22,9 +23,76 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
         public override void Create(GarmentBookingOrder model)
         {
             GenerateBookingOrderNo(model);
+            if (model.Items.Count > 0)
+            {
+                model.HadConfirmed = true;
+            }
 
             EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
             DbSet.Add(model);
+        }
+
+        public override async void UpdateAsync(int id, GarmentBookingOrder model)
+        {
+            if (model.Items != null)
+            {
+                HashSet<long> itemIds = GarmentBookingOrderItemsLogic.GetBookingOrderIds(id);
+                if (itemIds.Count.Equals(0))
+                {
+                    foreach (var detail in model.Items)
+                    {
+                        GarmentBookingOrderItemsLogic.Create(detail);
+                        //EntityExtension.FlagForCreate(detail, IdentityService.Username, "sales-service");
+                    }
+                }
+                //else if (model.Items.Count.Equals(0))
+                //{
+                //    foreach (var oldItem in itemIds)
+                //    {
+                //        GarmentSalesContractItem dataItem = DbContext.GarmentSalesContractItems.FirstOrDefault(prop => prop.Id.Equals(oldItem));
+                //        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                //    }
+                //}
+                else
+                {
+                    foreach (var itemId in itemIds)
+                    {
+
+                        GarmentBookingOrderItem data = model.Items.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        if (data == null)
+                        {
+                            GarmentBookingOrderItem dataItem = DbContext.GarmentBookingOrderItems.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                            EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                        }
+                        //await GarmentSalesContractItemLogic.DeleteAsync(Convert.ToInt32(itemId));
+                        else
+                        {
+                            //GarmentSalesContractItem dataItem = DbContext.GarmentSalesContractItems.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                            //EntityExtension.FlagForUpdate(dataItem, IdentityService.Username, "sales-service");
+                            GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                        }
+
+                        foreach (GarmentBookingOrderItem item in model.Items)
+                        {
+                            if (item.Id == 0)
+                                GarmentBookingOrderItemsLogic.Create(item);
+                        }
+                    }
+
+                }
+
+            }
+            else
+            {
+                foreach (var detail in model.Items)
+                {
+                    GarmentBookingOrderItemsLogic.Create(detail);
+                    //EntityExtension.FlagForCreate(detail, IdentityService.Username, "sales-service");
+                }
+            }
+            model.HadConfirmed = true;
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            DbSet.Update(model);
         }
 
         private void GenerateBookingOrderNo(GarmentBookingOrder model)

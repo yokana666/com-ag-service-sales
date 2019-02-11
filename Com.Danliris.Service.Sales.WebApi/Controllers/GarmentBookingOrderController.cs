@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
-using Com.Danliris.Service.Sales.Lib.Models.BookingOrder;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Services;
-using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrder;
+using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels;
 using Com.Danliris.Service.Sales.WebApi.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
