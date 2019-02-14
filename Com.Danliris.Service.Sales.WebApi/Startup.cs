@@ -50,6 +50,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment.WeeklyPlanInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.WeeklyPlanFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.WeeklyPlanLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -84,7 +87,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<AzureImageFacade>()
 				.AddTransient<AzureImageFacade>()
                 .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>()
-                .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>();
+                .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
+                .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>();
 
         }
 
@@ -111,7 +115,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<RateLogic>()
                 .AddTransient<EfficiencyLogic>()
                 .AddTransient<RO_Garment_ValidationLogic>()
-                .AddTransient<GarmentBookingOrderLogic>();
+                .AddTransient<GarmentBookingOrderLogic>()
+                .AddTransient<WeeklyPlanLogic>()
+                .AddTransient<WeeklyPlanItemLogic>();
 
         }
 
@@ -133,9 +139,8 @@ namespace Com.Danliris.Service.Sales.WebApi
 
         }
 
-
-
         #endregion Register
+
         public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
