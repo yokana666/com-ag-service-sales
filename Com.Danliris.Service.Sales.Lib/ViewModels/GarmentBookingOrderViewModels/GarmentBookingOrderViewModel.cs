@@ -28,6 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public double ExpiredBookingQuantity { get; set; }
         public double ConfirmedQuantity { get; set; }
         public bool HadConfirmed { get; set; }
+        public List<GarmentBookingOrderItemViewModel> Items { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -46,6 +47,52 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 yield return new ValidationResult("Tanggal Pengiriman Harus lebih dari Tanggal Booking", new List<string> { "DeliveryDate" });
             else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45) )
                 yield return new ValidationResult("Tanggal Pengiriman harus lebih dari "+ dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")), new List<string> { "DeliveryDate" });
+
+            if (Items != null)
+            {
+                int Count = 0;
+                string ItemError = "[";
+
+                foreach (GarmentBookingOrderItemViewModel item in Items)
+                {
+                    ItemError += "{";
+                    if (string.IsNullOrWhiteSpace(item.ComodityName))
+                    {
+                        Count++;
+                        ItemError += " Comodity: 'Komoditas harus diisi' , ";
+                    }
+
+                    if (item.ConfirmQuantity <= 0)
+                    {
+                        Count++;
+                        ItemError += " ConfirmQuantity: 'Jumlah tidak boleh kurang dari 0' , ";
+                    }
+
+                    if (item.DeliveryDate == DateTimeOffset.MinValue || item.DeliveryDate == null)
+                    {
+                        Count++;
+                        ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Diisi' , ";
+                    }
+                    else if (item.DeliveryDate > this.DeliveryDate)
+                    {
+                        Count++;
+                        ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Kurang dari Booking Tanggal Pengiriman' , ";
+                    }
+                    else if (item.DeliveryDate <= this.BookingOrderDate)
+                    {
+                        Count++;
+                        ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Lebih dari Tanggal Booking' , ";
+                    }
+                    ItemError += "}, ";
+                }
+
+                ItemError += "]";
+
+                if (Count > 0)
+                {
+                    yield return new ValidationResult(ItemError, new List<string> { "Items" });
+                }
+            }
         }
     }
 }

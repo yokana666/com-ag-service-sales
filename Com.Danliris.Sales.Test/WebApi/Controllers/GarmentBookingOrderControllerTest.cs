@@ -42,5 +42,59 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
             Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
         }
+
+        [Fact]
+        public async Task Should_Success_Cancel_Leftover()
+        {
+            var ViewModel = new GarmentBookingOrderViewModel
+            {
+                BuyerName = "buyername",
+                BuyerCode = "buyercode",
+                IsBlockingPlan = true,
+                SectionName = "sectionname",
+                SectionCode = "sectioncode",
+                DeliveryDate = DateTimeOffset.Now.AddDays(20),
+                BookingOrderDate = DateTimeOffset.Now
+            };
+            var mocks = GetMocks();
+            mocks.ValidateService
+                .Setup(s => s.Validate(It.IsAny<GarmentBookingOrderViewModel>()))
+                .Verifiable();
+            mocks.Facade
+                .Setup(s => s.CreateAsync(It.IsAny<GarmentBookingOrder>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = GetController(mocks);
+            var response = await controller.CancelLeftOvers((int)ViewModel.Id, ViewModel);
+
+            Assert.Equal((int)HttpStatusCode.NoContent, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_Success_Delete_Leftover()
+        {
+            var ViewModel = new GarmentBookingOrderViewModel
+            {
+                BuyerName = "buyername",
+                BuyerCode = "buyercode",
+                IsBlockingPlan = true,
+                SectionName = "sectionname",
+                SectionCode = "sectioncode",
+                DeliveryDate = DateTimeOffset.Now.AddDays(20),
+                BookingOrderDate = DateTimeOffset.Now
+            };
+            var mocks = GetMocks();
+            mocks.ValidateService
+                .Setup(s => s.Validate(It.IsAny<GarmentBookingOrderViewModel>()))
+                .Verifiable();
+            mocks.Facade
+                .Setup(s => s.CreateAsync(It.IsAny<GarmentBookingOrder>()))
+                .ThrowsAsync(new Exception());
+
+            var controller = GetController(mocks);
+            var response = await controller.DeleteLeftOvers((int)ViewModel.Id, ViewModel);
+
+            Assert.Equal((int)HttpStatusCode.NoContent, GetStatusCode(response));
+        }
     }
 }

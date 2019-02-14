@@ -55,5 +55,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             garmentBookingOrderLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
+
+        public async Task<int> BOCancel(int id, GarmentBookingOrder model)
+        {
+            await garmentBookingOrderLogic.BOCancel(id, model);
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> BODelete(int id, GarmentBookingOrder model)
+        {
+            await garmentBookingOrderLogic.BODelete(id, model);
+            return await DbContext.SaveChangesAsync();
+        }
     }
 }
