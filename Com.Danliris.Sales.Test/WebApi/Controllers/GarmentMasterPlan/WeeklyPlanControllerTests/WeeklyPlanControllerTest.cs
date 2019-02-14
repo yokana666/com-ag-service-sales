@@ -11,5 +11,17 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers.GarmentMasterPlan.WeeklyPla
 {
     public class WeeklyPlanControllerTest : BaseControllerTest<WeeklyPlanController, WeeklyPlan, WeeklyPlanViewModel, IWeeklyPlanFacade>
     {
+        protected override WeeklyPlanViewModel ViewModel
+        {
+            get
+            {
+                var viewModel = base.ViewModel;
+                viewModel.Items = new List<WeeklyPlanItemViewModel>
+                {
+                    new WeeklyPlanItemViewModel()
+                };
+                return viewModel;
+            }
+        }
     }
 }
