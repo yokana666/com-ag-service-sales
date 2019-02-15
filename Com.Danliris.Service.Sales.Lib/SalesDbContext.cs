@@ -10,8 +10,7 @@ using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
 using Com.Danliris.Service.Sales.Lib.Models.ROGarments;
 using Com.Danliris.Service.Sales.Lib.Models;
-using Com.Danliris.Service.Sales.Lib.Models.BookingOrder;
-using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -44,11 +43,10 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<Rate> Rates { get; set; }
         public DbSet<ArticleColor> ArticleColors { get; set; }
         public DbSet<Efficiency> Efficiencies { get; set; }
-
         public DbSet<GarmentBookingOrder> GarmentBookingOrders { get; set; }
-        public DbSet<WeeklyPlan> WeeklyPlans { get; set; }
-        public DbSet<WeeklyPlanItem> WeeklyPlanItems { get; set; }
-        
+        public DbSet<GarmentBookingOrderItem> GarmentBookingOrderItems { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

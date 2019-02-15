@@ -1,6 +1,5 @@
 ﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics;
-using Com.Danliris.Service.Sales.Lib.Models.BookingOrder;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade
 {
@@ -53,6 +53,18 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         public async Task<int> UpdateAsync(int id, GarmentBookingOrder model)
         {
             garmentBookingOrderLogic.UpdateAsync(id, model);
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> BOCancel(int id, GarmentBookingOrder model)
+        {
+            await garmentBookingOrderLogic.BOCancel(id, model);
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> BODelete(int id, GarmentBookingOrder model)
+        {
+            await garmentBookingOrderLogic.BODelete(id, model);
             return await DbContext.SaveChangesAsync();
         }
     }

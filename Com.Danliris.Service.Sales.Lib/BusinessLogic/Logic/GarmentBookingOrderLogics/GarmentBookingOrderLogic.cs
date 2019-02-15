@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.BookingOrder;
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
@@ -9,22 +9,94 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics
 {
     public class GarmentBookingOrderLogic : BaseLogic<GarmentBookingOrder>
     {
         private readonly SalesDbContext DbContext;
-        public GarmentBookingOrderLogic(IIdentityService IdentityService, IServiceProvider serviceProvider, SalesDbContext dbContext) : base(IdentityService, serviceProvider, dbContext)
+        private GarmentBookingOrderItemLogic GarmentBookingOrderItemsLogic;
+        public GarmentBookingOrderLogic(GarmentBookingOrderItemLogic GarmentBookingOrderItemsLogic, IIdentityService IdentityService, IServiceProvider serviceProvider, SalesDbContext dbContext) : base(IdentityService, serviceProvider, dbContext)
         {
+            this.GarmentBookingOrderItemsLogic = GarmentBookingOrderItemsLogic;
+            this.DbContext = dbContext;
         }
 
         public override void Create(GarmentBookingOrder model)
         {
             GenerateBookingOrderNo(model);
+            if (model.Items.Count > 0)
+            {
+                model.HadConfirmed = true;
+            }
 
             EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
             DbSet.Add(model);
+        }
+        public override async Task<GarmentBookingOrder> ReadByIdAsync(int id)
+        {
+            var garmentBookingOrder = await DbSet.Include(p => p.Items).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
+            garmentBookingOrder.Items = garmentBookingOrder.Items.Where(s => s.IsCanceled == false).OrderBy(s => s.Id).ToArray();
+            return garmentBookingOrder;
+        }
+
+        public override async void UpdateAsync(int id, GarmentBookingOrder model)
+        {
+            double updatedItems = 0;
+            if (model.Items != null)
+            {
+                HashSet<long> itemIds = GarmentBookingOrderItemsLogic.GetBookingOrderIds(id);
+                if (itemIds.Count.Equals(0))
+                {
+                    foreach (var detail in model.Items)
+                    {
+                        GarmentBookingOrderItemsLogic.Create(detail);
+                        model.ConfirmedQuantity += detail.ConfirmQuantity;
+                    }
+                }
+                else
+                {
+                    foreach (var itemId in itemIds)
+                    {
+
+                        GarmentBookingOrderItem data = model.Items.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        if (data == null)
+                        {
+                            GarmentBookingOrderItem dataItem = DbContext.GarmentBookingOrderItems.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                            EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                        }
+                        else
+                        {
+                            if (data.IsCanceled)
+                            {
+                                var itemz = DbContext.GarmentBookingOrderItems.Where(i => i.BookingOrderId == id && i.IsCanceled == false).Sum(s => s.ConfirmQuantity);
+                                GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                                data.CanceledDate = DateTimeOffset.Now;
+                                model.ConfirmedQuantity = itemz - data.ConfirmQuantity;
+                            }
+                            else
+                            {
+                                GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                                updatedItems += data.ConfirmQuantity;
+                                model.ConfirmedQuantity = updatedItems;
+                            }
+                        }
+                    }
+
+                    foreach (GarmentBookingOrderItem item in model.Items)
+                    {
+                        if (item.Id == 0)
+                        {
+                            GarmentBookingOrderItemsLogic.Create(item);
+                            model.ConfirmedQuantity += item.ConfirmQuantity;
+                        }
+                    }
+                }
+            }
+            model.HadConfirmed = true;
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            DbSet.Update(model);
         }
 
         private void GenerateBookingOrderNo(GarmentBookingOrder model)
@@ -70,7 +142,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                       "ConfirmedQuantity", "HadConfirmed"
             };
 
-            Query = Query
+            Query = Query.Where(d => d.OrderQuantity > 0)
                  .Select(bo => new GarmentBookingOrder
                  {
                      Id = bo.Id,
@@ -104,6 +176,49 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             int totalData = pageable.TotalCount;
 
             return new ReadResponse<GarmentBookingOrder>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        public async Task BOCancel(int id, GarmentBookingOrder model)
+        {
+            double cancelsQuantity = 0;
+
+            cancelsQuantity = model.OrderQuantity - model.ConfirmedQuantity;
+
+            model.CanceledQuantity = cancelsQuantity;
+            model.OrderQuantity -= cancelsQuantity;
+            model.CanceledDate = DateTimeOffset.Now;
+            foreach (var item in model.Items)
+            {
+                GarmentBookingOrderItemsLogic.UpdateAsync((int)item.Id, item);
+            }
+
+            if (model.ConfirmedQuantity == 0)
+            {
+                model.IsCanceled = true;
+            }
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+
+            DbSet.Update(model);
+        }
+
+        public async Task BODelete(int id, GarmentBookingOrder model )
+        {
+            double cancelsQuantity = 0;
+
+            cancelsQuantity = model.OrderQuantity - model.ConfirmedQuantity;
+
+            model.ExpiredBookingQuantity = cancelsQuantity;
+            model.OrderQuantity -= cancelsQuantity;
+            model.ExpiredBookingDate = DateTimeOffset.Now;
+
+            foreach (var item in model.Items)
+            {
+                GarmentBookingOrderItemsLogic.UpdateAsync((int)item.Id, item);
+            }
+
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+
+            DbSet.Update(model);
         }
     }
 }

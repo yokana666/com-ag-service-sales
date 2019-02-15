@@ -1,9 +1,10 @@
-﻿using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
+using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Com.Danliris.Service.Sales.Lib.Models.BookingOrder
+namespace Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel
 {
     public class GarmentBookingOrder : BaseModel
     {
@@ -26,5 +27,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.BookingOrder
         public double ExpiredBookingQuantity { get; set; }
         public double ConfirmedQuantity { get; set; }
         public bool HadConfirmed { get; set; }
+        public virtual ICollection<GarmentBookingOrderItem> Items { get; set; }
+
     }
 }
