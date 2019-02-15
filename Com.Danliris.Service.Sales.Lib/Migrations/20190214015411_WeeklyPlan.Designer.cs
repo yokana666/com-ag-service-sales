@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190214015411_WeeklyPlan")]
+    partial class WeeklyPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,6 +73,92 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ArticleColors");
+                });
+
+            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.BookingOrder.GarmentBookingOrder", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<DateTimeOffset>("BookingOrderDate");
+
+                    b.Property<string>("BookingOrderNo");
+
+                    b.Property<string>("BuyerCode");
+
+                    b.Property<long>("BuyerId");
+
+                    b.Property<string>("BuyerName");
+
+                    b.Property<DateTimeOffset?>("CanceledDate");
+
+                    b.Property<double>("CanceledQuantity");
+
+                    b.Property<double>("ConfirmedQuantity");
+
+                    b.Property<string>("CreatedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("CreatedUtc");
+
+                    b.Property<string>("DeletedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("DeletedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("DeletedUtc");
+
+                    b.Property<DateTimeOffset>("DeliveryDate");
+
+                    b.Property<DateTimeOffset?>("ExpiredBookingDate");
+
+                    b.Property<double>("ExpiredBookingQuantity");
+
+                    b.Property<bool>("HadConfirmed");
+
+                    b.Property<bool>("IsBlockingPlan");
+
+                    b.Property<bool>("IsCanceled");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("LastModifiedAgent")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<DateTime>("LastModifiedUtc");
+
+                    b.Property<double>("OrderQuantity");
+
+                    b.Property<string>("Remark");
+
+                    b.Property<string>("SectionCode");
+
+                    b.Property<long>("SectionId");
+
+                    b.Property<string>("SectionName");
+
+                    b.Property<string>("UId")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GarmentBookingOrders");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments.CostCalculationGarment", b =>
@@ -708,162 +796,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasFilter("[SalesContractNo] IS NOT NULL");
 
                     b.ToTable("FinishingPrintingSalesContracts");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrder", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<DateTimeOffset>("BookingOrderDate");
-
-                    b.Property<string>("BookingOrderNo");
-
-                    b.Property<string>("BuyerCode");
-
-                    b.Property<long>("BuyerId");
-
-                    b.Property<string>("BuyerName");
-
-                    b.Property<DateTimeOffset?>("CanceledDate");
-
-                    b.Property<double>("CanceledQuantity");
-
-                    b.Property<double>("ConfirmedQuantity");
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<DateTimeOffset>("DeliveryDate");
-
-                    b.Property<DateTimeOffset?>("ExpiredBookingDate");
-
-                    b.Property<double>("ExpiredBookingQuantity");
-
-                    b.Property<bool>("HadConfirmed");
-
-                    b.Property<bool>("IsBlockingPlan");
-
-                    b.Property<bool>("IsCanceled");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<double>("OrderQuantity");
-
-                    b.Property<string>("Remark");
-
-                    b.Property<string>("SectionCode");
-
-                    b.Property<long>("SectionId");
-
-                    b.Property<string>("SectionName");
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GarmentBookingOrders");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrderItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<long>("BookingOrderId");
-
-                    b.Property<DateTimeOffset>("CanceledDate");
-
-                    b.Property<string>("ComodityCode");
-
-                    b.Property<long>("ComodityId");
-
-                    b.Property<string>("ComodityName");
-
-                    b.Property<DateTimeOffset>("ConfirmDate");
-
-                    b.Property<double>("ConfirmQuantity");
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<DateTimeOffset>("DeliveryDate");
-
-                    b.Property<bool>("IsCanceled");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<string>("Remark");
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingOrderId");
-
-                    b.ToTable("GarmentBookingOrderItems");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels.WeeklyPlan", b =>
@@ -2231,14 +2163,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting.FinishingPrintingSalesContractModel", "FinishingPrintingSalesContract")
                         .WithMany("Details")
                         .HasForeignKey("FinishingPrintingSalesContractId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrderItem", b =>
-                {
-                    b.HasOne("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrder", "GarmentBookingOrder")
-                        .WithMany("Items")
-                        .HasForeignKey("BookingOrderId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
