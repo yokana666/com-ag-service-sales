@@ -16,7 +16,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
 {
     public class WeeklyPlanLogic : BaseLogic<WeeklyPlan>
     {
-        public WeeklyPlanLogic(IIdentityService IdentityService, IServiceProvider serviceProvider, SalesDbContext dbContext) : base(IdentityService, serviceProvider, dbContext)
+        public WeeklyPlanLogic(IIdentityService IdentityService, SalesDbContext dbContext) : base(IdentityService, dbContext)
         {
         }
 
