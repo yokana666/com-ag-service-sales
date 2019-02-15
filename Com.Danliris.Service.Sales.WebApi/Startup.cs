@@ -116,7 +116,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<EfficiencyLogic>()
                 .AddTransient<RO_Garment_ValidationLogic>()
                 .AddTransient<GarmentBookingOrderLogic>()
-                .AddTransient<GarmentBookingOrderItemLogic>();
+                .AddTransient<GarmentBookingOrderItemLogic>()
                 .AddTransient<WeeklyPlanLogic>();
 
         }
