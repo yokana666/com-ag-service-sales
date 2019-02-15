@@ -2239,6 +2239,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrder", "GarmentBookingOrder")
                         .WithMany("Items")
                         .HasForeignKey("BookingOrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels.WeeklyPlanItem", b =>
                 {
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels.WeeklyPlan", "WeeklyPlan")
