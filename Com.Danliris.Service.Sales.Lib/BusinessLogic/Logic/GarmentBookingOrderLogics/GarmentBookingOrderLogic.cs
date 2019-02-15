@@ -211,10 +211,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             model.OrderQuantity -= cancelsQuantity;
             model.ExpiredBookingDate = DateTimeOffset.Now;
 
-            if (model.ConfirmedQuantity == 0)
+            foreach (var item in model.Items)
             {
-                model.IsCanceled = true;
+                GarmentBookingOrderItemsLogic.UpdateAsync((int)item.Id, item);
             }
+
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
 
             DbSet.Update(model);
