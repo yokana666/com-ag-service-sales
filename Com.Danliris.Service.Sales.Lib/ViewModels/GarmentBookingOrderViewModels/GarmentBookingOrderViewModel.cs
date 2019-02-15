@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels
@@ -32,6 +33,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            SalesDbContext dbContext = (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
+
             int clientTimeZoneOffset = 0;
             DateTimeOffset dt = DateTimeOffset.Now.AddDays(45);
             dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
@@ -41,13 +44,17 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 yield return new ValidationResult("Buyer harus diisi", new List<string> { "Buyer" });
             if (this.OrderQuantity <= 0)
                 yield return new ValidationResult("Jumlah Order harus lebih besar dari 0", new List<string> { "OrderQuantity" });
-            if (this.DeliveryDate == null || this.DeliveryDate == DateTimeOffset.MinValue)
-                yield return new ValidationResult("Tanggal Pengiriman harus diisi", new List<string> { "DeliveryDate" });
-            else if (this.DeliveryDate < this.BookingOrderDate)
-                yield return new ValidationResult("Tanggal Pengiriman Harus lebih dari Tanggal Booking", new List<string> { "DeliveryDate" });
-            else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45) )
-                yield return new ValidationResult("Tanggal Pengiriman harus lebih dari "+ dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")), new List<string> { "DeliveryDate" });
 
+            var expiredDate = dbContext.GarmentBookingOrders.FirstOrDefault(d => d.Id == Id && d.DeliveryDate != null);
+            if (expiredDate == null )
+            {
+                if (this.DeliveryDate == null || this.DeliveryDate == DateTimeOffset.MinValue)
+                    yield return new ValidationResult("Tanggal Pengiriman harus diisi", new List<string> { "DeliveryDate" });
+                else if (this.DeliveryDate < this.BookingOrderDate)
+                    yield return new ValidationResult("Tanggal Pengiriman Harus lebih dari Tanggal Booking", new List<string> { "DeliveryDate" });
+                else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45))
+                    yield return new ValidationResult("Tanggal Pengiriman harus lebih dari " + dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")), new List<string> { "DeliveryDate" });
+            }
             if (Items != null)
             {
                 int Count = 0;
