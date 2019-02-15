@@ -23,12 +23,6 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
             this.IdentityService = IdentityService;
         }
 
-        public BaseLogic(IIdentityService IdentityService, SalesDbContext dbContext)
-        {
-            this.DbSet = dbContext.Set<TModel>();
-            this.IdentityService = IdentityService;
-        }
-
         public abstract ReadResponse<TModel> Read(int page, int size, string order, List<string> select, string keyword, string filter);
 
         public virtual void Create(TModel model)

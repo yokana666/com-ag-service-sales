@@ -26,22 +26,22 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         where TViewModel : BaseViewModel, IValidatableObject, new()
         where IFacade : class, IBaseFacade<TModel>
     {
-        protected virtual TModel Model
+        protected TModel Model
         {
             get { return new TModel(); }
         }
 
-        protected virtual TViewModel ViewModel
+        protected TViewModel ViewModel
         {
             get { return new TViewModel(); }
         }
 
-        protected virtual List<TViewModel> Models
+        protected List<TViewModel> Models
         {
             get { return new List<TViewModel>(); }
         }
 
-        protected virtual List<TViewModel> ViewModels
+        protected List<TViewModel> ViewModels
         {
             get { return new List<TViewModel>(); }
         }

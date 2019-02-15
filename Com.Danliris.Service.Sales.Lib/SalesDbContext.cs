@@ -11,7 +11,6 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
 using Com.Danliris.Service.Sales.Lib.Models.ROGarments;
 using Com.Danliris.Service.Sales.Lib.Models;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
-using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -46,9 +45,8 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<Efficiency> Efficiencies { get; set; }
         public DbSet<GarmentBookingOrder> GarmentBookingOrders { get; set; }
         public DbSet<GarmentBookingOrderItem> GarmentBookingOrderItems { get; set; }
-        public DbSet<WeeklyPlan> WeeklyPlans { get; set; }
-        public DbSet<WeeklyPlanItem> WeeklyPlanItems { get; set; }
-        
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
