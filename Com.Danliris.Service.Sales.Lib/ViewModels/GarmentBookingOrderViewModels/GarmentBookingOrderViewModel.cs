@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
             if (this.OrderQuantity <= 0)
                 yield return new ValidationResult("Jumlah Order harus lebih besar dari 0", new List<string> { "OrderQuantity" });
 
-            var expiredDate = dbContext.GarmentBookingOrders.FirstOrDefault(d => d.Id == Id && d.DeliveryDate != null);
+            var expiredDate = dbContext.GarmentBookingOrders.FirstOrDefault(d => d.DeliveryDate != null);
             if (expiredDate == null )
             {
                 if (this.DeliveryDate == null || this.DeliveryDate == DateTimeOffset.MinValue)

@@ -70,7 +70,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                         {
                             if (data.IsCanceled)
                             {
-                                var itemz = DbContext.GarmentBookingOrderItems.Where(i => i.BookingOrderId == id && i.IsCanceled == false).Sum(s => s.ConfirmQuantity);
+                                var itemz = DbContext.GarmentBookingOrderItems.AsNoTracking().Where(i => i.BookingOrderId == id && i.IsCanceled == false).Sum(s => s.ConfirmQuantity);
                                 GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
                                 data.CanceledDate = DateTimeOffset.Now;
                                 model.ConfirmedQuantity = itemz - data.ConfirmQuantity;
