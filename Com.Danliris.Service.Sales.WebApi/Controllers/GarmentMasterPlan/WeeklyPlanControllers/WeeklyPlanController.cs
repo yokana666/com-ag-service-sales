@@ -18,12 +18,33 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers.GarmentMasterPlan.Weekly
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/garment-master-plan/weekly-plans")]
     [Authorize]
-    public class WeeklyPlanController : BaseController<WeeklyPlan, WeeklyPlanViewModel, IWeeklyPlanFacade>
+    public class WeeklyPlanController : BaseController<GarmentWeeklyPlan, GarmentWeeklyPlanViewModel, IWeeklyPlanFacade>
     {
         private readonly static string apiVersion = "1.0";
 
         public WeeklyPlanController(IIdentityService identityService, IValidateService validateService, IWeeklyPlanFacade facade, IMapper mapper) : base(identityService, validateService, facade, mapper, apiVersion)
         {
+        }
+
+        [HttpGet("years")]
+        public IActionResult GetYears(string keyword = "")
+        {
+            try
+            {
+                var data = Facade.GetYears(keyword);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok(data);
+                return Ok(Result);
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
         }
     }
 }
