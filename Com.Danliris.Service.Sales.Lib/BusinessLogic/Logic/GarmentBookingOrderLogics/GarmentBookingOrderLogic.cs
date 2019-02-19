@@ -17,7 +17,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
     {
         private readonly SalesDbContext DbContext;
         private GarmentBookingOrderItemLogic GarmentBookingOrderItemsLogic;
-        public GarmentBookingOrderLogic(GarmentBookingOrderItemLogic GarmentBookingOrderItemsLogic, IIdentityService IdentityService, IServiceProvider serviceProvider, SalesDbContext dbContext) : base(IdentityService, serviceProvider, dbContext)
+        public GarmentBookingOrderLogic(GarmentBookingOrderItemLogic GarmentBookingOrderItemsLogic, IIdentityService IdentityService, SalesDbContext dbContext) : base(IdentityService, dbContext)
         {
             this.GarmentBookingOrderItemsLogic = GarmentBookingOrderItemsLogic;
             this.DbContext = dbContext;
