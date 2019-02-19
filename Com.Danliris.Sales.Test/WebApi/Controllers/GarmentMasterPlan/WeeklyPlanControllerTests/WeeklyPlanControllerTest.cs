@@ -12,16 +12,16 @@ using Xunit;
 
 namespace Com.Danliris.Sales.Test.WebApi.Controllers.GarmentMasterPlan.WeeklyPlanControllerTests
 {
-    public class WeeklyPlanControllerTest : BaseControllerTest<WeeklyPlanController, WeeklyPlan, WeeklyPlanViewModel, IWeeklyPlanFacade>
+    public class WeeklyPlanControllerTest : BaseControllerTest<WeeklyPlanController, GarmentWeeklyPlan, GarmentWeeklyPlanViewModel, IWeeklyPlanFacade>
     {
-        protected override WeeklyPlanViewModel ViewModel
+        protected override GarmentWeeklyPlanViewModel ViewModel
         {
             get
             {
                 var viewModel = base.ViewModel;
-                viewModel.Items = new List<WeeklyPlanItemViewModel>
+                viewModel.Items = new List<GarmentWeeklyPlanItemViewModel>
                 {
-                    new WeeklyPlanItemViewModel()
+                    new GarmentWeeklyPlanItemViewModel()
                 };
                 return viewModel;
             }

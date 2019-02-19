@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels
 {
-    public class WeeklyPlan : BaseModel
+    public class GarmentWeeklyPlan : BaseModel
     {
         public short Year { get; set; }
 
@@ -14,6 +14,6 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanMode
         [MaxLength(255)]
         public string UnitName { get; set; }
 
-        public virtual ICollection<WeeklyPlanItem> Items { get; set; }
+        public virtual ICollection<GarmentWeeklyPlanItem> Items { get; set; }
     }
 }

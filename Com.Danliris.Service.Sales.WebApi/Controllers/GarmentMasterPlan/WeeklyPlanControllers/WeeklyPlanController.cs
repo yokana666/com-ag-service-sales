@@ -18,7 +18,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers.GarmentMasterPlan.Weekly
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/garment-master-plan/weekly-plans")]
     [Authorize]
-    public class WeeklyPlanController : BaseController<WeeklyPlan, WeeklyPlanViewModel, IWeeklyPlanFacade>
+    public class WeeklyPlanController : BaseController<GarmentWeeklyPlan, GarmentWeeklyPlanViewModel, IWeeklyPlanFacade>
     {
         private readonly static string apiVersion = "1.0";
 

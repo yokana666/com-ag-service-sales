@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment.WeeklyPlanInterfaces
 {
-    public interface IWeeklyPlanFacade : IBaseFacade<WeeklyPlan>
+    public interface IWeeklyPlanFacade : IBaseFacade<GarmentWeeklyPlan>
     {
         List<string> GetYears(string keyword);
     }

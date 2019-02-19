@@ -8,21 +8,21 @@ using System.Text;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.WeeklyPlanDataUtils
 {
-    public class WeeklyPlanDataUtil : BaseDataUtil<WeeklyPlanFacade, WeeklyPlan>
+    public class WeeklyPlanDataUtil : BaseDataUtil<WeeklyPlanFacade, GarmentWeeklyPlan>
     {
         public WeeklyPlanDataUtil(WeeklyPlanFacade facade) : base(facade)
         {
         }
 
-        public override WeeklyPlan GetNewData()
+        public override GarmentWeeklyPlan GetNewData()
         {
-            var weeklyPlan = new WeeklyPlan
+            var weeklyPlan = new GarmentWeeklyPlan
             {
                 Year = 2019,
                 UnitId = 1,
                 UnitCode = "UnitCode",
                 UnitName = "UnitName",
-                Items = new List<WeeklyPlanItem>()
+                Items = new List<GarmentWeeklyPlanItem>()
             };
             var startDateOfYear = new DateTime(2019, 01, 01);
             var endDateOfYear = new DateTime(2019, 12, 31);
@@ -30,7 +30,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Week
             var totalWeek = Math.Ceiling((decimal)((diff / 86400000) + 1) / 7);
             for (byte i = 1; i <= totalWeek; i++)
             {
-                weeklyPlan.Items.Add(new WeeklyPlanItem
+                weeklyPlan.Items.Add(new GarmentWeeklyPlanItem
                 {
                     WeekNumber = (byte)(i + 1)
                 });

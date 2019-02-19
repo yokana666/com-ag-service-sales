@@ -16,20 +16,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
     {
         private IIdentityService identityService;
         private SalesDbContext dbContext;
-        private DbSet<WeeklyPlan> dbSet;
+        private DbSet<GarmentWeeklyPlan> dbSet;
 
         public MonitoringRemainingEHLogic(IIdentityService identityService, SalesDbContext dbContext)
         {
             this.identityService = identityService;
             this.dbContext = dbContext;
-            dbSet = dbContext.Set<WeeklyPlan>();
+            dbSet = dbContext.Set<GarmentWeeklyPlan>();
         }
 
         public override IQueryable<MonitoringRemainingEHViewModel> GetQuery(string filter)
         {
             Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
 
-            IQueryable<WeeklyPlan> Query = dbSet.Include(i => i.Items);
+            IQueryable<GarmentWeeklyPlan> Query = dbSet.Include(i => i.Items);
 
             try
             {
