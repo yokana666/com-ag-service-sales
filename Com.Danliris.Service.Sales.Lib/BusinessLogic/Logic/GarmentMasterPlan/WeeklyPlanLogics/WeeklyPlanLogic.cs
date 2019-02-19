@@ -102,5 +102,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
                 EntityExtension.FlagForUpdate(item, IdentityService.Username, "sales-service");
             }
         }
+
+        internal List<string> GetYears(string keyword)
+        {
+            return DbSet.Where(d => d.Year.ToString().Contains(keyword))
+                .Select(d => d.Year.ToString())
+                .Distinct()
+                .OrderBy(year => year).ToList();
+        }
     }
 }

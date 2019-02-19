@@ -12,7 +12,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Weekly
 {
     public class WeeklyPlanFacadeTest : BaseFacadeTest<SalesDbContext, WeeklyPlanFacade, WeeklyPlanLogic, WeeklyPlan, WeeklyPlanDataUtil>
     {
-        private const string ENTITY = "WeeklyPlan";
+        private const string ENTITY = "GarmentWeeklyPlan";
 
         public WeeklyPlanFacadeTest() : base(ENTITY)
         {

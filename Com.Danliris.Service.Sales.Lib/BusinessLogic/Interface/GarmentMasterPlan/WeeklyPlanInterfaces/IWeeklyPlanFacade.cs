@@ -8,5 +8,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment.WeeklyP
 {
     public interface IWeeklyPlanFacade : IBaseFacade<WeeklyPlan>
     {
+        List<string> GetYears(string keyword);
     }
 }

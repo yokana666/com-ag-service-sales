@@ -53,5 +53,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             WeeklyPlanLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
+
+        public List<string> GetYears(string keyword)
+        {
+            return WeeklyPlanLogic.GetYears(keyword);
+        }
     }
 }

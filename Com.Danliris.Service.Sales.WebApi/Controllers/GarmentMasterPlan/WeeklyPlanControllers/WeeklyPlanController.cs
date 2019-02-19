@@ -25,5 +25,26 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers.GarmentMasterPlan.Weekly
         public WeeklyPlanController(IIdentityService identityService, IValidateService validateService, IWeeklyPlanFacade facade, IMapper mapper) : base(identityService, validateService, facade, mapper, apiVersion)
         {
         }
+
+        [HttpGet("years")]
+        public IActionResult GetYears(string keyword = "")
+        {
+            try
+            {
+                var data = Facade.GetYears(keyword);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok(data);
+                return Ok(Result);
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
     }
 }

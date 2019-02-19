@@ -8,5 +8,6 @@ namespace Com.Danliris.Service.Sales.Lib.Services
     {
         string Username { get; set; }
         string Token { get; set; }
+        int TimezoneOffset { get; set; }
     }
 }
