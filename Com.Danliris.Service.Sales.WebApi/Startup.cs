@@ -75,6 +75,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ISpinningSalesContract, SpinningSalesContractFacade>()
                 .AddTransient<SpinningSalesContractReportFacade>()
                 .AddTransient<FinishingPrintingSalesContractReportFacade>()
+                .AddTransient<GarmentBookingOrderMonitoringFacade>()
                 .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>()
                 .AddTransient<IGarmentSalesContract, GarmentSalesContractFacade>()
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
