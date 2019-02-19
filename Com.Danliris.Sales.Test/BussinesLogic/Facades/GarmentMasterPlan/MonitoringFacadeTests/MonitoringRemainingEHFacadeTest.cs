@@ -107,7 +107,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Monito
 
             var filter = new
             {
-                year = data.Year
+                data.Year
             };
             var Response = monitoringRemainingEHFacade.GenerateExcel(filter:JsonConvert.SerializeObject(filter));
 

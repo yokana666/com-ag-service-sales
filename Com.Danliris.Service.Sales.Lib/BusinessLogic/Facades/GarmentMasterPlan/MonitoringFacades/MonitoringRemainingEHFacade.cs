@@ -148,7 +148,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             MemoryStream streamExcel = new MemoryStream();
             package.SaveAs(streamExcel);
 
-            Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
+            Dictionary<string, string> FilterDictionary = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(filter), StringComparer.OrdinalIgnoreCase);
             string fileName = string.Concat("Remaining EH Report ", FilterDictionary["year"], ".xlsx");
 
             return Tuple.Create(streamExcel, fileName);

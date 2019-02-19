@@ -27,7 +27,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
 
         public override IQueryable<MonitoringRemainingEHViewModel> GetQuery(string filter)
         {
-            Dictionary<string, string> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(filter);
+            Dictionary<string, string> FilterDictionary = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(filter), StringComparer.OrdinalIgnoreCase);
 
             IQueryable<GarmentWeeklyPlan> Query = dbSet.Include(i => i.Items);
 
