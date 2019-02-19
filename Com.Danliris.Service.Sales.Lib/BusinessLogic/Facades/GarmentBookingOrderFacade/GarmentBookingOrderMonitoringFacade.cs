@@ -1,4 +1,5 @@
-﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics;
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics;
 using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Services;
@@ -15,69 +16,69 @@ using System.Linq;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade
 {
-    public class GarmentBookingOrderMonitoringFacade
+    public class GarmentBookingOrderMonitoringFacade //: IGarmentBookingOrderMonitoringInterface
     {
-        private readonly SalesDbContext DbContext;
-        private readonly DbSet<GarmentBookingOrder> DbSet;
-        private IdentityService IdentityService;
-        private GarmentBookingOrderLogic GarmentBookingOrderLogic;
+        //private readonly SalesDbContext DbContext;
+        //private readonly DbSet<GarmentBookingOrder> DbSet;
+        //private IdentityService IdentityService;
+        //private GarmentBookingOrderLogic GarmentBookingOrderLogic;
 
-        public GarmentBookingOrderMonitoringFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
-        {
-            this.DbContext = dbContext;
-            this.DbSet = this.DbContext.Set<GarmentBookingOrder>(); ;
-            this.IdentityService = serviceProvider.GetService<IdentityService>();
-            this.GarmentBookingOrderLogic = serviceProvider.GetService<GarmentBookingOrderLogic>(); ;
-        }
+        //public GarmentBookingOrderMonitoringFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
+        //{
+        //    this.DbContext = dbContext;
+        //    this.DbSet = this.DbContext.Set<GarmentBookingOrder>(); ;
+        //    this.IdentityService = serviceProvider.GetService<IdentityService>();
+        //    this.GarmentBookingOrderLogic = serviceProvider.GetService<GarmentBookingOrderLogic>(); ;
+        //}
 
-        public IQueryable<GarmentBookingOrderMonitoringViewModel> GetReportQuery(string no, string buyerCode, string sectionName, DateTime? dateFrom, DateTime? dateTo, int offset)
-        {
-            DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
-            DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
+        //public IQueryable<GarmentBookingOrderMonitoringViewModel> GetReportQuery(string no, string buyerCode, string sectionName, DateTime? dateFrom, DateTime? dateTo, int offset)
+        //{
+        //    DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
+        //    DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
 
-            var Query = (from a in DbContext.GarmentBookingOrders
-                         join b in DbContext.GarmentBookingOrderItems on a.Id equals b.GarmentBookingOrder.Id
+        //    var Query = (from a in DbContext.GarmentBookingOrders
+        //                 join b in DbContext.GarmentBookingOrderItems on a.Id equals b.GarmentBookingOrder.Id
 
-                         where a.IsDeleted == false
-                             && b.IsDeleted == false
-                             && a.BookingOrderNo == (string.IsNullOrWhiteSpace(no) ? a.BookingOrderNo : no)
-                             && a.BuyerName == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
-                             && a.SectionName == (string.IsNullOrWhiteSpace(sectionName) ? a.SectionName : sectionName)
-                             && a.CreatedUtc.AddHours(offset).Date >= DateFrom.Date
-                             && a.CreatedUtc.AddHours(offset).Date <= DateTo.Date
-                         select new GarmentBookingOrderMonitoringViewModel
-                         {
-                             CreatedUtc = a.CreatedUtc,
-                             BookingOrderNo = a.BookingOrderNo,
-                             BookingOrderDate = a.BookingOrderDate,
-                             ComodityName = b.ComodityName,
-                             BuyerName = a.BuyerName,
-                             DeliveryDate = a.DeliveryDate,
-                             OrderQuantity = a.OrderQuantity,
-                             DeliveryDateItems = b.DeliveryDate,
-                             ConfirmDate = b.ConfirmDate,
-                             ConfirmQuantity = b.ConfirmQuantity,
-                             Remark = b.Remark,
-                         });
-            return Query;
-        }
+        //                 where a.IsDeleted == false
+        //                     && b.IsDeleted == false
+        //                     && a.BookingOrderNo == (string.IsNullOrWhiteSpace(no) ? a.BookingOrderNo : no)
+        //                     && a.BuyerName == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
+        //                     && a.SectionName == (string.IsNullOrWhiteSpace(sectionName) ? a.SectionName : sectionName)
+        //                     && a.CreatedUtc.AddHours(offset).Date >= DateFrom.Date
+        //                     && a.CreatedUtc.AddHours(offset).Date <= DateTo.Date
+        //                 select new GarmentBookingOrderMonitoringViewModel
+        //                 {
+        //                     CreatedUtc = a.CreatedUtc,
+        //                     BookingOrderNo = a.BookingOrderNo,
+        //                     BookingOrderDate = a.BookingOrderDate,
+        //                     ComodityName = b.ComodityName,
+        //                     BuyerName = a.BuyerName,
+        //                     DeliveryDate = a.DeliveryDate,
+        //                     OrderQuantity = a.OrderQuantity,
+        //                     DeliveryDateItems = b.DeliveryDate,
+        //                     ConfirmDate = b.ConfirmDate,
+        //                     ConfirmQuantity = b.ConfirmQuantity,
+        //                     Remark = b.Remark,
+        //                 });
+        //    return Query;
+        //}
 
-        public Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> GetReport(string no, string buyerCode, string orderTypeCode, string comodityCode, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
-        {
-            var Query = GetReportQuery(no, buyerCode, orderTypeCode, dateFrom, dateTo, offset);
+        //public Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> GetReport(string no, string buyerCode, string sectionName, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
+        //{
+        //    var Query = GetReportQuery(no, buyerCode, sectionName, dateFrom, dateTo, offset);
 
-            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
-            if (OrderDictionary.Count.Equals(0))
-            {
-                Query = Query.OrderByDescending(b => b.LastModifiedUtc);
-            }
+        //    Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
+        //    if (OrderDictionary.Count.Equals(0))
+        //    {
+        //        Query = Query.OrderByDescending(b => b.LastModifiedUtc);
+        //    }
 
-            Pageable<GarmentBookingOrderMonitoringViewModel> pageable = new Pageable<GarmentBookingOrderMonitoringViewModel>(Query, page - 1, size);
-            List<GarmentBookingOrderMonitoringViewModel> Data = pageable.Data.ToList<GarmentBookingOrderMonitoringViewModel>();
-            int TotalData = pageable.TotalCount;
+        //    Pageable<GarmentBookingOrderMonitoringViewModel> pageable = new Pageable<GarmentBookingOrderMonitoringViewModel>(Query, page - 1, size);
+        //    List<GarmentBookingOrderMonitoringViewModel> Data = pageable.Data.ToList<GarmentBookingOrderMonitoringViewModel>();
+        //    int TotalData = pageable.TotalCount;
 
-            return Tuple.Create(Data, TotalData);
-        }
+        //    return Tuple.Create(Data, TotalData);
+        //}
 
         //public MemoryStream GenerateExcel(string no, string buyerCode, string orderTypeCode, string comodityCode, DateTime? dateFrom, DateTime? dateTo, int offset)
         //{
