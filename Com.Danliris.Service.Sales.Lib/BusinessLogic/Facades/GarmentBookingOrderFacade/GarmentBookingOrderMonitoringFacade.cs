@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -31,7 +32,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         //    this.GarmentBookingOrderLogic = serviceProvider.GetService<GarmentBookingOrderLogic>(); ;
         //}
 
-        //public IQueryable<GarmentBookingOrderMonitoringViewModel> GetReportQuery(string no, string buyerCode, string sectionName, DateTime? dateFrom, DateTime? dateTo, int offset)
+        //public IQueryable<GarmentBookingOrderMonitoringViewModel> GetReportQuery(string no, string buyerCode, string sectionName,string comodityName, DateTime? dateFrom, DateTime? dateTo, int offset)
         //{
         //    DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
         //    DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
@@ -59,30 +60,30 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         //                     ConfirmDate = b.ConfirmDate,
         //                     ConfirmQuantity = b.ConfirmQuantity,
         //                     Remark = b.Remark,
+        //                     StatusConfirm = a.OrderQuantity == 0 && a.IsBlockingPlan == false ? "Booking" : a.OrderQuantity > 0 && a.IsBlockingPlan == false ? "Confirmed" : "Sudah Dibuat MasterPlan",
+                             
         //                 });
         //    return Query;
         //}
 
-        //public Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> GetReport(string no, string buyerCode, string sectionName, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
+        //public Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> GetReport(string no, string buyerCode, string sectionName, string comodityName, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
         //{
-        //    var Query = GetReportQuery(no, buyerCode, sectionName, dateFrom, dateTo, offset);
+        //    var Query = GetReportQuery(no, buyerCode, sectionName,comodityName, dateFrom, dateTo, offset);
 
         //    Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
         //    if (OrderDictionary.Count.Equals(0))
         //    {
         //        Query = Query.OrderByDescending(b => b.LastModifiedUtc);
         //    }
-
-        //    Pageable<GarmentBookingOrderMonitoringViewModel> pageable = new Pageable<GarmentBookingOrderMonitoringViewModel>(Query, page - 1, size);
-        //    List<GarmentBookingOrderMonitoringViewModel> Data = pageable.Data.ToList<GarmentBookingOrderMonitoringViewModel>();
-        //    int TotalData = pageable.TotalCount;
+        //    var Data = Query.ToList();
+        //    var TotalData = Data.Count();
 
         //    return Tuple.Create(Data, TotalData);
         //}
 
-        //public MemoryStream GenerateExcel(string no, string buyerCode, string orderTypeCode, string comodityCode, DateTime? dateFrom, DateTime? dateTo, int offset)
+        //public MemoryStream GenerateExcel(string no, string buyerCode, string comodityCode, string sectionName, DateTime? dateFrom, DateTime? dateTo, int offset)
         //{
-        //    var Query = GetReportQuery(no, buyerCode, orderTypeCode, comodityCode, dateFrom, dateTo, offset);
+        //    var Query = GetReportQuery(no, buyerCode, comodityCode, sectionName, dateFrom, dateTo, offset);
         //    Query = Query.OrderByDescending(b => b.LastModifiedUtc);
         //    DataTable result = new DataTable();
         //    //No	Unit	Budget	Kategori	Tanggal PR	Nomor PR	Kode Barang	Nama Barang	Jumlah	Satuan	Tanggal Diminta Datang	Status	Tanggal Diminta Datang Eksternal
@@ -110,12 +111,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         //        foreach (var item in Query)
         //        {
         //            index++;
-        //            DateTimeOffset date = item.deliverySchedule ?? new DateTime(1970, 1, 1);
-        //            string deliverySchedule = date == new DateTime(1970, 1, 1) ? "-" : date.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-        //            result.Rows.Add(index, item.salesContractNo, item.CreatedUtc.ToString("dd MMM yyyy", new CultureInfo("id-ID")), item.buyerName, item.buyerType,
-        //                item.dispositionNo, item.orderType, item.comodityName, item.materialName, item.materialConstructionName, item.yarnMaterialName, item.materialWidth,
-        //                item.qualityName, item.orderQuantity, item.productionOrderQuantity, item.uomUnit, item.shippingQuantityTolerance, item.termOfPaymentName, item.paymentTo, deliverySchedule,
-        //                item.agentName, item.comission, item.color, item.price, item.accountCurrencyCode, item.useIncomeTax, item.status);
+        //            result.Rows.Add(item.BookingOrderNo, item.BookingOrderDate, item.BuyerName, item.OrderQuantity, item.DeliveryDate, item.ComodityName, item.ConfirmQuantity,
+        //                item.DeliveryDateItems, item.ConfirmDate, item.Remark, item.StatusConfirm, item.StatusBooking, item.OrderLeftover, item.SelisihHari);
         //        }
         //    }
 
