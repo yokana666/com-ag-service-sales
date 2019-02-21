@@ -53,6 +53,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFa
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment.WeeklyPlanInterfaces;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.WeeklyPlanFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.WeeklyPlanLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.MonitoringInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MonitoringFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MonitoringLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -75,6 +78,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ISpinningSalesContract, SpinningSalesContractFacade>()
                 .AddTransient<SpinningSalesContractReportFacade>()
                 .AddTransient<FinishingPrintingSalesContractReportFacade>()
+                .AddTransient<GarmentBookingOrderMonitoringFacade>()
                 .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>()
                 .AddTransient<IGarmentSalesContract, GarmentSalesContractFacade>()
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
@@ -89,7 +93,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>()
                 .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
                 .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>()
-                .AddTransient<CanceledGarmentBookingOrderReportFacade>();
+                .AddTransient<CanceledGarmentBookingOrderReportFacade>()
+                .AddTransient<IMonitoringRemainingEHFacade, MonitoringRemainingEHFacade>();
 
         }
 
@@ -118,6 +123,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<RO_Garment_ValidationLogic>()
                 .AddTransient<GarmentBookingOrderLogic>()
                 .AddTransient<GarmentBookingOrderItemLogic>()
+                .AddTransient<MonitoringRemainingEHLogic>()
                 .AddTransient<WeeklyPlanLogic>();
 
         }

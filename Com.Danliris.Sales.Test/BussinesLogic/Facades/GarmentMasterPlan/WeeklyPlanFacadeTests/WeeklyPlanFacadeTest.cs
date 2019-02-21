@@ -10,9 +10,9 @@ using System.Text;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.WeeklyPlanFacadeTests
 {
-    public class WeeklyPlanFacadeTest : BaseFacadeTest<SalesDbContext, WeeklyPlanFacade, WeeklyPlanLogic, WeeklyPlan, WeeklyPlanDataUtil>
+    public class WeeklyPlanFacadeTest : BaseFacadeTest<SalesDbContext, WeeklyPlanFacade, WeeklyPlanLogic, GarmentWeeklyPlan, WeeklyPlanDataUtil>
     {
-        private const string ENTITY = "WeeklyPlan";
+        private const string ENTITY = "GarmentWeeklyPlan";
 
         public WeeklyPlanFacadeTest() : base(ENTITY)
         {

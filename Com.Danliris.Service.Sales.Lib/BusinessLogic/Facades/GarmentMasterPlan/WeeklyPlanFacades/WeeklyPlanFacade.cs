@@ -14,19 +14,19 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
     public class WeeklyPlanFacade : IWeeklyPlanFacade
     {
         private readonly SalesDbContext DbContext;
-        private readonly DbSet<WeeklyPlan> DbSet;
+        private readonly DbSet<GarmentWeeklyPlan> DbSet;
         private IdentityService IdentityService;
         private WeeklyPlanLogic WeeklyPlanLogic;
 
         public WeeklyPlanFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             DbContext = dbContext;
-            DbSet = DbContext.Set<WeeklyPlan>();
+            DbSet = DbContext.Set<GarmentWeeklyPlan>();
             IdentityService = serviceProvider.GetService<IdentityService>();
             WeeklyPlanLogic = serviceProvider.GetService<WeeklyPlanLogic>();
         }
 
-        public async Task<int> CreateAsync(WeeklyPlan model)
+        public async Task<int> CreateAsync(GarmentWeeklyPlan model)
         {
             WeeklyPlanLogic.Create(model);
             return await DbContext.SaveChangesAsync();
@@ -38,20 +38,25 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             return await DbContext.SaveChangesAsync();
         }
 
-        public ReadResponse<WeeklyPlan> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        public ReadResponse<GarmentWeeklyPlan> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             return WeeklyPlanLogic.Read(page, size, order, select, keyword, filter);
         }
 
-        public async Task<WeeklyPlan> ReadByIdAsync(int id)
+        public async Task<GarmentWeeklyPlan> ReadByIdAsync(int id)
         {
             return await WeeklyPlanLogic.ReadByIdAsync(id);
         }
 
-        public async Task<int> UpdateAsync(int id, WeeklyPlan model)
+        public async Task<int> UpdateAsync(int id, GarmentWeeklyPlan model)
         {
             WeeklyPlanLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
+        }
+
+        public List<string> GetYears(string keyword)
+        {
+            return WeeklyPlanLogic.GetYears(keyword);
         }
     }
 }

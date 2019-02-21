@@ -46,8 +46,8 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<Efficiency> Efficiencies { get; set; }
         public DbSet<GarmentBookingOrder> GarmentBookingOrders { get; set; }
         public DbSet<GarmentBookingOrderItem> GarmentBookingOrderItems { get; set; }
-        public DbSet<WeeklyPlan> WeeklyPlans { get; set; }
-        public DbSet<WeeklyPlanItem> WeeklyPlanItems { get; set; }
+        public DbSet<GarmentWeeklyPlan> GarmentWeeklyPlans { get; set; }
+        public DbSet<GarmentWeeklyPlanItem> GarmentWeeklyPlanItems { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

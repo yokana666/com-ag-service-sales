@@ -8,13 +8,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.Garment.WeeklyPlanViewModels
 {
-    public class WeeklyPlanViewModel : BaseViewModel, IValidatableObject
+    public class GarmentWeeklyPlanViewModel : BaseViewModel, IValidatableObject
     {
         public short Year { get; set; }
 
         public UnitViewModel Unit { get; set; }
 
-        public List<WeeklyPlanItemViewModel> Items { get; set; }
+        public List<GarmentWeeklyPlanItemViewModel> Items { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

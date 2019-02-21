@@ -1,10 +1,9 @@
-﻿using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
+﻿using Com.Danliris.Service.Sales.Lib.Utilities;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels
+namespace Com.Danliris.Service.Sales.Lib.ViewModels.Garment.WeeklyPlanViewModels
 {
-    public class WeeklyPlanItem : BaseModel
+    public class GarmentWeeklyPlanItemViewModel : BaseViewModel
     {
         public byte WeekNumber { get; set; }
 
@@ -21,9 +20,5 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanMode
         public int EHTotal { get; set; }
         public int UsedEH { get; set; }
         public int RemainingEH { get; set; }
-
-        public virtual long WeeklyPlanId { get; set; }
-        [ForeignKey("WeeklyPlanId")]
-        public virtual WeeklyPlan WeeklyPlan { get; set; }
     }
 }

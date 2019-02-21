@@ -19,7 +19,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         private readonly GarmentBookingOrderLogic garmentBookingOrderLogic;
         public IServiceProvider ServiceProvider;
 
-        public GarmentBookingOrderFacade(SalesDbContext dbContext, IServiceProvider serviceProvider)
+        public GarmentBookingOrderFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             DbContext = dbContext;
             DbSet = DbContext.Set<GarmentBookingOrder>();

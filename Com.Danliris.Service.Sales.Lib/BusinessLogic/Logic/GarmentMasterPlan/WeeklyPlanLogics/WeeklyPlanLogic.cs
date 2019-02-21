@@ -14,25 +14,25 @@ using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.WeeklyPlanLogics
 {
-    public class WeeklyPlanLogic : BaseLogic<WeeklyPlan>
+    public class WeeklyPlanLogic : BaseLogic<GarmentWeeklyPlan>
     {
         public WeeklyPlanLogic(IIdentityService IdentityService, SalesDbContext dbContext) : base(IdentityService, dbContext)
         {
         }
 
-        public override ReadResponse<WeeklyPlan> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        public override ReadResponse<GarmentWeeklyPlan> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
-            IQueryable<WeeklyPlan> Query = this.DbSet;
+            IQueryable<GarmentWeeklyPlan> Query = this.DbSet;
 
             List<string> SearchAttributes = new List<string>()
             {
                 "UnitCode", "UnitName"
             };
 
-            Query = QueryHelper<WeeklyPlan>.Search(Query, SearchAttributes, keyword);
+            Query = QueryHelper<GarmentWeeklyPlan>.Search(Query, SearchAttributes, keyword);
 
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
-            Query = QueryHelper<WeeklyPlan>.Filter(Query, FilterDictionary);
+            Query = QueryHelper<GarmentWeeklyPlan>.Filter(Query, FilterDictionary);
 
             List<string> SelectedFields = select ?? new List<string>()
             {
@@ -40,7 +40,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
             };
 
             Query = Query
-                .Select(field => new WeeklyPlan
+                .Select(field => new GarmentWeeklyPlan
                 {
                     Id = field.Id,
                     Year = field.Year,
@@ -51,16 +51,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
-            Query = QueryHelper<WeeklyPlan>.Order(Query, OrderDictionary);
+            Query = QueryHelper<GarmentWeeklyPlan>.Order(Query, OrderDictionary);
 
-            Pageable<WeeklyPlan> pageable = new Pageable<WeeklyPlan>(Query, page - 1, size);
-            List<WeeklyPlan> data = pageable.Data.ToList<WeeklyPlan>();
+            Pageable<GarmentWeeklyPlan> pageable = new Pageable<GarmentWeeklyPlan>(Query, page - 1, size);
+            List<GarmentWeeklyPlan> data = pageable.Data.ToList<GarmentWeeklyPlan>();
             int totalData = pageable.TotalCount;
 
-            return new ReadResponse<WeeklyPlan>(data, totalData, OrderDictionary, SelectedFields);
+            return new ReadResponse<GarmentWeeklyPlan>(data, totalData, OrderDictionary, SelectedFields);
         }
 
-        public override void Create(WeeklyPlan model)
+        public override void Create(GarmentWeeklyPlan model)
         {
             foreach (var item in model.Items)
             {
@@ -69,7 +69,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
             base.Create(model);
         }
 
-        public override async Task<WeeklyPlan> ReadByIdAsync(int id)
+        public override async Task<GarmentWeeklyPlan> ReadByIdAsync(int id)
         {
             var model = await DbSet.AsNoTracking().Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
             model.Items = model.Items.OrderBy(i => i.WeekNumber).ToList();
@@ -86,7 +86,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
             }
         }
 
-        public override void UpdateAsync(int id, WeeklyPlan newModel)
+        public override void UpdateAsync(int id, GarmentWeeklyPlan newModel)
         {
             var model = DbSet.Include(d => d.Items).FirstOrDefault(d => d.Id == id);
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
@@ -101,6 +101,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
                 item.RemainingEH = newItem.RemainingEH;
                 EntityExtension.FlagForUpdate(item, IdentityService.Username, "sales-service");
             }
+        }
+
+        internal List<string> GetYears(string keyword)
+        {
+            return DbSet.Where(d => d.Year.ToString().Contains(keyword))
+                .Select(d => d.Year.ToString())
+                .Distinct()
+                .OrderBy(year => year).ToList();
         }
     }
 }
