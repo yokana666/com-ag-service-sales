@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels
 {
-    public class GarmentBookingOrderReportViewModel : BaseViewModel
+    public class CanceledGarmentBookingOrderReportViewModel : BaseViewModel
     {
         public string BookingOrderNo { get; set; }
         public DateTimeOffset? BookingOrderDate { get; set; }

@@ -20,13 +20,13 @@ using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade
 {
-    public class GarmentBookingOrderReportFacade
+    public class CanceledGarmentBookingOrderReportFacade
     {
         private readonly SalesDbContext DbContext;
         private readonly DbSet<GarmentBookingOrder> DbSet;
         private IdentityService IdentityService;
         private GarmentBookingOrderLogic GarmentBookingOrderLogic;
-        public GarmentBookingOrderReportFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
+        public CanceledGarmentBookingOrderReportFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             this.DbContext = dbContext;
             this.DbSet = this.DbContext.Set<GarmentBookingOrder>();
@@ -34,12 +34,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             this.GarmentBookingOrderLogic = serviceProvider.GetService<GarmentBookingOrderLogic>();
         }
 
-        public IQueryable<GarmentBookingOrderReportViewModel> GetReportQuery(string no, string buyerCode, string statusCancel, DateTime? dateFrom, DateTime? dateTo, int offset)
+        public IQueryable<CanceledGarmentBookingOrderReportViewModel> GetReportQuery(string no, string buyerCode, string statusCancel, DateTime? dateFrom, DateTime? dateTo, int offset)
         {
             DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
             DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
 
-            List<GarmentBookingOrderReportViewModel> listGarmentBookingReport = new List<GarmentBookingOrderReportViewModel>();
+            List<CanceledGarmentBookingOrderReportViewModel> listGarmentBookingReport = new List<CanceledGarmentBookingOrderReportViewModel>();
 
             var Query = (from a in DbContext.GarmentBookingOrders
                          join b in DbContext.GarmentBookingOrderItems on a.Id equals b.BookingOrderId
@@ -49,7 +49,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              && a.BuyerCode == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
                              && a.BookingOrderDate.AddHours(offset).Date >= DateFrom.Date
                              && a.BookingOrderDate.AddHours(offset).Date <= DateTo.Date
-                         select new GarmentBookingOrderReportViewModel
+                         select new CanceledGarmentBookingOrderReportViewModel
                          {
                              CreatedUtc = a.CreatedUtc,
                              BookingOrderDate = a.BookingOrderDate,
@@ -76,7 +76,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             {
                 if (query.IsCanceled == true)
                 {
-                    GarmentBookingOrderReportViewModel view = new GarmentBookingOrderReportViewModel
+                    CanceledGarmentBookingOrderReportViewModel view = new CanceledGarmentBookingOrderReportViewModel
                     {
                         CreatedUtc = query.CreatedUtc,
                         BookingOrderDate = query.BookingOrderDate,
@@ -97,7 +97,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 }
                 if (query.CanceledQuantity > 0)
                 {
-                    GarmentBookingOrderReportViewModel view = new GarmentBookingOrderReportViewModel
+                    CanceledGarmentBookingOrderReportViewModel view = new CanceledGarmentBookingOrderReportViewModel
                     {
                         CreatedUtc = query.CreatedUtc,
                         BookingOrderDate = query.BookingOrderDate,
@@ -118,7 +118,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 }
                 if (query.ExpiredBookingQuantity > 0)
                 {
-                    GarmentBookingOrderReportViewModel view = new GarmentBookingOrderReportViewModel
+                    CanceledGarmentBookingOrderReportViewModel view = new CanceledGarmentBookingOrderReportViewModel
                     {
                         CreatedUtc = query.CreatedUtc,
                         BookingOrderDate = query.BookingOrderDate,
@@ -148,17 +148,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             }
         }
 
-        public Tuple<List<GarmentBookingOrderReportViewModel>, int> GetReport(string no, string buyerCode, string statusCancel, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
+        public Tuple<List<CanceledGarmentBookingOrderReportViewModel>, int> GetReport(string no, string buyerCode, string statusCancel, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
         {
             var Query = GetReportQuery(no, buyerCode, statusCancel, dateFrom, dateTo, offset);
             var statusCheck = "";
             var bookingOrderNoTemp = "";
-            List<GarmentBookingOrderReportViewModel> Data = new List<GarmentBookingOrderReportViewModel>();
+            List<CanceledGarmentBookingOrderReportViewModel> Data = new List<CanceledGarmentBookingOrderReportViewModel>();
             foreach (var item in Query.OrderByDescending(b => b.LastModifiedUtc).ThenBy(b => b.BookingOrderNo).ThenBy(b => b.CancelStatus))
             {
                 
 
-                GarmentBookingOrderReportViewModel _new = new GarmentBookingOrderReportViewModel
+                CanceledGarmentBookingOrderReportViewModel _new = new CanceledGarmentBookingOrderReportViewModel
                 {
                     CreatedUtc = item.CreatedUtc,
                     BookingOrderDate = item.BookingOrderDate,

@@ -14,12 +14,12 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/sales/garment-booking-orders-report")]
     [Authorize]
-    public class GarmentBookingOrderReportController : Controller
+    public class CanceledGarmentBookingOrderReportController : Controller
     {
         private string ApiVersion = "1.0.0";
-        private readonly GarmentBookingOrderReportFacade _facade;
+        private readonly CanceledGarmentBookingOrderReportFacade _facade;
 
-        public GarmentBookingOrderReportController(GarmentBookingOrderReportFacade facade)
+        public CanceledGarmentBookingOrderReportController(CanceledGarmentBookingOrderReportFacade facade)
         {
             _facade = facade;
         }
