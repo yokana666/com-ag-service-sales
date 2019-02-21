@@ -1,6 +1,8 @@
 ﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade;
+using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
 using Com.Danliris.Service.Sales.Lib.Services;
-using Com.Danliris.Service.Sales.WebApi.Helpers;
+using Com.Danliris.Service.Sales.WebApi.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,12 +18,14 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     [Authorize]
     public class CanceledGarmentBookingOrderReportController : Controller
     {
-        private string ApiVersion = "1.0.0";
-        private readonly CanceledGarmentBookingOrderReportFacade _facade;
-
-        public CanceledGarmentBookingOrderReportController(CanceledGarmentBookingOrderReportFacade facade)
+        //private readonly CanceledGarmentBookingOrderReportFacade _facade;
+        private readonly static string apiVersion = "1.0";
+        private readonly ICanceledGarmentBookingOrderReportFacade facades;
+        private readonly IIdentityService Service;
+        public CanceledGarmentBookingOrderReportController(IIdentityService identityService, ICanceledGarmentBookingOrderReportFacade facade) 
         {
-            _facade = facade;
+            Service = identityService;
+            facades = facade;
         }
 
         [HttpGet]
@@ -33,23 +37,23 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             try
             {
 
-                var data = _facade.GetReport(no, buyerCode, statusCancel, dateFrom, dateTo, page, size, Order, offset);
+                var data = facades.Read(no, buyerCode, statusCancel, dateFrom, dateTo, page, size, Order, offset);
 
                 return Ok(new
                 {
-                    apiVersion = ApiVersion,
+                    apiVersion = apiVersion,
                     data = data.Item1,
                     info = new { total = data.Item2 },
-                    message = General.OK_MESSAGE,
-                    statusCode = General.OK_STATUS_CODE
+                    message = Common.OK_MESSAGE,
+                    statusCode = Common.OK_STATUS_CODE
                 });
             }
             catch (Exception e)
             {
                 Dictionary<string, object> Result =
-                    new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    new Utilities.ResultFormatter(apiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
                     .Fail();
-                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
 
@@ -64,7 +68,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : Convert.ToDateTime(dateFrom);
                 DateTime DateTo = dateTo == null ? DateTime.Now : Convert.ToDateTime(dateTo);
 
-                var xls = _facade.GenerateExcel(no, buyerCode, statusCancel, dateFrom, dateTo, offset);
+                var xls = facades.GenerateExcel(no, buyerCode, statusCancel, dateFrom, dateTo, offset);
 
                 string filename = String.Format("Laporan Canceled Booking Order - {0}.xlsx", DateTime.UtcNow.ToString("ddMMyyyy"));
 
@@ -76,9 +80,9 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             catch (Exception e)
             {
                 Dictionary<string, object> Result =
-                    new ResultFormatter(ApiVersion, General.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    new Utilities.ResultFormatter(apiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
                     .Fail();
-                return StatusCode(General.INTERNAL_ERROR_STATUS_CODE, Result);
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
     }

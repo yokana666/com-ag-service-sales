@@ -93,7 +93,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>()
                 .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
                 .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>()
-                .AddTransient<CanceledGarmentBookingOrderReportFacade>()
+                .AddTransient<ICanceledGarmentBookingOrderReportFacade, CanceledGarmentBookingOrderReportFacade>()
                 .AddTransient<IMonitoringRemainingEHFacade, MonitoringRemainingEHFacade>();
 
         }
