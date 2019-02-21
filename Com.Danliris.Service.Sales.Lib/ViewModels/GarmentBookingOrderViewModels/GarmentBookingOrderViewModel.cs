@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
             if (this.OrderQuantity <= 0)
                 yield return new ValidationResult("Jumlah Order harus lebih besar dari 0", new List<string> { "OrderQuantity" });
 
-            var expiredDate = dbContext.GarmentBookingOrders.FirstOrDefault(d => d.DeliveryDate != null);
+            var expiredDate = dbContext.GarmentBookingOrders.FirstOrDefault(d => d.DeliveryDate != null && d.Id == 0);
             if (expiredDate == null )
             {
                 if (this.DeliveryDate == null || this.DeliveryDate == DateTimeOffset.MinValue)
@@ -53,7 +53,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 else if (this.DeliveryDate < this.BookingOrderDate)
                     yield return new ValidationResult("Tanggal Pengiriman Harus lebih dari Tanggal Booking", new List<string> { "DeliveryDate" });
                 else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45))
-                    yield return new ValidationResult("Tanggal Pengiriman harus lebih dari " + dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")), new List<string> { "DeliveryDate" });
+                    yield return new ValidationResult("Tanggal Pengiriman harus lebih dari 45 Hari (" + dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")) + ")", new List<string> { "DeliveryDate" });
             }
             if (Items != null)
             {

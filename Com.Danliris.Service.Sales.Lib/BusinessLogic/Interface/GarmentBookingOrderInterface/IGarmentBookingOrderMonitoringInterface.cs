@@ -7,6 +7,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingO
 {
     public interface IGarmentBookingOrderMonitoringInterface
     {
-        Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> GetReport(string no, string buyerCode, string sectionName, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset);
+        //Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> GetReport(string no, string buyerCode, string sectionName, string comodityName, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset);
     }
 }
