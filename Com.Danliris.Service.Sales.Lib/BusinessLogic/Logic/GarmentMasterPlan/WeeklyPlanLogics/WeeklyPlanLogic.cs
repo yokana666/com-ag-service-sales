@@ -24,12 +24,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
         {
             IQueryable<GarmentWeeklyPlan> Query = this.DbSet;
 
-            List<string> SearchAttributes = new List<string>()
+            if (keyword != null)
             {
-                "UnitCode", "UnitName"
-            };
-
-            Query = QueryHelper<GarmentWeeklyPlan>.Search(Query, SearchAttributes, keyword);
+                Query = Query.Where(w => w.Year.ToString().Contains(keyword) || w.UnitCode.Contains(keyword) || w.UnitName.Contains(keyword));
+            }
 
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             Query = QueryHelper<GarmentWeeklyPlan>.Filter(Query, FilterDictionary);
