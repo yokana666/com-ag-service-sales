@@ -24,7 +24,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         //}
 
         //[HttpGet]
-        //public IActionResult GetReportAll(string no, string buyerName, string sectionName, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order = "{}")
+        //public IActionResult GetReportAll(string no, string buyerName, string sectionName, string comodityName, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order = "{}")
         //{
         //    int offset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
         //    string accept = Request.Headers["Accept"];
@@ -32,7 +32,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         //    try
         //    {
 
-        //        var data = _facade.GetReport(no, buyerName, sectionName, dateFrom, dateTo, page, size, Order, offset);
+        //        var data = _facade.GetReport(no, buyerName, sectionName, comodityName, dateFrom, dateTo, page, size, Order, offset);
 
         //        return Ok(new
         //        {

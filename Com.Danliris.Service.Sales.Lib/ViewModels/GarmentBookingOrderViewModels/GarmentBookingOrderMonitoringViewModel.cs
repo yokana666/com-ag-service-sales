@@ -5,11 +5,12 @@ using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels
 {
-    public class GarmentBookingOrderMonitoringViewModel : BaseViewModel
+    public class GarmentBookingOrderMonitoringViewModel //: BaseViewModel
     {
         //public string BookingOrderNo { get; set; }
         //public DateTimeOffset BookingOrderDate { get; set; }
         //public string BuyerName { get; set; }
+        //public string SectionName { get; set; }
         //public double OrderQuantity { get; set; }
         //public DateTimeOffset DeliveryDate { get; set; }
         //public string ComodityName { get; set; }
@@ -17,5 +18,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         //public DateTimeOffset DeliveryDateItems { get; set; }
         //public DateTimeOffset ConfirmDate { get; set; }
         //public string Remark { get; set; }
+        //public string StatusConfirm { get; set; }
+        //public string StatusBooking { get; set; }
+        //public string OrderLeftover { get; set; }
+        //public string SelisihHari { get; set; }
     }
 }

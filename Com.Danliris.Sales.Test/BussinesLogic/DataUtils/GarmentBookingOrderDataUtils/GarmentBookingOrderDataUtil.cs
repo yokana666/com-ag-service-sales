@@ -19,6 +19,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentBookingOrderDat
             {
                 BuyerId = 1,
                 BookingOrderNo = "BA1234",
+                BookingOrderDate = new DateTime(2019, 01, 01),
                 BuyerCode = "UnitCode",
                 BuyerName = "UnitName",
                 SectionId = 1,
