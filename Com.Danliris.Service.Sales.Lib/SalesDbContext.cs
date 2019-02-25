@@ -12,6 +12,7 @@ using Com.Danliris.Service.Sales.Lib.Models.ROGarments;
 using Com.Danliris.Service.Sales.Lib.Models;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -48,7 +49,11 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<GarmentBookingOrderItem> GarmentBookingOrderItems { get; set; }
         public DbSet<GarmentWeeklyPlan> GarmentWeeklyPlans { get; set; }
         public DbSet<GarmentWeeklyPlanItem> GarmentWeeklyPlanItems { get; set; }
-        
+
+        public DbSet<GarmentSewingBlockingPlan> GarmentSewingBlockingPlans { get; set; }
+        public DbSet<GarmentSewingBlockingPlanItem> GarmentSewingBlockingPlanItems { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
