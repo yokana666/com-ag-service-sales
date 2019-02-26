@@ -3,12 +3,14 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFa
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels;
 using Com.Danliris.Service.Sales.WebApi.Helpers;
 using Com.Danliris.Service.Sales.WebApi.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -62,6 +64,30 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             catch (Exception)
             {
                 return StatusCode(General.INTERNAL_ERROR_STATUS_CODE);
+            }
+        }
+
+        [HttpGet("read-by-no")]
+        public IActionResult Get(int page = 1, int size = 25, [Bind(Prefix = "Select[]")]List<string> select = null, string order = "{}", string keyword = null, string filter = "{}")
+        {
+            try
+            {
+                ReadResponse<GarmentBookingOrder> read = Facade.ReadByBookingOrderNo(page, size, order, select, keyword, filter);
+
+                List<GarmentBookingOrderViewModel> DataVM = Mapper.Map<List<GarmentBookingOrderViewModel>>(read.Data);
+
+                Dictionary<string, object> Result =
+                    new Utilities.ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok<GarmentBookingOrderViewModel>(Mapper, DataVM, page, size, read.Count, DataVM.Count, read.Order, read.Selected);
+                return Ok(Result);
+
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new Utilities.ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
     }
