@@ -128,7 +128,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
 
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             Query = QueryHelper<GarmentBookingOrder>.Filter(Query, FilterDictionary);
-
+            
             List<string> SelectedFields = new List<string>()
             {
                   "Id", "BookingOrderNo", "BookingOrderDate", "SectionName", "BuyerName", "OrderQuantity", "LastModifiedUtc","Remark",
@@ -213,6 +213,42 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
 
             DbSet.Update(model);
+        }
+
+        public ReadResponse<GarmentBookingOrder> ReadByBookingOrderNo(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            IQueryable<GarmentBookingOrder> Query = DbSet;
+
+            List<string> SearchAttributes = new List<string>()
+            {
+                "BookingOrderNo"
+            };
+
+            Query = QueryHelper<GarmentBookingOrder>.Search(Query, SearchAttributes, keyword);
+
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<GarmentBookingOrder>.Filter(Query, FilterDictionary);
+
+            List<string> SelectedFields = new List<string>()
+            {
+                  "BookingOrderNo"
+            };
+
+            Query = Query
+                 .Select(bo => new GarmentBookingOrder
+                 {
+                     Id = bo.Id,
+                     BookingOrderNo = bo.BookingOrderNo,
+                 });
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<GarmentBookingOrder>.Order(Query, OrderDictionary);
+
+            Pageable<GarmentBookingOrder> pageable = new Pageable<GarmentBookingOrder>(Query, page - 1, size);
+            List<GarmentBookingOrder> data = pageable.Data.ToList<GarmentBookingOrder>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<GarmentBookingOrder>(data, totalData, OrderDictionary, SelectedFields);
         }
     }
 }

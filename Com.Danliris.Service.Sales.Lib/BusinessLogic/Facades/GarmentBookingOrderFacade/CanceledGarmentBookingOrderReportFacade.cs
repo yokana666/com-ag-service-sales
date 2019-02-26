@@ -42,15 +42,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             List<CanceledGarmentBookingOrderReportViewModel> listGarmentBookingReport = new List<CanceledGarmentBookingOrderReportViewModel>();
 
             var Query = (from a in DbContext.GarmentBookingOrders
-                         join b in DbContext.GarmentBookingOrderItems on a.Id equals b.BookingOrderId
+                         join b in DbContext.GarmentBookingOrderItems on a.Id equals b.BookingOrderId into temp
+                            from b in temp.DefaultIfEmpty()
                          //Conditions
-                         where a.IsDeleted == false
+            where a.IsDeleted == false
                              && a.BookingOrderNo == (string.IsNullOrWhiteSpace(no) ? a.BookingOrderNo : no)
                              && a.BuyerCode == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
                              && a.BookingOrderDate.AddHours(offset).Date >= DateFrom.Date
                              && a.BookingOrderDate.AddHours(offset).Date <= DateTo.Date
                          select new CanceledGarmentBookingOrderReportViewModel
                          {
+                             Id = a.Id,
                              CreatedUtc = a.CreatedUtc,
                              BookingOrderDate = a.BookingOrderDate,
                              BookingOrderNo = a.BookingOrderNo,
@@ -69,6 +71,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              ExpiredBookingDate = a.ExpiredBookingDate,
                              CancelStatus = "",
                              IsCanceled = b.IsCanceled,
+                             BookingOrderItemId = b.Id,
+                             TotalBeginningQuantity = (a.OrderQuantity + a.CanceledQuantity + a.ExpiredBookingQuantity),
                              LastModifiedUtc = a.LastModifiedUtc
                          });
 
@@ -78,6 +82,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 {
                     CanceledGarmentBookingOrderReportViewModel view = new CanceledGarmentBookingOrderReportViewModel
                     {
+                        Id = query.Id,
                         CreatedUtc = query.CreatedUtc,
                         BookingOrderDate = query.BookingOrderDate,
                         BookingOrderNo = query.BookingOrderNo,
@@ -92,7 +97,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                         CanceledDate = query.CanceledDateItem,
                         CanceledQuantity = query.ConfirmQuantity,
                         ExpiredBookingQuantity = query.ExpiredBookingQuantity,
-                        CancelStatus = "Cancel Confirm"
+                        BookingOrderItemId = query.BookingOrderItemId,
+                        TotalBeginningQuantity = query.TotalBeginningQuantity,
+                        CancelStatus = "Cancel Confirm",
+                        LastModifiedUtc = query.LastModifiedUtc,
                     };
                     listGarmentBookingReport.Add(view);
                 }
@@ -100,6 +108,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 {
                     CanceledGarmentBookingOrderReportViewModel view = new CanceledGarmentBookingOrderReportViewModel
                     {
+                        Id = query.Id,
                         CreatedUtc = query.CreatedUtc,
                         BookingOrderDate = query.BookingOrderDate,
                         BookingOrderNo = query.BookingOrderNo,
@@ -114,7 +123,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                         CanceledDate = query.CanceledDate,
                         CanceledQuantity = query.CanceledQuantity,
                         ExpiredBookingQuantity = query.ExpiredBookingQuantity,
-                        CancelStatus = "Cancel Sisa"
+                        BookingOrderItemId = query.BookingOrderItemId,
+                        TotalBeginningQuantity = query.TotalBeginningQuantity,
+                        CancelStatus = "Cancel Sisa",
+                        LastModifiedUtc = query.LastModifiedUtc
                     };
                     listGarmentBookingReport.Add(view);
                 }
@@ -122,6 +134,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 {
                     CanceledGarmentBookingOrderReportViewModel view = new CanceledGarmentBookingOrderReportViewModel
                     {
+                        Id = query.Id,
                         CreatedUtc = query.CreatedUtc,
                         BookingOrderDate = query.BookingOrderDate,
                         BookingOrderNo = query.BookingOrderNo,
@@ -136,7 +149,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                         CanceledDate = query.ExpiredBookingDate,
                         CanceledQuantity = query.ExpiredBookingQuantity,
                         ExpiredBookingQuantity = query.ExpiredBookingQuantity,
-                        CancelStatus = "Expired"
+                        BookingOrderItemId = query.BookingOrderItemId,
+                        TotalBeginningQuantity = query.TotalBeginningQuantity,
+                        CancelStatus = "Expired",
+                        LastModifiedUtc = query.LastModifiedUtc
                     };
                     listGarmentBookingReport.Add(view);
                 }
@@ -156,11 +172,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             var Query = GetReportQuery(no, buyerCode, statusCancel, dateFrom, dateTo, offset);
             var statusCheck = "";
             var bookingOrderNoTemp = "";
+            long? IdTemp = 0;
+            long? bookingOrderItemId = 0;
             List<CanceledGarmentBookingOrderReportViewModel> Data = new List<CanceledGarmentBookingOrderReportViewModel>();
-            foreach (var item in Query.OrderByDescending(b => b.LastModifiedUtc).ThenBy(b => b.BookingOrderNo).ThenBy(b => b.CancelStatus))
+            foreach (var item in Query.OrderByDescending(b => b.LastModifiedUtc))
             {
                 CanceledGarmentBookingOrderReportViewModel _new = new CanceledGarmentBookingOrderReportViewModel
                 {
+                    Id = item.Id,
                     CreatedUtc = item.CreatedUtc,
                     BookingOrderDate = item.BookingOrderDate,
                     BookingOrderNo = item.BookingOrderNo,
@@ -175,11 +194,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                     CanceledDate = item.CanceledDate,
                     CanceledQuantity = item.CanceledQuantity,
                     ExpiredBookingQuantity = item.ExpiredBookingQuantity,
-                    CancelStatus = item.CancelStatus
+                    BookingOrderItemId = item.BookingOrderItemId,
+                    TotalBeginningQuantity = item.TotalBeginningQuantity,
+                    CancelStatus = item.CancelStatus,
+                    LastModifiedUtc = item.LastModifiedUtc
                 };
 
 
-                if (bookingOrderNoTemp == item.BookingOrderNo && statusCheck == item.CancelStatus && statusCheck != "Cancel Confirm")
+                if (bookingOrderNoTemp == item.BookingOrderNo && statusCheck == item.CancelStatus && statusCheck != "Cancel Confirm" && IdTemp == item.Id && bookingOrderItemId != item.BookingOrderItemId)
                     _new = null;
                 else
                     Data.Add(_new);
@@ -189,6 +211,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
 
                 if(statusCheck == "" || statusCheck != item.CancelStatus)
                     statusCheck = item.CancelStatus;
+
+                if (IdTemp == 0 || IdTemp != item.Id)
+                    IdTemp = item.Id;
+
+                if (bookingOrderItemId == 0 || bookingOrderItemId != item.BookingOrderItemId)
+                    bookingOrderItemId = item.BookingOrderItemId;
             }
             return Tuple.Create(Data, Data.Count);
         }
@@ -198,13 +226,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             var Query = GetReportQuery(no, buyerCode, statusCancel, dateFrom, dateTo, offset);
             var statusCheck = "";
             var bookingOrderNoTemp = "";
+            long? IdTemp = 0;
+            long? bookingOrderItemId = 0;
             List<CanceledGarmentBookingOrderReportViewModel> Data = new List<CanceledGarmentBookingOrderReportViewModel>();
-            Query = Query.OrderByDescending(b => b.LastModifiedUtc).ThenBy(b => b.BookingOrderNo).ThenBy(b => b.CancelStatus);
+            Query = Query.OrderByDescending(b => b.LastModifiedUtc);
 
             foreach (var item in Query)
             {
                 CanceledGarmentBookingOrderReportViewModel _new = new CanceledGarmentBookingOrderReportViewModel
                 {
+                    Id = item.Id,
                     CreatedUtc = item.CreatedUtc,
                     BookingOrderDate = item.BookingOrderDate,
                     BookingOrderNo = item.BookingOrderNo,
@@ -219,11 +250,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                     CanceledDate = item.CanceledDate,
                     CanceledQuantity = item.CanceledQuantity,
                     ExpiredBookingQuantity = item.ExpiredBookingQuantity,
-                    CancelStatus = item.CancelStatus
+                    BookingOrderItemId = item.BookingOrderItemId,
+                    TotalBeginningQuantity = item.TotalBeginningQuantity,
+                    CancelStatus = item.CancelStatus,
+                    LastModifiedUtc = item.LastModifiedUtc
                 };
 
 
-                if (bookingOrderNoTemp == item.BookingOrderNo && statusCheck == item.CancelStatus && statusCheck != "Cancel Confirm")
+                if (bookingOrderNoTemp == item.BookingOrderNo && statusCheck == item.CancelStatus && statusCheck != "Cancel Confirm" && IdTemp == item.Id && bookingOrderItemId != item.BookingOrderItemId)
                     _new = null;
                 else
                     Data.Add(_new);
@@ -233,6 +267,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
 
                 if (statusCheck == "" || statusCheck != item.CancelStatus)
                     statusCheck = item.CancelStatus;
+
+                if (IdTemp == 0 || IdTemp != item.Id)
+                    IdTemp = item.Id;
+
+                if (bookingOrderItemId == 0 || bookingOrderItemId != item.BookingOrderItemId)
+                    bookingOrderItemId = item.BookingOrderItemId;
             }
 
             DataTable result = new DataTable();
@@ -257,7 +297,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             else
             {
                 int index = 0;
-                foreach (var item in Data)
+                foreach (var item in Query)
                 {
                     index++;
                     DateTimeOffset bookingOrderDate = item.BookingOrderDate ?? new DateTime(1970, 1, 1);
@@ -266,14 +306,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                     DateTimeOffset deliveryDateItem = item.DeliveryDateItem ?? new DateTime(1970, 1, 1);
                     DateTimeOffset canceledDate = item.CanceledDate ?? new DateTime(1970, 1, 1);
 
-                    string BookingOrderDate = bookingOrderDate == new DateTime(1970, 1, 1) ? "-" : bookingOrderDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    string DeliveryDate = deliveryDate == new DateTime(1970, 1, 1) ? "-" : deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    string ConfirmDate = confirmDate == new DateTime(1970, 1, 1) ? "-" : confirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    string DeliveryDateItem = deliveryDateItem == new DateTime(1970, 1, 1) ? "-" : deliveryDateItem.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    string CanceledDate = canceledDate == new DateTime(1970, 1, 1) ? "-" : canceledDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    var total = item.OrderQuantity + item.CanceledQuantity + item.ExpiredBookingQuantity;
-                    result.Rows.Add(index, item.BookingOrderNo, item.BookingOrderDate, item.BuyerName, total, 
-                        item.OrderQuantity, item.DeliveryDate, item.ComodityName, item.ConfirmQuantity, item.ConfirmDate, item.DeliveryDateItem, item.Remark, item.CanceledDate, item.CanceledQuantity, item.CancelStatus);
+                    string BookingOrderDate = bookingOrderDate == new DateTime(1970, 1, 1) ? "-" : bookingOrderDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    string DeliveryDate = deliveryDate == new DateTime(1970, 1, 1) ? "-" : deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    string ConfirmDate = confirmDate == new DateTime(1970, 1, 1) ? "-" : confirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    string DeliveryDateItem = deliveryDateItem == new DateTime(1970, 1, 1) ? "-" : deliveryDateItem.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    string CanceledDate = canceledDate == new DateTime(1970, 1, 1) ? "-" : canceledDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+
+                    result.Rows.Add(index, item.BookingOrderNo, BookingOrderDate, item.BuyerName, item.TotalBeginningQuantity, 
+                        item.OrderQuantity, DeliveryDate, item.ComodityName ?? "-", item.ConfirmQuantity.ToString() ?? "-", ConfirmDate, DeliveryDateItem, item.Remark ?? "-", CanceledDate, item.CanceledQuantity, item.CancelStatus);
                 }
             }
 

@@ -45,6 +45,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             return garmentBookingOrderLogic.Read(page, size, order, select, keyword, filter);
         }
 
+        public ReadResponse<GarmentBookingOrder> ReadByBookingOrderNo(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            return garmentBookingOrderLogic.ReadByBookingOrderNo(page, size, order, select, keyword, filter);
+        }
+
         public async Task<GarmentBookingOrder> ReadByIdAsync(int id)
         {
             return await garmentBookingOrderLogic.ReadByIdAsync(id);

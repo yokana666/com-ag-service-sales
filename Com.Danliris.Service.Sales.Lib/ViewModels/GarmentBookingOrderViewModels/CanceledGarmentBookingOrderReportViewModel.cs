@@ -10,6 +10,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
 {
     public class CanceledGarmentBookingOrderReportViewModel : BaseViewModel
     {
+        public long Id { get; set; }
         public string BookingOrderNo { get; set; }
         public DateTimeOffset? BookingOrderDate { get; set; }
         public DateTimeOffset? DeliveryDate { get; set; }
@@ -25,8 +26,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public DateTimeOffset? DeliveryDateItem { get; set; }
         public DateTimeOffset? ConfirmDate { get; set; }
         public string Remark { get; set; }
-        public bool IsCanceled { get; set; }
+        public bool? IsCanceled { get; set; }
         public DateTimeOffset? CanceledDateItem { get; set; }
+        public long? BookingOrderItemId { get; set; }
+
+        public double? TotalBeginningQuantity { get; set; }
 
         public string CancelStatus { get; set; }
     }
