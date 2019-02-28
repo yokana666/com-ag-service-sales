@@ -16,8 +16,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
 {
     public class WeeklyPlanLogic : BaseLogic<GarmentWeeklyPlan>
     {
+        private readonly SalesDbContext DbContext;
         public WeeklyPlanLogic(IIdentityService IdentityService, SalesDbContext dbContext) : base(IdentityService, dbContext)
         {
+            DbContext = dbContext;
         }
 
         public override ReadResponse<GarmentWeeklyPlan> Read(int page, int size, string order, List<string> select, string keyword, string filter)
@@ -26,7 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
 
             if (keyword != null)
             {
-                Query = Query.Where(w => w.Year.ToString().Contains(keyword) || w.UnitCode.Contains(keyword) || w.UnitName.Contains(keyword));
+                Query = Query.Where(w => w.Year.ToString().Contains(keyword) || w.UnitCode.Contains(keyword) || w.UnitName.Contains(keyword) || w.Items.Any(i=>i.WeekNumber.ToString().Contains(keyword)));
             }
 
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
@@ -34,7 +36,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
 
             List<string> SelectedFields = select ?? new List<string>()
             {
-                "Id", "Year", "Unit"
+                "Id", "Year", "Unit","Items"
             };
 
             Query = Query
@@ -45,7 +47,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
                     UnitId = field.UnitId,
                     UnitCode = field.UnitCode,
                     UnitName = field.UnitName,
-                    LastModifiedUtc = field.LastModifiedUtc
+                    LastModifiedUtc = field.LastModifiedUtc,
+                    Items = field.Items.OrderBy(w => w.WeekNumber).ToList()
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -107,6 +110,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
                 .Select(d => d.Year.ToString())
                 .Distinct()
                 .OrderBy(year => year).ToList();
+        }
+
+        internal GarmentWeeklyPlanItem GetWeekById(long id)
+        {
+            return DbContext.GarmentWeeklyPlanItems.FirstOrDefault(d => d.Id.Equals(id));
         }
     }
 }

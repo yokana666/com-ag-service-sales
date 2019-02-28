@@ -58,5 +58,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
         {
             return WeeklyPlanLogic.GetYears(keyword);
         }
+
+        public GarmentWeeklyPlanItem GetWeekById(long id)
+        {
+            return WeeklyPlanLogic.GetWeekById(id);
+        }
+        
     }
 }
