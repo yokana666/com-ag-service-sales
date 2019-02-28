@@ -54,5 +54,33 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers.GarmentMasterPlan.WeeklyPla
             int statusCode = this.GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
+
+        [Fact]
+        public void Get_Week_WithoutException_ReturnOK()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.GetWeekById(It.IsAny<long>()))
+                .Returns(new GarmentWeeklyPlanItem { });
+
+            var controller = GetController(mocks);
+            var response = controller.GetWeek(It.IsAny<long>());
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Get_Week_ReadThrowException_ReturnInternalServerError()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.GetWeekById(It.IsAny<long>()))
+                .Throws(new Exception());
+
+            var controller = GetController(mocks);
+            var response = controller.GetWeek(It.IsAny<long>());
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
     }
 }
