@@ -27,7 +27,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel
         public string UnitName { get; set; }
         public short Year { get; set; }
         public long WeeklyPlanItemId { get; set; }
-        public byte Weeknumber { get; set; }
+        public byte WeekNumber { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
         public double OrderQuantity { get; set; }

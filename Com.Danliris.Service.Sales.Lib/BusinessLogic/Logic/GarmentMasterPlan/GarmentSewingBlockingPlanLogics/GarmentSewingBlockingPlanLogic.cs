@@ -1,4 +1,6 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
@@ -16,8 +18,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
 {
     public class GarmentSewingBlockingPlanLogic : BaseLogic<GarmentSewingBlockingPlan>
     {
+        private readonly SalesDbContext DbContext;
         public GarmentSewingBlockingPlanLogic(IIdentityService IdentityService, SalesDbContext dbContext) : base(IdentityService, dbContext)
         {
+            DbContext = dbContext;
         }
 
         public override ReadResponse<GarmentSewingBlockingPlan> Read(int page, int size, string order, List<string> select, string keyword, string filter)
@@ -64,8 +68,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
 
         public override void Create(GarmentSewingBlockingPlan model)
         {
+            EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
+
+            GarmentBookingOrder booking = DbContext.GarmentBookingOrders.FirstOrDefault(b => b.Id == model.BookingOrderId);
+            booking.IsBlockingPlan = true;
             foreach (var item in model.Items)
             {
+                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
+                week.UsedEH += (int)item.EHBooking;
+                week.RemainingEH-= (int)item.EHBooking;
+
+                item.Status = "Booking";
                 EntityExtension.FlagForCreate(item, IdentityService.Username, "sales-service");
             }
             base.Create(model);
@@ -82,23 +95,71 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
         {
             var model = await DbSet.Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
+
+            GarmentBookingOrder booking = DbContext.GarmentBookingOrders.FirstOrDefault(b => b.Id == model.BookingOrderId);
+            booking.IsBlockingPlan = false;
             foreach (var item in model.Items)
             {
+                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
+                week.UsedEH -= (int)item.EHBooking;
+                week.RemainingEH += (int)item.EHBooking;
+
                 EntityExtension.FlagForDelete(item, IdentityService.Username, "sales-service", true);
             }
         }
 
         public override void UpdateAsync(int id, GarmentSewingBlockingPlan newModel)
         {
-            var model = DbSet.Include(d => d.Items).FirstOrDefault(d => d.Id == id);
-            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            var model = DbSet.AsNoTracking().Include(d => d.Items).FirstOrDefault(d => d.Id == id);
+
             foreach (var item in model.Items)
             {
-                var newItem = newModel.Items.Single(i => i.Id == item.Id);
-                item.Efficiency = newItem.Efficiency;
-
-                EntityExtension.FlagForUpdate(item, IdentityService.Username, "sales-service");
+                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
+                week.UsedEH -= (int)item.EHBooking;
+                week.RemainingEH += (int)item.EHBooking;
             }
+
+            foreach (var newPlan in newModel.Items)
+            {
+                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == newPlan.WeeklyPlanItemId);
+                //var oldItem = model.Items.FirstOrDefault(i => i.Id == newPlan.Id);
+                if (newPlan.Id==0)
+                {
+                    
+                    week.UsedEH += (int)newPlan.EHBooking;
+                    week.RemainingEH -= (int)newPlan.EHBooking;
+
+                    newPlan.Status = "Booking";
+                    EntityExtension.FlagForCreate(newPlan, IdentityService.Username, "sales-service");
+                }
+                else
+                {
+                    week.UsedEH += (int)newPlan.EHBooking;
+                    week.RemainingEH -= (int)newPlan.EHBooking;
+
+                    EntityExtension.FlagForUpdate(newPlan, IdentityService.Username, "sales-service");
+                }
+            }
+
+
+            DbSet.Update(newModel);
+
+            foreach (var oldItem in model.Items)
+            {
+
+                var newItem = newModel.Items.FirstOrDefault(i => i.Id == oldItem.Id);
+                if (newItem == null)
+                {
+                    EntityExtension.FlagForDelete(oldItem, IdentityService.Username, "sales-service");
+                    DbContext.GarmentSewingBlockingPlanItems.Update(oldItem);
+                }
+            }
+
+
+            //DbSet.Update(model);
+
+            EntityExtension.FlagForUpdate(newModel, IdentityService.Username, "sales-service");
+
         }
     }
 }

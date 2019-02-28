@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.GarmentSewingBlockingPlanFacades
 {
@@ -37,6 +39,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
         public async Task<int> DeleteAsync(int id)
         {
             await garmentSewingBlockingPlanLogic.DeleteAsync(id);
+
             return await DbContext.SaveChangesAsync();
         }
 
