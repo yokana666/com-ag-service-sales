@@ -175,7 +175,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             long? IdTemp = 0;
             long? bookingOrderItemId = 0;
             List<CanceledGarmentBookingOrderReportViewModel> Data = new List<CanceledGarmentBookingOrderReportViewModel>();
-            foreach (var item in Query.OrderByDescending(b => b.LastModifiedUtc))
+            foreach (var item in Query.OrderBy(b => b.BookingOrderNo).ThenBy(b => b.CancelStatus))
             {
                 CanceledGarmentBookingOrderReportViewModel _new = new CanceledGarmentBookingOrderReportViewModel
                 {
@@ -218,7 +218,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 if (bookingOrderItemId == 0 || bookingOrderItemId != item.BookingOrderItemId)
                     bookingOrderItemId = item.BookingOrderItemId;
             }
-            return Tuple.Create(Data, Data.Count);
+            return Tuple.Create(Data.OrderByDescending(o => o.LastModifiedUtc).ToList(), Data.Count);
         }
 
         public MemoryStream GenerateExcel(string no, string buyerCode, string statusCancel, DateTime? dateFrom, DateTime? dateTo, int offset)
@@ -229,7 +229,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             long? IdTemp = 0;
             long? bookingOrderItemId = 0;
             List<CanceledGarmentBookingOrderReportViewModel> Data = new List<CanceledGarmentBookingOrderReportViewModel>();
-            Query = Query.OrderByDescending(b => b.LastModifiedUtc);
+            Query = Query.OrderBy(b => b.BookingOrderNo).ThenBy(b => b.CancelStatus);
 
             foreach (var item in Query)
             {
@@ -292,12 +292,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             result.Columns.Add(new DataColumn() { ColumnName = "Tgl Cancel", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jumlah yg Dicancel", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Status Cancel", DataType = typeof(String) });
-            if (Query.ToArray().Count() == 0)
+            if (Data.ToArray().Count() == 0)
                 result.Rows.Add("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
             else
             {
                 int index = 0;
-                foreach (var item in Query)
+                foreach (var item in Data.OrderByDescending(o => o.LastModifiedUtc))
                 {
                     index++;
                     DateTimeOffset bookingOrderDate = item.BookingOrderDate ?? new DateTime(1970, 1, 1);
