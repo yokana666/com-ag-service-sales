@@ -133,7 +133,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             {
                   "Id", "BookingOrderNo", "BookingOrderDate", "SectionName", "BuyerName", "OrderQuantity", "LastModifiedUtc","Remark",
                     "IsBlockingPlan", "IsCanceled", "CanceledDate", "DeliveryDate", "CanceledQuantity", "ExpiredBookingDate", "ExpiredBookingQuantity",
-                      "ConfirmedQuantity", "HadConfirmed"
+                      "ConfirmedQuantity", "HadConfirmed","Items","BuyerCode","BuyerId"
             };
 
             Query = Query.Where(d => d.OrderQuantity > 0)
@@ -160,6 +160,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                      ConfirmedQuantity = bo.ConfirmedQuantity,
                      HadConfirmed = bo.HadConfirmed,
                      LastModifiedUtc = bo.LastModifiedUtc,
+                     Items = bo.Items.ToList()
                  });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);

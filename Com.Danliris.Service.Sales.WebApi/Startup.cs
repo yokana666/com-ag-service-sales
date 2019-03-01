@@ -56,6 +56,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.Weekl
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.MonitoringInterfaces;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MonitoringFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MonitoringLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.GarmentSewingBlockingPlanFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.GarmentSewingBlockingPlanInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.GarmentSewingBlockingPlanLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -94,7 +97,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
                 .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>()
                 .AddTransient<ICanceledGarmentBookingOrderReportFacade, CanceledGarmentBookingOrderReportFacade>()
-                .AddTransient<IMonitoringRemainingEHFacade, MonitoringRemainingEHFacade>();
+                .AddTransient<IMonitoringRemainingEHFacade, MonitoringRemainingEHFacade>()
+                .AddTransient<IGarmentSewingBlockingPlan, GarmentSewingBlockingPlanFacade>();
 
         }
 
@@ -124,7 +128,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<GarmentBookingOrderLogic>()
                 .AddTransient<GarmentBookingOrderItemLogic>()
                 .AddTransient<MonitoringRemainingEHLogic>()
-                .AddTransient<WeeklyPlanLogic>();
+                .AddTransient<WeeklyPlanLogic>()
+                .AddTransient<GarmentSewingBlockingPlanLogic>();
 
         }
 

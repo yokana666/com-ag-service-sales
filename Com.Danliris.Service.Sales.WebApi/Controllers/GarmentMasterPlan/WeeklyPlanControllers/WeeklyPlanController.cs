@@ -46,5 +46,26 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers.GarmentMasterPlan.Weekly
                 return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
+
+        [HttpGet("week/{Id}")]
+        public IActionResult GetWeek([FromRoute] long id)
+        {
+            try
+            {
+                var data = Facade.GetWeekById(id);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok(data);
+                return Ok(Result);
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
     }
 }

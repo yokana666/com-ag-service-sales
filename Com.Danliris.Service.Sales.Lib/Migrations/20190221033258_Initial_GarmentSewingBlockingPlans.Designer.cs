@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190221033258_Initial_GarmentSewingBlockingPlans")]
+    partial class Initial_GarmentSewingBlockingPlans
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1198,22 +1200,17 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<string>("BookingItems");
-
                     b.Property<DateTimeOffset>("BookingOrderDate");
 
                     b.Property<long>("BookingOrderId");
 
-                    b.Property<string>("BookingOrderNo")
-                        .HasMaxLength(255);
+                    b.Property<string>("BookingOrderNo");
 
-                    b.Property<string>("BuyerCode")
-                        .HasMaxLength(255);
+                    b.Property<string>("BuyerCode");
 
                     b.Property<long>("BuyerId");
 
-                    b.Property<string>("BuyerName")
-                        .HasMaxLength(255);
+                    b.Property<string>("BuyerName");
 
                     b.Property<string>("CreatedAgent")
                         .IsRequired()
@@ -1271,13 +1268,11 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<long>("BlockingPlanId");
 
-                    b.Property<string>("ComodityCode")
-                        .HasMaxLength(255);
+                    b.Property<string>("ComodityCode");
 
                     b.Property<long>("ComodityId");
 
-                    b.Property<string>("ComodityName")
-                        .HasMaxLength(500);
+                    b.Property<string>("ComodityName");
 
                     b.Property<string>("CreatedAgent")
                         .IsRequired()
@@ -1334,19 +1329,17 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("UId")
                         .HasMaxLength(255);
 
-                    b.Property<string>("UnitCode")
-                        .HasMaxLength(255);
+                    b.Property<string>("UnitCode");
 
                     b.Property<long>("UnitId");
 
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(255);
-
-                    b.Property<byte>("WeekNumber");
+                    b.Property<string>("UnitName");
 
                     b.Property<long>("WeeklyPlanId");
 
                     b.Property<long>("WeeklyPlanItemId");
+
+                    b.Property<byte>("Weeknumber");
 
                     b.Property<short>("Year");
 
@@ -2428,7 +2421,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel.GarmentSewingBlockingPlanItem", b =>
                 {
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel.GarmentSewingBlockingPlan", "GarmentSewingBlockingPlan")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("BlockingPlanId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
