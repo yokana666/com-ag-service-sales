@@ -29,6 +29,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public double ExpiredBookingQuantity { get; set; }
         public double ConfirmedQuantity { get; set; }
         public bool HadConfirmed { get; set; }
+        public bool cancelConfirm { get; set; }
         public List<GarmentBookingOrderItemViewModel> Items { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -46,7 +47,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 yield return new ValidationResult("Jumlah Order harus lebih besar dari 0", new List<string> { "OrderQuantity" });
 
             var expiredDate = dbContext.GarmentBookingOrders.FirstOrDefault(d => d.DeliveryDate != null && d.Id == 0);
-            if (expiredDate == null )
+            if (expiredDate == null && !cancelConfirm)
             {
                 if (this.DeliveryDate == null || this.DeliveryDate == DateTimeOffset.MinValue)
                     yield return new ValidationResult("Tanggal Pengiriman harus diisi", new List<string> { "DeliveryDate" });
@@ -83,7 +84,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                     else if (item.DeliveryDate > this.DeliveryDate)
                     {
                         Count++;
-                        ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Kurang dari Booking Tanggal Pengiriman' , ";
+                        ItemError += " DeliveryDate: ' Tanggal Pengiriman tidak boleh lebih dari Tanggal Pengiriman Booking' , ";
                     }
                     else if (item.DeliveryDate <= this.BookingOrderDate)
                     {

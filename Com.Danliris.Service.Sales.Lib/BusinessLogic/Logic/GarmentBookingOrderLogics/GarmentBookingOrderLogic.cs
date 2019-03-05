@@ -44,7 +44,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
         public override async void UpdateAsync(int id, GarmentBookingOrder model)
         {
             double updatedItems = 0;
-            model.HadConfirmed = true;
             if (model.Items != null)
             {
                 HashSet<long> itemIds = GarmentBookingOrderItemsLogic.GetBookingOrderIds(id);
@@ -56,10 +55,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                         GarmentBookingOrderItem dataItem = DbContext.GarmentBookingOrderItems.FirstOrDefault(prop => prop.Id.Equals(itemId));
                         EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
                         model.ConfirmedQuantity -= dataItem.ConfirmQuantity;
-                        if (dataItem.IsCanceled == false && dataItem.IsDeleted == true && model.ConfirmedQuantity == 0)
-                        {
-                            model.HadConfirmed = false;
-                        }
+                        //if (dataItem.IsCanceled == false && dataItem.IsDeleted == true && model.ConfirmedQuantity == 0)
+                        //{
+                        //    model.HadConfirmed = false;
+                        //}
                     }
                     else
                     {
@@ -77,6 +76,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                             model.ConfirmedQuantity = updatedItems;
                         }
                     }
+
+
                 }
 
                 foreach (GarmentBookingOrderItem item in model.Items)
@@ -85,9 +86,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                     {
                         GarmentBookingOrderItemsLogic.Create(item);
                         model.ConfirmedQuantity += item.ConfirmQuantity;
+                        model.HadConfirmed = true;
                     }
                 }
 
+            }
+            if( model.Items==null || model.Items.Count==0)
+            {
+                model.HadConfirmed = false;
             }
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);
