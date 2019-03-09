@@ -218,7 +218,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 if (bookingOrderItemId == 0 || bookingOrderItemId != item.BookingOrderItemId)
                     bookingOrderItemId = item.BookingOrderItemId;
             }
-            return Tuple.Create(Data.OrderByDescending(o => o.LastModifiedUtc).ToList(), Data.Count);
+
+            Pageable<CanceledGarmentBookingOrderReportViewModel> pageable = new Pageable<CanceledGarmentBookingOrderReportViewModel>(Data, page - 1, size);
+            List<CanceledGarmentBookingOrderReportViewModel> Data_ = pageable.Data.ToList<CanceledGarmentBookingOrderReportViewModel>();
+            int TotalData = pageable.TotalCount;
+
+            return Tuple.Create(Data_.OrderByDescending(o => o.LastModifiedUtc).ToList(), TotalData);
         }
 
         public MemoryStream GenerateExcel(string no, string buyerCode, string statusCancel, DateTime? dateFrom, DateTime? dateTo, int offset)
