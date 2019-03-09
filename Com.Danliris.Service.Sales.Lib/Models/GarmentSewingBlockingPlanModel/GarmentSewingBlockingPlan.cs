@@ -20,6 +20,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel
         public string BuyerName { get; set; }
         public double OrderQuantity { get; set; }
         public string Remark { get; set; }
+        public string Status { get; set; }
         public string BookingItems { get; set; }
 
         public virtual ICollection<GarmentSewingBlockingPlanItem> Items { get; set; }

@@ -17,6 +17,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
         public double OrderQuantity { get; set; }
         public string Remark { get; set; }
         public string BookingItems { get; set; }
+        public string Status { get; set; }
 
         public List<GarmentSewingBlockingPlanItemViewModel> Items { get; set; }
 
