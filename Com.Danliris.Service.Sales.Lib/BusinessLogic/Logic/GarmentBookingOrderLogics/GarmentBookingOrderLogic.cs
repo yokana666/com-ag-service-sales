@@ -52,9 +52,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                     GarmentBookingOrderItem data = model.Items.FirstOrDefault(prop => prop.Id.Equals(itemId));
                     if (data == null)
                     {
-                        GarmentBookingOrderItem dataItem = DbContext.GarmentBookingOrderItems.FirstOrDefault(prop => prop.Id.Equals(itemId));
-                        EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
-                        model.ConfirmedQuantity -= dataItem.ConfirmQuantity;
+                        GarmentBookingOrderItem dataItem = DbContext.GarmentBookingOrderItems.FirstOrDefault(prop => prop.Id.Equals(itemId) && prop.IsCanceled == false);
+                        if(dataItem != null)
+                        {
+                            EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
+                            model.ConfirmedQuantity -= dataItem.ConfirmQuantity;
+                        }
+                        
                         //if (dataItem.IsCanceled == false && dataItem.IsDeleted == true && model.ConfirmedQuantity == 0)
                         //{
                         //    model.HadConfirmed = false;
@@ -94,6 +98,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             if( model.Items==null || model.Items.Count==0)
             {
                 model.HadConfirmed = false;
+            }
+
+            if (model.IsBlockingPlan == true)
+            {
+                var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == model.Id);
+                if (blockingPlan != null)
+                {
+                    blockingPlan.Status = "Booking Ada Perubahan";
+                }
             }
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);
@@ -185,7 +198,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
 
             cancelsQuantity = model.OrderQuantity - model.ConfirmedQuantity;
 
-            model.CanceledQuantity = cancelsQuantity;
+            model.CanceledQuantity += cancelsQuantity;
             model.OrderQuantity -= cancelsQuantity;
             model.CanceledDate = DateTimeOffset.Now;
             foreach (var item in model.Items)
@@ -198,6 +211,22 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                 model.IsCanceled = true;
             }
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+
+            if (model.IsBlockingPlan == true)
+            {
+                var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == model.Id);
+                if (blockingPlan != null)
+                {
+                    if (model.OrderQuantity == 0)
+                    {
+                        blockingPlan.Status = "Booking Dibatalkan";
+                    }
+                    else if(model.OrderQuantity>0 && model.CanceledQuantity > 0)
+                    {
+                        blockingPlan.Status = "Booking Ada Perubahan";
+                    }
+                }
+            }
 
             DbSet.Update(model);
         }
@@ -218,7 +247,21 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             }
 
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-
+            if (model.IsBlockingPlan == true)
+            {
+                var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == model.Id);
+                if (blockingPlan != null)
+                {
+                    if (model.OrderQuantity == 0)
+                    {
+                        blockingPlan.Status = "Booking Expired";
+                    }
+                    else if (model.OrderQuantity > 0 && model.ExpiredBookingQuantity > 0)
+                    {
+                        blockingPlan.Status = "Booking Ada Perubahan";
+                    }
+                }
+            }
             DbSet.Update(model);
         }
 
