@@ -40,7 +40,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
 
             List<string> SelectedFields = select ?? new List<string>()
             {
-                "BookingOrderNo", "Buyer", "DeliveryDate", "BookingOrderDate","Remark"
+                "BookingOrderNo", "Buyer", "DeliveryDate", "BookingOrderDate","Remark","Status"
             };
 
             Query = Query
@@ -53,7 +53,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
                     OrderQuantity=field.OrderQuantity,
                     DeliveryDate=field.DeliveryDate,
                     Remark=field.Remark,
-                    LastModifiedUtc = field.LastModifiedUtc
+                    LastModifiedUtc = field.LastModifiedUtc,
+                    Status=field.Status
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -69,7 +70,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
         public override void Create(GarmentSewingBlockingPlan model)
         {
             EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
-
+            model.Status = "Booking";
             GarmentBookingOrder booking = DbContext.GarmentBookingOrders.FirstOrDefault(b => b.Id == model.BookingOrderId);
             booking.IsBlockingPlan = true;
             foreach (var item in model.Items)
@@ -78,7 +79,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
                 week.UsedEH += (int)item.EHBooking;
                 week.RemainingEH-= (int)item.EHBooking;
 
-                item.Status = "Booking";
+                
                 EntityExtension.FlagForCreate(item, IdentityService.Username, "sales-service");
             }
             base.Create(model);
@@ -129,7 +130,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
                     week.UsedEH += (int)newPlan.EHBooking;
                     week.RemainingEH -= (int)newPlan.EHBooking;
 
-                    newPlan.Status = "Booking";
                     EntityExtension.FlagForCreate(newPlan, IdentityService.Username, "sales-service");
                 }
                 else

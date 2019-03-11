@@ -35,7 +35,6 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel
         public DateTimeOffset DeliveryDate { get; set; }
         public double Efficiency { get; set; }
         public double EHBooking { get; set; }
-        public string Status { get; set; }
 
     }
 }
