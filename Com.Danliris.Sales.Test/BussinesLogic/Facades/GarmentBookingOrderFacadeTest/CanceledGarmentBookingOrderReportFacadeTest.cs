@@ -77,7 +77,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
             ICanceledGarmentBookingOrderReportFacade canceledGarmentBookingOrderReportFacade = new CanceledGarmentBookingOrderReportFacade(serviceProvider, dbContext);
 
            
-            var Response = canceledGarmentBookingOrderReportFacade.Read(null,null,null,null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>());
+            var Response = canceledGarmentBookingOrderReportFacade.Read(null,null,null,null, null, 1, 25, It.IsAny<string>(), It.IsAny<int>());
 
             Assert.NotEqual(Response.Item2, 0);
         }
