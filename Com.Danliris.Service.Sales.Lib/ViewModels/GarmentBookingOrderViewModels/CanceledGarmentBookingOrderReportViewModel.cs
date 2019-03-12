@@ -33,5 +33,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public double? TotalBeginningQuantity { get; set; }
 
         public string CancelStatus { get; set; }
+        public int row_count { get; set; }
     }
 }
