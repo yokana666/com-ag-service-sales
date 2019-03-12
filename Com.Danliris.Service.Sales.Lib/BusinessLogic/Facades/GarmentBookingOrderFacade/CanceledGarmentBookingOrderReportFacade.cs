@@ -73,7 +73,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              IsCanceled = b.IsCanceled,
                              BookingOrderItemId = b.Id,
                              TotalBeginningQuantity = (a.OrderQuantity + a.CanceledQuantity + a.ExpiredBookingQuantity),
-                             LastModifiedUtc = a.LastModifiedUtc
+                             LastModifiedUtc = a.LastModifiedUtc,
+                             row_count = 1
                          });
 
             foreach(var query in Query)
@@ -101,6 +102,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                         TotalBeginningQuantity = query.TotalBeginningQuantity,
                         CancelStatus = "Cancel Confirm",
                         LastModifiedUtc = query.LastModifiedUtc,
+                        row_count = 1
                     };
                     listGarmentBookingReport.Add(view);
                 }
@@ -126,7 +128,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                         BookingOrderItemId = query.BookingOrderItemId,
                         TotalBeginningQuantity = query.TotalBeginningQuantity,
                         CancelStatus = "Cancel Sisa",
-                        LastModifiedUtc = query.LastModifiedUtc
+                        LastModifiedUtc = query.LastModifiedUtc,
+                        row_count = 1
                     };
                     listGarmentBookingReport.Add(view);
                 }
@@ -152,7 +155,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                         BookingOrderItemId = query.BookingOrderItemId,
                         TotalBeginningQuantity = query.TotalBeginningQuantity,
                         CancelStatus = "Expired",
-                        LastModifiedUtc = query.LastModifiedUtc
+                        LastModifiedUtc = query.LastModifiedUtc,
+                        row_count = 1
                     };
                     listGarmentBookingReport.Add(view);
                 }
@@ -197,7 +201,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                     BookingOrderItemId = item.BookingOrderItemId,
                     TotalBeginningQuantity = item.TotalBeginningQuantity,
                     CancelStatus = item.CancelStatus,
-                    LastModifiedUtc = item.LastModifiedUtc
+                    LastModifiedUtc = item.LastModifiedUtc,
+                    row_count = 1
                 };
 
 
@@ -233,6 +238,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             var bookingOrderNoTemp = "";
             long? IdTemp = 0;
             long? bookingOrderItemId = 0;
+            
             List<CanceledGarmentBookingOrderReportViewModel> Data = new List<CanceledGarmentBookingOrderReportViewModel>();
             Query = Query.OrderBy(b => b.BookingOrderNo).ThenBy(b => b.CancelStatus);
 
@@ -282,7 +288,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
 
             DataTable result = new DataTable();
 
-            result.Columns.Add(new DataColumn() { ColumnName = "No", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Kode Booking", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tgl Booking", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Buyer", DataType = typeof(String) });
@@ -297,14 +302,21 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             result.Columns.Add(new DataColumn() { ColumnName = "Tgl Cancel", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jumlah yg Dicancel", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Status Cancel", DataType = typeof(String) });
+
+            List<(string, Enum, Enum)> mergeCells = new List<(string, Enum, Enum)>() { };
+
             if (Data.ToArray().Count() == 0)
-                result.Rows.Add("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
+                result.Rows.Add("", "", "", "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
             else
             {
                 int index = 0;
+                string temp_No = "";
+                int rowPosition = 1;
+                int counterTemp = 1;
                 foreach (var item in Data.OrderByDescending(o => o.LastModifiedUtc))
                 {
                     index++;
+                    rowPosition++;
                     DateTimeOffset bookingOrderDate = item.BookingOrderDate ?? new DateTime(1970, 1, 1);
                     DateTimeOffset deliveryDate = item.DeliveryDate ?? new DateTime(1970, 1, 1);
                     DateTimeOffset confirmDate = item.ConfirmDate ?? new DateTime(1970, 1, 1);
@@ -317,12 +329,55 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                     string DeliveryDateItem = deliveryDateItem == new DateTime(1970, 1, 1) ? "-" : deliveryDateItem.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
                     string CanceledDate = canceledDate == new DateTime(1970, 1, 1) ? "-" : canceledDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
 
-                    result.Rows.Add(index, item.BookingOrderNo, BookingOrderDate, item.BuyerName, item.TotalBeginningQuantity, 
-                        item.OrderQuantity, DeliveryDate, item.ComodityName ?? "-", item.ConfirmQuantity.ToString() ?? "-", ConfirmDate, DeliveryDateItem, item.Remark ?? "-", CanceledDate, item.CanceledQuantity, item.CancelStatus);
+
+                    if (temp_No == item.BookingOrderNo)
+                    {
+                        item.BookingOrderNo = null;
+                        BookingOrderDate = null;
+                        item.BuyerName = null;
+                        item.TotalBeginningQuantity = null;
+                        item.OrderQuantity = null;
+                        DeliveryDate = null;
+
+                        counterTemp++;
+
+                        result.Rows.Add(item.BookingOrderNo, BookingOrderDate, item.BuyerName, item.TotalBeginningQuantity,
+                            item.OrderQuantity, DeliveryDate, item.ComodityName ?? "-", item.ConfirmQuantity.ToString() ?? "-", ConfirmDate, DeliveryDateItem, item.Remark ?? "-", CanceledDate, item.CanceledQuantity, item.CancelStatus);
+
+
+                    }
+                    else
+                    {
+                        result.Rows.Add(item.BookingOrderNo, BookingOrderDate, item.BuyerName, item.TotalBeginningQuantity,
+                            item.OrderQuantity, DeliveryDate, item.ComodityName ?? "-", item.ConfirmQuantity.ToString() ?? "-", ConfirmDate, DeliveryDateItem, item.Remark ?? "-", CanceledDate, item.CanceledQuantity, item.CancelStatus);
+
+                        if (counterTemp > 1)
+                        {
+                            mergeCells.Add(($"A{rowPosition - counterTemp}:A{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                            mergeCells.Add(($"B{rowPosition - counterTemp}:B{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                            mergeCells.Add(($"C{rowPosition - counterTemp}:C{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                            mergeCells.Add(($"D{rowPosition - counterTemp}:D{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                            mergeCells.Add(($"E{rowPosition - counterTemp}:E{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                            mergeCells.Add(($"F{rowPosition - counterTemp}:F{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+
+                            counterTemp = 1;
+                        }
+                        temp_No = item.BookingOrderNo;
+                    }
+                }
+                if (counterTemp > 1)
+                {
+                    mergeCells.Add(($"A{rowPosition + 1 - counterTemp}:A{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                    mergeCells.Add(($"B{rowPosition + 1 - counterTemp}:B{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                    mergeCells.Add(($"C{rowPosition + 1 - counterTemp}:C{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                    mergeCells.Add(($"D{rowPosition + 1 - counterTemp}:D{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                    mergeCells.Add(($"E{rowPosition + 1 - counterTemp}:E{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                    mergeCells.Add(($"F{rowPosition + 1 - counterTemp}:F{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+
+                    counterTemp = 1;
                 }
             }
-
-            return Excel.CreateExcel(new List<KeyValuePair<DataTable, string>>() { new KeyValuePair<DataTable, string>(result, "Territory") }, true);
+            return Excel.CreateExcel(new List<(DataTable, string, List<(string, Enum, Enum)>)>() { (result, "Report", mergeCells) }, true);
         }
     }
 }
