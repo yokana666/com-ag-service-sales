@@ -11,12 +11,14 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.Garme
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.WeeklyPlanLogics;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Xunit;
@@ -145,6 +147,15 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
             var response = await facade.CreateAsync(data);
 
             Assert.NotEqual(response, 0);
+        }
+
+        [Fact]
+        public void Should_Success_Validate_Data()
+        {
+            GarmentSewingBlockingPlanViewModel nullViewModel = new GarmentSewingBlockingPlanViewModel();
+            Assert.True(nullViewModel.Validate(null).Count() > 0);
+
+            
         }
 
         [Fact]
