@@ -113,6 +113,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
         {
             var model = DbSet.AsNoTracking().Include(d => d.Items).FirstOrDefault(d => d.Id == id);
 
+            if(model.Status=="Booking Ada Perubahan")
+            {
+                newModel.Status = "Booking";
+            }
+
             foreach (var item in model.Items)
             {
                 GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
