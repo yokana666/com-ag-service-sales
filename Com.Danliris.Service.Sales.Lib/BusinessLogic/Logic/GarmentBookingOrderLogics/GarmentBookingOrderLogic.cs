@@ -41,75 +41,91 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             return garmentBookingOrder;
         }
 
-        public override async void UpdateAsync(int id, GarmentBookingOrder model)
+        public override async void UpdateAsync(int id, GarmentBookingOrder newModel)
         {
-            double updatedItems = 0;
-            if (model.Items != null)
+            var model = DbSet.AsNoTracking().Include(d => d.Items).FirstOrDefault(d => d.Id == id);
+
+            foreach (var item in model.Items)
             {
-                HashSet<long> itemIds = GarmentBookingOrderItemsLogic.GetBookingOrderIds(id);
-                foreach (var itemId in itemIds)
+                if (item.IsCanceled == false)
                 {
-                    GarmentBookingOrderItem data = model.Items.FirstOrDefault(prop => prop.Id.Equals(itemId));
-                    if (data == null)
+                    model.ConfirmedQuantity -= item.ConfirmQuantity;
+                }
+            }
+            newModel.ConfirmedQuantity = model.ConfirmedQuantity;
+
+            if (newModel.ConfirmedQuantity == 0)
+            {
+                newModel.HadConfirmed = false;
+            }
+
+            foreach (var newItem in newModel.Items)
+            {
+                if (newItem.IsCanceled == false)
+                {
+                    if (newItem.Id == 0)
                     {
-                        GarmentBookingOrderItem dataItem = DbContext.GarmentBookingOrderItems.FirstOrDefault(prop => prop.Id.Equals(itemId) && prop.IsCanceled == false);
-                        if(dataItem != null)
-                        {
-                            EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
-                            model.ConfirmedQuantity -= dataItem.ConfirmQuantity;
-                        }
-                        
-                        //if (dataItem.IsCanceled == false && dataItem.IsDeleted == true && model.ConfirmedQuantity == 0)
-                        //{
-                        //    model.HadConfirmed = false;
-                        //}
+                        GarmentBookingOrderItemsLogic.Create(newItem);
+                        newModel.ConfirmedQuantity += newItem.ConfirmQuantity;
+                        newModel.HadConfirmed = true;
+
+                        EntityExtension.FlagForCreate(newItem, IdentityService.Username, "sales-service");
                     }
                     else
                     {
-                        if (data.IsCanceled)
-                        {
-                            var itemz = DbContext.GarmentBookingOrderItems.Where(i => i.BookingOrderId == id && i.IsCanceled == false).Sum(s => s.ConfirmQuantity);
-                            GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
-                            data.CanceledDate = DateTimeOffset.Now;
-                            model.ConfirmedQuantity = itemz - data.ConfirmQuantity;
-                        }
-                        else
-                        {
-                            GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
-                            updatedItems += data.ConfirmQuantity;
-                            model.ConfirmedQuantity = updatedItems;
-                        }
+                        //GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                        newModel.ConfirmedQuantity += newItem.ConfirmQuantity;
+
+                        EntityExtension.FlagForUpdate(newItem, IdentityService.Username, "sales-service");
                     }
-
-
                 }
-
-                foreach (GarmentBookingOrderItem item in model.Items)
+                else
                 {
-                    if (item.Id == 0)
-                    {
-                        GarmentBookingOrderItemsLogic.Create(item);
-                        model.ConfirmedQuantity += item.ConfirmQuantity;
-                        model.HadConfirmed = true;
-                    }
+                    newItem.CanceledDate = DateTimeOffset.Now;
+                    //newModel.ConfirmedQuantity -= newItem.ConfirmQuantity;
+                    EntityExtension.FlagForUpdate(newItem, IdentityService.Username, "sales-service");
+                    newModel.HadConfirmed = true;
                 }
 
             }
-            if( model.Items==null || model.Items.Count==0)
+
+            DbSet.Update(newModel);
+
+            foreach (var oldItem in model.Items)
             {
-                model.HadConfirmed = false;
+                if (oldItem.IsCanceled == false)
+                {
+                    var newItem = newModel.Items.FirstOrDefault(i => i.Id == oldItem.Id);
+                    if (newItem == null)
+                    {
+                        EntityExtension.FlagForDelete(oldItem, IdentityService.Username, "sales-service");
+                        //newModel.ConfirmedQuantity -= oldItem.ConfirmQuantity;
+                        DbContext.GarmentBookingOrderItems.Update(oldItem);
+                    }
+                }
+                else
+                {
+                    newModel.HadConfirmed = true;
+                }
+
             }
 
-            if (model.IsBlockingPlan == true)
+            EntityExtension.FlagForUpdate(newModel, IdentityService.Username, "sales-service");
+
+            
+
+            if (newModel.IsBlockingPlan == true)
             {
-                var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == model.Id);
+                var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == newModel.Id);
                 if (blockingPlan != null)
                 {
                     blockingPlan.Status = "Booking Ada Perubahan";
                 }
             }
-            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-            DbSet.Update(model);
+
+            
+            //EntityExtension.FlagForUpdate(newModel, IdentityService.Username, "sales-service");
+            //DbSet.Update(newModel);
         }
 
         private void GenerateBookingOrderNo(GarmentBookingOrder model)
@@ -237,7 +253,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
 
             cancelsQuantity = model.OrderQuantity - model.ConfirmedQuantity;
 
-            model.ExpiredBookingQuantity = cancelsQuantity;
+            model.ExpiredBookingQuantity += cancelsQuantity;
             model.OrderQuantity -= cancelsQuantity;
             model.ExpiredBookingDate = DateTimeOffset.Now;
 
