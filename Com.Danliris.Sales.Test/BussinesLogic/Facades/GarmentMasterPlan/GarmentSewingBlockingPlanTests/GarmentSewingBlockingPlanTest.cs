@@ -152,10 +152,34 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
         [Fact]
         public void Should_Success_Validate_Data()
         {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider, dbContext);
+
+            var data = DataUtil(facade, dbContext).GetNewData();
             GarmentSewingBlockingPlanViewModel nullViewModel = new GarmentSewingBlockingPlanViewModel();
             Assert.True(nullViewModel.Validate(null).Count() > 0);
 
-            
+            GarmentSewingBlockingPlanViewModel vm = new GarmentSewingBlockingPlanViewModel {
+                BookingOrderNo = data.BookingOrderNo,
+                BookingOrderDate=data.BookingOrderDate,
+                DeliveryDate=data.DeliveryDate,
+                Items = new List<GarmentSewingBlockingPlanItemViewModel> {
+                    new GarmentSewingBlockingPlanItemViewModel
+                    {
+                        DeliveryDate= DateTimeOffset.UtcNow.Date.AddDays(-2)
+                    },
+                    new GarmentSewingBlockingPlanItemViewModel
+                    {
+                        DeliveryDate= data.DeliveryDate.Date.AddDays(2)
+                    }
+                }
+            };
+
+            Assert.True(vm.Validate(null).Count() > 0);
+
+
         }
 
         [Fact]
@@ -197,7 +221,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
             GarmentSewingBlockingPlanFacade facade = Activator.CreateInstance(typeof(GarmentSewingBlockingPlanFacade), serviceProvider, dbContext) as GarmentSewingBlockingPlanFacade;
 
             var data = await DataUtil(facade, dbContext).GetTestData();
-
+            data.Status = "Booking Ada Perubahan";
             var response = await facade.UpdateAsync((int)data.Id, data);
 
             Assert.NotEqual(response, 0);
