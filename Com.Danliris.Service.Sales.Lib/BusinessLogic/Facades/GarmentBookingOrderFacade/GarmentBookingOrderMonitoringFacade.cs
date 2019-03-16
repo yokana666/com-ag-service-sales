@@ -34,7 +34,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         {
             DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
             DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
-            var today = DateTimeOffset.Now;
+            var today = DateTime.Today;
             List<GarmentBookingOrderMonitoringViewModel> listGarmentBookingMonitoring = new List<GarmentBookingOrderMonitoringViewModel>();
             List<GarmentBookingOrderMonitoringViewModel> listGarmentBookingMonitoringFilter = new List<GarmentBookingOrderMonitoringViewModel>();
 
@@ -66,11 +66,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              DeliveryDateItems = b.DeliveryDate,
                              ConfirmDate = b.ConfirmDate,
                              Remark = b.Remark,
-                             StatusConfirm = a.OrderQuantity == 0 ? "Belum Dikonfirmasi" : a.OrderQuantity > 0 ? "Sudah Dikonfirmasi" : "-",
+                             StatusConfirm = a.ConfirmedQuantity == 0 ? "Belum Dikonfirmasi" : a.ConfirmedQuantity > 0 ? "Sudah Dikonfirmasi" : "-",
                              StatusBooking = a.IsBlockingPlan == true ? "Sudah Dibuat Master Plan" : a.ConfirmedQuantity == 0 && a.IsBlockingPlan == false ? "Booking" : a.ConfirmedQuantity > 0 && a.IsBlockingPlan == false ? "Confirmed" : "-",
                              OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity).ToString(),
-                             DateDiff = ((TimeSpan)(a.DeliveryDate - today)).Days <= 45 && ((TimeSpan)(a.DeliveryDate - today)).Days >= 0 ? ((TimeSpan)(a.DeliveryDate - today)).Days.ToString() : "-",
-                             row_count = 1
+                             DateDiff = ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days <= 45 && ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days >= 0 ? ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days.ToString() : "-",
+                             row_count = 1,
+                             LastModifiedUtc = a.LastModifiedUtc
                          }
             );
 
