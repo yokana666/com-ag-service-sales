@@ -52,8 +52,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              && a.BookingOrderNo == (string.IsNullOrWhiteSpace(no) ? a.BookingOrderNo : no)
                              && a.BuyerCode == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
                              && b.ComodityCode == (string.IsNullOrWhiteSpace(comodityCode) ? b.ComodityCode : comodityCode)
-                             && a.CreatedUtc.AddHours(offset).Date >= DateFrom.Date
-                             && a.CreatedUtc.AddHours(offset).Date <= DateTo.Date
+                             && a.BookingOrderDate.AddHours(offset).Date >= DateFrom.Date
+                             && a.BookingOrderDate.AddHours(offset).Date <= DateTo.Date
                          select new GarmentBookingOrderMonitoringViewModel
                          {
                              CreatedUtc = a.CreatedUtc,
