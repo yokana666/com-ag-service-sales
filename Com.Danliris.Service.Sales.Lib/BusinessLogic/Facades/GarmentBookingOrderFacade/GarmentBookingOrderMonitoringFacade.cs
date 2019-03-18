@@ -128,12 +128,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         {
             var Query = GetReportQuery(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, offset);
 
-            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
-            if (OrderDictionary.Count.Equals(0))
-            {
-                Query = Query.OrderByDescending(b => b.LastModifiedUtc);
-            }
-            var Data = Query.ToList();
+            var Data = Query.OrderByDescending(b => b.LastModifiedUtc).ToList();
 
             Pageable<GarmentBookingOrderMonitoringViewModel> pageable = new Pageable<GarmentBookingOrderMonitoringViewModel>(Data, page - 1, size);
             List<GarmentBookingOrderMonitoringViewModel> Data_ = pageable.Data.ToList<GarmentBookingOrderMonitoringViewModel>();
