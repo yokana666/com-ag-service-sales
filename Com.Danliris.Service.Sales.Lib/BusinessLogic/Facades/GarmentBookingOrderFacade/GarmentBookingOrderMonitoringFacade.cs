@@ -40,7 +40,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
 
 
             var Query = (from a in DbContext.GarmentBookingOrders
-                         join b in DbContext.GarmentBookingOrderItems on a.Id equals b.GarmentBookingOrder.Id
+                         join b in DbContext.GarmentBookingOrderItems on a.Id equals b.BookingOrderId into temp
+                         from b in temp.DefaultIfEmpty()
 
                          where a.IsDeleted == false
                              && b.IsDeleted == false
