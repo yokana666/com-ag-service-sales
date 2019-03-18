@@ -3,6 +3,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogi
 using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels;
 using Com.Moonlay.NetCore.Lib;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,8 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade
 {
@@ -36,17 +39,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
             var today = DateTime.Today;
             List<GarmentBookingOrderMonitoringViewModel> listGarmentBookingMonitoring = new List<GarmentBookingOrderMonitoringViewModel>();
+            List<GarmentBookingOrderMonitoringViewModel> listAllGarmentBookingMonitoring = new List<GarmentBookingOrderMonitoringViewModel>();
             List<GarmentBookingOrderMonitoringViewModel> listGarmentBookingMonitoringFilter = new List<GarmentBookingOrderMonitoringViewModel>();
 
 
             var Query = (from a in DbContext.GarmentBookingOrders
-                         join b in DbContext.GarmentBookingOrderItems on a.Id equals b.BookingOrderId into temp
-                         from b in temp.DefaultIfEmpty()
+                         join b in DbContext.GarmentBookingOrderItems on a.Id equals b.BookingOrderId
 
                          where a.IsDeleted == false
-                             && b.IsDeleted == false
                              && a.IsCanceled == false
-                             && b.IsCanceled == false
                              && a.OrderQuantity > 0
                              && a.SectionCode == (string.IsNullOrWhiteSpace(section) ? a.SectionCode : section)
                              && a.BookingOrderNo == (string.IsNullOrWhiteSpace(no) ? a.BookingOrderNo : no)
@@ -96,7 +97,76 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 }
             }
 
-            foreach(var queryFilter in listGarmentBookingMonitoring)
+            if (comodityCode != "Sudah Dikonfirmasi")
+            {
+                var query2 = (from a in DbContext.GarmentBookingOrders
+                              where a.IsDeleted == false
+                              && a.IsCanceled == false
+                              && a.OrderQuantity > 0
+                              && a.ConfirmedQuantity == 0
+                              && a.SectionCode == (string.IsNullOrWhiteSpace(section) ? a.SectionCode : section)
+                              && a.BookingOrderNo == (string.IsNullOrWhiteSpace(no) ? a.BookingOrderNo : no)
+                              && a.BuyerCode == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
+                              && a.BookingOrderDate.AddHours(offset).Date >= DateFrom.Date
+                              && a.BookingOrderDate.AddHours(offset).Date <= DateTo.Date
+                              select new GarmentBookingOrderMonitoringViewModel
+                              {
+                                  CreatedUtc = a.CreatedUtc,
+                                  BookingOrderNo = a.BookingOrderNo,
+                                  BookingOrderDate = a.BookingOrderDate,
+                                  BuyerName = a.BuyerName,
+                                  OrderQuantity = a.OrderQuantity,
+                                  DeliveryDate = a.DeliveryDate,
+                                  ComodityName = null,
+                                  ConfirmQuantity = null,
+                                  DeliveryDateItems = null,
+                                  ConfirmDate = null,
+                                  Remark = null,
+                                  StatusConfirm = "Belum Dikonfirmasi",
+                                  StatusBooking = a.IsBlockingPlan == true ? "Sudah Dibuat Master Plan" : a.ConfirmedQuantity == 0 && a.IsBlockingPlan == false ? "Booking" : a.ConfirmedQuantity > 0 && a.IsBlockingPlan == false ? "Confirmed" : "-",
+                                  OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity).ToString(),
+                                  DateDiff = ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days <= 45 && ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days >= 0 ? ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days.ToString() : "-",
+                                  row_count = 1,
+                                  LastModifiedUtc = a.LastModifiedUtc
+                              }
+                );
+                foreach (var query in query2.OrderBy(o => o.BookingOrderNo))
+                {
+                    if (listGarmentBookingMonitoring.Count > 0)
+                    {
+                        foreach (var mainQuery in listGarmentBookingMonitoring.OrderBy(o => o.BookingOrderNo))
+                        {
+                            if (mainQuery.BookingOrderNo != query.BookingOrderNo)
+                            {
+                                listAllGarmentBookingMonitoring.Add(query);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        listAllGarmentBookingMonitoring.Add(query);
+                    }
+                }
+
+                foreach (var query in listAllGarmentBookingMonitoring.Distinct())
+                {
+                    listGarmentBookingMonitoring.Add(query);
+                }
+
+                var tempCheck = "";
+                foreach (var query in listGarmentBookingMonitoring.OrderBy(o => o.BookingOrderNo))
+                {
+                    if (tempCheck == query.BookingOrderNo && query.ComodityName==null && query.ConfirmQuantity==null && query.DeliveryDateItems==null && query.ConfirmDate==null && query.Remark==null)
+                    {
+                        listGarmentBookingMonitoring.Remove(query);
+                    }
+                    
+                    if (tempCheck == "" || tempCheck != query.BookingOrderNo)
+                        tempCheck = query.BookingOrderNo;
+                }
+            }
+
+            foreach (var queryFilter in listGarmentBookingMonitoring)
             {
                 if (statusBookingOrder == "Sudah Dibuat Master Plan")
                 {
