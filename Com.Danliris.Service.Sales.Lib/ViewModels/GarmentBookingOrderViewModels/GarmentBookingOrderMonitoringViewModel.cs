@@ -14,7 +14,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public double? OrderQuantity { get; set; }
         public DateTimeOffset? DeliveryDate { get; set; }
         public string ComodityName { get; set; }
-        public double ConfirmQuantity { get; set; }
+        public double? ConfirmQuantity { get; set; }
         public DateTimeOffset? DeliveryDateItems { get; set; }
         public DateTimeOffset? ConfirmDate { get; set; }
         public string Remark { get; set; }
