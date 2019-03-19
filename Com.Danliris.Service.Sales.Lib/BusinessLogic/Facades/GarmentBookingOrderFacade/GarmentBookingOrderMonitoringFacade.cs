@@ -97,7 +97,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                 }
             }
 
-            if (comodityCode != "Sudah Dikonfirmasi")
+            if (statusConfirm != "Sudah Dikonfirmasi")
             {
                 var query2 = (from a in DbContext.GarmentBookingOrders
                               where a.IsDeleted == false
