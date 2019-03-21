@@ -35,13 +35,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             Dictionary<string, string> FilterDictionary = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(filter), StringComparer.OrdinalIgnoreCase);
             var Query = AcceptedOrderMonitoringLogic.GetQuery(filter);
             var year = short.Parse(FilterDictionary["year"]);
-            
+            var unitFilter = FilterDictionary.ContainsKey("unit") ? FilterDictionary["unit"] : "";
             var weeks = DbContext.GarmentWeeklyPlans.Include(a=>a.Items).Where(a=>a.Year==year);
             var data = Query.ToList();
 
-            if (!string.IsNullOrWhiteSpace(FilterDictionary["unit"]))
+            if (!string.IsNullOrWhiteSpace(unitFilter))
             {
-                weeks = DbContext.GarmentWeeklyPlans.Include(a => a.Items).Where(a => a.Year == year && a.UnitCode== FilterDictionary["unit"]);
+                weeks = DbContext.GarmentWeeklyPlans.Include(a => a.Items).Where(a => a.Year == year && a.UnitCode== unitFilter);
             }
             DataTable result = new DataTable();
 
@@ -88,6 +88,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     {
                         rowData.Add(week , new List<UnitDataTable> { unitDataTable });
                     }
+                }
+
+                var sumQty = data.Where(a => a.Unit == d.UnitCode);
+                if (!rowData.ContainsKey("TOTAL"))
+                {
+                    UnitDataTable unitDataTable1 = new UnitDataTable
+                    {
+                        Unit = d.UnitCode,
+                        qty = sumQty==null ? "-" : sumQty.Sum(a => a.Quantity).ToString() 
+                    };
+                    rowData.Add("TOTAL", new List<UnitDataTable> { unitDataTable1 });
+                }
+                else
+                {
+                    var sumData = rowData["TOTAL"];
+                    UnitDataTable unitDataTable2 = new UnitDataTable
+                    {
+                        Unit = d.UnitCode,
+                        qty = sumQty == null ? "-" : sumQty.Sum(a => a.Quantity).ToString()
+                    };
+                    sumData.Add(unitDataTable2);
                 }
             }
             
