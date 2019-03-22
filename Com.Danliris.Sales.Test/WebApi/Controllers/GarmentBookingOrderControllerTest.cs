@@ -6,6 +6,7 @@ using Com.Danliris.Service.Sales.WebApi.Controllers;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,6 +96,39 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var response = await controller.DeleteLeftOvers((int)ViewModel.Id, ViewModel);
 
             Assert.Equal((int)HttpStatusCode.NoContent, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Put_ThrowServiceValidationExeption_ReturnBadRequest_DeliveryDate()
+        {
+            var mocks = this.GetMocks();
+            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<GarmentBookingOrderViewModel>())).Throws(this.GetServiceValidationException());
+            var ViewModel = new GarmentBookingOrderViewModel
+            {
+                BuyerName = "buyername",
+                BuyerCode = "buyercode",
+                IsBlockingPlan = true,
+                SectionName = "sectionname",
+                SectionCode = "sectioncode",
+                DeliveryDate = DateTimeOffset.Now.AddDays(20),
+                BookingOrderDate = DateTimeOffset.Now,
+                Items=new List<GarmentBookingOrderItemViewModel>
+                {
+                    new GarmentBookingOrderItemViewModel
+                    {
+                        DeliveryDate=DateTimeOffset.Now.AddDays(22),
+                        ComodityCode="como",
+                        ComodityId=It.IsAny<long>(),
+                        ComodityName=It.IsAny<string>(),
+                        ConfirmQuantity=It.IsAny<double>(),
+                    }
+                }
+            };
+
+            var controller = GetController(mocks);
+            var response = await controller.Put((int)ViewModel.Id, ViewModel);
+
+            Assert.Equal((int)HttpStatusCode.BadRequest, GetStatusCode(response));
         }
     }
 }
