@@ -10,7 +10,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingO
 {
     public interface IExpiredGarmentBookingOrder : IBaseFacade<GarmentBookingOrder>
     {
-        Task<int> BOCancelExpired(List<GarmentBookingOrder> list, string user);
+        int BOCancelExpired(List<GarmentBookingOrder> list, string user);
         ReadResponse<GarmentBookingOrder> ReadExpired(int page, int size, string order, List<string> select, string keyword, string filter);
     }
 }

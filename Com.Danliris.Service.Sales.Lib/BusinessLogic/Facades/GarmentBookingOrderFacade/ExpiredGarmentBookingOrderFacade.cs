@@ -53,10 +53,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
         {
             return await garmentBookingOrderLogic.ReadByIdAsync(id);
         }
-        public async Task<int> BOCancelExpired(List<GarmentBookingOrder> list, string user)
+        public int BOCancelExpired(List<GarmentBookingOrder> list, string user)
         {
-            garmentBookingOrderLogic.BOCancelExpired(list, user);
-            return await DbContext.SaveChangesAsync();
+            return garmentBookingOrderLogic.BOCancelExpired(list, user);
         }
 
         public async Task<int> UpdateAsync(int id, GarmentBookingOrder model)
