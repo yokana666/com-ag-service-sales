@@ -81,7 +81,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                         Count++;
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Diisi' , ";
                     }
-                    else if (item.DeliveryDate > this.DeliveryDate)
+                    else if (item.DeliveryDate > this.DeliveryDate && !item.IsCanceled)
                     {
                         Count++;
                         ItemError += " DeliveryDate: ' Tanggal Pengiriman tidak boleh lebih dari Tanggal Pengiriman Booking' , ";
