@@ -128,6 +128,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             //DbSet.Update(newModel);
         }
 
+        public override async Task DeleteAsync(int id)
+        {
+            var model = await DbSet.Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
+            EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
+            
+            foreach (var item in model.Items)
+            {
+                EntityExtension.FlagForDelete(item, IdentityService.Username, "sales-service", true);
+            }
+        }
+
         private void GenerateBookingOrderNo(GarmentBookingOrder model)
         {
             DateTime Now = DateTime.Now;
