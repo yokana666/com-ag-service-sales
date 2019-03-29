@@ -132,10 +132,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
         {
             var model = await DbSet.Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
-
-            if (model.IsBlockingPlan == true)
+            var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == model.Id);
+            if (model.IsBlockingPlan == true && blockingPlan != null)
             {
-                var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == model.Id);
                 blockingPlan.Status = "Booking Dihapus";
             }
             
