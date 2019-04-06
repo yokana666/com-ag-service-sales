@@ -99,7 +99,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ICanceledGarmentBookingOrderReportFacade, CanceledGarmentBookingOrderReportFacade>()
                 .AddTransient<IMonitoringRemainingEHFacade, MonitoringRemainingEHFacade>()
                 .AddTransient<IGarmentSewingBlockingPlan, GarmentSewingBlockingPlanFacade>()
-                .AddTransient<IAcceptedOrderMonitoringFacade, AcceptedOrderMonitoringFacade>();
+                .AddTransient<IAcceptedOrderMonitoringFacade, AcceptedOrderMonitoringFacade>()
+                .AddTransient<ISewingBlockingPlanReportFacade, SewingBlockingPlanReportFacade>();
 
         }
 
@@ -131,7 +132,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<MonitoringRemainingEHLogic>()
                 .AddTransient<WeeklyPlanLogic>()
                 .AddTransient<GarmentSewingBlockingPlanLogic>()
-                .AddTransient<AcceptedOrderMonitoringLogic>();
+                .AddTransient<AcceptedOrderMonitoringLogic>()
+                .AddTransient<SewingBlockingPlanReportLogic>();
 
         }
 
