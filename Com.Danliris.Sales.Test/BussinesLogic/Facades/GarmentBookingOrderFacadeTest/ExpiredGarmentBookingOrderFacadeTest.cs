@@ -16,11 +16,12 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Xunit;
+
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacadeTest
 {
-    public class CanceledGarmentBookingOrderReportFacadeTest
+    public class ExpiredGarmentBookingOrderFacadeTest
     {
-        private const string ENTITY = "CanceledGarmentBookingOrderReport";
+        private const string ENTITY = "ExpiredGarmentBookingOrder";
         [MethodImpl(MethodImplOptions.NoInlining)]
         private string GetCurrentMethod()
         {
@@ -44,7 +45,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
         protected virtual Mock<IServiceProvider> GetServiceProviderMock(SalesDbContext dbContext)
         {
             var serviceProviderMock = new Mock<IServiceProvider>();
-            
+
             IIdentityService identityService = new IdentityService { Username = "Username" };
 
             serviceProviderMock
@@ -58,48 +59,46 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
             return serviceProviderMock;
         }
 
-        protected virtual GarmentBookingOrderDataUtil DataUtil(GarmentBookingOrderFacade facade, SalesDbContext dbContext = null)
+        protected virtual ExpiredGarmentBookingOrderDataUtil DataUtil(ExpiredGarmentBookingOrderFacade facade, SalesDbContext dbContext = null)
         {
-            GarmentBookingOrderDataUtil dataUtil = new GarmentBookingOrderDataUtil(facade);
+            ExpiredGarmentBookingOrderDataUtil dataUtil = new ExpiredGarmentBookingOrderDataUtil(facade);
             return dataUtil;
         }
 
         [Fact]
-        public async void Get_Success()
+        public async void Get_Success_ReadExpired()
         {
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
-            GarmentBookingOrderFacade facade = new GarmentBookingOrderFacade(serviceProvider, dbContext);
+            ExpiredGarmentBookingOrderFacade facade = new ExpiredGarmentBookingOrderFacade(serviceProvider, dbContext);
 
             var data = await DataUtil(facade).GetTestData();
 
-            ICanceledGarmentBookingOrderReportFacade canceledGarmentBookingOrderReportFacade = new CanceledGarmentBookingOrderReportFacade(serviceProvider, dbContext);
+            IExpiredGarmentBookingOrder expiredGarmentBookingOrder = new ExpiredGarmentBookingOrderFacade(serviceProvider, dbContext);
 
-           
-            var Response = canceledGarmentBookingOrderReportFacade.Read(null,null,null,null, null, 1, 25, It.IsAny<string>(), It.IsAny<int>());
 
-            Assert.NotEqual(Response.Item2, 0);
+            var Response = expiredGarmentBookingOrder.ReadExpired(1, 25, "{}", new List<string>(), "", "{}");
+
+            Assert.NotEqual(Response.Data.Count, 0);
         }
 
         [Fact]
-        public async void Get_Excel_Success()
+        public virtual async void Update_Success_ReadExpired()
         {
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
-            GarmentBookingOrderFacade facade = new GarmentBookingOrderFacade(serviceProvider, dbContext);
+            ExpiredGarmentBookingOrderFacade facade = Activator.CreateInstance(typeof(ExpiredGarmentBookingOrderFacade), serviceProvider, dbContext) as ExpiredGarmentBookingOrderFacade;
 
             var data = await DataUtil(facade).GetTestData();
+            data.IsBlockingPlan = false;
+            data.Remark = "test";
+            var listData = new List<GarmentBookingOrder> { data };
 
-            ICanceledGarmentBookingOrderReportFacade monitoringRemainingEHFacade = new CanceledGarmentBookingOrderReportFacade(serviceProvider, dbContext);
+            var response = facade.BOCancelExpired(listData, "");
 
-            
-            var Response = monitoringRemainingEHFacade.GenerateExcel(null, null, null, null, null, It.IsAny<int>());
-
-            // ???
-            Assert.IsType(typeof(MemoryStream),Response);
+            Assert.NotEqual(response, 0);
         }
-
     }
 }

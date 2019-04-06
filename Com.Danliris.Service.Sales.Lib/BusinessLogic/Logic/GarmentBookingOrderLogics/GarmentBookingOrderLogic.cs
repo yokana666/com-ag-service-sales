@@ -128,6 +128,22 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             //DbSet.Update(newModel);
         }
 
+        public override async Task DeleteAsync(int id)
+        {
+            var model = await DbSet.Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
+            EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
+            var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == model.Id);
+            if (model.IsBlockingPlan == true && blockingPlan != null)
+            {
+                blockingPlan.Status = "Booking Dihapus";
+            }
+            
+            foreach (var item in model.Items)
+            {
+                EntityExtension.FlagForDelete(item, IdentityService.Username, "sales-service", true);
+            }
+        }
+
         private void GenerateBookingOrderNo(GarmentBookingOrder model)
         {
             DateTime Now = DateTime.Now;
@@ -315,6 +331,127 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             int totalData = pageable.TotalCount;
 
             return new ReadResponse<GarmentBookingOrder>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        public ReadResponse<GarmentBookingOrder> ReadExpired(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            IQueryable<GarmentBookingOrder> Query = DbSet;
+
+            List<string> SearchAttributes = new List<string>()
+            {
+                "BookingOrderNo","BuyerName"
+            };
+
+            Query = QueryHelper<GarmentBookingOrder>.Search(Query, SearchAttributes, keyword);
+
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<GarmentBookingOrder>.Filter(Query, FilterDictionary);
+
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "BookingOrderNo", "BookingOrderDate", "SectionName", "BuyerName", "OrderQuantity", "LastModifiedUtc","Remark",
+                    "IsBlockingPlan", "IsCanceled", "CanceledDate", "DeliveryDate", "CanceledQuantity", "ExpiredBookingDate", "ExpiredBookingQuantity",
+                      "ConfirmedQuantity", "HadConfirmed","Items","BuyerCode","BuyerId"
+            };
+            var today = DateTime.Today;
+            Query = Query
+                .Where(d => d.ConfirmedQuantity<d.OrderQuantity && d.DeliveryDate <= today.AddDays(45))
+                 .Select(bo => new GarmentBookingOrder
+                 {
+                     Id = bo.Id,
+                     BookingOrderNo = bo.BookingOrderNo,
+                     BookingOrderDate = bo.BookingOrderDate,
+                     BuyerCode = bo.BuyerCode,
+                     BuyerId = bo.BuyerId,
+                     BuyerName = bo.BuyerName,
+                     SectionId = bo.SectionId,
+                     SectionCode = bo.SectionCode,
+                     SectionName = bo.SectionName,
+                     DeliveryDate = bo.DeliveryDate,
+                     OrderQuantity = bo.OrderQuantity,
+                     Remark = bo.Remark,
+                     IsBlockingPlan = bo.IsBlockingPlan,
+                     IsCanceled = bo.IsCanceled,
+                     CanceledDate = bo.CanceledDate,
+                     CanceledQuantity = bo.CanceledQuantity,
+                     ExpiredBookingDate = bo.ExpiredBookingDate,
+                     ExpiredBookingQuantity = bo.ExpiredBookingQuantity,
+                     ConfirmedQuantity = bo.ConfirmedQuantity,
+                     HadConfirmed = bo.HadConfirmed,
+                     LastModifiedUtc = bo.LastModifiedUtc,
+                     Items = bo.Items.ToList()
+                 });
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<GarmentBookingOrder>.Order(Query, OrderDictionary);
+
+            Pageable<GarmentBookingOrder> pageable = new Pageable<GarmentBookingOrder>(Query, page - 1, size);
+            List<GarmentBookingOrder> data = pageable.Data.ToList<GarmentBookingOrder>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<GarmentBookingOrder>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        public int BOCancelExpired(List<GarmentBookingOrder> list, string user)
+        {
+            int Updated = 0;
+            double cancelsQuantity = 0;
+            using (var transaction = this.DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var Ids = list.Select(d => d.Id).ToList();
+                    var listData = this.DbSet
+                        .Where(m => Ids.Contains(m.Id) && !m.IsDeleted)
+                        .Include(d => d.Items)
+                        .ToList();
+                    listData.ForEach(m =>
+                    {
+                        cancelsQuantity = 0;
+
+                        cancelsQuantity = m.OrderQuantity - m.ConfirmedQuantity;
+
+                        m.ExpiredBookingQuantity += cancelsQuantity;
+                        m.OrderQuantity -= cancelsQuantity;
+                        m.ExpiredBookingDate = DateTimeOffset.Now;
+                        foreach (var item in m.Items)
+                        {
+                            GarmentBookingOrderItemsLogic.UpdateAsync((int)item.Id, item);
+                        }
+
+                        if (m.ConfirmedQuantity == 0)
+                        {
+                            m.IsCanceled = true;
+                        }
+                        EntityExtension.FlagForUpdate(m, IdentityService.Username, "sales-service");
+
+                        if (m.IsBlockingPlan == true)
+                        {
+                            var blockingPlan = DbContext.GarmentSewingBlockingPlans.FirstOrDefault(b => b.BookingOrderId == m.Id);
+                            if (blockingPlan != null)
+                            {
+                                if (m.ConfirmedQuantity == 0)
+                                {
+                                    blockingPlan.Status = "Booking Expired";
+                                }
+                                else if (m.ConfirmedQuantity > 0)
+                                {
+                                    blockingPlan.Status = "Booking Ada Perubahan";
+                                }
+                            }
+                        }
+                    });
+                    Updated = DbContext.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return Updated;
         }
     }
 }

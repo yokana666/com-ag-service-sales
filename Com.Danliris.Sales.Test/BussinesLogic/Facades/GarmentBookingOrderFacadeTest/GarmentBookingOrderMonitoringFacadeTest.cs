@@ -16,11 +16,12 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Xunit;
+
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacadeTest
 {
-    public class CanceledGarmentBookingOrderReportFacadeTest
+    public class GarmentBookingOrderMonitoringFacadeTest
     {
-        private const string ENTITY = "CanceledGarmentBookingOrderReport";
+        private const string ENTITY = "GarmentBookingOrderMonitoringReport";
         [MethodImpl(MethodImplOptions.NoInlining)]
         private string GetCurrentMethod()
         {
@@ -40,11 +41,10 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
 
             return dbContext;
         }
-
         protected virtual Mock<IServiceProvider> GetServiceProviderMock(SalesDbContext dbContext)
         {
             var serviceProviderMock = new Mock<IServiceProvider>();
-            
+
             IIdentityService identityService = new IdentityService { Username = "Username" };
 
             serviceProviderMock
@@ -57,7 +57,6 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
 
             return serviceProviderMock;
         }
-
         protected virtual GarmentBookingOrderDataUtil DataUtil(GarmentBookingOrderFacade facade, SalesDbContext dbContext = null)
         {
             GarmentBookingOrderDataUtil dataUtil = new GarmentBookingOrderDataUtil(facade);
@@ -74,10 +73,10 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
 
             var data = await DataUtil(facade).GetTestData();
 
-            ICanceledGarmentBookingOrderReportFacade canceledGarmentBookingOrderReportFacade = new CanceledGarmentBookingOrderReportFacade(serviceProvider, dbContext);
+            IGarmentBookingOrderMonitoringInterface garmentBookingOrderMonitoringFacade = new GarmentBookingOrderMonitoringFacade(serviceProvider, dbContext);
 
-           
-            var Response = canceledGarmentBookingOrderReportFacade.Read(null,null,null,null, null, 1, 25, It.IsAny<string>(), It.IsAny<int>());
+
+            var Response = garmentBookingOrderMonitoringFacade.Read(null, null, null, null, null, null, null, null, 1, 25, It.IsAny<string>(), It.IsAny<int>());
 
             Assert.NotEqual(Response.Item2, 0);
         }
@@ -92,14 +91,13 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
 
             var data = await DataUtil(facade).GetTestData();
 
-            ICanceledGarmentBookingOrderReportFacade monitoringRemainingEHFacade = new CanceledGarmentBookingOrderReportFacade(serviceProvider, dbContext);
+            IGarmentBookingOrderMonitoringInterface monitoringGarmentBookingOrder = new GarmentBookingOrderMonitoringFacade(serviceProvider, dbContext);
 
-            
-            var Response = monitoringRemainingEHFacade.GenerateExcel(null, null, null, null, null, It.IsAny<int>());
+
+            var Response = monitoringGarmentBookingOrder.GenerateExcel(null, null, null, null, null, null, null, null, It.IsAny<int>());
 
             // ???
-            Assert.IsType(typeof(MemoryStream),Response);
+            Assert.IsType(typeof(MemoryStream), Response);
         }
-
     }
 }

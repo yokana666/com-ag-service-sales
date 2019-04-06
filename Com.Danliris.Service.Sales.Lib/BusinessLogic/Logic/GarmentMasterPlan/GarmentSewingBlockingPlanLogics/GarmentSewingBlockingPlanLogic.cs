@@ -54,7 +54,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
                     DeliveryDate=field.DeliveryDate,
                     Remark=field.Remark,
                     LastModifiedUtc = field.LastModifiedUtc,
-                    Status=field.Status
+                    Status=field.Status,
+                    Items=field.Items
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
