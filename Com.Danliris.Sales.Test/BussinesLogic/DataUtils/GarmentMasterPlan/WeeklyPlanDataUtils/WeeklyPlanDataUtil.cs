@@ -32,7 +32,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Week
             {
                 weeklyPlan.Items.Add(new GarmentWeeklyPlanItem
                 {
-                    WeekNumber = (byte)(i + 1)
+                    WeekNumber = (byte)(i + 1),
+                    Efficiency = 50,
+                    Operator = 100,
+                    StartDate = startDateOfYear.AddDays(i - 1),
+                    EndDate=startDateOfYear.AddDays(i*7)
                 });
             }
             return weeklyPlan;

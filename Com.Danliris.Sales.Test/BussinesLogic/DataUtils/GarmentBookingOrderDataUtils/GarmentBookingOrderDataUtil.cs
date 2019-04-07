@@ -43,6 +43,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentBookingOrderDat
                 ComodityName = "ComodityName",
                 ConfirmQuantity = 55,
                 Remark = "Remark",
+                ConfirmDate= new DateTimeOffset()
             });
             return bookingOrder;
         }
