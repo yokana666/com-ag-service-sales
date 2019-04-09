@@ -164,6 +164,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     totalConfirmed[uwb] = BGC;
                 }
 
+
                 if (!units.ContainsKey(dt.unit))
                 {
                     units.Add(dt.unit, dt.unit);
@@ -592,6 +593,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
 
             int unitCount = units.Count;
 
+            #region GRANDTOTAL ROWS
+
             string GrandtotalKey = "GRAND TOTAL" + "-" + "Total Booking";
             string GrandtotalBookingConfKey = "GRAND TOTAL" + "-" + "Total Confirm";
             string GrandtotalBookingConfPrsKey = "GRAND TOTAL" + "-" + "Persentase Confirm";
@@ -840,6 +843,37 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     rowData[GrandtotalwhConfirmKey].Add(unitDataTableTotalWHConf);
                 }
             }
+            #endregion
+
+            var c = 0;
+            foreach (var s in smv.Keys.OrderBy(a=>a))
+            {
+                var buy = "Total Booking";
+                var smvAvg = smv[s] / count[s];
+                var smvKey= s.Split("-");
+
+                var un = smvKey[0];
+                var smvTotalKey = string.Concat(un,"-", buy);
+
+                if (!smv.ContainsKey(smvTotalKey))
+                {
+                    smv.Add(smvTotalKey, smvAvg);
+                }
+                else
+                {
+                    smv[smvTotalKey] += smvAvg;
+                }
+
+                if (!count.ContainsKey(smvTotalKey))
+                {
+                    count.Add(smvTotalKey, 1);
+                }
+                else
+                {
+                    count[smvTotalKey] += 1;
+                }
+            }
+
 
             Dictionary<string, string> Rowcount = new Dictionary<string, string>();
             int idx = 1;
@@ -892,7 +926,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         unBuy = string.Concat(keys[0], "-", keys[1]);
                     }
 
-                    var smvAvg = smv.ContainsKey(unBuy) && count.ContainsKey(unBuy) ? (smv[unBuy] / count[unBuy]).ToString() : "-";
+                    var smvAvg = smv.ContainsKey(unBuy) && count.ContainsKey(unBuy) ? Math.Round((smv[unBuy] / count[unBuy]),2).ToString() : "-";
                     rowValues.Add(smvAvg);
 
                     foreach (var a in rowValue.Value)
@@ -1026,13 +1060,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             public int week { get; set; }
         }
 
-
-        class rowCountTable
-        {
-            public int index { get; set; }
-            public int count { get; set; }
-        }
-
         class unitTable
         {
             public string unit { get; set; }
@@ -1040,11 +1067,5 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             public byte week { get; set; }
         }
 
-        class bookingTable
-        {
-            public long bookingId { get; set; }
-            public double bookingqty { get; set; }
-            public byte weekBooking { get; set; }
-        }
     }
 }
