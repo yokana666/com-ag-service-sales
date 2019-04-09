@@ -63,8 +63,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
                                  a.WeekNumber,a.EHBooking,a.Efficiency,a.EndDate, bookingqty=b.OrderQuantity, a.WeeklyPlanId, b.BookingOrderId, b.BookingOrderDate
                              }).AsQueryable();
 
-
-
             var joinAll = (from a in JoinQuery
                            join b in WeekQuery on a.WeeklyPlanId equals b.Id
                            join d in dbContext.GarmentBookingOrders on a.BookingOrderId equals d.Id
@@ -77,21 +75,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
                                buyer = a.buyer,
                                year = a.Year,
                                weekSewingBlocking = a.WeekNumber,
-                               UsedEH = a.EHBooking * a.Efficiency,
+                               UsedEH = a.EHBooking,
                                bookingDate = a.BookingOrderDate,
                                bookingId = a.BookingOrderId,
                                bookingOrderQty = a.bookingqty,
-                               weekBookingOrder = dbContext.GarmentWeeklyPlanItems
-                                                 .Where(w => w.WeeklyPlanId == b.Id && w.StartDate.Date <= a.BookingOrderDate && w.EndDate >= a.BookingOrderDate)
-                                                 .Select(w => w.WeekNumber).FirstOrDefault(),
                                bookingOrderItems = dbContext.GarmentBookingOrderItems.Where(a => a.BookingOrderId == d.Id)
                                                 .Select(data => new BOItemViewModel
                                                 {
                                                     ConfirmQuantity = data.ConfirmQuantity,
-                                                    ConfirmDate = data.ConfirmDate,
-                                                    weekConfirm = dbContext.GarmentWeeklyPlanItems
-                                                     .Where(w => w.WeeklyPlanId == b.Id && w.StartDate.Date <= data.ConfirmDate && w.EndDate >= data.ConfirmDate)
-                                                     .Select(w => w.WeekNumber).FirstOrDefault(),
                                                 }).ToList(),
                                items = (from c in dbContext.GarmentWeeklyPlanItems where b.Id== c.WeeklyPlanId orderby c.WeekNumber
                                         select new SewingBlockingPlanReportItemViewModel {
@@ -104,12 +95,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
                                             weekEndDate=c.EndDate,
                                             weekNumber=c.WeekNumber,
                                             workingHours=c.WorkingHours,
-                                            WHBooking=c.UsedEH !=0 && c.Operator!=0 ? (c.UsedEH/c.Operator)*c.Efficiency/100 : 0,
+                                            WHBooking=c.UsedEH !=0 && c.Operator!=0 ? c.UsedEH/(c.Operator*c.Efficiency/100) : 0,
                                         }).ToList()
                         }).AsQueryable();
 
             return joinAll;
-            
         }
     }
 }
