@@ -99,7 +99,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
 
             GarmentBookingOrder booking = DbContext.GarmentBookingOrders.FirstOrDefault(b => b.Id == model.BookingOrderId);
-            booking.IsBlockingPlan = false;
+            if(booking!=null)
+                booking.IsBlockingPlan = false;
             foreach (var item in model.Items)
             {
                 GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
@@ -121,14 +122,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.G
 
             foreach (var item in model.Items)
             {
-                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
+                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
                 week.UsedEH -= (int)item.EHBooking;
                 week.RemainingEH += (int)item.EHBooking;
             }
 
             foreach (var newPlan in newModel.Items)
             {
-                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == newPlan.WeeklyPlanItemId);
+                GarmentWeeklyPlanItem week = DbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == newPlan.WeeklyPlanItemId);
                 //var oldItem = model.Items.FirstOrDefault(i => i.Id == newPlan.Id);
                 if (newPlan.Id==0)
                 {
