@@ -76,7 +76,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
             IGarmentBookingOrderMonitoringInterface garmentBookingOrderMonitoringFacade = new GarmentBookingOrderMonitoringFacade(serviceProvider, dbContext);
 
 
-            var Response = garmentBookingOrderMonitoringFacade.Read(null, null, null, null, null, null, null, null, 1, 25, It.IsAny<string>(), It.IsAny<int>());
+            var Response = garmentBookingOrderMonitoringFacade.Read(null, null, null, null, null, null, null, null,null,null, 1, 25, It.IsAny<string>(), It.IsAny<int>());
 
             Assert.NotEqual(Response.Item2, 0);
         }
@@ -94,7 +94,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
             IGarmentBookingOrderMonitoringInterface monitoringGarmentBookingOrder = new GarmentBookingOrderMonitoringFacade(serviceProvider, dbContext);
 
 
-            var Response = monitoringGarmentBookingOrder.GenerateExcel(null, null, null, null, null, null, null, null, It.IsAny<int>());
+            var Response = monitoringGarmentBookingOrder.GenerateExcel(null, null, null, null, null, null, null, null,null,null, It.IsAny<int>());
 
             // ???
             Assert.IsType(typeof(MemoryStream), Response);

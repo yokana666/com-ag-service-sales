@@ -28,7 +28,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetReportAll(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order = "{}")
+        public IActionResult GetReportAll(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, DateTime? dateDeliveryFrom, DateTime? dateDeliveryTo, int page, int size, string Order = "{}")
         {
             int offset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
             string accept = Request.Headers["Accept"];
@@ -36,7 +36,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             try
             {
 
-                var data = facades.Read(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, page, size, Order, offset);
+                var data = facades.Read(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo,  dateDeliveryFrom, dateDeliveryTo, page, size, Order, offset);
 
                 return Ok(new
                 {
@@ -57,7 +57,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         }
 
         [HttpGet("download")]
-        public IActionResult GetXlsAll(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo)
+        public IActionResult GetXlsAll(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, DateTime? dateDeliveryFrom, DateTime? dateDeliveryTo)
         {
 
             try
@@ -66,8 +66,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 int offset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
                 DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : Convert.ToDateTime(dateFrom);
                 DateTime DateTo = dateTo == null ? DateTime.Now : Convert.ToDateTime(dateTo);
+                DateTime DateDeliveryFrom = dateDeliveryFrom == null ? new DateTime(1970, 1, 1) : Convert.ToDateTime(dateDeliveryFrom);
+                DateTime DateDeliveryTo = dateDeliveryTo == null ? DateTime.MaxValue : Convert.ToDateTime(dateDeliveryTo);
 
-                var xls = facades.GenerateExcel(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, offset);
+                var xls = facades.GenerateExcel(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, dateDeliveryFrom, dateDeliveryTo, offset);
 
                 string filename = String.Format("Laporan Booking Order - {0}.xlsx", DateTime.UtcNow.ToString("ddMMyyyy"));
 
