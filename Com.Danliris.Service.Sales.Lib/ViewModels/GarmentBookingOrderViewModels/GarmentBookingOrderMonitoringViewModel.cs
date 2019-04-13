@@ -23,5 +23,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public string OrderLeft { get; set; }
         public string DateDiff { get; set; }
         public int row_count { get; set; }
+        public double NotConfirmedQuantity { get; set; }
+        public string SurplusQuantity { get; set; }
     }
 }

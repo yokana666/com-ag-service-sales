@@ -32,7 +32,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentBookingOrderDat
                 ExpiredBookingQuantity = 9,
                 HadConfirmed = true,
                 Remark = "Remark",
-                DeliveryDate= new DateTimeOffset().AddDays(30),
+                DeliveryDate= DateTime.Now.AddDays(30),
                 Items = new List<GarmentBookingOrderItem>()
             };
 

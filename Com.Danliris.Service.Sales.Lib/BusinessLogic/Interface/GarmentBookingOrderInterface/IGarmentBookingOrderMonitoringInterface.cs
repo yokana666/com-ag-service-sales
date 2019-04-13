@@ -8,7 +8,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingO
 {
     public interface IGarmentBookingOrderMonitoringInterface
     {
-        Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> Read(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset);
-        MemoryStream GenerateExcel(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, int offset);
+        Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> Read(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, DateTime? dateDeliveryFrom, DateTime? dateDeliveryTo, int page, int size, string Order, int offset);
+        MemoryStream GenerateExcel(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, DateTime? dateDeliveryFrom, DateTime? dateDeliveryTo, int offset);
     }
 }

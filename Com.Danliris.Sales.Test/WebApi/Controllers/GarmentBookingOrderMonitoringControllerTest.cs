@@ -60,11 +60,11 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         public void Get_WithoutException_ReturnOK()
         {
             var mocks = this.GetMocks();
-            mocks.Facade.Setup(f => f.Read(null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            mocks.Facade.Setup(f => f.Read(null, null, null, null, null, null, null, null,null,null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Tuple.Create(viewModels, 1));
 
             var controller = GetController(mocks);
-            var response = controller.GetReportAll(null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>());
+            var response = controller.GetReportAll(null, null, null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>());
 
             int statusCode = this.GetStatusCode(response);
 
@@ -75,13 +75,13 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         public void Get_Accept_Xls_WithoutException_ReturnOK()
         {
             var mocks = this.GetMocks();
-            mocks.Facade.Setup(f => f.GenerateExcel(null, null, null, null, null, null, null, null, It.IsAny<int>()))
+            mocks.Facade.Setup(f => f.GenerateExcel(null, null, null, null, null, null, null, null, null, null, It.IsAny<int>()))
                 .Returns(new MemoryStream());
 
             var controller = GetController(mocks);
             controller.ControllerContext.HttpContext.Request.Headers["Accept"] = "application/xls";
 
-            var response = controller.GetXlsAll(null, null, null, null, null, null, null, null);
+            var response = controller.GetXlsAll(null, null, null, null, null, null, null, null, null, null);
 
             Assert.Equal("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", response.GetType().GetProperty("ContentType").GetValue(response, null));
         }
@@ -90,11 +90,11 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         public void Get_ReadThrowException_ReturnInternalServerError()
         {
             var mocks = this.GetMocks();
-            mocks.Facade.Setup(f => f.Read(null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            mocks.Facade.Setup(f => f.Read(null, null, null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Throws(new Exception());
 
             var controller = GetController(mocks);
-            var response = controller.GetReportAll(null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>());
+            var response = controller.GetReportAll(null, null, null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>());
 
             int statusCode = this.GetStatusCode(response);
 

@@ -33,10 +33,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             this.IdentityService = serviceProvider.GetService<IdentityService>();
         }
 
-        public IQueryable<GarmentBookingOrderMonitoringViewModel> GetReportQuery(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, int offset)
+        public IQueryable<GarmentBookingOrderMonitoringViewModel> GetReportQuery(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, DateTime? dateDeliveryFrom, DateTime? dateDeliveryTo, int offset)
         {
             DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
             DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
+
+            DateTime DateDeliveryFrom = dateDeliveryFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateDeliveryFrom;
+            DateTime DateDeliveryTo = dateDeliveryTo == null ? DateTime.MaxValue : (DateTime)dateDeliveryTo;
             var today = DateTime.Today;
             List<GarmentBookingOrderMonitoringViewModel> listGarmentBookingMonitoring = new List<GarmentBookingOrderMonitoringViewModel>();
             List<GarmentBookingOrderMonitoringViewModel> listAllGarmentBookingMonitoring = new List<GarmentBookingOrderMonitoringViewModel>();
@@ -55,6 +58,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              && b.ComodityCode == (string.IsNullOrWhiteSpace(comodityCode) ? b.ComodityCode : comodityCode)
                              && a.BookingOrderDate.AddHours(offset).Date >= DateFrom.Date
                              && a.BookingOrderDate.AddHours(offset).Date <= DateTo.Date
+                             && a.DeliveryDate.AddHours(offset).Date >= DateDeliveryFrom.Date
+                             && a.DeliveryDate.AddHours(offset).Date <= DateDeliveryTo.Date
                          select new GarmentBookingOrderMonitoringViewModel
                          {
                              CreatedUtc = a.CreatedUtc,
@@ -73,7 +78,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity).ToString(),
                              DateDiff = ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days <= 45 && ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days >= 0 ? ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days.ToString() : "-",
                              row_count = 1,
-                             LastModifiedUtc = a.LastModifiedUtc
+                             LastModifiedUtc = a.LastModifiedUtc,
+                             NotConfirmedQuantity= a.ExpiredBookingQuantity + a.CanceledQuantity,
+                             SurplusQuantity = (a.ConfirmedQuantity - a.OrderQuantity) > 0 ? (a.ConfirmedQuantity - a.OrderQuantity).ToString() : "-"
                          }
             );
 
@@ -109,6 +116,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                               && a.BuyerCode == (string.IsNullOrWhiteSpace(buyerCode) ? a.BuyerCode : buyerCode)
                               && a.BookingOrderDate.AddHours(offset).Date >= DateFrom.Date
                               && a.BookingOrderDate.AddHours(offset).Date <= DateTo.Date
+                              && a.DeliveryDate.AddHours(offset).Date >= DateDeliveryFrom.Date
+                              && a.DeliveryDate.AddHours(offset).Date <= DateDeliveryTo.Date
                               select new GarmentBookingOrderMonitoringViewModel
                               {
                                   CreatedUtc = a.CreatedUtc,
@@ -127,7 +136,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                                   OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity).ToString(),
                                   DateDiff = ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days <= 45 && ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days >= 0 ? ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days.ToString() : "-",
                                   row_count = 1,
-                                  LastModifiedUtc = a.LastModifiedUtc
+                                  LastModifiedUtc = a.LastModifiedUtc,
+                                  NotConfirmedQuantity = a.ExpiredBookingQuantity + a.CanceledQuantity,
+                                  SurplusQuantity = (a.ConfirmedQuantity - a.OrderQuantity)>0? (a.ConfirmedQuantity - a.OrderQuantity).ToString(): "-"
                               }
                 );
                 foreach (var query in query2.OrderBy(o => o.BookingOrderNo))
@@ -195,9 +206,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             return listGarmentBookingMonitoringFilter.AsQueryable();
         }
 
-        public Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> Read(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
+        public Tuple<List<GarmentBookingOrderMonitoringViewModel>, int> Read(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, DateTime? dateDeliveryFrom, DateTime? dateDeliveryTo, int page, int size, string Order, int offset)
         {
-            var Query = GetReportQuery(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, offset);
+            var Query = GetReportQuery(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, dateDeliveryFrom, dateDeliveryTo, offset);
 
             var Data = Query.OrderByDescending(b => b.LastModifiedUtc).ToList();
 
@@ -209,9 +220,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             return Tuple.Create(Data_, TotalData);
         }
 
-        public MemoryStream GenerateExcel(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, int offset)
+        public MemoryStream GenerateExcel(string section, string no, string buyerCode, string comodityCode, string statusConfirm, string statusBookingOrder, DateTime? dateFrom, DateTime? dateTo, DateTime? dateDeliveryFrom, DateTime? dateDeliveryTo, int offset)
         {
-            var Query = GetReportQuery(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, offset);
+            var Query = GetReportQuery(section, no, buyerCode, comodityCode, statusConfirm, statusBookingOrder, dateFrom, dateTo, dateDeliveryFrom, dateDeliveryTo, offset);
             Query = Query.OrderByDescending(b => b.LastModifiedUtc);
             DataTable result = new DataTable();
 
@@ -229,11 +240,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
             result.Columns.Add(new DataColumn() { ColumnName = "Status Booking Order", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Sisa Order (Belum Confirm)", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Seilisih Hari (dari Tanggal Pengiriman)", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Not Confirmed Order (MINUS)", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Over Confirm (SURPLUS)", DataType = typeof(string) });
 
             List<(string, Enum, Enum)> mergeCells = new List<(string, Enum, Enum)>() { };
 
             if (Query.ToArray().Count() == 0)
-                result.Rows.Add("", "", "", "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
+                result.Rows.Add("", "", "", "", "", "", "", "", "", "", "", "", "", "","",""); // to allow column name to be generated properly for empty data as template
             else
             {
                 int index = 0;
@@ -255,6 +268,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                     string ConfirmDate = confirmDate == new DateTime(1970, 1, 1) ? "-" : confirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
                     string DeliveryDateItems = deliveryDateItems == new DateTime(1970, 1, 1) ? "-" : deliveryDateItems.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
 
+
                     if (temp_No == item.BookingOrderNo)
                     {
                         item.BookingOrderNo = null;
@@ -270,13 +284,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                         counterTemp++;
 
                         result.Rows.Add(item.BookingOrderNo, BookingOrderDate, item.BuyerName, item.OrderQuantity, DeliveryDate, item.ComodityName, item.ConfirmQuantity,
-                        DeliveryDateItems, ConfirmDate, item.Remark, item.StatusConfirm, item.StatusBooking, item.OrderLeft, item.DateDiff);
+                        DeliveryDateItems, ConfirmDate, item.Remark, item.StatusConfirm, item.StatusBooking, item.OrderLeft, item.DateDiff,item.NotConfirmedQuantity, item.SurplusQuantity);
 
                        
                     } else
                     {
                         result.Rows.Add(item.BookingOrderNo, BookingOrderDate, item.BuyerName, item.OrderQuantity, DeliveryDate, item.ComodityName, item.ConfirmQuantity,
-                        DeliveryDateItems, ConfirmDate, item.Remark, item.StatusConfirm, item.StatusBooking, item.OrderLeft, item.DateDiff);
+                        DeliveryDateItems, ConfirmDate, item.Remark, item.StatusConfirm, item.StatusBooking, item.OrderLeft, item.DateDiff, item.NotConfirmedQuantity, item.SurplusQuantity);
 
                         if (counterTemp > 1)
                         {
@@ -289,6 +303,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                             mergeCells.Add(($"L{rowPosition - counterTemp}:L{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
                             mergeCells.Add(($"M{rowPosition - counterTemp}:M{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
                             mergeCells.Add(($"N{rowPosition - counterTemp}:N{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                            mergeCells.Add(($"O{rowPosition - counterTemp}:O{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                            mergeCells.Add(($"P{rowPosition - counterTemp}:P{rowPosition - 1}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
 
                             counterTemp = 1;
                         }
@@ -307,6 +323,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                     mergeCells.Add(($"L{rowPosition + 1 - counterTemp}:L{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
                     mergeCells.Add(($"M{rowPosition + 1 - counterTemp}:M{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
                     mergeCells.Add(($"N{rowPosition + 1 - counterTemp}:N{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                    mergeCells.Add(($"O{rowPosition + 1 - counterTemp}:O{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
+                    mergeCells.Add(($"P{rowPosition + 1 - counterTemp}:P{rowPosition}", OfficeOpenXml.Style.ExcelHorizontalAlignment.Left, OfficeOpenXml.Style.ExcelVerticalAlignment.Center));
 
                     counterTemp = 1;
                 }
