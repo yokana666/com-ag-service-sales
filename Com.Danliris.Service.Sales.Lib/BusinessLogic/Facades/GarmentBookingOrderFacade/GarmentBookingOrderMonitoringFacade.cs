@@ -60,6 +60,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              && a.BookingOrderDate.AddHours(offset).Date <= DateTo.Date
                              && a.DeliveryDate.AddHours(offset).Date >= DateDeliveryFrom.Date
                              && a.DeliveryDate.AddHours(offset).Date <= DateDeliveryTo.Date
+                             && b.IsCanceled==false
                          select new GarmentBookingOrderMonitoringViewModel
                          {
                              CreatedUtc = a.CreatedUtc,
@@ -75,7 +76,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                              Remark = b.Remark,
                              StatusConfirm = a.ConfirmedQuantity == 0 ? "Belum Dikonfirmasi" : a.ConfirmedQuantity > 0 ? "Sudah Dikonfirmasi" : "-",
                              StatusBooking = a.IsBlockingPlan == true ? "Sudah Dibuat Master Plan" : a.ConfirmedQuantity == 0 && a.IsBlockingPlan == false ? "Booking" : a.ConfirmedQuantity > 0 && a.IsBlockingPlan == false ? "Confirmed" : "-",
-                             OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity).ToString(),
+                             OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity) > 0 ? (a.OrderQuantity - a.ConfirmedQuantity).ToString() : "0",
                              DateDiff = ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days <= 45 && ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days >= 0 ? ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days.ToString() : "-",
                              row_count = 1,
                              LastModifiedUtc = a.LastModifiedUtc,
@@ -133,7 +134,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrd
                                   Remark = null,
                                   StatusConfirm = "Belum Dikonfirmasi",
                                   StatusBooking = a.IsBlockingPlan == true ? "Sudah Dibuat Master Plan" : a.ConfirmedQuantity == 0 && a.IsBlockingPlan == false ? "Booking" : a.ConfirmedQuantity > 0 && a.IsBlockingPlan == false ? "Confirmed" : "-",
-                                  OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity).ToString(),
+                                  OrderLeft = (a.OrderQuantity - a.ConfirmedQuantity)>0 ? (a.OrderQuantity - a.ConfirmedQuantity).ToString() : "0",
                                   DateDiff = ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days <= 45 && ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days >= 0 ? ((TimeSpan)(a.DeliveryDate.AddHours(offset) - today)).Days.ToString() : "-",
                                   row_count = 1,
                                   LastModifiedUtc = a.LastModifiedUtc,
