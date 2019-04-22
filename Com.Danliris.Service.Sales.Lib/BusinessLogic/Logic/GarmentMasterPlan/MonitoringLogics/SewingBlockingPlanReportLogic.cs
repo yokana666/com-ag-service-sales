@@ -79,7 +79,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
                                bookingDate = a.BookingOrderDate,
                                bookingId = a.BookingOrderId,
                                bookingOrderQty = a.bookingqty,
-                               bookingOrderItems = dbContext.GarmentBookingOrderItems.Where(a => a.BookingOrderId == d.Id)
+                               bookingOrderItems = dbContext.GarmentBookingOrderItems.Where(a => a.BookingOrderId == d.Id && a.IsCanceled==false)
                                                 .Select(data => new BOItemViewModel
                                                 {
                                                     ConfirmQuantity = data.ConfirmQuantity,
