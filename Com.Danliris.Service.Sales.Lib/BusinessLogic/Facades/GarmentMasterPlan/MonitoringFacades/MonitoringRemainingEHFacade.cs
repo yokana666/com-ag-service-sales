@@ -1,7 +1,6 @@
 ﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.MonitoringInterfaces;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MonitoringLogics;
 using Com.Danliris.Service.Sales.Lib.Helpers;
-using Com.Danliris.Service.Sales.Lib.Migrations;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentMasterPlan.MonitoringViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +20,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
     public class MonitoringRemainingEHFacade : IMonitoringRemainingEHFacade
     {
         private readonly SalesDbContext DbContext;
-        private readonly DbSet<WeeklyPlan> DbSet;
+        //private readonly DbSet<WeeklyPlan> DbSet;
         private IdentityService IdentityService;
         private MonitoringRemainingEHLogic MonitoringRemainingEHLogic;
 
         public MonitoringRemainingEHFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             DbContext = dbContext;
-            DbSet = DbContext.Set<WeeklyPlan>();
+            //DbSet = DbContext.Set<WeeklyPlan>();
             IdentityService = serviceProvider.GetService<IdentityService>();
             MonitoringRemainingEHLogic = serviceProvider.GetService<MonitoringRemainingEHLogic>();
         }
