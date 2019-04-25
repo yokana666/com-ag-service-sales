@@ -139,7 +139,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     }
                     else
                     {
-                        if (x > 1 && x < (sheet.Dimension.Columns - (data.Count > 1 ? 2 : 0)))
+                        if (x > 1 && x < (sheet.Dimension.Columns - (data.Count >= 1 ? 2 : 0)))
                         {
                             cell.Style.Fill.BackgroundColor.SetColor(
                                 (int)cell.Value > 0 ? Color.Yellow :
