@@ -58,8 +58,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     column.Add(week, weeks.weekNumber);
                 }
             }
-            
 
+            bool flagSK = false;
+            foreach (var dta in data)
+            {
+                if (dta.unit == "SK")
+                {
+                    flagSK = true;
+                }
+            }
             Dictionary<string, int> count = new Dictionary<string, int>();
             Dictionary<string, double> smv = new Dictionary<string, double>();
             Dictionary<string, double> total = new Dictionary<string, double>();
@@ -71,7 +78,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             Dictionary<int, double> Grandtotal = new Dictionary<int, double>();
             Dictionary<long, long> bookId = new Dictionary<long, long>();
             Dictionary<string, double> totalConfirmPerUnit = new Dictionary<string, double>();
-            Dictionary<int, double> ConfirmBookingTotal = new Dictionary<int, double>();
+            Dictionary<string, double> ehConfirm = new Dictionary<string, double>();
+
             Dictionary<int, double> GrandtotalConf = new Dictionary<int, double>();
             Dictionary<int, double> GrandtotalEff = new Dictionary<int, double>();
             Dictionary<int, double> GrandtotalOp = new Dictionary<int, double>();
@@ -79,9 +87,23 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             Dictionary<int, double> GrandtotalAH = new Dictionary<int, double>();
             Dictionary<int, double> GrandtotalEH = new Dictionary<int, double>();
             Dictionary<int, double> GrandtotalusedEH = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalusedEHConfirm = new Dictionary<int, double>();
             Dictionary<int, double> GrandtotalremEH = new Dictionary<int, double>();
             Dictionary<int, double> GrandtotalWHBook = new Dictionary<int, double>();
             Dictionary<int, double> GrandtotalWHConf = new Dictionary<int, double>();
+
+            Dictionary<int, double> GrandtotalUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalConfUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalEffUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalOpUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalWHUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalAHUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalEHUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalusedEHUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalusedEHConfirmUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalremEHUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalWHBookUnit = new Dictionary<int, double>();
+            Dictionary<int, double> GrandtotalWHConfUnit = new Dictionary<int, double>();
             var BGC = "";
             foreach (var dt in data)
             {
@@ -109,6 +131,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 {
                     if (dt.isConfirmed)
                         totalConfirmPerUnit[uw] += dt.bookingQty;
+                }
+
+                if (!ehConfirm.ContainsKey(uw))
+                {
+                    if (dt.isConfirmed)
+                        ehConfirm.Add(uw, dt.UsedEH);
+                }
+                else
+                {
+                    if (dt.isConfirmed)
+                        ehConfirm[uw] += dt.UsedEH;
                 }
 
                 if (!totalWHConfirm.ContainsKey(uw))
@@ -233,8 +266,75 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         {
                             GrandtotalremEH[item.weekNumber] += item.remainingEH;
                         }
+
+                        if (dt.unit != "SK")
+                        {
+                            if (!GrandtotalEffUnit.ContainsKey(item.weekNumber))
+                            {
+                                GrandtotalEffUnit.Add(item.weekNumber, item.efficiency);
+                            }
+                            else
+                            {
+                                GrandtotalEffUnit[item.weekNumber] += item.efficiency;
+                            }
+
+                            if (!GrandtotalOpUnit.ContainsKey(item.weekNumber))
+                            {
+                                GrandtotalOpUnit.Add(item.weekNumber, item.head);
+                            }
+                            else
+                            {
+                                GrandtotalOpUnit[item.weekNumber] += item.head;
+                            }
+
+                            if (!GrandtotalWHUnit.ContainsKey(item.weekNumber))
+                            {
+                                GrandtotalWHUnit.Add(item.weekNumber, item.workingHours);
+                            }
+                            else
+                            {
+                                GrandtotalWHUnit[item.weekNumber] += item.workingHours;
+                            }
+
+                            if (!GrandtotalAHUnit.ContainsKey(item.weekNumber))
+                            {
+                                GrandtotalAHUnit.Add(item.weekNumber, item.AHTotal);
+                            }
+                            else
+                            {
+                                GrandtotalAHUnit[item.weekNumber] += item.AHTotal;
+                            }
+
+                            if (!GrandtotalEHUnit.ContainsKey(item.weekNumber))
+                            {
+                                GrandtotalEHUnit.Add(item.weekNumber, item.EHTotal);
+                            }
+                            else
+                            {
+                                GrandtotalEHUnit[item.weekNumber] += item.EHTotal;
+                            }
+
+                            if (!GrandtotalusedEHUnit.ContainsKey(item.weekNumber))
+                            {
+                                GrandtotalusedEHUnit.Add(item.weekNumber, item.usedTotal);
+                            }
+                            else
+                            {
+                                GrandtotalusedEHUnit[item.weekNumber] += item.usedTotal;
+                            }
+
+                            if (!GrandtotalremEHUnit.ContainsKey(item.weekNumber))
+                            {
+                                GrandtotalremEHUnit.Add(item.weekNumber, item.remainingEH);
+                            }
+                            else
+                            {
+                                GrandtotalremEHUnit[item.weekNumber] += item.remainingEH;
+                            }
+                        }
                     }
                 }
+
                 unitTable ut = new unitTable
                 {
                     unit=dt.unit,
@@ -260,7 +360,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
 
                 if (!GrandtotalConf.ContainsKey(w))
                 {
-                    if(dt.isConfirmed)
+                    if (dt.isConfirmed)
                         GrandtotalConf.Add(w, dt.bookingQty);
                 }
                 else
@@ -269,7 +369,54 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         GrandtotalConf[w] += dt.bookingQty;
                 }
 
+                if (!GrandtotalusedEHConfirm.ContainsKey(w))
+                {
+                    if (dt.isConfirmed)
+                        GrandtotalusedEHConfirm.Add(w, dt.UsedEH);
+                }
+                else
+                {
+                    if (dt.isConfirmed)
+                        GrandtotalusedEHConfirm[w] += dt.UsedEH;
+                }
 
+                #endregion
+
+                #region GRANDTOTALUNIT
+                if (dt.unit != "SK")
+                {
+                    if (!GrandtotalUnit.ContainsKey(w))
+                    {
+                        GrandtotalUnit.Add(w, dt.bookingQty);
+                    }
+                    else
+                    {
+                        GrandtotalUnit[w] += dt.bookingQty;
+                    }
+
+                    if (!GrandtotalConfUnit.ContainsKey(w))
+                    {
+                        if (dt.isConfirmed)
+                            GrandtotalConfUnit.Add(w, dt.bookingQty);
+                    }
+                    else
+                    {
+                        if (dt.isConfirmed)
+                            GrandtotalConfUnit[w] += dt.bookingQty;
+                    }
+
+                    if (!GrandtotalusedEHConfirmUnit.ContainsKey(w))
+                    {
+                        if (dt.isConfirmed)
+                            GrandtotalusedEHConfirmUnit.Add(w, dt.UsedEH);
+                    }
+                    else
+                    {
+                        if (dt.isConfirmed)
+                            GrandtotalusedEHConfirmUnit[w] += dt.UsedEH;
+                    }
+                }
+                
                 #endregion
             }
 
@@ -322,12 +469,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     string whKey = un.Value + "-" + "Working Hours";
                     string AHKey = un.Value + "-" + "Total AH";
                     string EHKey = un.Value + "-" + "Total EH";
-                    string useEHKey = un.Value + "-" + "Used EH";
+                    string useEHKey = un.Value + "-" + "Used EH Booking";
+                    string useEHConfKey = un.Value + "-" + "Used EH Confirm";
                     string remEHKey = un.Value + "-" + "Remaining EH";
                     string whBookKey = un.Value + "-" + "WH Booking";
                     string whConfirmKey = un.Value + "-" + "WH Confirm";
 
                     string unWeek = string.Concat(un.Value, "-", weekNum.Value);
+
+                    
+
                     UnitDataTable unitDataTable1 = new UnitDataTable
                     {
                         Unit = un.Value,
@@ -502,7 +653,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     UnitDataTable unitDataTableUseEH = new UnitDataTable
                     {
                         Unit = un.Value,
-                        buyer = "Used EH",
+                        buyer = "Used EH Booking",
                         qty = usedEH.ToString(),
                         week = weekNum.Value
                     };
@@ -516,10 +667,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         rowData[useEHKey].Add(unitDataTableUseEH);
                     }
 
+                    UnitDataTable unitDataTableEHConf = new UnitDataTable
+                    {
+                        Unit = un.Value,
+                        buyer = "Used EH Confirm",
+                        qty = ehConfirm.ContainsKey(unWeek) ? ehConfirm[unWeek].ToString() : "0",
+                        week = weekNum.Value
+                    };
+                    if (!rowData.ContainsKey(useEHConfKey))
+                    {
+
+                        rowData.Add(useEHConfKey, new List<UnitDataTable> { unitDataTableEHConf });
+                    }
+                    else
+                    {
+                        rowData[useEHConfKey].Add(unitDataTableEHConf);
+                    }
+
                     UnitDataTable unitDataTableRemEH = new UnitDataTable
                     {
                         Unit = un.Value,
-                        buyer = "Used EH",
+                        buyer = "Remaining EH",
                         qty = remainingEH.ToString(),
                         week = weekNum.Value
                     };
@@ -559,8 +727,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         GrandtotalWHBook[weekNum.Value] += whBooking;
                     }
 
+                    
+
                     double ehConf = totalWHConfirm.ContainsKey(unWeek) ? totalWHConfirm[unWeek] : 0;
                     double whConf = ehConf != 0 ? ehConf / (op * eff / 100) : 0;
+
+
 
                     UnitDataTable unitDataTableWHConfirm = new UnitDataTable
                     {
@@ -587,11 +759,37 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     {
                         GrandtotalWHConf[weekNum.Value] += whConf;
                     }
+
+                    if (un.Value != "SK")
+                    {
+
+                        double ehConfUnit = totalWHConfirm.ContainsKey(unWeek) ? totalWHConfirm[unWeek] : 0;
+                        double whConfUnit = ehConfUnit != 0 ? ehConf / (op * eff / 100) : 0;
+
+                        if (!GrandtotalWHBookUnit.ContainsKey(weekNum.Value))
+                        {
+                            GrandtotalWHBookUnit.Add(weekNum.Value, whBooking);
+                        }
+                        else
+                        {
+                            GrandtotalWHBookUnit[weekNum.Value] += whBooking;
+                        }
+
+                        if (!GrandtotalWHConfUnit.ContainsKey(weekNum.Value))
+                        {
+                            GrandtotalWHConfUnit.Add(weekNum.Value, whConfUnit);
+                        }
+                        else
+                        {
+                            GrandtotalWHConfUnit[weekNum.Value] += whConfUnit;
+                        }
+                    }
                 }
                 #endregion
             }
 
             int unitCount = units.Count;
+            int unitCountSK = flagSK ? unitCount - 1 : unitCount;
 
             #region GRANDTOTAL ROWS
 
@@ -603,245 +801,534 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             string GrandtotalwhKey = "GRAND TOTAL" + "-" + "Working Hours";
             string GrandtotalAHKey = "GRAND TOTAL" + "-" + "Total AH";
             string GrandtotalEHKey = "GRAND TOTAL" + "-" + "Total EH";
-            string GrandtotaluseEHKey = "GRAND TOTAL" + "-" + "Used EH";
+            string GrandtotaluseEHKey = "GRAND TOTAL" + "-" + "Used EH Booking";
+            string GrandtotaluseEHConfKey = "GRAND TOTAL" + "-" + "Used EH Confirm";
             string GrandtotalremEHKey = "GRAND TOTAL" + "-" + "Remaining EH";
             string GrandtotalwhBookKey = "GRAND TOTAL" + "-" + "WH Booking";
             string GrandtotalwhConfirmKey = "GRAND TOTAL" + "-" + "WH Confirm";
 
+            string GrandtotalKeyUnit = "GRAND TOTAL UNIT" + "-" + "Total Booking";
+            string GrandtotalBookingConfKeyUnit = "GRAND TOTAL UNIT" + "-" + "Total Confirm";
+            string GrandtotalBookingConfPrsKeyUnit = "GRAND TOTAL UNIT" + "-" + "Persentase Confirm";
+            string GrandtotaleffKeyUnit = "GRAND TOTAL UNIT" + "-" + "Efisiensi";
+            string GrandtotalopKeyUnit = "GRAND TOTAL UNIT" + "-" + "Total Operator Sewing";
+            string GrandtotalwhKeyUnit = "GRAND TOTAL UNIT" + "-" + "Working Hours";
+            string GrandtotalAHKeyUnit = "GRAND TOTAL UNIT" + "-" + "Total AH";
+            string GrandtotalEHKeyUnit = "GRAND TOTAL UNIT" + "-" + "Total EH";
+            string GrandtotaluseEHKeyUnit = "GRAND TOTAL UNIT" + "-" + "Used EH Booking";
+            string GrandtotaluseEHConfKeyUnit = "GRAND TOTAL UNIT" + "-" + "Used EH Confirm";
+            string GrandtotalremEHKeyUnit = "GRAND TOTAL UNIT" + "-" + "Remaining EH";
+            string GrandtotalwhBookKeyUnit = "GRAND TOTAL UNIT" + "-" + "WH Booking";
+            string GrandtotalwhConfirmKeyUnit = "GRAND TOTAL UNIT" + "-" + "WH Confirm";
+
             foreach (var wNum in column)
             {
                 int weekKey = wNum.Value;
-                UnitDataTable unitDataTableTotal = new UnitDataTable
+
+                UnitDataTable unitDataTableTotalUnit = new UnitDataTable
                 {
-                    Unit = "GRAND TOTAL",
+                    Unit = "GRAND TOTAL UNIT",
                     buyer = "Total Booking",
-                    qty = Grandtotal.ContainsKey(weekKey) ? Grandtotal[weekKey].ToString() : "-",
+                    qty = GrandtotalUnit.ContainsKey(weekKey) ? GrandtotalUnit[weekKey].ToString() : "-",
                     week = weekKey
                 };
-                if (!rowData.ContainsKey(GrandtotalKey))
+                if (!rowData.ContainsKey(GrandtotalKeyUnit))
                 {
 
-                    rowData.Add(GrandtotalKey, new List<UnitDataTable> { unitDataTableTotal });
+                    rowData.Add(GrandtotalKeyUnit, new List<UnitDataTable> { unitDataTableTotalUnit });
                 }
                 else
                 {
-                    rowData[GrandtotalKey].Add(unitDataTableTotal);
+                    rowData[GrandtotalKeyUnit].Add(unitDataTableTotalUnit);
                 }
 
-                UnitDataTable unitDataTableTotalConf = new UnitDataTable
+                UnitDataTable unitDataTableTotalConfUnit = new UnitDataTable
                 {
-                    Unit = "GRAND TOTAL",
+                    Unit = "GRAND TOTAL UNIT",
                     buyer = "Total Confirm",
-                    qty = GrandtotalConf.ContainsKey(weekKey) ? GrandtotalConf[weekKey].ToString() : "-",
+                    qty = GrandtotalConfUnit.ContainsKey(weekKey) ? GrandtotalConfUnit[weekKey].ToString() : "-",
                     week = weekKey
                 };
-                if (!rowData.ContainsKey(GrandtotalBookingConfKey))
+                if (!rowData.ContainsKey(GrandtotalBookingConfKeyUnit))
                 {
 
-                    rowData.Add(GrandtotalBookingConfKey, new List<UnitDataTable> { unitDataTableTotalConf });
+                    rowData.Add(GrandtotalBookingConfKeyUnit, new List<UnitDataTable> { unitDataTableTotalConfUnit });
                 }
                 else
                 {
-                    rowData[GrandtotalBookingConfKey].Add(unitDataTableTotalConf);
+                    rowData[GrandtotalBookingConfKeyUnit].Add(unitDataTableTotalConfUnit);
                 }
 
-                double percentConfirmTotal = 0;
-                if (!Grandtotal.ContainsKey(weekKey))
+                double percentConfirmTotalUnit = 0;
+                if (!GrandtotalUnit.ContainsKey(weekKey))
                 {
-                    if (!GrandtotalConf.ContainsKey(weekKey))
+                    if (!GrandtotalConfUnit.ContainsKey(weekKey))
                     {
-                        percentConfirmTotal = 0;
+                        percentConfirmTotalUnit = 0;
                     }
                     else
                     {
-                        percentConfirmTotal = 100;
+                        percentConfirmTotalUnit = 100;
                     }
                 }
-                else if (!GrandtotalConf.ContainsKey(weekKey))
+                else if (!GrandtotalConfUnit.ContainsKey(weekKey))
                 {
+                    if (!GrandtotalUnit.ContainsKey(weekKey))
+                    {
+                        percentConfirmTotalUnit = 0;
+                    }
+                }
+                else
+                {
+                    percentConfirmTotalUnit = Math.Round(((GrandtotalConfUnit[weekKey] / GrandtotalUnit[weekKey]) * 100), 2);
+                }
+
+                UnitDataTable unitDataTableTotalConfPrsUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Persentase Confirm",
+                    qty = string.Concat(percentConfirmTotalUnit, "%"),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalBookingConfPrsKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalBookingConfPrsKeyUnit, new List<UnitDataTable> { unitDataTableTotalConfPrsUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalBookingConfPrsKeyUnit].Add(unitDataTableTotalConfPrsUnit);
+                }
+
+                UnitDataTable unitDataTableTotalEffUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Efisiensi",
+                    qty = string.Concat(Math.Round(GrandtotalEffUnit[weekKey] / unitCountSK), "%"),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotaleffKeyUnit))
+                {
+
+                    rowData.Add(GrandtotaleffKeyUnit, new List<UnitDataTable> { unitDataTableTotalEffUnit });
+                }
+                else
+                {
+                    rowData[GrandtotaleffKeyUnit].Add(unitDataTableTotalEffUnit);
+                }
+
+                UnitDataTable unitDataTableTotalOPUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Operator",
+                    qty = GrandtotalOpUnit[weekKey].ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalopKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalopKeyUnit, new List<UnitDataTable> { unitDataTableTotalOPUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalopKeyUnit].Add(unitDataTableTotalOPUnit);
+                }
+
+                UnitDataTable unitDataTableTotalWHUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Working Hours",
+                    qty = (Math.Round(GrandtotalWHUnit[weekKey] / unitCountSK, 2)).ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalwhKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalwhKeyUnit, new List<UnitDataTable> { unitDataTableTotalWHUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalwhKeyUnit].Add(unitDataTableTotalWHUnit);
+                }
+
+                UnitDataTable unitDataTableTotalAHUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Total AH",
+                    qty = (GrandtotalAHUnit[weekKey]).ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalAHKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalAHKeyUnit, new List<UnitDataTable> { unitDataTableTotalAHUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalAHKeyUnit].Add(unitDataTableTotalAHUnit);
+                }
+
+                UnitDataTable unitDataTableTotalEHUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Total EH",
+                    qty = (GrandtotalEHUnit[weekKey]).ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalEHKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalEHKeyUnit, new List<UnitDataTable> { unitDataTableTotalEHUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalEHKeyUnit].Add(unitDataTableTotalEHUnit);
+                }
+
+                UnitDataTable unitDataTableTotalUsedEHUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Used EH Booking",
+                    qty = (GrandtotalusedEHUnit[weekKey]).ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotaluseEHKeyUnit))
+                {
+
+                    rowData.Add(GrandtotaluseEHKeyUnit, new List<UnitDataTable> { unitDataTableTotalUsedEHUnit });
+                }
+                else
+                {
+                    rowData[GrandtotaluseEHKeyUnit].Add(unitDataTableTotalUsedEHUnit);
+                }
+
+                UnitDataTable unitDataTableUsedEHConfUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Used EH Confirm",
+                    qty = GrandtotalusedEHConfirmUnit.ContainsKey(weekKey) ? GrandtotalusedEHConfirmUnit[weekKey].ToString() : "0",
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotaluseEHConfKeyUnit))
+                {
+
+                    rowData.Add(GrandtotaluseEHConfKeyUnit, new List<UnitDataTable> { unitDataTableUsedEHConfUnit });
+                }
+                else
+                {
+                    rowData[GrandtotaluseEHConfKeyUnit].Add(unitDataTableUsedEHConfUnit);
+                }
+
+                UnitDataTable unitDataTableTotalremEHUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "Remaining EH",
+                    qty = (GrandtotalremEHUnit[weekKey]).ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalremEHKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalremEHKeyUnit, new List<UnitDataTable> { unitDataTableTotalremEHUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalremEHKeyUnit].Add(unitDataTableTotalremEHUnit);
+                }
+
+                var totalWHBookUnit = GrandtotalWHBookUnit[weekKey] / unitCountSK;
+
+                UnitDataTable unitDataTableTotalWHBookingUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "WH Booking",
+                    qty = (Math.Round(totalWHBookUnit, 2)).ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalwhBookKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalwhBookKeyUnit, new List<UnitDataTable> { unitDataTableTotalWHBookingUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalwhBookKeyUnit].Add(unitDataTableTotalWHBookingUnit);
+                }
+
+                var totalWHConfUnit = GrandtotalWHConfUnit[weekKey] / unitCountSK;
+
+                UnitDataTable unitDataTableTotalWHConfUnit = new UnitDataTable
+                {
+                    Unit = "GRAND TOTAL UNIT",
+                    buyer = "WH Confirm",
+                    qty = (Math.Round(totalWHConfUnit, 2)).ToString(),
+                    week = weekKey
+                };
+                if (!rowData.ContainsKey(GrandtotalwhConfirmKeyUnit))
+                {
+
+                    rowData.Add(GrandtotalwhConfirmKeyUnit, new List<UnitDataTable> { unitDataTableTotalWHConfUnit });
+                }
+                else
+                {
+                    rowData[GrandtotalwhConfirmKeyUnit].Add(unitDataTableTotalWHConfUnit);
+                }
+
+                
+
+                if (flagSK)
+                {
+                    UnitDataTable unitDataTableTotal = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Total Booking",
+                        qty = Grandtotal.ContainsKey(weekKey) ? Grandtotal[weekKey].ToString() : "-",
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalKey))
+                    {
+
+                        rowData.Add(GrandtotalKey, new List<UnitDataTable> { unitDataTableTotal });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalKey].Add(unitDataTableTotal);
+                    }
+
+                    UnitDataTable unitDataTableTotalConf = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Total Confirm",
+                        qty = GrandtotalConf.ContainsKey(weekKey) ? GrandtotalConf[weekKey].ToString() : "-",
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalBookingConfKey))
+                    {
+
+                        rowData.Add(GrandtotalBookingConfKey, new List<UnitDataTable> { unitDataTableTotalConf });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalBookingConfKey].Add(unitDataTableTotalConf);
+                    }
+
+                    double percentConfirmTotal = 0;
                     if (!Grandtotal.ContainsKey(weekKey))
                     {
-                        percentConfirmTotal = 0;
+                        if (!GrandtotalConf.ContainsKey(weekKey))
+                        {
+                            percentConfirmTotal = 0;
+                        }
+                        else
+                        {
+                            percentConfirmTotal = 100;
+                        }
+                    }
+                    else if (!GrandtotalConf.ContainsKey(weekKey))
+                    {
+                        if (!Grandtotal.ContainsKey(weekKey))
+                        {
+                            percentConfirmTotal = 0;
+                        }
+                    }
+                    else
+                    {
+                        percentConfirmTotal = Math.Round(((GrandtotalConf[weekKey] / Grandtotal[weekKey]) * 100), 2);
+                    }
+
+                    UnitDataTable unitDataTableTotalConfPrs = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Persentase Confirm",
+                        qty = string.Concat(percentConfirmTotal, "%"),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalBookingConfPrsKey))
+                    {
+
+                        rowData.Add(GrandtotalBookingConfPrsKey, new List<UnitDataTable> { unitDataTableTotalConfPrs });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalBookingConfPrsKey].Add(unitDataTableTotalConfPrs);
+                    }
+
+                    UnitDataTable unitDataTableTotalEff = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Efisiensi",
+                        qty = string.Concat(Math.Round(GrandtotalEff[weekKey] / unitCount), "%"),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotaleffKey))
+                    {
+
+                        rowData.Add(GrandtotaleffKey, new List<UnitDataTable> { unitDataTableTotalEff });
+                    }
+                    else
+                    {
+                        rowData[GrandtotaleffKey].Add(unitDataTableTotalEff);
+                    }
+
+                    UnitDataTable unitDataTableTotalOP = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Operator",
+                        qty = GrandtotalOp[weekKey].ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalopKey))
+                    {
+
+                        rowData.Add(GrandtotalopKey, new List<UnitDataTable> { unitDataTableTotalOP });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalopKey].Add(unitDataTableTotalOP);
+                    }
+
+                    UnitDataTable unitDataTableTotalWH = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Working Hours",
+                        qty = (Math.Round(GrandtotalWH[weekKey] / unitCount, 2)).ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalwhKey))
+                    {
+
+                        rowData.Add(GrandtotalwhKey, new List<UnitDataTable> { unitDataTableTotalWH });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalwhKey].Add(unitDataTableTotalWH);
+                    }
+
+                    UnitDataTable unitDataTableTotalAH = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Total AH",
+                        qty = (GrandtotalAH[weekKey]).ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalAHKey))
+                    {
+
+                        rowData.Add(GrandtotalAHKey, new List<UnitDataTable> { unitDataTableTotalAH });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalAHKey].Add(unitDataTableTotalAH);
+                    }
+
+                    UnitDataTable unitDataTableTotalEH = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Total EH",
+                        qty = (GrandtotalEH[weekKey]).ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalEHKey))
+                    {
+
+                        rowData.Add(GrandtotalEHKey, new List<UnitDataTable> { unitDataTableTotalEH });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalEHKey].Add(unitDataTableTotalEH);
+                    }
+
+                    UnitDataTable unitDataTableTotalUsedEH = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Used EH Booking",
+                        qty = (GrandtotalusedEH[weekKey]).ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotaluseEHKey))
+                    {
+
+                        rowData.Add(GrandtotaluseEHKey, new List<UnitDataTable> { unitDataTableTotalUsedEH });
+                    }
+                    else
+                    {
+                        rowData[GrandtotaluseEHKey].Add(unitDataTableTotalUsedEH);
+                    }
+
+                    UnitDataTable unitDataTableUsedEHConf = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Used EH Confirm",
+                        qty = GrandtotalusedEHConfirm.ContainsKey(weekKey) ? GrandtotalusedEHConfirm[weekKey].ToString() : "0",
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotaluseEHConfKey))
+                    {
+
+                        rowData.Add(GrandtotaluseEHConfKey, new List<UnitDataTable> { unitDataTableUsedEHConf });
+                    }
+                    else
+                    {
+                        rowData[GrandtotaluseEHConfKey].Add(unitDataTableUsedEHConf);
+                    }
+
+                    UnitDataTable unitDataTableTotalremEH = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "Remaining EH",
+                        qty = (GrandtotalremEH[weekKey]).ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalremEHKey))
+                    {
+
+                        rowData.Add(GrandtotalremEHKey, new List<UnitDataTable> { unitDataTableTotalremEH });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalremEHKey].Add(unitDataTableTotalremEH);
+                    }
+
+                    var totalWHBook = GrandtotalWHBook[weekKey] / unitCount;
+
+                    UnitDataTable unitDataTableTotalWHBooking = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "WH Booking",
+                        qty = (Math.Round(totalWHBook, 2)).ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalwhBookKey))
+                    {
+
+                        rowData.Add(GrandtotalwhBookKey, new List<UnitDataTable> { unitDataTableTotalWHBooking });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalwhBookKey].Add(unitDataTableTotalWHBooking);
+                    }
+
+                    var totalWHConf = GrandtotalWHConf[weekKey] / unitCount;
+
+                    UnitDataTable unitDataTableTotalWHConf = new UnitDataTable
+                    {
+                        Unit = "GRAND TOTAL",
+                        buyer = "WH Confirm",
+                        qty = (Math.Round(totalWHConf, 2)).ToString(),
+                        week = weekKey
+                    };
+                    if (!rowData.ContainsKey(GrandtotalwhConfirmKey))
+                    {
+
+                        rowData.Add(GrandtotalwhConfirmKey, new List<UnitDataTable> { unitDataTableTotalWHConf });
+                    }
+                    else
+                    {
+                        rowData[GrandtotalwhConfirmKey].Add(unitDataTableTotalWHConf);
                     }
                 }
-                else
-                {
-                    percentConfirmTotal = Math.Round(((GrandtotalConf[weekKey] / Grandtotal[weekKey]) * 100), 2);
-                }
 
-                UnitDataTable unitDataTableTotalConfPrs = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Persentase Confirm",
-                    qty = string.Concat(percentConfirmTotal, "%"),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalBookingConfPrsKey))
-                {
-
-                    rowData.Add(GrandtotalBookingConfPrsKey, new List<UnitDataTable> { unitDataTableTotalConfPrs });
-                }
-                else
-                {
-                    rowData[GrandtotalBookingConfPrsKey].Add(unitDataTableTotalConfPrs);
-                }
-
-                UnitDataTable unitDataTableTotalEff = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Efisiensi",
-                    qty = string.Concat(Math.Round(GrandtotalEff[weekKey] / unitCount), "%"),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotaleffKey))
-                {
-
-                    rowData.Add(GrandtotaleffKey, new List<UnitDataTable> { unitDataTableTotalEff });
-                }
-                else
-                {
-                    rowData[GrandtotaleffKey].Add(unitDataTableTotalEff);
-                }
-
-                UnitDataTable unitDataTableTotalOP = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Operator",
-                    qty = GrandtotalOp[weekKey].ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalopKey))
-                {
-
-                    rowData.Add(GrandtotalopKey, new List<UnitDataTable> { unitDataTableTotalOP });
-                }
-                else
-                {
-                    rowData[GrandtotalopKey].Add(unitDataTableTotalOP);
-                }
-
-                UnitDataTable unitDataTableTotalWH = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Working Hours",
-                    qty = (Math.Round(GrandtotalWH[weekKey]/unitCount, 2)).ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalwhKey))
-                {
-
-                    rowData.Add(GrandtotalwhKey, new List<UnitDataTable> { unitDataTableTotalWH });
-                }
-                else
-                {
-                    rowData[GrandtotalwhKey].Add(unitDataTableTotalWH);
-                }
-
-                UnitDataTable unitDataTableTotalAH = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Total AH",
-                    qty = (GrandtotalAH[weekKey]).ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalAHKey))
-                {
-
-                    rowData.Add(GrandtotalAHKey, new List<UnitDataTable> { unitDataTableTotalAH });
-                }
-                else
-                {
-                    rowData[GrandtotalAHKey].Add(unitDataTableTotalAH);
-                }
-
-                UnitDataTable unitDataTableTotalEH = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Total EH",
-                    qty = (GrandtotalEH[weekKey]).ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalEHKey))
-                {
-
-                    rowData.Add(GrandtotalEHKey, new List<UnitDataTable> { unitDataTableTotalEH });
-                }
-                else
-                {
-                    rowData[GrandtotalEHKey].Add(unitDataTableTotalEH);
-                }
-
-                UnitDataTable unitDataTableTotalUsedEH = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Total EH",
-                    qty = (GrandtotalusedEH[weekKey]).ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotaluseEHKey))
-                {
-
-                    rowData.Add(GrandtotaluseEHKey, new List<UnitDataTable> { unitDataTableTotalUsedEH });
-                }
-                else
-                {
-                    rowData[GrandtotaluseEHKey].Add(unitDataTableTotalUsedEH);
-                }
-
-                UnitDataTable unitDataTableTotalremEH = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "Remaining EH",
-                    qty = (GrandtotalremEH[weekKey]).ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalremEHKey))
-                {
-
-                    rowData.Add(GrandtotalremEHKey, new List<UnitDataTable> { unitDataTableTotalremEH });
-                }
-                else
-                {
-                    rowData[GrandtotalremEHKey].Add(unitDataTableTotalremEH);
-                }
-
-                var totalWHBook = GrandtotalWHBook[weekKey] / unitCount;
-
-                UnitDataTable unitDataTableTotalWHBooking = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "WH Booking",
-                    qty = (Math.Round(totalWHBook, 2)).ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalwhBookKey))
-                {
-
-                    rowData.Add(GrandtotalwhBookKey, new List<UnitDataTable> { unitDataTableTotalWHBooking });
-                }
-                else
-                {
-                    rowData[GrandtotalwhBookKey].Add(unitDataTableTotalWHBooking);
-                }
-
-                var totalWHConf = GrandtotalWHConf[weekKey] / unitCount;
-
-                UnitDataTable unitDataTableTotalWHConf = new UnitDataTable
-                {
-                    Unit = "GRAND TOTAL",
-                    buyer = "WH Confirm",
-                    qty = (Math.Round(totalWHConf, 2)).ToString(),
-                    week = weekKey
-                };
-                if (!rowData.ContainsKey(GrandtotalwhConfirmKey))
-                {
-
-                    rowData.Add(GrandtotalwhConfirmKey, new List<UnitDataTable> { unitDataTableTotalWHConf });
-                }
-                else
-                {
-                    rowData[GrandtotalwhConfirmKey].Add(unitDataTableTotalWHConf);
-                }
+                
             }
             #endregion
 
