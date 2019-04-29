@@ -1557,8 +1557,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<string>("ArticleFabricEdge")
-                        .HasMaxLength(1000);
+                    b.Property<string>("ArticleFabricEdge");
 
                     b.Property<long>("AutoIncreament");
 
@@ -1598,8 +1597,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTimeOffset>("DeliveryDate");
 
-                    b.Property<string>("DesignCode")
-                        .HasMaxLength(255);
+                    b.Property<string>("DesignCode");
 
                     b.Property<string>("DesignMotiveCode")
                         .HasMaxLength(25);
@@ -1669,8 +1667,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("MaterialName")
                         .HasMaxLength(1000);
 
-                    b.Property<string>("MaterialOrigin")
-                        .HasMaxLength(255);
+                    b.Property<string>("MaterialOrigin");
 
                     b.Property<double>("MaterialPrice");
 
@@ -1719,8 +1716,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("ProfileLastName")
                         .HasMaxLength(1000);
 
-                    b.Property<string>("Remark")
-                        .HasMaxLength(1000);
+                    b.Property<string>("Remark");
 
                     b.Property<string>("Run")
                         .HasMaxLength(255);

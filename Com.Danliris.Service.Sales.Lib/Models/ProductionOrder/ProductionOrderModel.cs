@@ -16,13 +16,13 @@ namespace Com.Danliris.Service.Sales.Lib.Models.ProductionOrder
         public string OrderNo { get; set; }
         public double OrderQuantity { get; set; }
         public double ShippingQuantityTolerance { get; set; }
-        [MaxLength(255)]
+        //[MaxLength(255)]
         public string MaterialOrigin { get; set; }
         [MaxLength(255)]
         public string FinishWidth { get; set; }
         [MaxLength(255)]
         public string DesignNumber { get; set; }
-        [MaxLength(255)]
+        //[MaxLength(255)]
         public string DesignCode { get; set; }
         [MaxLength(255)]
         public string HandlingStandard { get; set; }
@@ -30,7 +30,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.ProductionOrder
         public string Run { get; set; }
         [MaxLength(255)]
         public string ShrinkageStandard { get; set; }
-        [MaxLength(1000)]
+        //[MaxLength(1000)]
         public string ArticleFabricEdge { get; set; }
         [MaxLength(1000)]
         public string MaterialWidth { get; set; }
@@ -39,7 +39,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.ProductionOrder
         [MaxLength(1000)]
         public string Sample { get; set; }
         public DateTimeOffset DeliveryDate { get; set; }
-        [MaxLength(1000)]
+        //[MaxLength(1000)]
         public string Remark { get; set; }
         public double DistributedQuantity { get; set; }
         public bool IsUsed { get; set; }
