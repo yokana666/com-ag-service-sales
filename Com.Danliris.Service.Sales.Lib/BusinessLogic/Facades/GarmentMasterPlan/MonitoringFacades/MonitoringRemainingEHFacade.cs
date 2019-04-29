@@ -52,12 +52,18 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 foreach (var item in d.Items)
                 {
                     string week = string.Concat("W", item.WeekNumber);
-
+                    int opUnit = 0;
+                    if (d.Unit != "SK")
+                    {
+                        opUnit = item.Operator;
+                    }
                     UnitDataTable unitDataTable = new UnitDataTable
                     {
                         Unit = d.Unit,
                         RemainigEH = item.RemainingEH,
-                        Operator = item.Operator
+                        Operator = item.Operator,
+                        OperatorUnit=opUnit
+                        
                     };
 
                     if (rowData.ContainsKey(week))
@@ -80,7 +86,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 result.Columns.Add(new DataColumn() { ColumnName = "Total Remaining EH", DataType = typeof(string) });
                 rowValuesForEmptyData.Add("");
             }
-            result.Columns.Add(new DataColumn() { ColumnName = "Head Count", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Head Count Unit", DataType = typeof(string) });
+            rowValuesForEmptyData.Add("");
+
+            result.Columns.Add(new DataColumn() { ColumnName = "Head Count Total", DataType = typeof(string) });
             rowValuesForEmptyData.Add("");
 
             if (data.Count == 0)
@@ -101,6 +110,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     {
                         rowValues.Add(rowValue.Value.Sum(s => s.RemainigEH));
                     }
+                    rowValues.Add(rowValue.Value.Sum(s => s.OperatorUnit));
                     rowValues.Add(rowValue.Value.Sum(s => s.Operator));
                     result.Rows.Add(rowValues.ToArray());
                 }
@@ -128,7 +138,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     }
                     else
                     {
-                        if (x > 1 && x < (sheet.Dimension.Columns - (data.Count > 1 ? 1 : 0)))
+                        if (x > 1 && x <= (sheet.Dimension.Columns - (data.Count > 1 ? 3 : 2)))
                         {
                             cell.Style.Fill.BackgroundColor.SetColor(
                                 (int)cell.Value > 0 ? Color.Yellow :
@@ -165,6 +175,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             public string Unit { get; set; }
             public int RemainigEH { get; set; }
             public int Operator { get; set; }
+            public int OperatorUnit { get; set; }
         }
     }
 }
