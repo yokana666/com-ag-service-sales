@@ -904,7 +904,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 {
                     Unit = "GRAND TOTAL UNIT",
                     buyer = "Efisiensi",
-                    qty = string.Concat(Math.Round(GrandtotalEffUnit[weekKey] / unitCountSK), "%"),
+                    qty = string.Concat(Math.Round((GrandtotalEffUnit[weekKey] / unitCountSK),2), "%"),
                     week = weekKey
                 };
                 if (!rowData.ContainsKey(GrandtotaleffKeyUnit))
@@ -1036,7 +1036,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     rowData[GrandtotalremEHKeyUnit].Add(unitDataTableTotalremEHUnit);
                 }
 
-                var totalWHBookUnit = GrandtotalWHBookUnit[weekKey] / unitCountSK;
+                var totalWHBookUnit = GrandtotalusedEHUnit.ContainsKey(weekKey) ? GrandtotalusedEHUnit[weekKey] /(GrandtotalOpUnit[weekKey] * Math.Round((GrandtotalEffUnit[weekKey] / unitCountSK), 2) / 100) : 0;
 
                 UnitDataTable unitDataTableTotalWHBookingUnit = new UnitDataTable
                 {
@@ -1055,7 +1055,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     rowData[GrandtotalwhBookKeyUnit].Add(unitDataTableTotalWHBookingUnit);
                 }
 
-                var totalWHConfUnit = GrandtotalWHConfUnit[weekKey] / unitCountSK;
+                var totalWHConfUnit = GrandtotalusedEHConfirmUnit.ContainsKey(weekKey)? GrandtotalusedEHConfirmUnit[weekKey]/ (GrandtotalOpUnit[weekKey] * Math.Round((GrandtotalEffUnit[weekKey] / unitCountSK), 2) / 100):0;
 
                 UnitDataTable unitDataTableTotalWHConfUnit = new UnitDataTable
                 {
@@ -1157,7 +1157,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     {
                         Unit = "GRAND TOTAL",
                         buyer = "Efisiensi",
-                        qty = string.Concat(Math.Round(GrandtotalEff[weekKey] / unitCount), "%"),
+                        qty = string.Concat(Math.Round((GrandtotalEff[weekKey] / unitCount),2), "%"),
                         week = weekKey
                     };
                     if (!rowData.ContainsKey(GrandtotaleffKey))
@@ -1289,7 +1289,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         rowData[GrandtotalremEHKey].Add(unitDataTableTotalremEH);
                     }
 
-                    var totalWHBook = GrandtotalWHBook[weekKey] / unitCount;
+                    //var totalWHBook = GrandtotalWHBook[weekKey] / unitCount;
+                    var totalWHBook = GrandtotalusedEH.ContainsKey(weekKey) ? GrandtotalusedEH[weekKey] / (GrandtotalOp[weekKey] * Math.Round((GrandtotalEff[weekKey] / unitCount), 2) / 100):0;
 
                     UnitDataTable unitDataTableTotalWHBooking = new UnitDataTable
                     {
@@ -1308,7 +1309,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         rowData[GrandtotalwhBookKey].Add(unitDataTableTotalWHBooking);
                     }
 
-                    var totalWHConf = GrandtotalWHConf[weekKey] / unitCount;
+                    //var totalWHConf = GrandtotalWHConf[weekKey] / unitCount;
+                    var totalWHConf = GrandtotalusedEHConfirm.ContainsKey(weekKey)? GrandtotalusedEHConfirm[weekKey] / (GrandtotalOp[weekKey] * Math.Round((GrandtotalEff[weekKey] / unitCount), 2) / 100):0;
 
                     UnitDataTable unitDataTableTotalWHConf = new UnitDataTable
                     {

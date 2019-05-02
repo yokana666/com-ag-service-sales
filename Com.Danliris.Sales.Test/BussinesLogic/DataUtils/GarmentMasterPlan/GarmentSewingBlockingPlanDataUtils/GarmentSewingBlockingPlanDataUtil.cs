@@ -58,6 +58,27 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Garm
                         UnitId=1,
                         SMVSewing=1,
                         Remark="test"
+                    },
+                    new GarmentSewingBlockingPlanItem
+                    {
+                        WeekNumber=week.WeekNumber,
+                        WeeklyPlanId=dataWeek.Id,
+                        WeeklyPlanItemId=week.Id,
+                        Year=dataWeek.Year,
+                        ComodityCode="ComodityTest",
+                        ComodityId=1,
+                        ComodityName="TestComo",
+                        DeliveryDate=datas.DeliveryDate.AddDays(-1),
+                        Efficiency=week.Efficiency,
+                        EHBooking=10,
+                        EndDate=week.EndDate,
+                        StartDate=week.StartDate,
+                        OrderQuantity=10,
+                        UnitName="SK",
+                        UnitCode="SK",
+                        UnitId=1,
+                        SMVSewing=1,
+                        Remark="test"
                     }
                 }
             };
