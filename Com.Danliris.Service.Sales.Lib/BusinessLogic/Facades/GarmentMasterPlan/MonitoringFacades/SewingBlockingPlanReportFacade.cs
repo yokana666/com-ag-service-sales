@@ -199,7 +199,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     }
                     else if(totalConfirmed[uwb] == "orange")
                     {
-                        BGC = dt.bookingOrderItems.Count == 0 ? "yellow" : "orange";
+                        if(dt.bookingOrderItems.Count == 0)
+                        {
+                            BGC = "yellow";
+                        }
+                        
                     }
                 }
 
