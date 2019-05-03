@@ -906,13 +906,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     rowData[GrandtotalBookingConfPrsKeyUnit].Add(unitDataTableTotalConfPrsUnit);
                 }
 
-                decimal efisiensi = (decimal)(GrandtotalEffUnit[weekKey] / unitCountSK);
+                decimal efisiensiUnit = (decimal)(GrandtotalEffUnit[weekKey] / unitCountSK);
 
                 UnitDataTable unitDataTableTotalEffUnit = new UnitDataTable
                 {
                     Unit = "GRAND TOTAL UNIT",
                     buyer = "Efisiensi",
-                    qty = string.Concat(Math.Round((GrandtotalEffUnit[weekKey] / unitCountSK),2), "%"),
+                    qty = string.Format("{0:N2}%", efisiensiUnit),
                     week = weekKey
                 };
                 if (!rowData.ContainsKey(GrandtotaleffKeyUnit))
