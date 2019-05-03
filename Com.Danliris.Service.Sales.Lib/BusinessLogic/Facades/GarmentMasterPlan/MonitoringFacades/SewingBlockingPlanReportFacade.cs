@@ -906,6 +906,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     rowData[GrandtotalBookingConfPrsKeyUnit].Add(unitDataTableTotalConfPrsUnit);
                 }
 
+                decimal efisiensi = (decimal)(GrandtotalEffUnit[weekKey] / unitCountSK);
+
                 UnitDataTable unitDataTableTotalEffUnit = new UnitDataTable
                 {
                     Unit = "GRAND TOTAL UNIT",
@@ -1160,7 +1162,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     }
 
                     decimal efisiensi =(decimal) (GrandtotalEff[weekKey] / unitCount);
-                    decimal effRound = Math.Round(efisiensi, 2);
 
                     UnitDataTable unitDataTableTotalEff = new UnitDataTable
                     {
