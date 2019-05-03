@@ -191,10 +191,22 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 }
                 else
                 {
-                    BGC = dt.bookingOrderItems.Count == 0 ? "yellow" :
+                    if(totalConfirmed[uwb]== "transparent")
+                    {
+                        BGC = dt.bookingOrderItems.Count == 0 ? "yellow" :
                         dt.bookingOrderItems.Sum(a => a.ConfirmQuantity) < dt.bookingOrderQty ? "orange" :
                         "transparent";
-                    totalConfirmed[uwb] = BGC;
+                        totalConfirmed[uwb] = BGC;
+                    }
+                    else if(totalConfirmed[uwb] == "orange")
+                    {
+                        if(dt.bookingOrderItems.Count == 0)
+                        {
+                            BGC = "yellow";
+                            totalConfirmed[uwb] = BGC;
+                        }
+                        
+                    }
                 }
 
 
@@ -900,11 +912,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     rowData[GrandtotalBookingConfPrsKeyUnit].Add(unitDataTableTotalConfPrsUnit);
                 }
 
+                decimal efisiensiUnit = (decimal)(GrandtotalEffUnit[weekKey] / unitCountSK);
+
                 UnitDataTable unitDataTableTotalEffUnit = new UnitDataTable
                 {
                     Unit = "GRAND TOTAL UNIT",
                     buyer = "Efisiensi",
-                    qty = string.Concat(Math.Round((GrandtotalEffUnit[weekKey] / unitCountSK),2), "%"),
+                    qty = string.Format("{0:N2}%", efisiensiUnit),
                     week = weekKey
                 };
                 if (!rowData.ContainsKey(GrandtotaleffKeyUnit))
@@ -1153,11 +1167,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         rowData[GrandtotalBookingConfPrsKey].Add(unitDataTableTotalConfPrs);
                     }
 
+                    decimal efisiensi =(decimal) (GrandtotalEff[weekKey] / unitCount);
+
                     UnitDataTable unitDataTableTotalEff = new UnitDataTable
                     {
                         Unit = "GRAND TOTAL",
                         buyer = "Efisiensi",
-                        qty = string.Concat(Math.Round((GrandtotalEff[weekKey] / unitCount),2), "%"),
+                        qty = string.Format("{0:N2}%", efisiensi),
                         week = weekKey
                     };
                     if (!rowData.ContainsKey(GrandtotaleffKey))
