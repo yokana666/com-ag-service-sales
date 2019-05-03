@@ -191,10 +191,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 }
                 else
                 {
-                    BGC = dt.bookingOrderItems.Count == 0 ? "yellow" :
+                    if(totalConfirmed[uwb]== "transparent")
+                    {
+                        BGC = dt.bookingOrderItems.Count == 0 ? "yellow" :
                         dt.bookingOrderItems.Sum(a => a.ConfirmQuantity) < dt.bookingOrderQty ? "orange" :
                         "transparent";
-                    totalConfirmed[uwb] = BGC;
+                    }
+                    else if(totalConfirmed[uwb] == "orange")
+                    {
+                        BGC = dt.bookingOrderItems.Count == 0 ? "yellow" : "orange";
+                    }
                 }
 
 
@@ -1153,11 +1159,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         rowData[GrandtotalBookingConfPrsKey].Add(unitDataTableTotalConfPrs);
                     }
 
+                    decimal efisiensi =(decimal) (GrandtotalEff[weekKey] / unitCount);
+                    decimal effRound = Math.Round(efisiensi, 2);
+
                     UnitDataTable unitDataTableTotalEff = new UnitDataTable
                     {
                         Unit = "GRAND TOTAL",
                         buyer = "Efisiensi",
-                        qty = string.Concat(Math.Round((GrandtotalEff[weekKey] / unitCount),2), "%"),
+                        qty = string.Format("{0:N2}%", efisiensi),
                         week = weekKey
                     };
                     if (!rowData.ContainsKey(GrandtotaleffKey))
