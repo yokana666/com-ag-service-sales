@@ -196,12 +196,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         BGC = dt.bookingOrderItems.Count == 0 ? "yellow" :
                         dt.bookingOrderItems.Sum(a => a.ConfirmQuantity) < dt.bookingOrderQty ? "orange" :
                         "transparent";
+                        totalConfirmed[uwb] = BGC;
                     }
                     else if(totalConfirmed[uwb] == "orange")
                     {
                         if(dt.bookingOrderItems.Count == 0)
                         {
                             BGC = "yellow";
+                            totalConfirmed[uwb] = BGC;
                         }
                         
                     }
