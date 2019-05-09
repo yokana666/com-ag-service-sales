@@ -66,5 +66,20 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
             var Response = await facade.BODelete((int)data.Id, data);
             Assert.NotEqual(Response, 0);
         }
+
+        [Fact]
+        public virtual async void ReadBYNo_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            GarmentBookingOrderFacade facade = new GarmentBookingOrderFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+
+            var Response = facade.ReadByBookingOrderNo(1, 25, "{}", new List<string>(), "", "{}");
+
+            Assert.NotEqual(Response.Data.Count, 0);
+        }
     }
 }
