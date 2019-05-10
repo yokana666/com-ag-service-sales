@@ -13,7 +13,6 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingPro
                 .ForPath(d => d.Currency.Code, opt => opt.MapFrom(s => s.CurrencyCode))
                 .ForPath(d => d.Currency.Symbol, opt => opt.MapFrom(s => s.CurrencySymbol))
                 .ForPath(d => d.Currency.Rate, opt => opt.MapFrom(s => s.CurrencyRate))
-
                 .ReverseMap();
         }
     }

@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Service.Sales.Lib", "Com.Danliris.Service.Sales.Lib\Com.Danliris.Service.Sales.Lib.csproj", "{891F27EA-B1B7-43A7-A75C-4B709BBB3811}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Service.Sales.WebApi", "Com.Danliris.Service.Sales.WebApi\Com.Danliris.Service.Sales.WebApi.csproj", "{05D6FFA2-22A5-4A84-9ECC-4C630CACFF81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Danliris.Sales.Test", "Com.Danliris.Sales.Test\Com.Danliris.Sales.Test.csproj", "{FE0C17EA-33A4-42DD-A794-72CCBEC113E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Danliris.Sales.Test", "Com.Danliris.Sales.Test\Com.Danliris.Sales.Test.csproj", "{FE0C17EA-33A4-42DD-A794-72CCBEC113E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{429AFBA7-FA22-4251-B40B-95DD72B73A5B}"
+	ProjectSection(SolutionItems) = preProject
+		.codecov.yml = .codecov.yml
+		.travis.yml = .travis.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

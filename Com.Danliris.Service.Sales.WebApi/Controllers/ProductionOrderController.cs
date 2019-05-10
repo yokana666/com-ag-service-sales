@@ -49,8 +49,6 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 }
                 else
                 {
-
-
                     ProductionOrderViewModel viewModel = Mapper.Map<ProductionOrderViewModel>(model);
 
                         ProductionOrderPDFTemplate PdfTemplate = new ProductionOrderPDFTemplate();
@@ -58,8 +56,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                         return new FileStreamResult(stream, "application/pdf")
                         {
                             FileDownloadName = "Production Order" + viewModel.OrderNo+ ".pdf"
-                        };
-                    
+                        };                    
                 }
             }
             catch (Exception e)

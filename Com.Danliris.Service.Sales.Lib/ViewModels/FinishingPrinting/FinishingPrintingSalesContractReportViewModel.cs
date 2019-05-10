@@ -1,18 +1,35 @@
-﻿using System;
+﻿using Com.Danliris.Service.Sales.Lib.Utilities;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
 {
-    public class FinishingPrintingSalesContractReportViewModel
-    {
-        public int No { get; set; }
-        public string SalesContractNo { get; set; }
-        public DateTime SalesContractDate { get; set; }
-        public string BuyerName { get; set; }
-        public string BuyerType { get; set; }
-        public string DispositionNumber { get; set; }
-        public string OrderType { get; set; }
-        public string Commodity { get; set; }
-        public string Quality { get; set; }
-        public double OrderQuantity { get; set; }
+    public class FinishingPrintingSalesContractReportViewModel : BaseViewModel
+	{
+        public string salesContractNo { get; set; }
+        public string buyerName { get; set; }
+        public string buyerType { get; set; }
+        public string dispositionNo { get; set; }
+        public string orderType { get; set; }
+        public string comodityName { get; set; }
+        public string materialName { get; set; }
+        public string materialConstructionName { get; set; }
+        public string yarnMaterialName { get; set; }
+        public string materialWidth { get; set; }
+        public double orderQuantity { get; set; }
+        public double productionOrderQuantity { get; set; }
+        public string uomUnit { get; set; }
+        public double shippingQuantityTolerance { get; set; }
+        public string qualityName { get; set; }
+        public double price { get; set; }
+        public string accountCurrencyCode { get; set; }
+        public string termOfPaymentName { get; set; }
+        public string paymentTo { get; set; }
+        public DateTimeOffset? deliverySchedule { get; set; }
+        public string agentName { get; set; }
+        public string comission { get; set; }
+        public string color { get; set; }
+        public string useIncomeTax { get; set; }
+        public string status { get; set; }
     }
 }

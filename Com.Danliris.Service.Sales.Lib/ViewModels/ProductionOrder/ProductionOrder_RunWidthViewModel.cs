@@ -8,7 +8,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
 {
     public class ProductionOrder_RunWidthViewModel : BaseViewModel, IValidatableObject
     {
-        public double Value{ get; set; }
+        public double? Value{ get; set; }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             throw new NotImplementedException();
