@@ -1,5 +1,4 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
-using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
@@ -7,7 +6,6 @@ using Com.Moonlay.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics
@@ -28,13 +26,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
             return new HashSet<long>(DbSet.Where(d => d.GarmentSalesContract.Id == id).Select(d => d.Id));
         }
 
-        public override async void UpdateAsync(int id, GarmentSalesContractItem model)
+        public override void UpdateAsync(long id, GarmentSalesContractItem model)
         {
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);
         }
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
             var model = await ReadByIdAsync(id);
 

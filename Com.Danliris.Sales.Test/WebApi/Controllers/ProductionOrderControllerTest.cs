@@ -26,7 +26,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             Assert.Equal((int)HttpStatusCode.NotFound, statusCode);
 
         }
-
+        
         [Fact]
         public void Get_PDF_Exception()
         {

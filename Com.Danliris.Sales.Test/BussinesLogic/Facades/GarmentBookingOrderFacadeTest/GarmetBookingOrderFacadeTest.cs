@@ -9,6 +9,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacadeTest
 {
@@ -38,6 +39,47 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
                 .Returns(garmentBookingOrderLogic);
 
             return serviceProviderMock;
+        }
+
+        [Fact]
+        public async void BOCancel_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            GarmentBookingOrderFacade facade = new GarmentBookingOrderFacade(serviceProvider, dbContext);
+            
+            var data = await DataUtil(facade).GetTestData();
+
+            var Response = await facade.BOCancel((int)data.Id, data);
+            Assert.NotEqual(Response, 0);
+        }
+
+        [Fact]
+        public async void BODelete_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            GarmentBookingOrderFacade facade = new GarmentBookingOrderFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+
+            var Response = await facade.BODelete((int)data.Id, data);
+            Assert.NotEqual(Response, 0);
+        }
+
+        [Fact]
+        public virtual async void ReadBYNo_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            GarmentBookingOrderFacade facade = new GarmentBookingOrderFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+
+            var Response = facade.ReadByBookingOrderNo(1, 25, "{}", new List<string>(), "", "{}");
+
+            Assert.NotEqual(Response.Data.Count, 0);
         }
     }
 }

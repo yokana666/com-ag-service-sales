@@ -1,19 +1,12 @@
-﻿using AutoMapper;
-using Com.Danliris.Sales.Test.WebApi.Utils;
-using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade;
-using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
-using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
 using Com.Danliris.Service.Sales.Lib.Services;
-using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModels;
 using Com.Danliris.Service.Sales.WebApi.Controllers;
-using Com.Moonlay.NetCore.Lib.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
 using System.Security.Claims;
@@ -21,7 +14,7 @@ using Xunit;
 
 namespace Com.Danliris.Sales.Test.WebApi.Controllers
 {
-    public class GarmentBookingOrderMonitoringControllerTest 
+    public class GarmentBookingOrderMonitoringControllerTest
     {
         protected (Mock<IIdentityService> IdentityService, Mock<IGarmentBookingOrderMonitoringInterface> Facade) GetMocks()
         {
@@ -60,7 +53,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         public void Get_WithoutException_ReturnOK()
         {
             var mocks = this.GetMocks();
-            mocks.Facade.Setup(f => f.Read(null, null, null, null, null, null, null, null,null,null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            mocks.Facade.Setup(f => f.Read(null, null, null, null, null, null, null, null, null, null, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(Tuple.Create(viewModels, 1));
 
             var controller = GetController(mocks);
@@ -85,6 +78,22 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
             Assert.Equal("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", response.GetType().GetProperty("ContentType").GetValue(response, null));
         }
+
+        [Fact]
+        public void Get_Accept_Xls_Exception_InternalServerError()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.GenerateExcel(null, null, null, null, null, null, null, null, null, null, It.IsAny<int>()))
+                .Throws(new Exception("error"));
+
+            var controller = GetController(mocks);
+            controller.ControllerContext.HttpContext.Request.Headers["Accept"] = "application/xls";
+
+            var response = controller.GetXlsAll(null, null, null, null, null, null, null, null, null, null);
+
+            Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
+
 
         [Fact]
         public void Get_ReadThrowException_ReturnInternalServerError()

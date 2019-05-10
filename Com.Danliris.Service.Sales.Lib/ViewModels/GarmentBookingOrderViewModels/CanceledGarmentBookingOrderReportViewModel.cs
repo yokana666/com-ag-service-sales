@@ -10,7 +10,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
 {
     public class CanceledGarmentBookingOrderReportViewModel : BaseViewModel
     {
-        public long Id { get; set; }
         public string BookingOrderNo { get; set; }
         public DateTimeOffset? BookingOrderDate { get; set; }
         public DateTimeOffset? DeliveryDate { get; set; }

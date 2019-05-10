@@ -84,7 +84,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         }
 
         [HttpGet("detail/{no}")]
-        public async Task<IActionResult> GetDetail([FromRoute] long no)
+        public IActionResult GetDetail([FromRoute] long no)
         {
             try
             {

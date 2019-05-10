@@ -34,7 +34,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
             DbSet.Add(model);
         }
-        public override async Task<GarmentBookingOrder> ReadByIdAsync(int id)
+        public override async Task<GarmentBookingOrder> ReadByIdAsync(long id)
         {
             var garmentBookingOrder = await DbSet.Include(p => p.Items).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
             if(garmentBookingOrder!=null)
@@ -42,7 +42,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             return garmentBookingOrder;
         }
 
-        public override async void UpdateAsync(int id, GarmentBookingOrder newModel)
+        public override void UpdateAsync(long id, GarmentBookingOrder newModel)
         {
             var model = DbSet.AsNoTracking().Include(d => d.Items).FirstOrDefault(d => d.Id == id);
 
@@ -74,7 +74,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                     }
                     else
                     {
-                        //GarmentBookingOrderItemsLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                        //GarmentBookingOrderItemsLogic.UpdateAsync(itemId, data);
                         newModel.ConfirmedQuantity += newItem.ConfirmQuantity;
 
                         EntityExtension.FlagForUpdate(newItem, IdentityService.Username, "sales-service");
@@ -129,7 +129,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             //DbSet.Update(newModel);
         }
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
             var model = await DbSet.Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
@@ -225,7 +225,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             return new ReadResponse<GarmentBookingOrder>(data, totalData, OrderDictionary, SelectedFields);
         }
 
-        public async Task BOCancel(int id, GarmentBookingOrder model)
+        public void BOCancel(int id, GarmentBookingOrder model)
         {
             double cancelsQuantity = 0;
 
@@ -254,7 +254,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
                     {
                         blockingPlan.Status = "Booking Dibatalkan";
                     }
-                    else if(model.OrderQuantity>0 && model.CanceledQuantity > 0)
+                    else if (model.OrderQuantity > 0 && model.CanceledQuantity > 0)
                     {
                         blockingPlan.Status = "Booking Ada Perubahan";
                     }
@@ -264,7 +264,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             DbSet.Update(model);
         }
 
-        public async Task BODelete(int id, GarmentBookingOrder model )
+        public void BODelete(int id, GarmentBookingOrder model)
         {
             double cancelsQuantity = 0;
 

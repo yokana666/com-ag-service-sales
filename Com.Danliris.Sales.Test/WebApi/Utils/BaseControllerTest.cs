@@ -4,7 +4,6 @@ using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
 using Com.Danliris.Service.Sales.WebApi.Utilities;
-using Com.Moonlay.NetCore.Lib.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -13,10 +12,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Com.Danliris.Service.Sales.Lib.Utilities;
 
 namespace Com.Danliris.Sales.Test.WebApi.Utils
 {
