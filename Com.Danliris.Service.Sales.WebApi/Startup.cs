@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Com.Danliris.Service.Sales.Lib;
+using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving;
@@ -31,6 +32,33 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentSalesContractInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ROGarmentInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentBookingOrderInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment.WeeklyPlanInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.WeeklyPlanFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.WeeklyPlanLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.MonitoringInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MonitoringFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MonitoringLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.GarmentSewingBlockingPlanFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.GarmentSewingBlockingPlanInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.GarmentSewingBlockingPlanLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -50,22 +78,66 @@ namespace Com.Danliris.Service.Sales.WebApi
         {
             services
                 .AddTransient<IWeavingSalesContract, WeavingSalesContractFacade>()
-                .AddTransient<ISpinningSalesContract,SpinningSalesContractFacade>()
+                .AddTransient<ISpinningSalesContract, SpinningSalesContractFacade>()
+                .AddTransient<SpinningSalesContractReportFacade>()
+                .AddTransient<FinishingPrintingSalesContractReportFacade>()
+                .AddTransient<IGarmentBookingOrderMonitoringInterface, GarmentBookingOrderMonitoringFacade>()
                 .AddTransient<IFinishingPrintingSalesContract, FinishingPrintingSalesContractFacade>()
-                .AddTransient<IProductionOrder, ProductionOrderFacade>();
+                .AddTransient<IGarmentSalesContract, GarmentSalesContractFacade>()
+                .AddTransient<IProductionOrder, ProductionOrderFacade>()
+                .AddTransient<WeavingSalesContractReportFacade>()
+				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>()
+                .AddTransient<IROGarment, ROGarmentFacade>()
+                .AddTransient<IArticleColor, ArticleColorFacade>()
+                .AddTransient<IRate, RateFacade>()
+                .AddTransient<IEfficiency, EfficiencyFacade>()
+                .AddTransient<AzureImageFacade>()
+				.AddTransient<AzureImageFacade>()
+                .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>()
+                .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
+                .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>()
+                .AddTransient<ICanceledGarmentBookingOrderReportFacade, CanceledGarmentBookingOrderReportFacade>()
+                .AddTransient<IMonitoringRemainingEHFacade, MonitoringRemainingEHFacade>()
+                .AddTransient<IGarmentSewingBlockingPlan, GarmentSewingBlockingPlanFacade>()
+                .AddTransient<IAcceptedOrderMonitoringFacade, AcceptedOrderMonitoringFacade>()
+                .AddTransient<IExpiredGarmentBookingOrder, ExpiredGarmentBookingOrderFacade>()
+                .AddTransient<ISewingBlockingPlanReportFacade, SewingBlockingPlanReportFacade>()
+                .AddTransient<IOverScheduleMonitoringFacade, OverScheduleMonitoringFacade>();
+
         }
 
         private void RegisterLogic(IServiceCollection services)
         {
-            services
-                .AddTransient<WeavingSalesContractLogic>()
-                .AddTransient<SpinningSalesContractLogic>()
-                .AddTransient<FinishingPrintingSalesContractLogic>()
-                .AddTransient<FinishingPrintingSalesContractDetailLogic>()
-                .AddTransient<ProductionOrder_DetailLogic>()
-                .AddTransient<ProductionOrder_LampStandardLogic>()
-                .AddTransient<ProductionOrder_RunWidthLogic>()
-                .AddTransient<ProductionOrderLogic>();
+
+			services
+				.AddTransient<WeavingSalesContractLogic>()
+				.AddTransient<SpinningSalesContractLogic>()
+				.AddTransient<FinishingPrintingSalesContractLogic>()
+				.AddTransient<FinishingPrintingSalesContractDetailLogic>()
+				.AddTransient<ProductionOrder_DetailLogic>()
+				.AddTransient<ProductionOrder_LampStandardLogic>()
+				.AddTransient<ProductionOrder_RunWidthLogic>()
+				.AddTransient<ProductionOrderLogic>()
+				.AddTransient<CostCalculationGarmentLogic>()
+				.AddTransient<CostCalculationGarmentMaterialLogic>()
+                .AddTransient<GarmentSalesContractLogic>()
+                .AddTransient<GarmentSalesContractItemLogic>()
+                .AddTransient<ArticleColorLogic>()
+                .AddTransient<ROGarmentLogic>()
+                .AddTransient<ROGarmentSizeBreakdownLogic>()
+                .AddTransient<ROGarmentSizeBreakdownDetailLogic>()
+                .AddTransient<RateLogic>()
+                .AddTransient<EfficiencyLogic>()
+                .AddTransient<RO_Garment_ValidationLogic>()
+                .AddTransient<GarmentBookingOrderLogic>()
+                .AddTransient<GarmentBookingOrderItemLogic>()
+                .AddTransient<MonitoringRemainingEHLogic>()
+                .AddTransient<WeeklyPlanLogic>()
+                .AddTransient<GarmentSewingBlockingPlanLogic>()
+                .AddTransient<AcceptedOrderMonitoringLogic>()
+                .AddTransient<SewingBlockingPlanReportLogic>()
+                .AddTransient<OverScheduleMonitoringLogic>();
+
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -77,18 +149,24 @@ namespace Com.Danliris.Service.Sales.WebApi
 
         private void RegisterEndpoint()
         {
-            APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+            Com.Danliris.Service.Sales.WebApi.Utilities. APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+			Com.Danliris.Service.Sales.WebApi.Utilities.APIEndpoint.AzureCore = Configuration.GetValue<string>("AzureCoreEndpoint") ?? Configuration["AzureCoreEndpoint"];
+			Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.StorageAccountName = Configuration.GetValue<string>("StorageAccountName") ?? Configuration["StorageAccountName"];
+			Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.StorageAccountKey = Configuration.GetValue<string>("StorageAccountKey") ?? Configuration["StorageAccountKey"];
+            Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.AzurePurchasing = Configuration.GetValue<string>("AzurePurchasingEndpoint") ?? Configuration["PurchasingEndpoint"];
+            Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+
         }
 
-
-
         #endregion Register
+
         public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection") ?? Configuration["DefaultConnection"];
 
+            Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.ConnectionString = connectionString;
             /* Register */
             services.AddDbContext<SalesDbContext>(options => options.UseSqlServer(connectionString));
             RegisterFacades(services);
@@ -115,9 +193,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                         IssuerSigningKey = Key
                     };
                 });
-
-            /* CORS */
-            services.AddCors(options => options.AddPolicy(SALES_POLICY, builder =>
+		 
+			/* CORS */
+			services.AddCors(options => options.AddPolicy(SALES_POLICY, builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()

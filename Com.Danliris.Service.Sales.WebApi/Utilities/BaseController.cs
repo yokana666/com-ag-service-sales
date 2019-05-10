@@ -91,11 +91,11 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
                     .Ok();
                 return Created(String.Concat(Request.Path, "/", 0), Result);
             }
-            catch (ServiceValidationExeption e)
+            catch (ServiceValidationException e)
             {
                 Dictionary<string, object> Result =
                     new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
-                    .Fail(e.Message);
+                    .Fail(e);
                 return BadRequest(Result);
             }
             catch (Exception e)
@@ -171,11 +171,11 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
 
                 return NoContent();
             }
-            catch (ServiceValidationExeption e)
+            catch (ServiceValidationException e)
             {
                 Dictionary<string, object> Result =
                     new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
-                    .Fail(e.Message);
+                    .Fail(e);
                 return BadRequest(Result);
             }
             catch (DbUpdateConcurrencyException e)

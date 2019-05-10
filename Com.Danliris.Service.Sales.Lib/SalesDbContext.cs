@@ -6,6 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentSalesContractModel;
+using Com.Danliris.Service.Sales.Lib.Models.ROGarments;
+using Com.Danliris.Service.Sales.Lib.Models;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -15,11 +22,14 @@ namespace Com.Danliris.Service.Sales.Lib
         {
         }
 
-
         public DbSet<WeavingSalesContractModel> WeavingSalesContract { get; set; }
         public DbSet<SpinningSalesContractModel> SpinningSalesContract { get; set; }
         public DbSet<FinishingPrintingSalesContractModel> FinishingPrintingSalesContracts { get; set; }
         public DbSet<FinishingPrintingSalesContractDetailModel> FinishingPrintingSalesContractDetails { get; set; }
+		public DbSet<CostCalculationGarment> CostCalculationGarments { get; set; }
+		public DbSet<CostCalculationGarment_Material> CostCalculationGarment_Materials { get; set; }
+        public DbSet<GarmentSalesContract> GarmentSalesContracts { get; set; }
+        public DbSet<GarmentSalesContractItem> GarmentSalesContractItems { get; set; }
 
         #region PRODUCTION ORDER DBSET
         public DbSet<ProductionOrderModel> ProductionOrder { get; set; }
@@ -28,6 +38,21 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<ProductionOrder_RunWidthModel> ProductionOrder_RunWidth { get; set; }
 
         #endregion
+
+        public DbSet<RO_Garment> RO_Garments { get; set; }
+        public DbSet<RO_Garment_SizeBreakdown> RO_Garment_SizeBreakdowns { get; set; }
+        public DbSet<RO_Garment_SizeBreakdown_Detail> RO_Garment_SizeBreakdown_Details { get; set; }
+        public DbSet<Rate> Rates { get; set; }
+        public DbSet<ArticleColor> ArticleColors { get; set; }
+        public DbSet<Efficiency> Efficiencies { get; set; }
+        public DbSet<GarmentBookingOrder> GarmentBookingOrders { get; set; }
+        public DbSet<GarmentBookingOrderItem> GarmentBookingOrderItems { get; set; }
+        public DbSet<GarmentWeeklyPlan> GarmentWeeklyPlans { get; set; }
+        public DbSet<GarmentWeeklyPlanItem> GarmentWeeklyPlanItems { get; set; }
+
+        public DbSet<GarmentSewingBlockingPlan> GarmentSewingBlockingPlans { get; set; }
+        public DbSet<GarmentSewingBlockingPlanItem> GarmentSewingBlockingPlanItems { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +66,9 @@ namespace Com.Danliris.Service.Sales.Lib
             modelBuilder.Entity<FinishingPrintingSalesContractModel>()
                 .HasIndex(h => h.SalesContractNo)
                 .IsUnique();
+
+            modelBuilder.Entity<RO_Garment>()
+            .Ignore(c => c.ImagesFile);
         }
     }
 }

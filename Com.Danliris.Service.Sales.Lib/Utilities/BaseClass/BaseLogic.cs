@@ -23,6 +23,12 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
             this.IdentityService = IdentityService;
         }
 
+        public BaseLogic(IIdentityService IdentityService, SalesDbContext dbContext)
+        {
+            this.DbSet = dbContext.Set<TModel>();
+            this.IdentityService = IdentityService;
+        }
+
         public abstract ReadResponse<TModel> Read(int page, int size, string order, List<string> select, string keyword, string filter);
 
         public virtual void Create(TModel model)
@@ -31,18 +37,18 @@ namespace Com.Danliris.Service.Sales.Lib.Utilities.BaseClass
             DbSet.Add(model);
         }
 
-        public virtual Task<TModel> ReadByIdAsync(int id)
+        public virtual Task<TModel> ReadByIdAsync(long id)
         {
             return DbSet.FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
         }
 
-        public virtual void UpdateAsync(int id, TModel model)
+        public virtual void UpdateAsync(long id, TModel model)
         {
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);
         }
 
-        public virtual async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(long id)
         {
             TModel model = await ReadByIdAsync(id);
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);

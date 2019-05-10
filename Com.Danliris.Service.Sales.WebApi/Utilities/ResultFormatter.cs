@@ -30,6 +30,16 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
             return Result;
         }
 
+        public Dictionary<string, object> Ok<TViewModel>(TViewModel Data, int TotalData)
+        {
+            Dictionary<string, object> Info = new Dictionary<string, object>
+            {
+                { "total", TotalData },
+            };
+            Result.Add("info", Info);
+            Result.Add("data", Data);
+            return Result;
+        }
 
         public Dictionary<string, object> Ok<TViewModel>(IMapper mapper, List<TViewModel> Data, int Page, int Size, int TotalData, int TotalPageData, Dictionary<string, string> Order, List<string> Select)
         {

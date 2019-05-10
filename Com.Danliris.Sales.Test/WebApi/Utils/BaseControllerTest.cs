@@ -4,7 +4,6 @@ using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
 using Com.Danliris.Service.Sales.WebApi.Utilities;
-using Com.Moonlay.NetCore.Lib.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -13,10 +12,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Com.Danliris.Service.Sales.Lib.Utilities;
 
 namespace Com.Danliris.Sales.Test.WebApi.Utils
 {
@@ -26,32 +23,32 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         where TViewModel : BaseViewModel, IValidatableObject, new()
         where IFacade : class, IBaseFacade<TModel>
     {
-        protected TModel Model
+        protected virtual TModel Model
         {
             get { return new TModel(); }
         }
 
-        protected TViewModel ViewModel
+        protected virtual TViewModel ViewModel
         {
             get { return new TViewModel(); }
         }
 
-        protected List<TViewModel> Models
+        protected virtual List<TViewModel> Models
         {
             get { return new List<TViewModel>(); }
         }
 
-        protected List<TViewModel> ViewModels
+        protected virtual List<TViewModel> ViewModels
         {
             get { return new List<TViewModel>(); }
         }
 
-        protected ServiceValidationExeption GetServiceValidationExeption()
+        protected ServiceValidationException GetServiceValidationException()
         {
             Mock<IServiceProvider> serviceProvider = new Mock<IServiceProvider>();
             List<ValidationResult> validationResults = new List<ValidationResult>();
             System.ComponentModel.DataAnnotations.ValidationContext validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(this.ViewModel, serviceProvider.Object, null);
-            return new ServiceValidationExeption(validationContext, validationResults);
+            return new ServiceValidationException(validationContext, validationResults);
         }
 
         protected (Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) GetMocks()
@@ -138,7 +135,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         public async Task Post_ThrowServiceValidationExeption_ReturnBadRequest()
         {
             var mocks = this.GetMocks();
-            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationExeption());
+            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationException());
 
             int statusCode = await this.GetStatusCodePost(mocks);
             Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
@@ -168,6 +165,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         {
             var mocks = this.GetMocks();
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(this.Model);
+            mocks.Mapper.Setup(f => f.Map<TViewModel>(It.IsAny<TModel>())).Returns(this.ViewModel);
 
             int statusCode = await this.GetStatusCodeGetById(mocks);
             Assert.Equal((int)HttpStatusCode.OK, statusCode);
@@ -238,7 +236,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         public async Task Put_ThrowServiceValidationExeption_ReturnBadRequest()
         {
             var mocks = this.GetMocks();
-            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationExeption());
+            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<TViewModel>())).Throws(this.GetServiceValidationException());
 
             int statusCode = await this.GetStatusCodePut(mocks, 1, this.ViewModel);
             Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);

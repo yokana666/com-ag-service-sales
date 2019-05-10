@@ -27,18 +27,31 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             return new HashSet<long>(DbSet.Where(d => d.FinishingPrintingSalesContract.Id == id).Select(d => d.Id));
         }
 
-        public override async void UpdateAsync(int id, FinishingPrintingSalesContractDetailModel model)
+        public override void UpdateAsync(long id, FinishingPrintingSalesContractDetailModel model)
         {
-            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-            DbSet.Update(model);
+            try
+            {
+                EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+                DbSet.Update(model);
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
-            var model = await ReadByIdAsync(id);
+            try
+            {
+                var model = await ReadByIdAsync(id);
 
-            EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
-            DbSet.Update(model);
+                EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
+                DbSet.Update(model);
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

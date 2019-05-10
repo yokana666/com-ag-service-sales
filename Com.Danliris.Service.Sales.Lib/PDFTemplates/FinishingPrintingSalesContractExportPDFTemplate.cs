@@ -47,8 +47,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             }
 
 
-            string QuantityToText = NumberToTextEN.toWords(viewModel.OrderQuantity);
-            double amount = (viewModel.Amount);
+            string QuantityToText = NumberToTextEN.toWords((double)viewModel.OrderQuantity);
+            double amount = ((double)viewModel.Amount);
             string AmountToText = NumberToTextEN.toWords(amount);
 
             //var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", viewModel.Price) + " / KG";
@@ -73,7 +73,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             foreach (var i in viewModel.Details)
             {
                 var ppn = "";
-                if (viewModel.UseIncomeTax)
+                if ((bool)viewModel.UseIncomeTax)
                 {
                     if (i.UseIncomeTax)
                     {
