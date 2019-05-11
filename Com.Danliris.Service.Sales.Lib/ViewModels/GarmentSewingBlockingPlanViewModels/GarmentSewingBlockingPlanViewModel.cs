@@ -56,7 +56,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                         Count++;
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Diisi' , ";
                     }
-                    else if(item.DeliveryDate < DateTimeOffset.UtcNow.Date)
+                    else if(item.DeliveryDate.AddHours(7).Date < DateTimeOffset.UtcNow.Date)
                     {
                         Count++;
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Tidak Boleh Kurang dari Hari Ini' , ";
