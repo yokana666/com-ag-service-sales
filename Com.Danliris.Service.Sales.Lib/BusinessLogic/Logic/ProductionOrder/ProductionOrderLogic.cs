@@ -77,6 +77,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     OrderTypeId = field.OrderTypeId,
                     OrderTypeCode = field.OrderTypeCode,
                     OrderTypeName = field.OrderTypeName,
+                    OrderQuantity = field.OrderQuantity,
                     LastModifiedUtc = field.LastModifiedUtc,
                     Details = field.Details,
                     DesignCode = field.DesignCode,
