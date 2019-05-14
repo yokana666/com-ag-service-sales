@@ -144,6 +144,7 @@ namespace Com.Danliris.Service.Sales.WebApi
         {
             services
                 .AddScoped<IIdentityService,IdentityService>()
+                .AddScoped<IHttpClientService, HttpClientService>()
                 .AddScoped<IValidateService,ValidateService>();
         }
 
