@@ -25,7 +25,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         private readonly static string apiVersion = "1.0";
         private readonly IEfficiency _facade;
         private readonly IIdentityService Service;
-        public EfficienciesController(IIdentityService identityService, IValidateService validateService, IEfficiency facade, IMapper mapper) : base(identityService, validateService, facade, mapper, apiVersion)
+        public EfficienciesController(IIdentityService identityService, IValidateService validateService, IEfficiency facade, IMapper mapper, IServiceProvider serviceProvider) : base(identityService, validateService, facade, mapper, apiVersion)
         {
             Service = identityService;
             _facade = facade;

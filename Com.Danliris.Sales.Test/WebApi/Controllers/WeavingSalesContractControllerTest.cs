@@ -39,5 +39,100 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
 
         }
+
+        [Fact]
+        public void Get_PDF_Local_OK()
+        {
+            var mocks = GetMocks();
+
+            var vm = new WeavingSalesContractViewModel
+            {
+                Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
+                {
+                    Id = 1,
+                    Type = "Lokal"
+                },
+                AccountBank = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AccountBankViewModel
+                {
+                    Id = 1
+                },
+                OrderQuantity = 1,
+                Uom = new Service.Sales.Lib.ViewModels.IntegrationViewModel.UomViewModel()
+                {
+                    Unit = "unit"
+                },
+                Comodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
+                {
+                    Name = "comm"
+                },
+                Quality = new Service.Sales.Lib.ViewModels.IntegrationViewModel.QualityViewModel()
+                {
+                    Name = "name"
+                },
+                TermOfPayment = new Service.Sales.Lib.ViewModels.IntegrationViewModel.TermOfPaymentViewModel()
+                {
+                    Name = "tp"
+                },
+                DeliverySchedule = DateTimeOffset.UtcNow,
+                
+            };
+
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(f => f.Map<WeavingSalesContractViewModel>(It.IsAny<WeavingSalesContractViewModel>())).Returns(vm);
+
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            Assert.NotNull(response);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Ekspor_OK()
+        {
+            var mocks = GetMocks();
+
+            var vm = new WeavingSalesContractViewModel
+            {
+                Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
+                {
+                    Id = 1,
+                    Type = "Lokal"
+                },
+                AccountBank = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AccountBankViewModel
+                {
+                    Id = 1
+                },
+                OrderQuantity = 1,
+                Uom = new Service.Sales.Lib.ViewModels.IntegrationViewModel.UomViewModel()
+                {
+                    Unit = "unit"
+                },
+                Comodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
+                {
+                    Name = "comm"
+                },
+                Quality = new Service.Sales.Lib.ViewModels.IntegrationViewModel.QualityViewModel()
+                {
+                    Name = "name"
+                },
+                TermOfPayment = new Service.Sales.Lib.ViewModels.IntegrationViewModel.TermOfPaymentViewModel()
+                {
+                    Name = "tp"
+                },
+                DeliverySchedule = DateTimeOffset.UtcNow,
+
+            };
+
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(f => f.Map<WeavingSalesContractViewModel>(It.IsAny<WeavingSalesContractViewModel>())).Returns(vm);
+
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            Assert.NotNull(response);
+
+        }
+
     }
 }

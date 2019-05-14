@@ -7,7 +7,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Com.Danliris.Sales.Test.WebApi.Controllers
@@ -24,6 +23,132 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
             int statusCode = this.GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.NotFound, statusCode);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Local_OK()
+        {
+            var mocks = GetMocks();
+
+            var vm = new FinishingPrintingSalesContractViewModel
+            {
+                Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
+                {
+                    Id = 1,
+                    Type = "Lokal"
+                },
+                AccountBank = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AccountBankViewModel
+                {
+                    Id = 1
+                },
+                OrderQuantity = 1,
+                UOM = new Service.Sales.Lib.ViewModels.IntegrationViewModel.UomViewModel()
+                {
+                    Unit = "unit"
+                },
+                Commodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
+                {
+                    Name = "comm"
+                },
+                Quality = new Service.Sales.Lib.ViewModels.IntegrationViewModel.QualityViewModel()
+                {
+                    Name = "name"
+                },
+                DesignMotive = new Service.Sales.Lib.ViewModels.IntegrationViewModel.OrderTypeViewModel()
+                {
+                    Name = "name"
+                },
+                TermOfPayment = new Service.Sales.Lib.ViewModels.IntegrationViewModel.TermOfPaymentViewModel()
+                {
+                    Name = "tp"
+                },
+                DeliverySchedule = DateTimeOffset.UtcNow,
+                UseIncomeTax = false,
+                Details = new List<FinishingPrintingSalesContractDetailViewModel>()
+                {
+                    new FinishingPrintingSalesContractDetailViewModel()
+                    {
+                        UseIncomeTax = false,
+                        Currency = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CurrencyViewModel()
+                        {
+                            Code = "code",
+                            Symbol = "c"
+                        }
+                    }
+                }
+            };
+
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(f => f.Map<FinishingPrintingSalesContractViewModel>(It.IsAny<FinishingPrintingSalesContractModel>())).Returns(vm);
+
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+            
+            Assert.NotNull(response);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Ekspor_OK()
+        {
+            var mocks = GetMocks();
+
+            var vm = new FinishingPrintingSalesContractViewModel
+            {
+                Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
+                {
+                    Id = 1,
+                    Type = "Ekspor"
+                },
+                AccountBank = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AccountBankViewModel
+                {
+                    Id = 1
+                },
+                OrderQuantity = 1,
+                UOM = new Service.Sales.Lib.ViewModels.IntegrationViewModel.UomViewModel()
+                {
+                    Unit = "unit"
+                },
+                Commodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
+                {
+                    Name = "comm"
+                },
+                Quality = new Service.Sales.Lib.ViewModels.IntegrationViewModel.QualityViewModel()
+                {
+                    Name = "name"
+                },
+                DesignMotive = new Service.Sales.Lib.ViewModels.IntegrationViewModel.OrderTypeViewModel()
+                {
+                    Name = "name"
+                },
+                TermOfPayment = new Service.Sales.Lib.ViewModels.IntegrationViewModel.TermOfPaymentViewModel()
+                {
+                    Name = "tp"
+                },
+                DeliverySchedule = DateTimeOffset.UtcNow,
+                UseIncomeTax = false,
+                Details = new List<FinishingPrintingSalesContractDetailViewModel>()
+                {
+                    new FinishingPrintingSalesContractDetailViewModel()
+                    {
+                        UseIncomeTax = false,
+                        Currency = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CurrencyViewModel()
+                        {
+                            Code = "code",
+                            Symbol = "c"
+                        }
+                    }
+                }
+            };
+
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(f => f.Map<FinishingPrintingSalesContractViewModel>(It.IsAny<FinishingPrintingSalesContractModel>())).Returns(vm);
+
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            Assert.NotNull(response);
 
         }
 
