@@ -79,11 +79,13 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     var jsonBank = resultBank.Single(p => p.Key.Equals("data")).Value;
                     Dictionary<string, object> bank = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBank.ToString());
 
+                    var currencyBankObj = JsonConvert.DeserializeObject<CurrencyViewModel>(bank["Currency"].ToString());
+
                     /* Get Currencies */
-                    var responseCurrencies = httpClient.GetAsync($@"{APIEndpoint.Core}{CurrenciesUri}/" + viewModel.AccountBank.Id).Result.Content.ReadAsStringAsync();
-                    Dictionary<string, object> resultCurrencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseCurrencies.Result);
-                    var jsonCurrencies = resultCurrencies.Single(p => p.Key.Equals("data")).Value;
-                    Dictionary<string, object> currencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonCurrencies.ToString());
+                    //var responseCurrencies = httpClient.GetAsync($@"{APIEndpoint.Core}{CurrenciesUri}/" + viewModel.AccountBank.Currency.Id).Result.Content.ReadAsStringAsync();
+                    //Dictionary<string, object> resultCurrencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseCurrencies.Result);
+                    //var jsonCurrencies = resultCurrencies.Single(p => p.Key.Equals("data")).Value;
+                    //Dictionary<string, object> currencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonCurrencies.ToString());
 
 
                     viewModel.Buyer.City = buyer["City"] != null ? buyer["City"].ToString() : "";
@@ -95,10 +97,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     viewModel.AccountBank.SwiftCode = bank["SwiftCode"].ToString();
 
                     viewModel.AccountBank.Currency = new CurrencyViewModel();
-                    viewModel.AccountBank.Currency.Description = currencies["Description"] != null ? currencies["Description"].ToString() : "";
-                    viewModel.AccountBank.Currency.Symbol = currencies["Symbol"].ToString();
-                    viewModel.AccountBank.Currency.Rate = Convert.ToDouble(currencies["Rate"].ToString());
-                    viewModel.AccountBank.Currency.Code = currencies["Code"].ToString();
+                    viewModel.AccountBank.Currency.Description = currencyBankObj.Description;
+                    viewModel.AccountBank.Currency.Symbol = currencyBankObj.Symbol;
+                    viewModel.AccountBank.Currency.Rate = currencyBankObj.Rate;
+                    viewModel.AccountBank.Currency.Code = currencyBankObj.Code;
 
 
                     if (viewModel.Buyer.Type != "Ekspor")
