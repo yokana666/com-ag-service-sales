@@ -116,6 +116,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(tableIdentity);
 
             PdfPTable tableIdentityOpeningLetter = new PdfPTable(3);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             cellIdentityContentLeft.Phrase = new Phrase("MESSRS,", normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
             cellIdentityContentRight.Phrase = new Phrase("");
@@ -136,10 +140,6 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.City, normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             PdfPCell cellIdentityOpeningLetter = new PdfPCell(tableIdentityOpeningLetter); // dont remove
             tableIdentityOpeningLetter.ExtendLastRow = false;
             tableIdentityOpeningLetter.SpacingAfter = 10f;
@@ -170,14 +170,23 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.Product.Name + " " + viewModel.MaterialConstruction.Name + " " + viewModel.YarnMaterial.Name + " WIDTH: " + viewModel.MaterialWidth, normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.Comodity.Name, normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.ComodityDescription, normal_font);
-            tableBody.AddCell(bodyContentLeft);
+
+            if(!string.IsNullOrEmpty(viewModel.Comodity.Name) && !string.IsNullOrWhiteSpace(viewModel.Comodity.Name))
+            {
+                bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+                tableBody.AddCell(bodyContentLeft);
+                bodyContentLeft.Phrase = new Phrase("  " + viewModel.Comodity.Name, normal_font);
+                tableBody.AddCell(bodyContentLeft);
+            }
+
+            if(!string.IsNullOrWhiteSpace(viewModel.ComodityDescription) && !string.IsNullOrEmpty(viewModel.ComodityDescription))
+            {
+                bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+                tableBody.AddCell(bodyContentLeft);
+                bodyContentLeft.Phrase = new Phrase("  " + viewModel.ComodityDescription, normal_font);
+                tableBody.AddCell(bodyContentLeft);
+            }
+            
             bodyContentLeft.Phrase = new Phrase("Quality", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.Quality.Name, normal_font);

@@ -157,29 +157,30 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
         private void SalesContractNumberGenerator(FinishingPrintingSalesContractModel model)
         {
-            FinishingPrintingSalesContractModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.OrderTypeName.Equals(model.OrderTypeName)).OrderByDescending(o => o.AutoIncrementNumber).FirstOrDefault();
+            FinishingPrintingSalesContractModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.BuyerType.Equals(model.BuyerType, StringComparison.OrdinalIgnoreCase)).OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
 
             string DocumentType = model.BuyerType.ToLower().Equals("ekspor") || model.BuyerType.ToLower().Equals("export") ? "FPE" : "FPL";
 
-            int YearNow = DateTime.Now.Year;
-            int MonthNow = DateTime.Now.Month;
+            DateTime Now = DateTime.Now;
+            string Year = Now.ToString("yyyy");
+            string month = Now.ToString("MM");
 
             if (lastData == null)
             {
                 model.AutoIncrementNumber = 1;
-                model.SalesContractNo = $"0001/{DocumentType}/{MonthNow}/{YearNow}";
+                model.SalesContractNo = $"0001/{DocumentType}/{month}.{Year}";
             }
             else
             {
-                if (YearNow > lastData.CreatedUtc.Year)
+                if (Now.Year > lastData.CreatedUtc.Year)
                 {
                     model.AutoIncrementNumber = 1;
-                    model.SalesContractNo = $"0001/{DocumentType}/{MonthNow}/{YearNow}";
+                    model.SalesContractNo = $"0001/{DocumentType}/{month}.{Year}";
                 }
                 else
                 {
                     model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
-                    model.SalesContractNo = $"{model.AutoIncrementNumber.ToString().PadLeft(4, '0')}/{DocumentType}/{MonthNow}/{YearNow}";
+                    model.SalesContractNo = $"{model.AutoIncrementNumber.ToString().PadLeft(4, '0')}/{DocumentType}/{month}.{Year}";
                 }
             }
         }
