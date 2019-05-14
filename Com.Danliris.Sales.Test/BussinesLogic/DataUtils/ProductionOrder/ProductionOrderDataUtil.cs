@@ -41,6 +41,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.ProductionOrder
                 HandlingStandard = "handling",
                 MaterialCode = "code",
                 MaterialConstructionCode = "code",
+                OrderQuantity = 100,
                 Details = new List<ProductionOrder_DetailModel>() {
                     new ProductionOrder_DetailModel()
                     {
