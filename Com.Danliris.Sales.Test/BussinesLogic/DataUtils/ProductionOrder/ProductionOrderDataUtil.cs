@@ -44,9 +44,10 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.ProductionOrder
                 HandlingStandard ="handling",
                 MaterialCode = "code",
                 MaterialConstructionCode = "code",
+                OrderQuantity = 100,
                 Details = new List<ProductionOrder_DetailModel>(),
                 LampStandards = new List<ProductionOrder_LampStandardModel>(),
-                RunWidths = new List<ProductionOrder_RunWidthModel>()
+                RunWidths = new List<ProductionOrder_RunWidthModel>(),
                 
             };
         }
