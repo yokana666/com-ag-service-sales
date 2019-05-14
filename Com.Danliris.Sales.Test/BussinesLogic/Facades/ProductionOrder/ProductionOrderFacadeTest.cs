@@ -11,6 +11,7 @@ using Com.Danliris.Service.Sales.Lib.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -42,6 +43,24 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             Assert.NotEqual(Response.Data.Count, 0);
         }
 
+        public override async void Get_By_Id_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            ProductionOrderFacade facade = new ProductionOrderFacade(serviceProvider, dbContext);
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            var Response =await facade.ReadByIdAsync((int)all.Data.FirstOrDefault().Id);
+
+            Assert.NotEqual(Response.Id, 0);
+        }
+
         public override async void Create_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -70,28 +89,12 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var data = DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
-
-            var Response = await facade.DeleteAsync((int)data.Id);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            var Response = await facade.DeleteAsync((int)all.Data.FirstOrDefault().Id);
             Assert.NotEqual(Response, 0);
         }
 
-        public override async void Get_By_Id_Success()
-        {
-            var dbContext = DbContext(GetCurrentMethod());
-            var serviceProvider = GetServiceProviderMock(dbContext).Object;
-
-            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
-            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
-            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
-            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
-            data.SalesContractId = salesData.Id;
-            var model = await facade.CreateAsync(data);
-
-            var Response = facade.ReadByIdAsync((int)data.Id);
-
-            Assert.NotEqual(Response.Id, 0);
-        }
+        
 
         public override async void Update_Success()
         {
@@ -104,9 +107,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var data = DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
-
-
-            var response = await facade.UpdateAsync((int)data.Id, data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            
+            var response = await facade.UpdateAsync((int)all.Data.FirstOrDefault().Id, data);
 
             Assert.NotEqual(response, 0);
         }
@@ -120,18 +123,37 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             serviceProviderMock
                 .Setup(x => x.GetService(typeof(IIdentityService)))
                 .Returns(identityService);
+            var productionOrderDetailLogic = new ProductionOrder_DetailLogic(serviceProviderMock.Object, identityService, dbContext);
+            var productionOrderlsLogic = new ProductionOrder_LampStandardLogic(serviceProviderMock.Object, identityService, dbContext);
+            var productionOrderrwLogic = new ProductionOrder_RunWidthLogic(serviceProviderMock.Object, identityService, dbContext);
 
-            var productionOrderLogic = new ProductionOrderLogic(serviceProviderMock.Object, identityService, dbContext);
+            var poDetailMock = new Mock<ProductionOrder_DetailLogic>();
+            var poRWk = new Mock<ProductionOrder_RunWidthLogic>();
+            var poLSMock = new Mock<ProductionOrder_LampStandardLogic>();
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(ProductionOrder_DetailLogic)))
+                .Returns(productionOrderDetailLogic);
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(ProductionOrder_LampStandardLogic)))
+                .Returns(productionOrderlsLogic);
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(ProductionOrder_RunWidthLogic)))
+                .Returns(productionOrderrwLogic);
+
+            
             var finishingprintingDetailObject = new FinishingPrintingSalesContractDetailLogic(serviceProviderMock.Object, identityService, dbContext);
             var finishingprintingLogic = new FinishingPrintingSalesContractLogic(finishingprintingDetailObject, serviceProviderMock.Object, identityService, dbContext);
-            
-            serviceProviderMock
-                .Setup(x => x.GetService(typeof(ProductionOrderLogic)))
-                .Returns(productionOrderLogic);
-
             serviceProviderMock
                 .Setup(x => x.GetService(typeof(FinishingPrintingSalesContractLogic)))
                 .Returns(finishingprintingLogic);
+
+            var productionOrderLogic = new ProductionOrderLogic(serviceProviderMock.Object, identityService, dbContext);
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(ProductionOrderLogic)))
+                .Returns(productionOrderLogic);
             
             return serviceProviderMock;
         }

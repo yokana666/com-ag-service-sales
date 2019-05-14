@@ -138,6 +138,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(tableIdentity);
 
             PdfPTable tableIdentityOpeningLetter = new PdfPTable(3);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             cellIdentityContentLeft.Phrase = new Phrase("MESSRS,", normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
             cellIdentityContentRight.Phrase = new Phrase("");
@@ -158,10 +162,6 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.City, normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             PdfPCell cellIdentityOpeningLetter = new PdfPCell(tableIdentityOpeningLetter); // dont remove
             tableIdentityOpeningLetter.ExtendLastRow = false;
             tableIdentityOpeningLetter.SpacingAfter = 10f;
@@ -194,14 +194,23 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.Material.Name + " " + viewModel.MaterialConstruction.Name, normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.YarnMaterial.Name + " WIDTH: " + viewModel.MaterialWidth, normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.CommodityDescription, normal_font);
-            tableBody.AddCell(bodyContentLeft);
+
+            if(!string.IsNullOrEmpty(viewModel.YarnMaterial.Name) && !string.IsNullOrEmpty(viewModel.MaterialWidth) && !string.IsNullOrWhiteSpace(viewModel.YarnMaterial.Name)&& !string.IsNullOrWhiteSpace(viewModel.MaterialWidth))
+            {
+                bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+                tableBody.AddCell(bodyContentLeft);
+                bodyContentLeft.Phrase = new Phrase("  " + viewModel.YarnMaterial.Name + " WIDTH: " + viewModel.MaterialWidth, normal_font);
+                tableBody.AddCell(bodyContentLeft);
+            }
+           
+            if(!string.IsNullOrEmpty(viewModel.CommodityDescription) && !string.IsNullOrWhiteSpace(viewModel.CommodityDescription))
+            {
+                bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+                tableBody.AddCell(bodyContentLeft);
+                bodyContentLeft.Phrase = new Phrase("  " + viewModel.CommodityDescription, normal_font);
+                tableBody.AddCell(bodyContentLeft);
+            }
+            
             bodyContentLeft.Phrase = new Phrase("Quality", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.Quality.Name, normal_font);
@@ -247,10 +256,15 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + appx + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("en-US"))).ToUpper(), normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.ShipmentDescription, normal_font);
-            tableBody.AddCell(bodyContentLeft);
+
+            if(!string.IsNullOrEmpty(viewModel.ShipmentDescription) && !string.IsNullOrWhiteSpace(viewModel.ShipmentDescription))
+            {
+                bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+                tableBody.AddCell(bodyContentLeft);
+                bodyContentLeft.Phrase = new Phrase("  " + viewModel.ShipmentDescription, normal_font);
+                tableBody.AddCell(bodyContentLeft);
+            }
+            
             bodyContentLeft.Phrase = new Phrase("Destination", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.DeliveredTo, normal_font);
