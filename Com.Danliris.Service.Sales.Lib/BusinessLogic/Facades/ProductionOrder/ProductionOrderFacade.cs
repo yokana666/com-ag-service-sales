@@ -41,6 +41,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
 
         public async Task<int> CreateAsync(ProductionOrderModel model)
         {
+            int result = 0;
             using (var transaction = DbContext.Database.BeginTransaction())
             {
                 try
@@ -246,6 +247,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                         dataFPSalesContract.RemainingQuantity = dataFPSalesContract.RemainingQuantity - model.OrderQuantity;
                         this.finishingPrintingSalesContractLogic.UpdateAsync(dataFPSalesContract.Id, dataFPSalesContract);
                     }
+                    result = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
                 }
                 catch (Exception e)
                 {
@@ -254,7 +257,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                 }
             }
 
-            return await DbContext.SaveChangesAsync();
+            return result;
         }
 
         public async Task<int> DeleteAsync(int id)

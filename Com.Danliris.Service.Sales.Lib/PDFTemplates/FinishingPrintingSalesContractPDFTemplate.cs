@@ -88,8 +88,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             #endregion
 
             #region Header
-
-            string codeNoString = "FM-PJ-00-03-004";
+            string codeNoString = "FM-PJ-00-03-003";
+            
             Paragraph codeNo = new Paragraph(codeNoString, bold_font) { Alignment = Element.ALIGN_RIGHT };
             document.Add(codeNo);
 
@@ -126,6 +126,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             PdfPTable tableIdentityOpeningLetter = new PdfPTable(3);
             tableIdentity.SetWidths(new float[] { 2f, 4.5f, 2.5f });
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             cellIdentityContentLeft.Phrase = new Phrase("Kepada Yth :", normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
             cellIdentityContentRight.Phrase = new Phrase("");
@@ -146,10 +150,6 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.City, normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             PdfPCell cellIdentityOpeningLetter = new PdfPCell(tableIdentityOpeningLetter); // dont remove
             tableIdentityOpeningLetter.ExtendLastRow = false;
             tableIdentityOpeningLetter.SpacingAfter = 10f;
@@ -175,10 +175,15 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.Commodity.Name, normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("  " + viewModel.CommodityDescription, normal_font);
-            tableBody.AddCell(bodyContentLeft);
+
+            if (!string.IsNullOrEmpty(viewModel.CommodityDescription) && !string.IsNullOrWhiteSpace(viewModel.CommodityDescription))
+            {
+                bodyContentLeft.Phrase = new Phrase(" ", normal_font);
+                tableBody.AddCell(bodyContentLeft);
+                bodyContentLeft.Phrase = new Phrase("  " + viewModel.CommodityDescription, normal_font);
+                tableBody.AddCell(bodyContentLeft);
+            }
+
             bodyContentLeft.Phrase = new Phrase("Jumlah", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity + " (" + jumlahTerbilang + ") " + uomLocal, normal_font);
