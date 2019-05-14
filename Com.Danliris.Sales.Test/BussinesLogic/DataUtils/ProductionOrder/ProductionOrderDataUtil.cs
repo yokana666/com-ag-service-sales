@@ -47,7 +47,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.ProductionOrder
                 OrderQuantity = 100,
                 Details = new List<ProductionOrder_DetailModel>(),
                 LampStandards = new List<ProductionOrder_LampStandardModel>(),
-                RunWidths = new List<ProductionOrder_RunWidthModel>(),
+                RunWidths = new List<ProductionOrder_RunWidthModel>()
                 
             };
         }
