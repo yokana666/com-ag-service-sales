@@ -158,7 +158,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             return serviceProviderMock;
         }
 
-
+        [Fact]
         public async void UpdateIsRequestedTrue_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -171,12 +171,16 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
-            List<int> ids = new List<int>((int)all.Data.FirstOrDefault().Id);
+            List<int> ids = new List<int>()
+            {
+                (int)all.Data.FirstOrDefault().Id
+            };
             var response = await facade.UpdateRequestedTrue(ids);
 
             Assert.NotEqual(response, 0);
         }
 
+        [Fact]
         public async void UpdateIsRequestedFalse_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -189,12 +193,16 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
-            List<int> ids = new List<int>((int)all.Data.FirstOrDefault().Id);
+            List<int> ids = new List<int>()
+            {
+                (int)all.Data.FirstOrDefault().Id
+            };
             var response = await facade.UpdateRequestedFalse(ids);
 
             Assert.NotEqual(response, 0);
         }
 
+        [Fact]
         public async void UpdateIsCompletedTrue_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -212,6 +220,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             Assert.NotEqual(response, 0);
         }
 
+        [Fact]
         public async void UpdateIsCompletedFalse_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -229,6 +238,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             Assert.NotEqual(response, 0);
         }
 
+        [Fact]
         public async void UpdateDistributedQuantity_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -241,8 +251,14 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
-            List<int> ids = new List<int>((int)all.Data.FirstOrDefault().Id);
-            List<double> distributedQuantity = new List<double>((int)all.Data.FirstOrDefault().DistributedQuantity);
+            List<int> ids = new List<int>()
+            {
+                (int)all.Data.FirstOrDefault().Id
+            };
+            List<double> distributedQuantity = new List<double>()
+            {
+                (int)all.Data.FirstOrDefault().DistributedQuantity
+            };
             var response = await facade.UpdateRequestedFalse(ids);
 
             Assert.NotEqual(response, 0);

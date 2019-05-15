@@ -13,6 +13,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using static Com.Danliris.Service.Sales.WebApi.Controllers.ProductionOrderController;
 
 namespace Com.Danliris.Sales.Test.WebApi.Controllers
 {
@@ -64,6 +65,9 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             };
             mocks.Mapper.Setup(m => m.Map<ProductionOrderViewModel>(It.IsAny<ProductionOrderViewModel>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.UpdateRequestedTrue(It.IsAny<List<int>>())).ReturnsAsync(1);
+            List<int> ids = new List<int>((int)viewModel.Id);
+            var controller = GetController(mocks);
+            var response = await controller.PutRequestedTrue(ids);
 
             int statusCode = await this.GetStatusCodePut(mocks, id, viewModel);
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
@@ -81,7 +85,9 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             };
             mocks.Mapper.Setup(m => m.Map<ProductionOrderViewModel>(It.IsAny<ProductionOrderViewModel>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.UpdateRequestedFalse(It.IsAny<List<int>>())).ReturnsAsync(1);
-
+            List<int> ids = new List<int>((int)viewModel.Id);
+            var controller = GetController(mocks);
+            var response = await controller.PutRequestedFalse(ids);
             int statusCode = await this.GetStatusCodePut(mocks, id, viewModel);
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
@@ -98,7 +104,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             };
             mocks.Mapper.Setup(m => m.Map<ProductionOrderViewModel>(It.IsAny<ProductionOrderViewModel>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.UpdateIsCompletedTrue(It.IsAny<int>())).ReturnsAsync(1);
-
+            var controller = GetController(mocks);
+            var response = await controller.PutIsCompletedTrue((int)viewModel.Id);
             int statusCode = await this.GetStatusCodePut(mocks, id, viewModel);
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
@@ -115,7 +122,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             };
             mocks.Mapper.Setup(m => m.Map<ProductionOrderViewModel>(It.IsAny<ProductionOrderViewModel>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.UpdateIsCompletedFalse(It.IsAny<int>())).ReturnsAsync(1);
-
+            var controller = GetController(mocks);
+            var response = await controller.PutIsCompletedFalse((int)viewModel.Id);
             int statusCode = await this.GetStatusCodePut(mocks, id, viewModel);
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
@@ -126,13 +134,25 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var mocks = GetMocks();
             mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<ProductionOrderViewModel>())).Verifiable();
             var id = 1;
+            var distributedQty = 1;
             var viewModel = new ProductionOrderViewModel()
             {
-                Id = id
+                Id = id,
+                DistributedQuantity = distributedQty
             };
             mocks.Mapper.Setup(m => m.Map<ProductionOrderViewModel>(It.IsAny<ProductionOrderViewModel>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.UpdateDistributedQuantity(It.IsAny<List<int>>(),It.IsAny<List<double>>())).ReturnsAsync(1);
+            List<SppParams> data = new List<SppParams>();
+            List<int> ids = new List<int>();
+            List<double> distributedQuantity = new List<double>();
+            foreach (var item in data)
+            {
+                ids.Add(int.Parse(item.id));
+                distributedQuantity.Add((double)item.distributedQuantity);
+            };
 
+            var controller = GetController(mocks);
+            var response = await controller.PutDistributedQuantity(data);
             int statusCode = await this.GetStatusCodePut(mocks, id, viewModel);
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
