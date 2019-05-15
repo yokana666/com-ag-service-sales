@@ -21,9 +21,204 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     [Authorize]
     public class ProductionOrderController : BaseController<ProductionOrderModel, ProductionOrderViewModel, IProductionOrder>
     {
+        private readonly IProductionOrder _facade;
         private readonly static string apiVersion = "1.0";
         public ProductionOrderController(IIdentityService identityService, IValidateService validateService, IProductionOrder productionOrderFacade, IMapper mapper) : base(identityService, validateService, productionOrderFacade, mapper, apiVersion)
         {
+            _facade = productionOrderFacade;
+        }
+
+        [HttpPut("update-requested-true")]
+        public async Task<IActionResult> PutRequestedTrue([FromBody] List<int> ids)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                //ValidateViewModel(viewModel);
+
+                if (ids == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail();
+                    return BadRequest(Result);
+                }
+                //TModel model = Mapper.Map<TModel>(viewModel);
+                await _facade.UpdateRequestedTrue(ids);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("update-requested-false")]
+        public async Task<IActionResult> PutRequestedFalse([FromBody] List<int> ids)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                //ValidateViewModel(viewModel);
+
+
+
+                if (ids == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail();
+                    return BadRequest(Result);
+                }
+                //TModel model = Mapper.Map<TModel>(viewModel);
+                await _facade.UpdateRequestedFalse(ids);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        public class SppParams
+        {
+            public string context { get; set; }
+            public string id { get; set; }
+            public double distributedQuantity { get; set; }
+        }
+
+        [HttpPut("update-iscompleted-true")]
+        public async Task<IActionResult> PutIsCompletedTrue([FromBody] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                //ValidateViewModel(viewModel);
+
+
+
+                if (id == 0 || id == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail();
+                    return BadRequest(Result);
+                }
+                //TModel model = Mapper.Map<TModel>(viewModel);
+                await _facade.UpdateIsCompletedTrue(id);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("update-iscompleted-false")]
+        public async Task<IActionResult> PutIsCompletedFalse([FromBody] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                //ValidateViewModel(viewModel);
+
+
+
+                if (id == 0 || id == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail();
+                    return BadRequest(Result);
+                }
+                //TModel model = Mapper.Map<TModel>(viewModel);
+                await _facade.UpdateIsCompletedFalse(id);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("update-distributed-quantity")]
+        public async Task<IActionResult> PutDistributedQuantity([FromBody] List<SppParams> data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                //ValidateViewModel(viewModel);
+
+
+
+                if (data == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail();
+                    return BadRequest(Result);
+                }
+                //TModel model = Mapper.Map<TModel>(viewModel);
+                List<int> id = new List<int>();
+                List<double> distributedQuantity = new List<double>();
+                foreach (var item in data)
+                {
+                    id.Add(int.Parse(item.id));
+                    distributedQuantity.Add((double)item.distributedQuantity);
+                }
+
+                await _facade.UpdateDistributedQuantity(id, distributedQuantity);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
         }
 
         [HttpGet("pdf/{Id}")]

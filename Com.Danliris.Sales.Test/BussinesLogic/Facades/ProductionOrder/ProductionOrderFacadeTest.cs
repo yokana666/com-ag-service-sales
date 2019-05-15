@@ -157,5 +157,95 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             
             return serviceProviderMock;
         }
+
+
+        public async void UpdateIsRequestedTrue_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            var model = await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            List<int> ids = new List<int>((int)all.Data.FirstOrDefault().Id);
+            var response = await facade.UpdateRequestedTrue(ids);
+
+            Assert.NotEqual(response, 0);
+        }
+
+        public async void UpdateIsRequestedFalse_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            var model = await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            List<int> ids = new List<int>((int)all.Data.FirstOrDefault().Id);
+            var response = await facade.UpdateRequestedFalse(ids);
+
+            Assert.NotEqual(response, 0);
+        }
+
+        public async void UpdateIsCompletedTrue_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            var model = await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            var response = await facade.UpdateIsCompletedTrue((int)all.Data.FirstOrDefault().Id);
+
+            Assert.NotEqual(response, 0);
+        }
+
+        public async void UpdateIsCompletedFalse_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            var model = await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            var response = await facade.UpdateIsCompletedFalse((int)all.Data.FirstOrDefault().Id);
+
+            Assert.NotEqual(response, 0);
+        }
+
+        public async void UpdateDistributedQuantity_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            var model = await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            List<int> ids = new List<int>((int)all.Data.FirstOrDefault().Id);
+            List<double> distributedQuantity = new List<double>((int)all.Data.FirstOrDefault().DistributedQuantity);
+            var response = await facade.UpdateRequestedFalse(ids);
+
+            Assert.NotEqual(response, 0);
+        }
     }
 }
