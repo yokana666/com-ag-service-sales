@@ -22,7 +22,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     public class ProductionOrderController : BaseController<ProductionOrderModel, ProductionOrderViewModel, IProductionOrder>
     {
         private readonly static string apiVersion = "1.0";
-        public ProductionOrderController(IIdentityService identityService, IValidateService validateService, IProductionOrder productionOrderFacade, IMapper mapper) : base(identityService, validateService, productionOrderFacade, mapper, apiVersion)
+        public ProductionOrderController(IIdentityService identityService, IValidateService validateService, IProductionOrder productionOrderFacade, IMapper mapper, IServiceProvider serviceProvider) : base(identityService, validateService, productionOrderFacade, mapper, apiVersion)
         {
         }
 
