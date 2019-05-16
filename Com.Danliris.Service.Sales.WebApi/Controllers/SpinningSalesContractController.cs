@@ -17,6 +17,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Com.Danliris.Service.Sales.WebApi.Controllers
 {
@@ -27,8 +28,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     public class SpinningSalesContractController : BaseController<SpinningSalesContractModel, SpinningSalesContractViewModel, ISpinningSalesContract>
     {
         private readonly static string apiVersion = "1.0";
-        public SpinningSalesContractController(IIdentityService identityService, IValidateService validateService, ISpinningSalesContract spinningSalesContractFacade,IMapper mapper) : base(identityService, validateService, spinningSalesContractFacade, mapper, apiVersion)
+        private readonly IHttpClientService HttpClientService;
+        public SpinningSalesContractController(IIdentityService identityService, IValidateService validateService, ISpinningSalesContract spinningSalesContractFacade,IMapper mapper, IServiceProvider serviceProvider) : base(identityService, validateService, spinningSalesContractFacade, mapper, apiVersion)
         {
+            HttpClientService = serviceProvider.GetService<IHttpClientService>();
         }
 
         [HttpGet("pdf/{Id}")]
@@ -59,31 +62,28 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     string CurrenciesUri = "master/currencies";
                     string Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
 
-                    HttpClient httpClient = new HttpClient();
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-
-
+                    
                     SpinningSalesContractViewModel viewModel = Mapper.Map<SpinningSalesContractViewModel>(model);
-
-
-
+                    
                     /* Get Buyer */
-                    var response = httpClient.GetAsync($@"{APIEndpoint.Core}{BuyerUri}/" + viewModel.Buyer.Id).Result.Content.ReadAsStringAsync();
+                    var response = HttpClientService.GetAsync($@"{APIEndpoint.Core}{BuyerUri}/" + viewModel.Buyer.Id).Result.Content.ReadAsStringAsync();
                     Dictionary<string, object> result = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Result);
                     var json = result.Single(p => p.Key.Equals("data")).Value;
                     Dictionary<string, object> buyer = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
 
                     /* Get AccountBank */
-                    var responseBank = httpClient.GetAsync($@"{APIEndpoint.Core}{BankUri}/" + viewModel.AccountBank.AccountCurrencyId).Result.Content.ReadAsStringAsync();
+                    var responseBank = HttpClientService.GetAsync($@"{APIEndpoint.Core}{BankUri}/" + viewModel.AccountBank.AccountCurrencyId).Result.Content.ReadAsStringAsync();
                     Dictionary<string, object> resultBank = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBank.Result);
                     var jsonBank = resultBank.Single(p => p.Key.Equals("data")).Value;
                     Dictionary<string, object> bank = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBank.ToString());
 
+                    var currencyBankObj = JsonConvert.DeserializeObject<CurrencyViewModel>(bank["Currency"].ToString());
+
                     /* Get Currencies */
-                    var responseCurrencies = httpClient.GetAsync($@"{APIEndpoint.Core}{CurrenciesUri}/" + viewModel.AccountBank.Id).Result.Content.ReadAsStringAsync();
-                    Dictionary<string, object> resultCurrencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseCurrencies.Result);
-                    var jsonCurrencies = resultCurrencies.Single(p => p.Key.Equals("data")).Value;
-                    Dictionary<string, object> currencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonCurrencies.ToString());
+                    //var responseCurrencies = httpClient.GetAsync($@"{APIEndpoint.Core}{CurrenciesUri}/" + viewModel.AccountBank.Currency.Id).Result.Content.ReadAsStringAsync();
+                    //Dictionary<string, object> resultCurrencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseCurrencies.Result);
+                    //var jsonCurrencies = resultCurrencies.Single(p => p.Key.Equals("data")).Value;
+                    //Dictionary<string, object> currencies = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonCurrencies.ToString());
 
 
                     viewModel.Buyer.City = buyer["City"] != null ? buyer["City"].ToString() : "";
@@ -95,10 +95,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     viewModel.AccountBank.SwiftCode = bank["SwiftCode"].ToString();
 
                     viewModel.AccountBank.Currency = new CurrencyViewModel();
-                    viewModel.AccountBank.Currency.Description = currencies["Description"] != null ? currencies["Description"].ToString() : "";
-                    viewModel.AccountBank.Currency.Symbol = currencies["Symbol"].ToString();
-                    viewModel.AccountBank.Currency.Rate = Convert.ToDouble(currencies["Rate"].ToString());
-                    viewModel.AccountBank.Currency.Code = currencies["Code"].ToString();
+                    viewModel.AccountBank.Currency.Description = currencyBankObj.Description;
+                    viewModel.AccountBank.Currency.Symbol = currencyBankObj.Symbol;
+                    viewModel.AccountBank.Currency.Rate = currencyBankObj.Rate;
+                    viewModel.AccountBank.Currency.Code = currencyBankObj.Code;
 
 
                     if (viewModel.Buyer.Type != "Ekspor")
