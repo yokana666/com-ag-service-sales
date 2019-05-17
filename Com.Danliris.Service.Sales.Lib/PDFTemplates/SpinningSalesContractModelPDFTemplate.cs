@@ -32,8 +32,20 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 ppn = "Include PPn 10%";
             }
-
-            var detailprice = viewModel.AccountBank.AccountCurrencyCode + " " + string.Format("{0:n2}", viewModel.Price) + " / " + ppn;
+            var uomLocal = "";
+            if (viewModel.UomUnit.ToLower() == "yds")
+            {
+                uomLocal = "YARD";
+            }
+            else if (viewModel.UomUnit.ToLower() == "mtr")
+            {
+                uomLocal = "METER";
+            }
+            else
+            {
+                uomLocal = viewModel.UomUnit;
+            }
+            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", viewModel.Price) + " / " + ppn;
 
             var appxLocal = "";
             var date = (viewModel.DeliverySchedule.Value.Day);
@@ -154,7 +166,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             }
             bodyContentLeft.Phrase = new Phrase("Jumlah", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity + " (" + jumlahTerbilang + ") ", normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity + " (" + jumlahTerbilang + ") " + uomLocal, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Kualitas", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -170,7 +182,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Pembayaran Ke Alamat", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.BankName, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": BANK " + viewModel.AccountBank.BankName, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("", normal_font);
             tableBody.AddCell(bodyContentLeft);
