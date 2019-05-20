@@ -44,7 +44,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
             List<string> SelectedFields = new List<string>()
             {
 
-                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber", "OrderQuantity"
+                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber", "OrderQuantity", "Uom"
 
             };
 
@@ -70,7 +70,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     ProcessTypeId = field.ProcessTypeId,
                     ProcessTypeCode = field.ProcessTypeCode,
                     ProcessTypeName = field.ProcessTypeName,
-
+                    UomId = field.UomId,
+                    UomUnit = field.UomUnit,
                     YarnMaterialId = field.YarnMaterialId,
                     YarnMaterialCode = field.YarnMaterialCode,
                     YarnMaterialName = field.YarnMaterialName,
