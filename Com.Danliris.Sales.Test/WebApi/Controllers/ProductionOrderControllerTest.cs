@@ -45,7 +45,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
         }
 
-        private async Task<int> GetStatusCodePut((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IProductionOrder> Facade, Mock<IMapper> Mapper) mocks, int id, ProductionOrderViewModel viewModel)
+        private async Task<int> GetStatusCodePut((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IProductionOrder> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks, int id, ProductionOrderViewModel viewModel)
         {
             ProductionOrderController controller = this.GetController(mocks);
             IActionResult response = await controller.Put(id, viewModel);
