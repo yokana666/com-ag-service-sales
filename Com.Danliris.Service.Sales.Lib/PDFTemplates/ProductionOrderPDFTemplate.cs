@@ -156,10 +156,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             cellIdentityContentLeft.Phrase = new Phrase(": " + viewModel.HandlingStandard, normal_font);
             tableIdentity1.AddCell(cellIdentityContentLeft);
 
-            if (!string.IsNullOrWhiteSpace(viewModel.Run) && (viewModel.RunWidths.Count > 0))
+            if (!string.IsNullOrWhiteSpace(viewModel.Run) && (viewModel.RunWidth.Count > 0))
             {
                 var index = 0;
-                foreach (ProductionOrder_RunWidthViewModel runwidths in viewModel.RunWidths)
+                foreach (ProductionOrder_RunWidthViewModel runwidths in viewModel.RunWidth)
                 {
                     index++;
                     cellIdentityContentLeft.Phrase = new Phrase("Lebar RUN (cm)", normal_font);

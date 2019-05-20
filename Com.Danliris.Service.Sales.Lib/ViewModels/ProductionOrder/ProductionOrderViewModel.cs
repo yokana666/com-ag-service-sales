@@ -51,7 +51,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
         public string SalesContractNo { get; set; }
 
         public virtual ICollection<ProductionOrder_DetailViewModel> Details { get; set; }
-        public virtual ICollection<ProductionOrder_RunWidthViewModel> RunWidths { get; set; }
+        public virtual ICollection<ProductionOrder_RunWidthViewModel> RunWidth { get; set; }
         public virtual ICollection<ProductionOrder_LampStandardViewModel> LampStandards { get; set; }
 
         public FinishingPrintingSalesContractViewModel FinishingPrintingSalesContract { get; set; }
@@ -109,16 +109,16 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
                     }
                     if (!string.IsNullOrWhiteSpace(this.Run) && this.Run != "Tanpa RUN")
                     {
-                        if (this.RunWidths.Count.Equals(0))
+                        if (this.RunWidth.Count.Equals(0))
                         {
                             yield return new ValidationResult("RunWidths harus di isi", new List<string> { "RunWidths" });
                         }
-                        else if (!this.RunWidths.Count.Equals(0))
+                        else if (!this.RunWidth.Count.Equals(0))
                         {
                             int Count = 0;
                             string RunWidths = "[";
 
-                            foreach (ProductionOrder_RunWidthViewModel data in this.RunWidths)
+                            foreach (ProductionOrder_RunWidthViewModel data in this.RunWidth)
                             {
                                 if (data.Value <= 0)
                                 {
