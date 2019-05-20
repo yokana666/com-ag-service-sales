@@ -193,7 +193,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Piece length", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.PieceLength, normal_font);
+            string pieceLength = !string.IsNullOrEmpty(viewModel.PieceLength) ? viewModel.PieceLength.Replace("\n", "\n  ") : viewModel.PieceLength;
+            bodyContentLeft.Phrase = new Phrase(": " + pieceLength, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Quantity", normal_font);
             tableBody.AddCell(bodyContentLeft);
