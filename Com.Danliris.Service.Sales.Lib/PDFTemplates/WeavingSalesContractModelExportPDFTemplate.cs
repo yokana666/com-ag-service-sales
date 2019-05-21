@@ -102,8 +102,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
             tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("dd MMMM yyyy", new CultureInfo("en-US"))}", normal_font);
-            tableIdentity.AddCell(cellIdentityContentRight);
+            cellIdentityContentLeft.Phrase = new Phrase($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("dd MMMM yyyy", new CultureInfo("en-US"))}", normal_font);
+            tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
             tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
@@ -116,6 +116,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(tableIdentity);
 
             PdfPTable tableIdentityOpeningLetter = new PdfPTable(3);
+            tableIdentity.SetWidths(new float[] { 2f, 4.5f, 2.5f });
             cellIdentityContentRight.Phrase = new Phrase("");
             tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
             cellIdentityContentRight.Phrase = new Phrase("");
@@ -198,7 +199,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Quantity", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity + " ( " + QuantityToText + ") " + uom, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity.ToString("N2") + " ( " + QuantityToText + ") " + uom, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Price & Payment", normal_font);
             tableBody.AddCell(bodyContentLeft);
