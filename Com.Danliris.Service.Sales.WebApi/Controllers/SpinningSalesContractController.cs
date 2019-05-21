@@ -72,7 +72,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     Dictionary<string, object> buyer = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
 
                     /* Get AccountBank */
-                    var responseBank = HttpClientService.GetAsync($@"{APIEndpoint.Core}{BankUri}/" + viewModel.AccountBank.AccountCurrencyId).Result.Content.ReadAsStringAsync();
+                    var responseBank = HttpClientService.GetAsync($@"{APIEndpoint.Core}{BankUri}/" + viewModel.AccountBank.Id).Result.Content.ReadAsStringAsync();
                     Dictionary<string, object> resultBank = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBank.Result);
                     var jsonBank = resultBank.Single(p => p.Key.Equals("data")).Value;
                     Dictionary<string, object> bank = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBank.ToString());

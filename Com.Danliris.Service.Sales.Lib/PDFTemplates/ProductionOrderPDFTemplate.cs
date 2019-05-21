@@ -33,7 +33,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             string blankString = " ";
             Paragraph bankSpace = new Paragraph(blankString, normal_font);
-            bankSpace.SpacingAfter = 100f;
+            bankSpace.SpacingAfter = 30f;
             document.Add(bankSpace);
 
 
@@ -156,7 +156,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             cellIdentityContentLeft.Phrase = new Phrase(": " + viewModel.HandlingStandard, normal_font);
             tableIdentity1.AddCell(cellIdentityContentLeft);
 
-            if (!string.IsNullOrWhiteSpace(viewModel.Run) && (viewModel.RunWidth.Count > 0))
+            if (!string.IsNullOrWhiteSpace(viewModel.Run) && viewModel.RunWidth != null  && (viewModel.RunWidth.Count > 0))
             {
                 var index = 0;
                 foreach (ProductionOrder_RunWidthViewModel runwidths in viewModel.RunWidth)
