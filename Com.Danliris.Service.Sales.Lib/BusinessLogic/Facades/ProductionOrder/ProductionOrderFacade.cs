@@ -187,7 +187,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                             {
                                 item
                             },
-                            LampStandards = model.LampStandards.Select(x => new ProductionOrder_LampStandardModel()
+                            LampStandards = model.LampStandards != null ? model.LampStandards.Select(x => new ProductionOrder_LampStandardModel()
                             {
                                 Active = x.Active,
                                 Code = x.Code,
@@ -207,8 +207,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                                 Name = x.Name,
                                 ProductionOrderModel = x.ProductionOrderModel,
                                 UId = x.UId
-                            }).ToArray(),
-                            RunWidths = model.RunWidths.Select(x => new ProductionOrder_RunWidthModel()
+                            }).ToArray() : new ProductionOrder_LampStandardModel[0],
+                            RunWidths = model.RunWidths != null ? model.RunWidths.Select(x => new ProductionOrder_RunWidthModel()
                             {
                                 Value = x.Value,
                                 Active = x.Active,
@@ -225,7 +225,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                                 LastModifiedUtc = x.LastModifiedUtc,
                                 ProductionOrderModel = x.ProductionOrderModel,
                                 UId = x.UId
-                            }).ToArray()
+                            }).ToArray() : new ProductionOrder_RunWidthModel[0]
                         };
                         
                         do
