@@ -10,6 +10,10 @@ namespace Com.Danliris.Service.Sales.Lib.Models.ProductionOrder
 {
     public class ProductionOrderModel : BaseModel
     {
+        public ProductionOrderModel()
+        {
+            RunWidths = new HashSet<ProductionOrder_RunWidthModel>();
+        }
         [MaxLength(255)]
         public string Code { get; set; }
         [MaxLength(255)]

@@ -252,9 +252,9 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 foreach (var detail in viewModel.Details)
                 {
                     uom = detail.Uom.Unit;
-                    cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorRequest, normal_font);
-                    tableBody2.AddCell(cellIdentityContentCenterWithBorder);
                     cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorTemplate, normal_font);
+                    tableBody2.AddCell(cellIdentityContentCenterWithBorder);
+                    cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorRequest, normal_font);
                     tableBody2.AddCell(cellIdentityContentCenterWithBorder);
                     cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorType.Name, normal_font);
                     tableBody2.AddCell(cellIdentityContentCenterWithBorder);
