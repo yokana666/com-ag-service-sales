@@ -11,6 +11,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
 {
     public class ProductionOrderViewModel : BaseViewModel, IValidatableObject
     {
+        public ProductionOrderViewModel()
+        {
+            RunWidth = new HashSet<ProductionOrder_RunWidthViewModel>();
+        }
+
         [MaxLength(255)]
         public string Code { get; set; }
         [MaxLength(255)]
