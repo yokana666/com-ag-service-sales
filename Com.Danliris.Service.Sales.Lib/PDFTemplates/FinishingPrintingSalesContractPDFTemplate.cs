@@ -115,7 +115,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase("Hal", normal_font);
             tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(": " + "KONFIRMASI ORDER GREY", normal_font);
+            cellIdentityContentLeft.Phrase = new Phrase(": " + "KONFIRMASI PESANAN PRINTING", normal_font);
             tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentRight.Phrase = new Phrase("");
             tableIdentity.AddCell(cellIdentityContentRight);
@@ -322,7 +322,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             cell_signature.Phrase = new Phrase("(...........................)", normal_font);
             signature.AddCell(cell_signature);
-            cell_signature.Phrase = new Phrase("( SRI HENDRATNO )", normal_font);
+            cell_signature.Phrase = new Phrase("( ROBBY SAPUTRO )", normal_font);
             signature.AddCell(cell_signature);
             cell_signature.Phrase = new Phrase("", normal_font);
             signature.AddCell(cell_signature);
