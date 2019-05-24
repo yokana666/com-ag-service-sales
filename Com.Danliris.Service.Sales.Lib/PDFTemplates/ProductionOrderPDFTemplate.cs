@@ -33,7 +33,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             string blankString = " ";
             Paragraph bankSpace = new Paragraph(blankString, normal_font);
-            bankSpace.SpacingAfter = 100f;
+            bankSpace.SpacingAfter = 30f;
             document.Add(bankSpace);
 
 
@@ -156,10 +156,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             cellIdentityContentLeft.Phrase = new Phrase(": " + viewModel.HandlingStandard, normal_font);
             tableIdentity1.AddCell(cellIdentityContentLeft);
 
-            if (!string.IsNullOrWhiteSpace(viewModel.Run) && (viewModel.RunWidths.Count > 0))
+            if (!string.IsNullOrWhiteSpace(viewModel.Run) && viewModel.RunWidth != null  && (viewModel.RunWidth.Count > 0))
             {
                 var index = 0;
-                foreach (ProductionOrder_RunWidthViewModel runwidths in viewModel.RunWidths)
+                foreach (ProductionOrder_RunWidthViewModel runwidths in viewModel.RunWidth)
                 {
                     index++;
                     cellIdentityContentLeft.Phrase = new Phrase("Lebar RUN (cm)", normal_font);
@@ -252,9 +252,9 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 foreach (var detail in viewModel.Details)
                 {
                     uom = detail.Uom.Unit;
-                    cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorRequest, normal_font);
-                    tableBody2.AddCell(cellIdentityContentCenterWithBorder);
                     cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorTemplate, normal_font);
+                    tableBody2.AddCell(cellIdentityContentCenterWithBorder);
+                    cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorRequest, normal_font);
                     tableBody2.AddCell(cellIdentityContentCenterWithBorder);
                     cellIdentityContentCenterWithBorder.Phrase = new Phrase(detail.ColorType.Name, normal_font);
                     tableBody2.AddCell(cellIdentityContentCenterWithBorder);

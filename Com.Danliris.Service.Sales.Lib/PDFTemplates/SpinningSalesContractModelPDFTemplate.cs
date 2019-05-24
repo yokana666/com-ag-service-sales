@@ -93,11 +93,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(": " + viewModel.SalesContractNo, normal_font);
             tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("dd MMMM yyyy", new CultureInfo("id-ID"))}", normal_font);
-            tableIdentity.AddCell(cellIdentityContentRight);
+            cellIdentityContentLeft.Phrase = new Phrase($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("dd MMMM yyyy", new CultureInfo("id-ID"))}", normal_font);
+            tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase("Hal", normal_font);
             tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(": " + "KONFIRMASI ORDER GREY", normal_font);
+            cellIdentityContentLeft.Phrase = new Phrase(": " + "KONFIRMASI ORDER BENANG", normal_font);
             tableIdentity.AddCell(cellIdentityContentLeft);
             cellIdentityContentRight.Phrase = new Phrase("");
             tableIdentity.AddCell(cellIdentityContentRight);
@@ -166,7 +166,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             }
             bodyContentLeft.Phrase = new Phrase("Jumlah", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity + " (" + jumlahTerbilang + ") " + uomLocal, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.OrderQuantity.ToString("N2") + " (" + jumlahTerbilang + ") " + uomLocal, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Kualitas", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -235,7 +235,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             document.Add(tableBody);
             #endregion
 
-            string ClosingParagraphString = "Demikian konfrmasi order ini kami sampaikan untuk diketahui dan dipergunakan seperlunya. Tembusan surat ini mohon dikirim kembali setelah ditanda tangani dan dibubuhi cap perusahaan.";
+            string ClosingParagraphString = "Demikian konfirmasi order ini kami sampaikan untuk diketahui dan dipergunakan seperlunya. Tembusan surat ini mohon dikirim kembali setelah ditanda tangani dan dibubuhi cap perusahaan.";
             Paragraph ClosingParagraph = new Paragraph(ClosingParagraphString, normal_font) { Alignment = Element.ALIGN_JUSTIFIED };
             ClosingParagraph.SpacingBefore = 10f;
             ClosingParagraph.SpacingAfter = 10f;
