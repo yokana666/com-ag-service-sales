@@ -14,6 +14,7 @@ using System.Data;
 using System.Globalization;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MonitoringFacades
 {
@@ -48,10 +49,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             result.Columns.Add(new DataColumn() { ColumnName = "SMV", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Unit", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tahun", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Week", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Week (Jadwal Pengerjaan)", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jumlah", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Keterangan", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Tanggal Pengiriman (Pengerjaan)", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Tanggal Pengiriman", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Status Confirm", DataType = typeof(string) });
 
             //List<(string, Enum, Enum)> mergeCells = new List<(string, Enum, Enum)>() { };
@@ -88,7 +89,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                     string BookingOrderDate = item.bookingOrderDate == new DateTime(1970, 1, 1) ? "-" : item.bookingOrderDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
                     string DeliveryDate = item.deliveryDate == new DateTime(1970, 1, 1) ? "-" : item.deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
                     // string ConfirmDate = confirmDate == new DateTime(1970, 1, 1) ? "-" : confirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
-                    string WorkingDeliveryDate = item.workingDeliveryDate == new DateTime(1970, 1, 1) ? "-" : item.deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    string WorkingDeliveryDate = item.workingDeliveryDate == new DateTime(1970, 1, 1) ? "-" : item.workingDeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
 
                     result.Rows.Add(item.bookingOrderNo, BookingOrderDate, item.buyer, item.orderQuantity, item.confirmQty, DeliveryDate, item.workingComodity, item.smv,
                     item.unit, item.year, item.week, item.quantity, item.remark, WorkingDeliveryDate, item.status);
@@ -98,6 +99,32 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             ExcelPackage package = new ExcelPackage();
             var sheet = package.Workbook.Worksheets.Add("Blocking Plan Sewing");
             sheet.Cells["A1"].LoadFromDataTable(result, true, OfficeOpenXml.Table.TableStyles.Light16);
+
+            for (int y = 1; y <= sheet.Dimension.Rows; y++)
+            {
+                for (int x = 1; x <= sheet.Dimension.Columns; x++)
+                {
+                    var cell = sheet.Cells[y, x];
+
+                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    cell.Style.Font.Size = 12;
+                    cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    cell.Style.Fill.BackgroundColor.SetColor(Color.WhiteSmoke);
+
+                    if (y > 1)
+                    {
+                        var stat = sheet.Cells[y, 15].Value.ToString();
+                        
+                        if (x > 6 && x <= sheet.Dimension.Columns)
+                        {
+                            cell.Style.Fill.BackgroundColor.SetColor(
+                                stat=="Sudah" ? Color.Green :  Color.Red );
+                        }
+                        
+                    }
+                }
+            }
 
             foreach (var rowMerge in Rowcount)
             {
