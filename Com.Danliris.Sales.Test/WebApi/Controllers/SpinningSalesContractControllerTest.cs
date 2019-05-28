@@ -52,50 +52,6 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
                 {
                     Id = 1,
-                    Type = "Lokal"
-                },
-                AccountBank = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AccountBankViewModel
-                {
-                    Id = 1
-                },
-                OrderQuantity = 1,
-                UomUnit = "unit",
-                Comodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
-                {
-                    Name = "comm"
-                },
-                Quality = new Service.Sales.Lib.ViewModels.IntegrationViewModel.QualityViewModel()
-                {
-                    Name = "name"
-                },
-                TermOfPayment = new Service.Sales.Lib.ViewModels.IntegrationViewModel.TermOfPaymentViewModel()
-                {
-                    Name = "tp"
-                },
-                DeliverySchedule = DateTimeOffset.UtcNow,
-
-            };
-
-            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            mocks.Mapper.Setup(f => f.Map<SpinningSalesContractViewModel>(It.IsAny<SpinningSalesContractViewModel>())).Returns(vm);
-
-            var controller = GetController(mocks);
-            var response = controller.GetPDF(1).Result;
-
-            Assert.NotNull(response);
-
-        }
-
-        [Fact]
-        public void Get_PDF_Ekspor_OK()
-        {
-            var mocks = GetMocks();
-            var mocks2 = GetMocks();
-            var vm = new SpinningSalesContractViewModel
-            {
-                Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
-                {
-                    Id = 1,
                     Type = "Lokal",
                     Country = "a"
                 },
@@ -133,6 +89,22 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
             };
 
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(f => f.Map<SpinningSalesContractViewModel>(It.IsAny<SpinningSalesContractModel>())).Returns(vm);
+
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            Assert.NotNull(response);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Ekspor_OK()
+        {
+            var mocks = GetMocks();
+            var mocks2 = GetMocks();
+            
             var vm2 = new SpinningSalesContractViewModel
             {
                 Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
@@ -177,13 +149,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
 
             //mocks.ServiceProvider.Setup(x => x.GetService<IHttpClientService>()).Returns(new HttpClientTestService());
-
-            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            mocks.Mapper.Setup(f => f.Map<SpinningSalesContractViewModel>(It.IsAny<SpinningSalesContractModel>())).Returns(vm);
-
-            var controller = GetController(mocks);
-            var response = controller.GetPDF(1).Result;
-
+            
             mocks2.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
             mocks2.Mapper.Setup(f => f.Map<SpinningSalesContractViewModel>(It.IsAny<SpinningSalesContractModel>())).Returns(vm2);
             var controller2 = GetController(mocks2);
@@ -191,7 +157,6 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var response2 = controller2.GetPDF(1).Result;
 
             Assert.NotNull(response2);
-            Assert.NotNull(response);
 
         }
 

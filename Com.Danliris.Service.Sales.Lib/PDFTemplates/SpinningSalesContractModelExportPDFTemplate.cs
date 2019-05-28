@@ -169,7 +169,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Quantity", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": ABOUT " + viewModel.OrderQuantity.ToString("N2") + " " + uom + " ( ABOUT : " + QuantityToText + " KG) ", normal_font);
+            bodyContentLeft.Phrase = new Phrase(": ABOUT " + viewModel.OrderQuantity.ToString("N2") + " " + uom + " ( ABOUT : " + convertion.ToString("N2") + " KG) ", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Price & Payment", normal_font);
             tableBody.AddCell(bodyContentLeft);

@@ -50,15 +50,23 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
                 {
                     Id = 1,
-                    Type = "Lokal"
+                    Type = "Local",
+                    Country = "a"
                 },
                 AccountBank = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AccountBankViewModel
                 {
-                    Id = 1
+                    Id = 1,
+                    Currency = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CurrencyViewModel()
+                    {
+                        Symbol = "a",
+                        Description = "a",
+                        Code = "a"
+                    }
                 },
                 OrderQuantity = 1,
                 Uom = new Service.Sales.Lib.ViewModels.IntegrationViewModel.UomViewModel()
                 {
+                    Id = 1,
                     Unit = "unit"
                 },
                 Comodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
@@ -73,12 +81,29 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 {
                     Name = "tp"
                 },
+                Agent = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AgentViewModel()
+                {
+                    Id = 1,
+                    Name = "A",
+                    Country = "a"
+                },
                 DeliverySchedule = DateTimeOffset.UtcNow,
-                
+                Product = new Service.Sales.Lib.ViewModels.IntegrationViewModel.ProductViewModel()
+                {
+                    Name = "a"
+                },
+                YarnMaterial = new Service.Sales.Lib.ViewModels.IntegrationViewModel.YarnMaterialViewModel()
+                {
+                    Name = "a"
+                },
+                MaterialConstruction = new Service.Sales.Lib.ViewModels.IntegrationViewModel.MaterialConstructionViewModel()
+                {
+                    Name = "a"
+                }
             };
 
             mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            mocks.Mapper.Setup(f => f.Map<WeavingSalesContractViewModel>(It.IsAny<WeavingSalesContractViewModel>())).Returns(vm);
+            mocks.Mapper.Setup(f => f.Map<WeavingSalesContractViewModel>(It.IsAny<WeavingSalesContractModel>())).Returns(vm);
 
             var controller = GetController(mocks);
             var response = controller.GetPDF(1).Result;
@@ -97,15 +122,23 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 Buyer = new Service.Sales.Lib.ViewModels.IntegrationViewModel.BuyerViewModel
                 {
                     Id = 1,
-                    Type = "Lokal"
+                    Type = "Ekspor",
+                    Country = "a"
                 },
                 AccountBank = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AccountBankViewModel
                 {
-                    Id = 1
+                    Id = 1,
+                    Currency = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CurrencyViewModel()
+                    {
+                        Symbol = "a",
+                        Description = "a",
+                        Code = "a"
+                    }
                 },
                 OrderQuantity = 1,
                 Uom = new Service.Sales.Lib.ViewModels.IntegrationViewModel.UomViewModel()
                 {
+                    Id = 1,
                     Unit = "unit"
                 },
                 Comodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
@@ -120,12 +153,29 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 {
                     Name = "tp"
                 },
+                Agent = new Service.Sales.Lib.ViewModels.IntegrationViewModel.AgentViewModel()
+                {
+                    Id = 1,
+                    Name = "A",
+                    Country = "a"
+                },
                 DeliverySchedule = DateTimeOffset.UtcNow,
-
+                Product = new Service.Sales.Lib.ViewModels.IntegrationViewModel.ProductViewModel()
+                {
+                    Name ="a"
+                },
+                YarnMaterial = new Service.Sales.Lib.ViewModels.IntegrationViewModel.YarnMaterialViewModel()
+                {
+                    Name = "a"
+                },
+                MaterialConstruction = new Service.Sales.Lib.ViewModels.IntegrationViewModel.MaterialConstructionViewModel()
+                {
+                    Name ="a"
+                }
             };
 
             mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            mocks.Mapper.Setup(f => f.Map<WeavingSalesContractViewModel>(It.IsAny<WeavingSalesContractViewModel>())).Returns(vm);
+            mocks.Mapper.Setup(f => f.Map<WeavingSalesContractViewModel>(It.IsAny<WeavingSalesContractModel>())).Returns(vm);
 
             var controller = GetController(mocks);
             var response = controller.GetPDF(1).Result;
