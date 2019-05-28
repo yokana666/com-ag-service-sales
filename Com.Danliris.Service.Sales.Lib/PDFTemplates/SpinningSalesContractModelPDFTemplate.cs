@@ -212,7 +212,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Jadwal Pengiriman", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + appxLocal + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("id-ID"))).ToUpper(), normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + appxLocal + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("id-ID")))?.ToUpper(), normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Kondisi", normal_font);
             tableBody.AddCell(bodyContentLeft);

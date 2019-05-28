@@ -29,9 +29,11 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     {
         private readonly static string apiVersion = "1.0";
         private readonly IHttpClientService HttpClientService;
+        private readonly IServiceProvider _serviceProvider;
         public SpinningSalesContractController(IIdentityService identityService, IValidateService validateService, ISpinningSalesContract spinningSalesContractFacade,IMapper mapper, IServiceProvider serviceProvider) : base(identityService, validateService, spinningSalesContractFacade, mapper, apiVersion)
         {
             HttpClientService = serviceProvider.GetService<IHttpClientService>();
+            _serviceProvider = serviceProvider;
         }
 
         [HttpGet("pdf/{Id}")]
@@ -72,10 +74,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     if (result.TryGetValue("data", out json))
                     {
                         Dictionary<string, object> buyer = JsonConvert.DeserializeObject<Dictionary<string, object>>(json.ToString());
-                        viewModel.Buyer.City = buyer["City"] != null ? buyer["City"].ToString() : "";
-                        viewModel.Buyer.Address = buyer["Address"] != null ? buyer["Address"].ToString() : "";
-                        viewModel.Buyer.Contact = buyer["Contact"] != null ? buyer["Contact"].ToString() : "";
-                        viewModel.Buyer.Country = buyer["Country"] != null ? buyer["Country"].ToString() : "";
+                        viewModel.Buyer.City = buyer.TryGetValue("City", out json) ? json.ToString() : "";
+                        viewModel.Buyer.Address = buyer.TryGetValue("Address", out json) ? json.ToString() : "";
+                        viewModel.Buyer.Contact = buyer.TryGetValue("Contact", out json) ? json.ToString() : "";
+                        viewModel.Buyer.Country = buyer.TryGetValue("Country", out json) ? json.ToString() : "";
                     }
 
                     /* Get Agent */
@@ -85,10 +87,10 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     if (resultAgent.TryGetValue("data", out jsonAgent))
                     {
                         Dictionary<string, object> agent = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonAgent.ToString());
-                        viewModel.Agent.City = agent["City"] != null ? agent["City"].ToString() : "";
-                        viewModel.Agent.Address = agent["Address"] != null ? agent["Address"].ToString() : "";
-                        viewModel.Agent.Country = agent["Country"] != null ? agent["Country"].ToString() : "";
-                        viewModel.Agent.Contact = agent["Contact"] != null ? agent["Contact"].ToString() : "";
+                        viewModel.Agent.City = agent.TryGetValue("City", out jsonAgent) ? jsonAgent.ToString() : "";
+                        viewModel.Agent.Address = agent.TryGetValue("Address", out jsonAgent) ? jsonAgent.ToString() : "";
+                        viewModel.Agent.Contact = agent.TryGetValue("Contact", out jsonAgent) ? jsonAgent.ToString() : "";
+                        viewModel.Agent.Country = agent.TryGetValue("Country", out jsonAgent) ? jsonAgent.ToString() : "";
                     }
 
                     /* Get AccountBank */

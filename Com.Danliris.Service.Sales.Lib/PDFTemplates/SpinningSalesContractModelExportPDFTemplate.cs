@@ -107,7 +107,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             //    tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
             //}
 
-            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Country.ToUpper(), normal_font);
+            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Country?.ToUpper(), normal_font);
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase("");
             tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
@@ -185,11 +185,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Amount", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", amount) + " ( " + AmountToText + " " + viewModel.AccountBank.Currency.Description.ToUpper() + " ) (APPROXIMATELLY)", normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", amount) + " ( " + AmountToText + " " + viewModel.AccountBank.Currency.Description?.ToUpper() + " ) (APPROXIMATELLY)", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Shipment", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + appx + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("en-US"))).ToUpper() + " " + viewModel.ShipmentDescription, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + appx + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("en-US")))?.ToUpper() + " " + viewModel.ShipmentDescription, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Destination", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -397,7 +397,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 //    cellIdentityContentRight.Phrase = new Phrase("");
                 //    agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
                 //}
-                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Agent.Country.ToUpper(), normal_font);
+                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Agent.Country?.ToUpper(), normal_font);
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
