@@ -106,7 +106,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 {
                     var cell = sheet.Cells[y, x];
 
-                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                     cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     cell.Style.Font.Size = 12;
                     cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -119,7 +119,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                         if (x > 6 && x <= sheet.Dimension.Columns)
                         {
                             cell.Style.Fill.BackgroundColor.SetColor(
-                                stat=="Sudah" ? Color.Green :  Color.Red );
+                                stat=="Sudah" ? Color.LightGreen :  Color.IndianRed );
                         }
                         
                     }
