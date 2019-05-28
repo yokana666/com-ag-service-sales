@@ -78,7 +78,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
                          status=a.IsConfirm ? "Sudah" : "Belum",
                          unit=a.UnitName,
                          week="W"+ a.WeekNumber.ToString() + "-"+ a.StartDate.ToString("dd MMMM yyyy", new CultureInfo("id-ID")) + " s/d " + a.EndDate.ToString("dd MMMM yyyy", new CultureInfo("id-ID")),
-                         workingComodity=a.ComodityName,
+                         workingComodity=a.ComodityName.TrimEnd(),
                          year=a.Year
                      }).OrderBy(a=>a.bookingOrderDate);
 
