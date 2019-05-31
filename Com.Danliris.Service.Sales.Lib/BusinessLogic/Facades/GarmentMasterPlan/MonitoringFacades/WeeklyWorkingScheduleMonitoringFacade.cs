@@ -15,6 +15,7 @@ using System.Globalization;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using Com.Moonlay.NetCore.Lib;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MonitoringFacades
 {
@@ -180,7 +181,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
         {
             var Query = WeeklyWorkingScheduleMonitoringLogic.GetQuery(filter);
             var data = Query.ToList();
-            return Tuple.Create(data, data.Count);
+
+            Pageable<WeeklyWorkingScheduleMonitoringViewModel> pageable = new Pageable<WeeklyWorkingScheduleMonitoringViewModel>(data, page - 1, size);
+            List<WeeklyWorkingScheduleMonitoringViewModel> Data_ = pageable.Data.ToList<WeeklyWorkingScheduleMonitoringViewModel>();
+
+            int TotalData = pageable.TotalCount;
+
+            return Tuple.Create(Data_, TotalData);
         }
     }
 }
