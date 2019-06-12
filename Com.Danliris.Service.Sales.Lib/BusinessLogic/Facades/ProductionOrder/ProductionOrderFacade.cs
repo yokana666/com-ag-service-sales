@@ -692,5 +692,116 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
         }
 
         #endregion
+
+        public async Task<int> UpdateRequestedTrue(List<int> ids)
+        {
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach(var id in ids)
+                    {
+                        ProductionOrderModel model = await ReadByIdAsync(id);
+                        model.IsRequested = true;
+                        productionOrderLogic.UpdateAsync(id, model);
+                    }
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateRequestedFalse(List<int> ids)
+        {
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var id in ids)
+                    {
+                        ProductionOrderModel model = await ReadByIdAsync(id);
+                        model.IsRequested = false;
+                        productionOrderLogic.UpdateAsync(id, model);
+                    }
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateIsCompletedTrue(int id)
+        {
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    ProductionOrderModel model = await ReadByIdAsync(id);
+                    model.IsCompleted = true;
+                    productionOrderLogic.UpdateAsync(id, model);
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateIsCompletedFalse(int id)
+        {
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    ProductionOrderModel model = await ReadByIdAsync(id);
+                    model.IsCompleted = false;
+                    productionOrderLogic.UpdateAsync(id, model);
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateDistributedQuantity(List<int> id, List<double> distributedQuantity)
+        {
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var i = 0;
+                    foreach(var Id in id)
+                    {
+                        ProductionOrderModel model = await ReadByIdAsync(Id);
+                        model.DistributedQuantity = distributedQuantity[i];
+                        productionOrderLogic.UpdateAsync(Id, model);
+                        i++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return await DbContext.SaveChangesAsync();
+        }
     }
 }

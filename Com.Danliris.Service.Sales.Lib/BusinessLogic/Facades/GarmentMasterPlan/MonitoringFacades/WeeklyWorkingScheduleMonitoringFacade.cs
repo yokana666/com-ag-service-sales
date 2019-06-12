@@ -12,36 +12,35 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Data;
 using System.Globalization;
-using Com.Danliris.Service.Sales.Lib.Helpers;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using Newtonsoft.Json;
+using System.Drawing;
 using Com.Moonlay.NetCore.Lib;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MonitoringFacades
 {
-    public class OverScheduleMonitoringFacade : IOverScheduleMonitoringFacade
+    public class WeeklyWorkingScheduleMonitoringFacade : IWeeklyWorkingScheduleMonitoringFacade
     {
         private readonly SalesDbContext DbContext;
         private readonly DbSet<GarmentSewingBlockingPlan> DbSet;
         private IdentityService IdentityService;
-        private OverScheduleMonitoringLogic OverScheduleMonitoringLogic;
+        private WeeklyWorkingScheduleMonitoringLogic WeeklyWorkingScheduleMonitoringLogic;
 
-        public OverScheduleMonitoringFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
+        public WeeklyWorkingScheduleMonitoringFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             DbContext = dbContext;
             DbSet = DbContext.Set<GarmentSewingBlockingPlan>();
             IdentityService = serviceProvider.GetService<IdentityService>();
-            OverScheduleMonitoringLogic = serviceProvider.GetService<OverScheduleMonitoringLogic>();
+            WeeklyWorkingScheduleMonitoringLogic = serviceProvider.GetService<WeeklyWorkingScheduleMonitoringLogic>();
         }
         public Tuple<MemoryStream, string> GenerateExcel(string filter = "{}")
         {
-            var Query = OverScheduleMonitoringLogic.GetQuery(filter);
+            var Query = WeeklyWorkingScheduleMonitoringLogic.GetQuery(filter);
             var data = Query.ToList();
             DataTable result = new DataTable();
             var offset = 7;
-                              
-            result.Columns.Add(new DataColumn() { ColumnName = "No. Booking", DataType = typeof(string) });
+
+            result.Columns.Add(new DataColumn() { ColumnName = "No. Booking Order", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tanggal Booking", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Buyer", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jumlah Order", DataType = typeof(string) });
@@ -51,11 +50,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             result.Columns.Add(new DataColumn() { ColumnName = "SMV", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Unit", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tahun", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Week", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Week (Jadwal Pengerjaan)", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jumlah", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Keterangan", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tanggal Pengiriman", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Used EH", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Status Confirm", DataType = typeof(string) });
 
             //List<(string, Enum, Enum)> mergeCells = new List<(string, Enum, Enum)>() { };
             Dictionary<string, string> Rowcount = new Dictionary<string, string>();
@@ -70,37 +69,63 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
                 foreach (var item in Query.ToList())
                 {
                     idx++;
-                    if (!Rowcount.ContainsKey(item.bookingCode))
+                    if (!Rowcount.ContainsKey(item.bookingOrderNo))
                     {
                         rCount = 0;
                         var index = idx;
-                        Rowcount.Add(item.bookingCode, index.ToString());
+                        Rowcount.Add(item.bookingOrderNo, index.ToString());
                     }
                     else
                     {
                         rCount += 1;
-                        Rowcount[item.bookingCode] = Rowcount[item.bookingCode] + "-" + rCount.ToString();
-                        var val = Rowcount[item.bookingCode].Split("-");
+                        Rowcount[item.bookingOrderNo] = Rowcount[item.bookingOrderNo] + "-" + rCount.ToString();
+                        var val = Rowcount[item.bookingOrderNo].Split("-");
                         if ((val).Length > 0)
                         {
-                            Rowcount[item.bookingCode] = val[0] + "-" + rCount.ToString();
+                            Rowcount[item.bookingOrderNo] = val[0] + "-" + rCount.ToString();
                         }
                     }
 
-                    string week= "W"+ item.weekNum + " " + item.startDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")) + " s/d " + item.endDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")); ;
-                    string BookingOrderDate = item.bookingDate == new DateTime(1970, 1, 1) ? "-" : item.bookingDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
-                    string DeliveryDate = item.bookingDeliveryDate == new DateTime(1970, 1, 1) ? "-" : item.bookingDeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    //string week = "W" + item.weekNum + " " + item.startDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")) + " s/d " + item.endDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")); ;
+                    string BookingOrderDate = item.bookingOrderDate == new DateTime(1970, 1, 1) ? "-" : item.bookingOrderDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    string DeliveryDate = item.deliveryDate == new DateTime(1970, 1, 1) ? "-" : item.deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
                     // string ConfirmDate = confirmDate == new DateTime(1970, 1, 1) ? "-" : confirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
-                    string DeliveryDateItems = item.deliveryDate == new DateTime(1970, 1, 1) ? "-" : item.deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
+                    string WorkingDeliveryDate = item.workingDeliveryDate == new DateTime(1970, 1, 1) ? "-" : item.workingDeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID"));
 
-                    result.Rows.Add(item.bookingCode, BookingOrderDate, item.buyer, item.bookingOrderQty, item.confirmQty, DeliveryDate, item.comodity, item.smv,
-                    item.unit, item.year, week,  item.quantity, item.remark, DeliveryDateItems, item.usedEH);
+                    result.Rows.Add(item.bookingOrderNo, BookingOrderDate, item.buyer, item.orderQuantity, item.confirmQty, DeliveryDate, item.workingComodity, item.smv,
+                    item.unit, item.year, item.week, item.quantity, item.remark, WorkingDeliveryDate, item.status);
 
                 }
             }
             ExcelPackage package = new ExcelPackage();
             var sheet = package.Workbook.Worksheets.Add("Blocking Plan Sewing");
             sheet.Cells["A1"].LoadFromDataTable(result, true, OfficeOpenXml.Table.TableStyles.Light16);
+
+            for (int y = 1; y <= sheet.Dimension.Rows; y++)
+            {
+                for (int x = 1; x <= sheet.Dimension.Columns; x++)
+                {
+                    var cell = sheet.Cells[y, x];
+
+                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                    cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    cell.Style.Font.Size = 12;
+                    cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    cell.Style.Fill.BackgroundColor.SetColor(Color.WhiteSmoke);
+
+                    if (y > 1)
+                    {
+                        var stat = sheet.Cells[y, 15].Value.ToString();
+                        
+                        if (x > 6 && x <= sheet.Dimension.Columns)
+                        {
+                            cell.Style.Fill.BackgroundColor.SetColor(
+                                stat=="Sudah" ? Color.LightGreen :  Color.IndianRed );
+                        }
+                        
+                    }
+                }
+            }
 
             foreach (var rowMerge in Rowcount)
             {
@@ -147,17 +172,18 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             package.SaveAs(streamExcel);
 
             //Dictionary<string, string> FilterDictionary = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(filter), StringComparer.OrdinalIgnoreCase);
-            string fileName = string.Concat("Monitoring Keterlambatan Jadwal Pengerjaan ", DateTime.Now.Date , ".xlsx");
+            string fileName = string.Concat("Monitoring Jadwal Pengerjaan Per Week ", ".xlsx");
 
             return Tuple.Create(streamExcel, fileName);
         }
 
-        public Tuple<List<OverScheduleMonitoringViewModel>, int> Read(int page = 1, int size = 25, string filter = "{}")
+        public Tuple<List<WeeklyWorkingScheduleMonitoringViewModel>, int> Read(int page = 1, int size = 25, string filter = "{}")
         {
-            var Query = OverScheduleMonitoringLogic.GetQuery(filter);
+            var Query = WeeklyWorkingScheduleMonitoringLogic.GetQuery(filter);
             var data = Query.ToList();
-            Pageable<OverScheduleMonitoringViewModel> pageable = new Pageable<OverScheduleMonitoringViewModel>(data, page - 1, size);
-            List<OverScheduleMonitoringViewModel> Data_ = pageable.Data.ToList<OverScheduleMonitoringViewModel>();
+
+            Pageable<WeeklyWorkingScheduleMonitoringViewModel> pageable = new Pageable<WeeklyWorkingScheduleMonitoringViewModel>(data, page - 1, size);
+            List<WeeklyWorkingScheduleMonitoringViewModel> Data_ = pageable.Data.ToList<WeeklyWorkingScheduleMonitoringViewModel>();
 
             int TotalData = pageable.TotalCount;
 

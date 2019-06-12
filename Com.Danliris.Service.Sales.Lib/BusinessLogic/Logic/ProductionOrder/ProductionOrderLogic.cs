@@ -44,7 +44,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
             List<string> SelectedFields = new List<string>()
             {
 
-                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber", "OrderQuantity", "Uom"
+                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber", "OrderQuantity", "Uom",
+                "DistributedQuantity", "IsCompleted", "IsClosed"
 
             };
 
@@ -82,7 +83,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     LastModifiedUtc = field.LastModifiedUtc,
                     Details = field.Details,
                     DesignCode = field.DesignCode,
-                    DesignNumber = field.DesignNumber
+                    DesignNumber = field.DesignNumber,
+                    DistributedQuantity = field.DistributedQuantity,
+                    IsCompleted = field.IsCompleted,
+                    IsClosed = field.IsClosed,
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
