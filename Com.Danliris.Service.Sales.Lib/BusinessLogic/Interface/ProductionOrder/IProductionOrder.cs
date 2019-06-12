@@ -15,5 +15,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder
         Task<Tuple<List<ProductionOrderReportViewModel>, int>> GetReport(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset);
         Task<MemoryStream> GenerateExcel(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int offset);
         Task<ProductionOrderReportDetailViewModel> GetDetailReport(long no);
+        Task<int> UpdateRequestedTrue(List<int> ids);
+        Task<int> UpdateRequestedFalse(List<int> ids);
+        Task<int> UpdateIsCompletedTrue(int id);
+        Task<int> UpdateIsCompletedFalse(int id);
+        Task<int> UpdateDistributedQuantity(List<int> id, List<double> distributedQuantity);
     }
 }
