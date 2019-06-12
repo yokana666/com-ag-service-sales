@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.Services
@@ -14,6 +12,7 @@ namespace Com.Danliris.Service.Sales.Lib.Services
 
         public HttpClientService(IIdentityService identityService)
         {
+            _client.Timeout = new System.TimeSpan(0,1,0);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, identityService.Token);
         }
 

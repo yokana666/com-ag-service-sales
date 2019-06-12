@@ -116,11 +116,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                             productionOrder_DetailLogic.UpdateAsync(itemId, data);
                         }
 
-                        foreach (ProductionOrder_DetailModel item in model.Details)
-                        {
-                            if (item.Id == 0)
-                                productionOrder_DetailLogic.Create(item);
-                        }
+                        
+                    }
+                    foreach (ProductionOrder_DetailModel item in model.Details)
+                    {
+                        if (item.Id == 0)
+                            productionOrder_DetailLogic.Create(item);
                     }
 
                     HashSet<long> LampStandardIds = productionOrder_LampStandardLogic.GetIds(id);
@@ -133,12 +134,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                         {
                             productionOrder_LampStandardLogic.UpdateAsync(itemId, data);
                         }
-
-                        foreach (ProductionOrder_LampStandardModel item in model.LampStandards)
-                        {
-                            if (item.Id == 0)
-                                productionOrder_LampStandardLogic.Create(item);
-                        }
+                    }
+                    
+                    foreach(ProductionOrder_LampStandardModel item in model.LampStandards)
+                    {
+                        if (item.Id == 0)
+                            productionOrder_LampStandardLogic.Create(item);
                     }
 
                     if (model.RunWidths.Count > 0)
@@ -154,12 +155,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                                 productionOrder_RunWidthLogic.UpdateAsync(itemId, data);
                             }
 
-                            foreach (ProductionOrder_RunWidthModel item in model.RunWidths)
-                            {
-                                if (item.Id == 0)
-                                    productionOrder_RunWidthLogic.Create(item);
-                            }
+                            
                         }
+                        foreach (ProductionOrder_RunWidthModel item in model.RunWidths)
+                        {
+                            if (item.Id == 0)
+                                productionOrder_RunWidthLogic.Create(item);
+                        }
+
                     }
 
                 }
