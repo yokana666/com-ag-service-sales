@@ -1,0 +1,112 @@
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
+using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.Utilities;
+using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
+using Com.Moonlay.Models;
+using Com.Moonlay.NetCore.Lib;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics
+{
+    public class GarmentPreSalesContractLogic : BaseLogic<GarmentPreSalesContract>
+    {
+        private readonly SalesDbContext DbContext;
+        public GarmentPreSalesContractLogic(IIdentityService identityService, SalesDbContext dbContext) : base(identityService, dbContext)
+        {
+            DbContext = dbContext;
+        }
+
+        public override ReadResponse<GarmentPreSalesContract> Read(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            IQueryable<GarmentPreSalesContract> Query = DbSet;
+
+            List<string> SearchAttributes = new List<string>()
+            {
+                "SCNo", "SCType", "BuyerAgentName", "BuyerBrandName"
+            };
+
+            Query = QueryHelper<GarmentPreSalesContract>.Search(Query, SearchAttributes, keyword);
+
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<GarmentPreSalesContract>.Filter(Query, FilterDictionary);
+
+            List<string> SelectedFields = new List<string>()
+            {
+                "Id", "BuyerBrandId", "BuyerBrandName", "BuyerBrandCode", "SCNo", "SCDate", "SCType", "LastModifiedUtc", "CreatedUtc", "BuyerAgentId", "BuyerAgentName", "BuyerAgentCode", "OrderQuantity"
+            };
+
+            Query = Query
+                .Select(sc => new GarmentPreSalesContract
+                {
+                    Id = sc.Id,
+                    SCNo = sc.SCNo,
+                    SCDate = sc.SCDate,
+                    SCType = sc.SCType,
+                    BuyerBrandCode = sc.BuyerBrandCode,
+                    BuyerBrandId = sc.BuyerBrandId,
+                    BuyerBrandName = sc.BuyerBrandName,
+                    CreatedUtc = sc.CreatedUtc,
+                    LastModifiedUtc = sc.LastModifiedUtc,
+                    BuyerAgentId = sc.BuyerAgentId,
+                    BuyerAgentName = sc.BuyerAgentName,
+                    BuyerAgentCode = sc.BuyerAgentCode,
+                    OrderQuantity = sc.OrderQuantity,
+                    IsDeleted = sc.IsDeleted
+                }).OrderByDescending(s => s.LastModifiedUtc);
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<GarmentPreSalesContract>.Order(Query, OrderDictionary);
+
+            Pageable<GarmentPreSalesContract> pageable = new Pageable<GarmentPreSalesContract>(Query, page - 1, size);
+            List<GarmentPreSalesContract> data = pageable.Data.ToList<GarmentPreSalesContract>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<GarmentPreSalesContract>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        public override void Create(GarmentPreSalesContract model)
+        {
+            GenerateNo(model);
+
+            EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
+            DbSet.Add(model);
+        }
+
+        private void GenerateNo(GarmentPreSalesContract model)
+        {
+            string Year = model.SCDate.ToString("yy");
+            //string Month = model.CreatedUtc.ToString("MM");
+
+            string no = $"SC-{model.SectionCode}-{model.BuyerBrandCode}-{Year}-";
+            int Padding = 5;
+
+            var lastData = DbSet.IgnoreQueryFilters().Where(w => w.SCNo.StartsWith(no) && !w.IsDeleted).OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+
+            //string DocumentType = model.BuyerType.ToLower().Equals("ekspor") || model.BuyerType.ToLower().Equals("export") ? "FPE" : "FPL";
+
+            int YearNow = DateTime.Now.Year;
+
+            if (lastData == null)
+            {
+                model.SCNo = no + "1".PadLeft(Padding, '0');
+            }
+            else
+            {
+                int lastNoNumber = Int32.Parse(lastData.SCNo.Replace(no, "")) + 1;
+                model.SCNo = no + lastNoNumber.ToString().PadLeft(Padding, '0');
+            }
+
+            if(model.SCType == "SAMPLE")
+            {
+                model.SCNo = model.SCNo + "-S";
+            }
+        }
+
+    }
+}
