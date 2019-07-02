@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Com.Danliris.Service.Sales.Lib.Utilities;
+using Com.Danliris.Service.Sales.Lib.ViewModels.Spinning;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System;
 using System.Globalization;
 using System.IO;
-using Com.Danliris.Service.Sales.Lib.Utilities;
-using Com.Danliris.Service.Sales.Lib.ViewModels.Spinning;
 
 namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 {
@@ -16,7 +16,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             Font normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 10);
             Font bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 10);
 
-            Document document = new Document(PageSize.A4, 40, 40, 40, 40);
+            Document document = new Document(PageSize.A4, 40, 40, 140, 40);
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = PdfWriter.GetInstance(document, stream);
             document.Open();
@@ -43,7 +43,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             var tax = viewModel.IncomeTax == "Include PPn" ? "Include PPn 10%" : viewModel.IncomeTax;
 
-            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}",viewModel.Price) + " / KG";
+            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", viewModel.Price) + " / KG";
 
             var appx = "";
             var date = viewModel.DeliverySchedule.Value.Day;
@@ -64,78 +64,73 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region Header
 
-            string blankString = " ";
-            Paragraph bankSpace = new Paragraph(blankString, normal_font);
-            bankSpace.SpacingAfter = 100f;
-            document.Add(bankSpace);
-
-
             string codeNoString = "FM-PJ-00-03-004";
             Paragraph codeNo = new Paragraph(codeNoString, bold_font) { Alignment = Element.ALIGN_RIGHT };
             document.Add(codeNo);
+            Paragraph dateString = new Paragraph($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("MMMM dd, yyyy", new CultureInfo("en-US"))}", normal_font) { Alignment = Element.ALIGN_RIGHT };
+            dateString.SpacingAfter = 5f;
+            document.Add(dateString);
+
+            #region Identity
+
+
+            PdfPTable tableIdentityOpeningLetter = new PdfPTable(3);
+            tableIdentityOpeningLetter.SetWidths(new float[] { 15f, 1f, 1f });
+            PdfPCell cellIdentityContentLeft = new PdfPCell() { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_LEFT };
+            PdfPCell cellIdentityContentRight = new PdfPCell() { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT };
+            cellIdentityContentLeft.Phrase = new Phrase("MESSRS,", normal_font);
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("", normal_font);
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Name, normal_font);
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Address, normal_font);
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+
+            //if (!string.IsNullOrEmpty(viewModel.Buyer.City))
+            //{
+            //    cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.City, normal_font);
+            //    tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            //    cellIdentityContentLeft.Phrase = new Phrase("");
+            //    tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            //    cellIdentityContentLeft.Phrase = new Phrase("");
+            //    tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            //}
+
+            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Country?.ToUpper(), normal_font);
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Contact, normal_font);
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+            cellIdentityContentRight.Phrase = new Phrase("");
+            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+            PdfPCell cellIdentityOpeningLetter = new PdfPCell(tableIdentityOpeningLetter); // dont remove
+            tableIdentityOpeningLetter.ExtendLastRow = false;
+            tableIdentityOpeningLetter.SpacingAfter = 10f;
+            document.Add(tableIdentityOpeningLetter);
+
+            #endregion
 
             string titleString = "SALES CONTRACT";
             Paragraph title = new Paragraph(titleString, bold_font) { Alignment = Element.ALIGN_CENTER };
             title.SpacingAfter = 10f;
             document.Add(title);
             bold_font.SetStyle(Font.NORMAL);
-
-            #endregion
-
-            #region Identity
-
-            PdfPTable tableIdentity = new PdfPTable(3);
-            tableIdentity.SetWidths(new float[] { 0.5f, 4.5f, 2.5f });
-            PdfPCell cellIdentityContentLeft = new PdfPCell() { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_LEFT };
-            PdfPCell cellIdentityContentRight = new PdfPCell() { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT };
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("dd MMMM yyyy", new CultureInfo("en-US"))}", normal_font);
-            tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            tableIdentity.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentity.AddCell(cellIdentityContentRight);
-            PdfPCell cellIdentity = new PdfPCell(tableIdentity); // dont remove
-            tableIdentity.ExtendLastRow = false;
-            tableIdentity.SpacingAfter = 10f;
-            document.Add(tableIdentity);
-
-            PdfPTable tableIdentityOpeningLetter = new PdfPTable(3);
-            tableIdentity.SetWidths(new float[] { 2f, 4.5f, 2.5f });
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentLeft.Phrase = new Phrase("MESSRS,", normal_font);
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Name, normal_font);
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Address, normal_font);
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentRight.Phrase = new Phrase("");
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-            cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.City, normal_font);
-            tableIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
-            PdfPCell cellIdentityOpeningLetter = new PdfPCell(tableIdentityOpeningLetter); // dont remove
-            tableIdentityOpeningLetter.ExtendLastRow = false;
-            tableIdentityOpeningLetter.SpacingAfter = 10f;
-            document.Add(tableIdentityOpeningLetter);
-
             #endregion
 
             string HeaderParagraphString = "On behalf of :";
@@ -174,7 +169,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Quantity", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": ABOUT " + viewModel.OrderQuantity.ToString("N2") + " " + uom + " ( ABOUT : " + QuantityToText + " KG) ", normal_font);
+            bodyContentLeft.Phrase = new Phrase(": ABOUT " + viewModel.OrderQuantity.ToString("N2") + " " + uom + " ( ABOUT : " + convertion.ToString("N2") + " KG) ", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Price & Payment", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -190,11 +185,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Amount", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.AccountCurrencyCode + " " + string.Format("{0:n2}",amount) + " ( " + AmountToText + " " + viewModel.AccountBank.Currency.Description.ToUpper() + " ) (APPROXIMATELLY)", normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", amount) + " ( " + AmountToText + " " + viewModel.AccountBank.Currency.Description?.ToUpper() + " ) (APPROXIMATELLY)", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Shipment", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + appx + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("en-US"))).ToUpper() + " " + viewModel.ShipmentDescription, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + appx + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("en-US")))?.ToUpper() + " " + viewModel.ShipmentDescription, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Destination", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -288,12 +283,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region ConditionPage
             document.NewPage();
-
-            string blankSpaceCondition = " ";
-            Paragraph blankConditionSpace = new Paragraph(blankSpaceCondition, normal_font);
-            blankConditionSpace.SpacingAfter = 100f;
-            document.Add(blankConditionSpace);
-
+            
             string ConditionString = "Remark";
             Paragraph ConditionName = new Paragraph(ConditionString, header_font) { Alignment = Element.ALIGN_LEFT };
             document.Add(ConditionName);
@@ -312,10 +302,6 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             conditionList.AddCell(cellIdentityContentLeft);
             bodyContentJustify.Phrase = new Phrase("All instructions regarding sticker, shipping marks etc. to be received 1 (one) month prior to shipment.", normal_font);
             conditionList.AddCell(bodyContentJustify);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(bulletListSymbol, normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
             bodyContentJustify.Phrase = new Phrase("Benefciary :  P.T. DAN LIRIS KELURAHAN BANARAN, KECAMATAN GROGOL SUKOHARJO - INDONESIA  (Phone No. 0271 - 740888 / 714400). ", normal_font);
@@ -326,7 +312,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase("PAYMENT TO BE TRANSFERRED TO BANK : "+viewModel.AccountBank.BankName, normal_font);
+            cellIdentityContentLeft.Phrase = new Phrase("PAYMENT TO BE TRANSFERRED TO BANK " + viewModel.AccountBank.BankName, normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
@@ -338,40 +324,20 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase("ACCOUNT NO : " + viewModel.AccountBank.AccountNumber, normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase("SWIFT CODE : " + viewModel.AccountBank.SwiftCode, normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
+            cellIdentityContentLeft.Phrase = new Phrase("ACCOUNT NO : " + viewModel.AccountBank.AccountNumber + " SWIFT CODE : " + viewModel.AccountBank.SwiftCode, normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(bulletListSymbol, normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
-            bodyContentJustify.Phrase = new Phrase("Payment 30% TT in advance + 70% TT after receipt copies of shipping document to be negotiable with BANK PT Bank Unit Test.", normal_font);
+            bodyContentJustify.Phrase = new Phrase(viewModel.TermOfPayment.Name + " to be negotiable with BANK " + viewModel.AccountBank.BankName, normal_font);
             conditionList.AddCell(bodyContentJustify);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(bulletListSymbol, normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
             bodyContentJustify.Phrase = new Phrase("Please find enclosed some Indonesia Banking Regulations.", normal_font);
             conditionList.AddCell(bodyContentJustify);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(bulletListSymbol, normal_font);
             conditionList.AddCell(cellIdentityContentLeft);
             bodyContentJustify.Phrase = new Phrase("If you find anything not order, please let us know immediately.", normal_font);
             conditionList.AddCell(bodyContentJustify);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
-            cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
-            conditionList.AddCell(cellIdentityContentLeft);
             PdfPCell conditionListData = new PdfPCell(conditionList); // dont remove
             conditionList.ExtendLastRow = false;
             document.Add(conditionList);
@@ -381,13 +347,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             if (viewModel.Agent.Id != 0)
             {
                 document.NewPage();
-
-                string blankSpaceConditionAgent = " ";
-                Paragraph blankConditionSpaceAgent = new Paragraph(blankSpaceConditionAgent, normal_font);
-                blankConditionSpaceAgent.SpacingAfter = 100f;
-                document.Add(blankConditionSpaceAgent);
-
-
+                
                 #region Identity
                 PdfPTable agentIdentity = new PdfPTable(3);
                 agentIdentity.SetWidths(new float[] { 0.5f, 4.5f, 2.5f });
@@ -395,7 +355,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 agentIdentity.AddCell(cellIdentityContentLeft);
                 cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
                 agentIdentity.AddCell(cellIdentityContentLeft);
-                cellIdentityContentRight.Phrase = new Phrase($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("dd MMMM yyyy", new CultureInfo("en-US"))}", normal_font);
+                cellIdentityContentRight.Phrase = new Phrase($"Sukoharjo, {viewModel.CreatedUtc.AddHours(timeoffset).ToString("MMMM dd, yyyy", new CultureInfo("en-US"))}", normal_font);
                 agentIdentity.AddCell(cellIdentityContentRight);
                 cellIdentityContentLeft.Phrase = new Phrase(" ", normal_font);
                 agentIdentity.AddCell(cellIdentityContentLeft);
@@ -409,32 +369,41 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 document.Add(agentIdentity);
 
                 PdfPTable agentIdentityOpeningLetter = new PdfPTable(3);
-                agentIdentityOpeningLetter.SetWidths(new float[] { 2f, 4.5f, 2.5f });
+                agentIdentityOpeningLetter.SetWidths(new float[] { 15f, 1f, 1f });
                 cellIdentityContentLeft.Phrase = new Phrase("MESSRS,", normal_font);
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Name, normal_font);
+                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Agent.Name, normal_font);
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Address, normal_font);
+                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Agent.Address, normal_font);
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Country, normal_font);
+                //if (!string.IsNullOrEmpty(viewModel.Agent.City))
+                //{
+                //    cellIdentityContentLeft.Phrase = new Phrase(viewModel.Agent.City, normal_font);
+                //    agentIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
+                //    cellIdentityContentRight.Phrase = new Phrase("");
+                //    agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+                //    cellIdentityContentRight.Phrase = new Phrase("");
+                //    agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
+                //}
+                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Agent.Country?.ToUpper(), normal_font);
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
-                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Buyer.Contact, normal_font);
+                cellIdentityContentLeft.Phrase = new Phrase(viewModel.Agent.Contact, normal_font);
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentLeft);
                 cellIdentityContentRight.Phrase = new Phrase("");
                 agentIdentityOpeningLetter.AddCell(cellIdentityContentRight);
@@ -461,9 +430,12 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 #endregion
 
                 #region agentBody
-                string agentFirstParagraphString = "This is to confirm that your order for " + viewModel.Buyer.Name + " concerning " + viewModel.OrderQuantity + " ( " + QuantityToText + ") " + uom + " ( ABOUT: " + convertion.ToString("N2") + " KG ) of " + viewModel.Comodity.Name;
+                string agentFirstParagraphString = "This is to confirm that your order for " + viewModel.Buyer.Name + " concerning " + viewModel.OrderQuantity.ToString("N2") + " ( " + QuantityToText + ") " + uom + " ( ABOUT: " + convertion.ToString("N2") + " KG ) of ";
                 Paragraph agentFirstParagraph = new Paragraph(agentFirstParagraphString, normal_font) { Alignment = Element.ALIGN_JUSTIFIED };
                 document.Add(agentFirstParagraph);
+                string agentFirstParagraphStringName = viewModel.Comodity.Name;
+                Paragraph agentFirstParagraphName = new Paragraph(agentFirstParagraphStringName, normal_font) { Alignment = Element.ALIGN_JUSTIFIED };
+                document.Add(agentFirstParagraphName);
                 string agentFirstParagraphStringDescription = viewModel.ComodityDescription;
                 Paragraph agentFirstParagraphDescription = new Paragraph(agentFirstParagraphStringDescription, normal_font) { Alignment = Element.ALIGN_JUSTIFIED };
                 agentFirstParagraphDescription.SpacingAfter = 10f;

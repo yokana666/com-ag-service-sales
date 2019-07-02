@@ -21,7 +21,7 @@ namespace Com.Danliris.Sales.Test
         {
             return Task.Run(() => new HttpResponseMessage() {
                 StatusCode = System.Net.HttpStatusCode.OK,
-                Content = new StringContent("{data:{}}")
+                Content = new StringContent("{data:{'data':'data'}}")
             });
         }
 

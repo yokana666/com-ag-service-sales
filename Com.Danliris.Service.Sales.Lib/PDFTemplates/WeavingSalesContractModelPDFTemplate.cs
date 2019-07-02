@@ -19,7 +19,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             Font normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 10);
             Font bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 10);
 
-            Document document = new Document(PageSize.A4, 40, 40, 40, 40);
+            Document document = new Document(PageSize.A4, 40, 40, 140, 40);
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = PdfWriter.GetInstance(document, stream);
             document.Open();
@@ -68,13 +68,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             #endregion
 
             #region Header
-
-            string blankString = " ";
-            Paragraph bankSpace = new Paragraph(blankString, normal_font);
-            bankSpace.SpacingAfter = 100f;
-            document.Add(bankSpace);
-
-
+            
             string codeNoString = "FM-PJ-00-03-003";
             Paragraph codeNo = new Paragraph(codeNoString, bold_font) { Alignment = Element.ALIGN_RIGHT };
             document.Add(codeNo);
@@ -214,7 +208,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Jadwal Pengiriman", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + appxLocal + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("id-ID"))).ToUpper(), normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + appxLocal + " " + (viewModel.DeliverySchedule.Value.AddHours(timeoffset).ToString("MMMM yyyy", new CultureInfo("id-ID")))?.ToUpper(), normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Piece length", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -287,12 +281,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region ConditionPage
             document.NewPage();
-
-            string blankSpaceCondition = " ";
-            Paragraph blankConditionSpace = new Paragraph(blankSpaceCondition, normal_font);
-            blankConditionSpace.SpacingAfter = 100f;
-            document.Add(blankConditionSpace);
-
+            
             string ConditionString = "Kondisi";
             Paragraph ConditionName = new Paragraph(ConditionString, header_font) { Alignment = Element.ALIGN_LEFT };
             document.Add(ConditionName);

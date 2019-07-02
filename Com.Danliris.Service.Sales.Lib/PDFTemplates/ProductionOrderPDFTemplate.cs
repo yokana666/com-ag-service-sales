@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
@@ -155,6 +156,27 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableIdentity1.AddCell(cellIdentityContentLeft);
             cellIdentityContentLeft.Phrase = new Phrase(": " + viewModel.HandlingStandard, normal_font);
             tableIdentity1.AddCell(cellIdentityContentLeft);
+
+            cellIdentityContentLeft.Phrase = new Phrase("RUN", normal_font);
+            tableIdentity1.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase(": " + viewModel.Run, normal_font);
+            tableIdentity1.AddCell(cellIdentityContentLeft);
+
+            string runWidth = "";
+
+            if (viewModel.RunWidth != null)
+                runWidth = string.Join(',', viewModel.RunWidth.Select(x => x.Value));
+
+            cellIdentityContentLeft.Phrase = new Phrase("Lebar RUN (cm)", normal_font);
+            tableIdentity1.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase(": " + runWidth, normal_font);
+            tableIdentity1.AddCell(cellIdentityContentLeft);
+
+            cellIdentityContentLeft.Phrase = new Phrase("Tulisan Pinggir Kain", normal_font);
+            tableIdentity1.AddCell(cellIdentityContentLeft);
+            cellIdentityContentLeft.Phrase = new Phrase(": " + viewModel.ArticleFabricEdge, normal_font);
+            tableIdentity1.AddCell(cellIdentityContentLeft);
+
 
             if (!string.IsNullOrWhiteSpace(viewModel.Run) && viewModel.RunWidth != null  && (viewModel.RunWidth.Count > 0))
             {

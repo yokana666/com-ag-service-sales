@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -29,14 +28,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
         private readonly IIdentityService identityService;
         private readonly ProductionOrderLogic productionOrderLogic;
         private readonly FinishingPrintingSalesContractLogic finishingPrintingSalesContractLogic;
+        private readonly IServiceProvider _serviceProvider;
 
         public ProductionOrderFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             this.DbContext = dbContext;
+            _serviceProvider = serviceProvider;
             this.DbSet = DbContext.Set<ProductionOrderModel>();
-            this.identityService = serviceProvider.GetService<IIdentityService>();
             this.productionOrderLogic = serviceProvider.GetService<ProductionOrderLogic>();
             this.finishingPrintingSalesContractLogic = serviceProvider.GetService<FinishingPrintingSalesContractLogic>();
+
+            this.identityService = serviceProvider.GetService<IIdentityService>();
         }
 
         public async Task<int> CreateAsync(ProductionOrderModel model)
@@ -227,7 +229,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                                 UId = x.UId
                             }).ToArray() : new ProductionOrder_RunWidthModel[0]
                         };
-                        
+
                         do
                         {
                             productionOrder.Code = CodeGenerator.Generate();
@@ -358,143 +360,179 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
 
         #region Report
 
-        public IQueryable<DailyOperationViewModel> GetDailyOperationItems(string no)
+        public async Task<List<DailyOperationViewModel>> GetDailyOperationItems(string no)
         {
-
             List<DailyOperationViewModel> reportData = new List<DailyOperationViewModel>();
             try
             {
-                string connectionString = APIEndpoint.ConnectionString;
-                using (SqlConnection conn =
-                    new SqlConnection(connectionString))
-                {
+                var httpClientService = (IHttpClientService)_serviceProvider.GetService(typeof(IHttpClientService));
 
-                    conn.Open();
-                    if (string.IsNullOrEmpty(no))
-                    {
-                        using (SqlCommand cmd = new SqlCommand(
-                        "select a.ProductionOrderOrderNo, b.Input  from Kanbans a join DailyOperation b on a.Id = b.KanbanId where a.IsDeleted=0 and b.IsDeleted=0", conn))
-                        {
-                            SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                            DataSet dSet = new DataSet();
-                            dataAdapter.Fill(dSet);
-                            foreach (DataRow data in dSet.Tables[0].Rows)
-                            {
-                                DailyOperationViewModel view = new DailyOperationViewModel
-                                {
-                                    orderNo = data["ProductionOrderOrderNo"].ToString(),
-                                    orderQuantity = string.IsNullOrWhiteSpace(data["Input"].ToString()) ? 0 : (double)data["Input"]
-                                };
-                                reportData.Add(view);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (SqlCommand cmd = new SqlCommand(
-                        "select a.ProductionOrderOrderNo, b.Input, e.Name, a.SelectedProductionOrderDetailColorRequest, d.ProcessArea, d.Process " +
-                        "from Kanbans a join DailyOperation b on a.Id = b.KanbanId " +
-                        "join KanbanInstructions c on a.Id = c.KanbanId " +
-                        "join KanbanSteps d on c.Id = d.InstructionId " +
-                        "join Machine e on d.MachineId = e.Id " +
-                        "where a.IsDeleted = 0 and b.IsDeleted = 0 and c.IsDeleted=0 and d.IsDeleted=0 and e.IsDeleted=0 and b.Input is not null and b.Input>0 and a.ProductionOrderOrderNo = '" + no + "'", conn))
-                        {
-                            SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                            DataSet dSet = new DataSet();
-                            dataAdapter.Fill(dSet);
-                            foreach (DataRow data in dSet.Tables[0].Rows)
-                            {
-                                DailyOperationViewModel view = new DailyOperationViewModel
-                                {
-                                    orderNo = data["ProductionOrderOrderNo"].ToString(),
-                                    orderQuantity = string.IsNullOrWhiteSpace(data["Input"].ToString()) ? 0 : (double)data["Input"],
-                                    area = data["ProcessArea"].ToString(),
-                                    color = data["SelectedProductionOrderDetailColorRequest"].ToString(),
-                                    machine = data["Name"].ToString(),
-                                    step = data["Process"].ToString()
-                                };
-                                reportData.Add(view);
-                            }
-                        }
-                    }
-                    conn.Close();
-                }
+                var productionService = await httpClientService.GetAsync(APIEndpoint.Production + "/finishing-printing/daily-operations/production-order-report?no=" + no);
+                productionService.EnsureSuccessStatusCode();
+
+                string data = await productionService.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<DailyAPiResult>(data);
+                reportData = result.data;
+
+
+
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                //Log exception
-                //Display Error message
+
             }
 
 
-            return reportData.AsQueryable();
+            return reportData;
+
+            //try
+            //{
+            //    string connectionString = APIEndpoint.ConnectionString;
+            //    using (SqlConnection conn =
+            //        new SqlConnection(connectionString))
+            //    {
+
+            //        conn.Open();
+            //        if (string.IsNullOrEmpty(no))
+            //        {
+            //            using (SqlCommand cmd = new SqlCommand(
+            //            "select a.ProductionOrderOrderNo, b.Input  from Kanbans a join DailyOperation b on a.Id = b.KanbanId where a.IsDeleted=0 and b.IsDeleted=0", conn))
+            //            {
+            //                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+            //                DataSet dSet = new DataSet();
+            //                dataAdapter.Fill(dSet);
+            //                foreach (DataRow data in dSet.Tables[0].Rows)
+            //                {
+            //                    DailyOperationViewModel view = new DailyOperationViewModel
+            //                    {
+            //                        orderNo = data["ProductionOrderOrderNo"].ToString(),
+            //                        orderQuantity = string.IsNullOrWhiteSpace(data["Input"].ToString()) ? 0 : (double)data["Input"]
+            //                    };
+            //                    reportData.Add(view);
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            using (SqlCommand cmd = new SqlCommand(
+            //            "select a.ProductionOrderOrderNo, b.Input, e.Name, a.SelectedProductionOrderDetailColorRequest, d.ProcessArea, d.Process " +
+            //            "from Kanbans a join DailyOperation b on a.Id = b.KanbanId " +
+            //            "join KanbanInstructions c on a.Id = c.KanbanId " +
+            //            "join KanbanSteps d on c.Id = d.InstructionId " +
+            //            "join Machine e on d.MachineId = e.Id " +
+            //            "where a.IsDeleted = 0 and b.IsDeleted = 0 and c.IsDeleted=0 and d.IsDeleted=0 and e.IsDeleted=0 and b.Input is not null and b.Input>0 and a.ProductionOrderOrderNo = '" + no + "'", conn))
+            //            {
+            //                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+            //                DataSet dSet = new DataSet();
+            //                dataAdapter.Fill(dSet);
+            //                foreach (DataRow data in dSet.Tables[0].Rows)
+            //                {
+            //                    DailyOperationViewModel view = new DailyOperationViewModel
+            //                    {
+            //                        orderNo = data["ProductionOrderOrderNo"].ToString(),
+            //                        orderQuantity = string.IsNullOrWhiteSpace(data["Input"].ToString()) ? 0 : (double)data["Input"],
+            //                        area = data["ProcessArea"].ToString(),
+            //                        color = data["SelectedProductionOrderDetailColorRequest"].ToString(),
+            //                        machine = data["Name"].ToString(),
+            //                        step = data["Process"].ToString()
+            //                    };
+            //                    reportData.Add(view);
+            //                }
+            //            }
+            //        }
+            //        conn.Close();
+            //    }
+            //}
+            //catch (SqlException ex)
+            //{
+            //    //Log exception
+            //    //Display Error message
+            //}
+
         }
 
-        public IQueryable<FabricQualityControlViewModel> GetFabricQualityItems(string no)
+        public async Task<List<FabricQualityControlViewModel>> GetFabricQualityItems(string no)
         {
-
             List<FabricQualityControlViewModel> reportData = new List<FabricQualityControlViewModel>();
             try
             {
-                string connectionString = APIEndpoint.ConnectionString;
-                using (SqlConnection conn =
-                    new SqlConnection(connectionString))
-                {
+                var httpClientService = (IHttpClientService)_serviceProvider.GetService(typeof(IHttpClientService));
+                var productionService = await httpClientService.GetAsync(APIEndpoint.Production + "/finishing-printing/quality-control/defect/production-order-report?no=" + no);
+                productionService.EnsureSuccessStatusCode();
+                string data = await productionService.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<FabricAPiResult>(data);
+                reportData = result.data;
 
-                    conn.Open();
-                    if (string.IsNullOrEmpty(no))
-                    {
-                        using (SqlCommand cmd = new SqlCommand(
-                        "select OrderQuantity,ProductionOrderNo from FabricQualityControls where IsDeleted=0", conn))
-                        {
-                            SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                            DataSet dSet = new DataSet();
-                            dataAdapter.Fill(dSet);
-                            foreach (DataRow data in dSet.Tables[0].Rows)
-                            {
-                                FabricQualityControlViewModel view = new FabricQualityControlViewModel
-                                {
-                                    orderNo = data["ProductionOrderNo"].ToString(),
-                                    orderQuantity = string.IsNullOrWhiteSpace(data["OrderQuantity"].ToString()) ? 0 : (double)data["OrderQuantity"]
-                                };
-                                reportData.Add(view);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (SqlCommand cmd = new SqlCommand(
-                        "select OrderQuantity,ProductionOrderNo,Grade from FabricQualityControls a join FabricGradeTests b on a.Id = b.FabricQualityControlId where a.IsDeleted = 0 and b.IsDeleted=0 and ProductionOrderNo='" + no + "'", conn))
-                        {
-                            SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                            DataSet dSet = new DataSet();
-                            dataAdapter.Fill(dSet);
-                            foreach (DataRow data in dSet.Tables[0].Rows)
-                            {
-                                FabricQualityControlViewModel view = new FabricQualityControlViewModel
-                                {
-                                    orderNo = data["ProductionOrderNo"].ToString(),
-                                    orderQuantity = string.IsNullOrWhiteSpace(data["OrderQuantity"].ToString()) ? 0 : (double)data["OrderQuantity"],
-                                    grade = data["Grade"].ToString()
-                                };
-                                reportData.Add(view);
-                            }
-                        }
-                    }
-
-                    conn.Close();
-                }
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                //Log exception
-                //Display Error message
+
             }
 
 
-            return reportData.AsQueryable();
+            return reportData;
+            //List<FabricQualityControlViewModel> reportData = new List<FabricQualityControlViewModel>();
+            //try
+            //{
+            //    string connectionString = APIEndpoint.ConnectionString;
+            //    using (SqlConnection conn =
+            //        new SqlConnection(connectionString))
+            //    {
+
+            //        conn.Open();
+            //        if (string.IsNullOrEmpty(no))
+            //        {
+            //            using (SqlCommand cmd = new SqlCommand(
+            //            "select OrderQuantity,ProductionOrderNo from FabricQualityControls where IsDeleted=0", conn))
+            //            {
+            //                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+            //                DataSet dSet = new DataSet();
+            //                dataAdapter.Fill(dSet);
+            //                foreach (DataRow data in dSet.Tables[0].Rows)
+            //                {
+            //                    FabricQualityControlViewModel view = new FabricQualityControlViewModel
+            //                    {
+            //                        orderNo = data["ProductionOrderNo"].ToString(),
+            //                        orderQuantity = string.IsNullOrWhiteSpace(data["OrderQuantity"].ToString()) ? 0 : (double)data["OrderQuantity"]
+            //                    };
+            //                    reportData.Add(view);
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            using (SqlCommand cmd = new SqlCommand(
+            //            "select OrderQuantity,ProductionOrderNo,Grade from FabricQualityControls a join FabricGradeTests b on a.Id = b.FabricQualityControlId where a.IsDeleted = 0 and b.IsDeleted=0 and ProductionOrderNo='" + no + "'", conn))
+            //            {
+            //                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+            //                DataSet dSet = new DataSet();
+            //                dataAdapter.Fill(dSet);
+            //                foreach (DataRow data in dSet.Tables[0].Rows)
+            //                {
+            //                    FabricQualityControlViewModel view = new FabricQualityControlViewModel
+            //                    {
+            //                        orderNo = data["ProductionOrderNo"].ToString(),
+            //                        orderQuantity = string.IsNullOrWhiteSpace(data["OrderQuantity"].ToString()) ? 0 : (double)data["OrderQuantity"],
+            //                        grade = data["Grade"].ToString()
+            //                    };
+            //                    reportData.Add(view);
+            //                }
+            //            }
+            //        }
+
+            //        conn.Close();
+            //    }
+            //}
+            //catch (SqlException ex)
+            //{
+            //    //Log exception
+            //    //Display Error message
+            //}
+
+
+            //return reportData.AsQueryable();
         }
-        public IQueryable<ProductionOrderReportViewModel> GetReportQuery(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int offset)
+        public async Task<IQueryable<ProductionOrderReportViewModel>> GetReportQuery(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int offset)
         {
             DateTime DateFrom = dateFrom == null ? new DateTime(1970, 1, 1) : (DateTime)dateFrom;
             DateTime DateTo = dateTo == null ? DateTime.Now : (DateTime)dateTo;
@@ -520,34 +558,36 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                              colorRequest = b.ColorRequest,
                              orderQuantity = b.Quantity,
                              colorTemplate = b.ColorTemplate,
-                             construction = a.MaterialConstructionName,
+                             construction = a.MaterialName + " / " + a.MaterialConstructionName + " / " + a.MaterialWidth,
                              deliveryDate = a.DeliveryDate,
                              designCode = a.DesignCode,
                              orderType = a.OrderTypeName,
                              processType = a.ProcessTypeName,
-                             staffName = a.CreatedBy,
+                             staffName = a.ProfileFirstName + " - " + a.ProfileLastName,
                              _createdDate = a.CreatedUtc
                          });
-            var dailyOP = GetDailyOperationItems(null).OrderByDescending(a => a.orderNo);
-            var fabricQuality = GetFabricQualityItems(null).OrderByDescending(a => a.orderNo);
+            var fabricQuality = await GetFabricQualityItems(orderNo);
+            var dailyOP = await GetDailyOperationItems(orderNo);
+            //List<DailyOperationViewModel> dailies = new List<DailyOperationViewModel>();
+            
+
             List<ProductionOrderReportViewModel> query = new List<ProductionOrderReportViewModel>();
             foreach (var data in Query)
             {
+
                 double detailProd = 0;
                 double detailPrep = 0;
                 foreach (var daily in dailyOP)
                 {
                     if (daily.orderNo == data.orderNo)
-                    {
                         detailProd += daily.orderQuantity;
-                    }
+
                 }
                 foreach (var prep in fabricQuality)
                 {
                     if (prep.orderNo == data.orderNo)
-                    {
                         detailPrep += prep.orderQuantity;
-                    }
+
                 }
                 data.detail = data.orderQuantity + " di SPP \n" + detailProd + " di Produksi \n" + detailPrep + " di Pemeriksaan \n";
                 if (detailPrep > 0)
@@ -568,9 +608,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             return Query = query.AsQueryable();
         }
 
-        public Tuple<List<ProductionOrderReportViewModel>, int> GetReport(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
+        public async Task<Tuple<List<ProductionOrderReportViewModel>, int>> GetReport(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int page, int size, string Order, int offset)
         {
-            var Query = GetReportQuery(salesContractNo, orderNo, orderTypeId, processTypeId, buyerId, accountId, dateFrom, dateTo, offset);
+            var Query = await GetReportQuery(salesContractNo, orderNo, orderTypeId, processTypeId, buyerId, accountId, dateFrom, dateTo, offset);
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(Order);
             if (OrderDictionary.Count.Equals(0))
@@ -585,9 +625,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             return Tuple.Create(Data, TotalData);
         }
 
-        public MemoryStream GenerateExcel(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int offset)
+        public async Task<MemoryStream> GenerateExcel(string salesContractNo, string orderNo, string orderTypeId, string processTypeId, string buyerId, string accountId, DateTime? dateFrom, DateTime? dateTo, int offset)
         {
-            var Query = GetReportQuery(salesContractNo, orderNo, orderTypeId, processTypeId, buyerId, accountId, dateFrom, dateTo, offset);
+            var Query = await GetReportQuery(salesContractNo, orderNo, orderTypeId, processTypeId, buyerId, accountId, dateFrom, dateTo, offset);
             Query = Query.OrderByDescending(b => b._createdDate);
             DataTable result = new DataTable();
 
@@ -602,13 +642,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             result.Columns.Add(new DataColumn() { ColumnName = "Motif", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Hasil Matching", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "CW", DataType = typeof(String) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Buyer", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tipe Buyer", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Staff Penjualan", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tanggal Terima Order", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tanggal Permintaan Pengiriman", DataType = typeof(String) });
 
             if (Query.ToArray().Count() == 0)
-                result.Rows.Add("", "", "", "", 0, "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
+                result.Rows.Add("", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
             else
             {
                 int index = 0;
@@ -618,14 +659,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                     string deliverySchedule = item.deliveryDate == null ? "-" : item.deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                     string createdDate = item._createdDate == null ? "-" : item._createdDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                     result.Rows.Add(index, item.status, item.detail, item.orderNo, item.orderQuantity, item.orderType, item.processType, item.construction,
-                        item.designCode, item.colorTemplate, item.colorRequest, item.buyerType, item.staffName, createdDate, deliverySchedule);
+                        item.designCode, item.colorTemplate, item.colorRequest, item.buyer, item.buyerType, item.staffName, createdDate, deliverySchedule);
                 }
             }
 
             return Excel.CreateExcel(new List<KeyValuePair<DataTable, string>>() { new KeyValuePair<DataTable, string>(result, "Territory") }, true);
         }
 
-        public ProductionOrderReportDetailViewModel GetDetailReport(long no)
+        public async Task<ProductionOrderReportDetailViewModel> GetDetailReport(long no)
         {
             var query = (from a in DbContext.ProductionOrder_Details
                          join b in DbContext.ProductionOrder on a.ProductionOrderModel.Id equals b.Id
@@ -645,8 +686,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             }
             ProductionOrderReportDetailViewModel detail = new ProductionOrderReportDetailViewModel();
             detail.SPPList = query;
-            detail.QCList = GetFabricQualityItems(sppNo).ToList();
-            detail.DailyOPList = GetDailyOperationItems(sppNo).ToList();
+            detail.QCList = await GetFabricQualityItems(sppNo);
+            detail.DailyOPList = await GetDailyOperationItems(sppNo);
             return detail;
         }
 
