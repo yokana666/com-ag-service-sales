@@ -28,7 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             List<string> SearchAttributes = new List<string>()
             {
-                "SalesContractNo"
+                "SalesContractNo","BuyerName"
             };
 
             Query = QueryHelper<FinishingPrintingSalesContractModel>.Search(Query, SearchAttributes, keyword);
