@@ -98,7 +98,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
             }
             else
             {
-                int lastNoNumber = Int32.Parse(lastData.SCNo.Replace(no, "")) + 1;
+                string tempSCNo = lastData.SCNo;
+                if(model.SCType == "SAMPLE")
+                {
+                    tempSCNo = lastData.SCNo.Substring(0, lastData.SCNo.Length - 2);
+                }
+                int lastNoNumber = Int32.Parse(tempSCNo.Replace(no, "")) + 1;
                 model.SCNo = no + lastNoNumber.ToString().PadLeft(Padding, '0');
             }
 
