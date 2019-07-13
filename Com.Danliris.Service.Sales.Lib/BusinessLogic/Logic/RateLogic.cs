@@ -14,7 +14,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic
    public  class RateLogic : BaseLogic<Rate>
     {
         private readonly SalesDbContext DbContext;
-        public RateLogic(IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService, serviceProvider, dbContext)
+        public RateLogic(IIdentityService identityService, SalesDbContext dbContext) : base(identityService, dbContext)
         {
             this.DbContext = dbContext;
         }
