@@ -3,6 +3,7 @@ using Com.Danliris.Service.Sales.Lib.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
@@ -27,7 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
             {
                 var rateFacade = (IRate)validationContext.GetService(typeof(IRate));
                 var rate = rateFacade.Read(1, 1, "{}", null, null, $"{{ Name: \"{Name}\", UnitId: \"{Unit.Id}\" }}");
-                if (rate.Count > 0)
+                if (rate.Data.Count(data => data.Id != Id) > 0)
                 {
                     yield return new ValidationResult($"Nama ongkos '{Name}' dan Unit '{Unit.Name}' sudah ada.", new List<string> { "Unit" });
                 }
