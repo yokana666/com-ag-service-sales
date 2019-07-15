@@ -55,7 +55,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentPreSalesContractViewM
 
             if (OrderQuantity <= 0)
             {
-                yield return new ValidationResult("Quantity harus lebih dari 0", new List<string> { "BuyerBrand" });
+                yield return new ValidationResult("Jumlah Order harus lebih dari 0", new List<string> { "OrderQuantity" });
             }
         }
 
