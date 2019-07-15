@@ -1,4 +1,4 @@
-﻿using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using System;
@@ -160,6 +160,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                     Code = costCalculation.UnitCode,
                     Name = costCalculation.UnitName
                 },
+                IsPosted = true,
                 Items = FillGarmentPurchaseRequestItems(costCalculation.CostCalculationGarment_Materials.ToList(), productDicts)
             };
             return garmentPurchaseRequest;
