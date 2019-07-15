@@ -83,10 +83,22 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             costCalculationGarmentLogic.Create(model);
 			return await DbContext.SaveChangesAsync();
 		}
-		public async Task<int> DeleteAsync(int id)
+
+        public async Task<int> DeleteAsync(int id)
 		{
-			await costCalculationGarmentLogic.DeleteAsync(id);
-			return await DbContext.SaveChangesAsync();
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    await costCalculationGarmentLogic.DeleteAsync(id);
+                    return await DbContext.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
 		}
 
 		public ReadResponse<CostCalculationGarment> Read(int page, int size, string order, List<string> select, string keyword, string filter)
