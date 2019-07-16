@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments
 {
@@ -105,9 +106,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 		{
 			return costCalculationGarmentLogic.Read(page, size, order, select, keyword, filter);
 		}
-		private AzureImageFacade AzureImageFacade
+		private IAzureImageFacade AzureImageFacade
 		{
-			get { return this.ServiceProvider.GetService<AzureImageFacade>(); }
+			get { return this.ServiceProvider.GetService<IAzureImageFacade>(); }
 		}
 		public async Task<CostCalculationGarment> ReadByIdAsync(int id)
 		{
