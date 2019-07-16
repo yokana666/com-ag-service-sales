@@ -62,7 +62,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
             base.Create(model);
         }
 
-        public override async Task<MaxWHConfirm> ReadByIdAsync(int id)
+        public override async Task<MaxWHConfirm> ReadByIdAsync(long id)
         {
             var model = await DbSet.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
             return model;
