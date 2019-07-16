@@ -13,6 +13,7 @@ using Com.Danliris.Service.Sales.Lib.Models;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.MaxWHConfirmModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
 
 namespace Com.Danliris.Service.Sales.Lib
@@ -54,6 +55,7 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<GarmentSewingBlockingPlan> GarmentSewingBlockingPlans { get; set; }
         public DbSet<GarmentSewingBlockingPlanItem> GarmentSewingBlockingPlanItems { get; set; }
 
+        public DbSet<MaxWHConfirm> MaxWHConfirms { get; set; }
         public DbSet<GarmentPreSalesContract> GarmentPreSalesContracts { get; set; }
 
 
