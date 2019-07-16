@@ -58,6 +58,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public long? SCGarmentId { get; set; }
         public bool? IsValidated { get; set; }
 
+        public long PreSCId { get; set; }
+        public string PreSCNo { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
 			if (string.IsNullOrWhiteSpace(this.Article))

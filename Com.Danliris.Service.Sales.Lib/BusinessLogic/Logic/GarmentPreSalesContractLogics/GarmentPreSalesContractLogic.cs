@@ -38,7 +38,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "BuyerBrandId", "BuyerBrandName", "BuyerBrandCode", "SCNo", "SCDate", "SCType", "LastModifiedUtc", "CreatedUtc", "BuyerAgentId", "BuyerAgentName", "BuyerAgentCode", "OrderQuantity"
+                "Id", "SectionId", "SectionCode", "BuyerBrandId", "BuyerBrandName", "BuyerBrandCode", "SCNo", "SCDate", "SCType", "LastModifiedUtc", "CreatedUtc", "BuyerAgentId", "BuyerAgentName", "BuyerAgentCode", "OrderQuantity"
             };
 
             Query = Query
@@ -48,6 +48,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
                     SCNo = sc.SCNo,
                     SCDate = sc.SCDate,
                     SCType = sc.SCType,
+                    SectionId = sc.SectionId,
+                    SectionCode = sc.SectionCode,
                     BuyerBrandCode = sc.BuyerBrandCode,
                     BuyerBrandId = sc.BuyerBrandId,
                     BuyerBrandName = sc.BuyerBrandName,
