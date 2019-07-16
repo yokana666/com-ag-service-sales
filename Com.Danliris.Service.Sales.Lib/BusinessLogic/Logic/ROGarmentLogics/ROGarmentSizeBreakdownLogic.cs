@@ -78,7 +78,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             DbSet.Add(model);
         }
 
-        public override async void UpdateAsync(int id, RO_Garment_SizeBreakdown model)
+        public override void UpdateAsync(long id, RO_Garment_SizeBreakdown model)
         {
             if (model.RO_Garment_SizeBreakdown_Details != null)
             {
@@ -90,12 +90,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                     {
                         RO_Garment_SizeBreakdown_Detail dataItem = DbContext.RO_Garment_SizeBreakdown_Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
                         EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
-                        //await roGarmentSizeBreakdownDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
+                        //await roGarmentSizeBreakdownDetailLogic.DeleteAsync(itemId);
 
                     }
                     else
                     {
-                        roGarmentSizeBreakdownDetailLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                        roGarmentSizeBreakdownDetailLogic.UpdateAsync(itemId, data);
                     }
 
                     foreach (RO_Garment_SizeBreakdown_Detail item in model.RO_Garment_SizeBreakdown_Details)
@@ -110,7 +110,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             DbSet.Update(model);
         }
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
             RO_Garment_SizeBreakdown model = await ReadByIdAsync(id);
             if (model.RO_Garment_SizeBreakdown_Details != null)
@@ -118,7 +118,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                 HashSet<long> detailIds = roGarmentSizeBreakdownDetailLogic.GetIds(id);
                 foreach (var itemId in detailIds)
                 {
-                    await roGarmentSizeBreakdownDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
+                    await roGarmentSizeBreakdownDetailLogic.DeleteAsync(itemId);
                 }
             }
 

@@ -4,7 +4,6 @@ using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
 using Com.Danliris.Service.Sales.WebApi.Utilities;
-using Com.Moonlay.NetCore.Lib.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -13,10 +12,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Com.Danliris.Service.Sales.Lib.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Com.Danliris.Sales.Test.WebApi.Utils
 {
@@ -54,13 +52,13 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             return new ServiceValidationException(validationContext, validationResults);
         }
 
-        protected (Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) GetMocks()
+        protected (Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) GetMocks()
         {
-            return (IdentityService: new Mock<IIdentityService>(), ValidateService: new Mock<IValidateService>(), Facade: new Mock<IFacade>(), Mapper: new Mock<IMapper>());
+            return (IdentityService: new Mock<IIdentityService>(), ValidateService: new Mock<IValidateService>(), Facade: new Mock<IFacade>(), Mapper: new Mock<IMapper>(), ServiceProvider: new Mock<IServiceProvider>());
         }
 
 
-        protected TController GetController((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) mocks)
+        protected TController GetController((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
         {
             var user = new Mock<ClaimsPrincipal>();
             var claims = new Claim[]
@@ -68,7 +66,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
                 new Claim("username", "unittestusername")
             };
             user.Setup(u => u.Claims).Returns(claims);
-            TController controller = (TController)Activator.CreateInstance(typeof(TController), mocks.IdentityService.Object, mocks.ValidateService.Object, mocks.Facade.Object, mocks.Mapper.Object);
+            mocks.ServiceProvider.Setup(s => s.GetService(typeof(IHttpClientService))).Returns(new HttpClientTestService());
+            TController controller = (TController)Activator.CreateInstance(typeof(TController), mocks.IdentityService.Object, mocks.ValidateService.Object, mocks.Facade.Object, mocks.Mapper.Object, mocks.ServiceProvider.Object);
             controller.ControllerContext = new ControllerContext()
             {
                 HttpContext = new DefaultHttpContext()
@@ -86,7 +85,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             return (int)response.GetType().GetProperty("StatusCode").GetValue(response, null);
         }
 
-        private int GetStatusCodeGet((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) mocks)
+        private int GetStatusCodeGet((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
         {
             TController controller = this.GetController(mocks);
             IActionResult response = controller.Get();
@@ -100,7 +99,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             var mocks = this.GetMocks();
             mocks.Facade.Setup(f => f.Read(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<TModel>(new List<TModel>(), 0, new Dictionary<string, string>(), new List<string>()));
             mocks.Mapper.Setup(f => f.Map<List<TViewModel>>(It.IsAny<List<TModel>>())).Returns(this.ViewModels);
-
+            
             int statusCode = this.GetStatusCodeGet(mocks);
             Assert.Equal((int)HttpStatusCode.OK, statusCode);
         }
@@ -115,7 +114,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
-        private async Task<int> GetStatusCodePost((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) mocks)
+        private async Task<int> GetStatusCodePost((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
         {
             TController controller = this.GetController(mocks);
             IActionResult response = await controller.Post(this.ViewModel);
@@ -155,7 +154,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
-        private async Task<int> GetStatusCodeGetById((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) mocks)
+        private async Task<int> GetStatusCodeGetById((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
         {
             TController controller = this.GetController(mocks);
             IActionResult response = await controller.GetById(1);
@@ -169,7 +168,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             var mocks = this.GetMocks();
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(this.Model);
             mocks.Mapper.Setup(f => f.Map<TViewModel>(It.IsAny<TModel>())).Returns(this.ViewModel);
-
+            
             int statusCode = await this.GetStatusCodeGetById(mocks);
             Assert.Equal((int)HttpStatusCode.OK, statusCode);
         }
@@ -195,7 +194,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
-        private async Task<int> GetStatusCodePut((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) mocks, int id, TViewModel viewModel)
+        private async Task<int> GetStatusCodePut((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks, int id, TViewModel viewModel)
         {
             TController controller = this.GetController(mocks);
             IActionResult response = await controller.Put(id, viewModel);
@@ -262,7 +261,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
-        private async Task<int> GetStatusCodeDelete((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper) mocks)
+        private async Task<int> GetStatusCodeDelete((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
         {
             TController controller = this.GetController(mocks);
             IActionResult response = await controller.Delete(1);

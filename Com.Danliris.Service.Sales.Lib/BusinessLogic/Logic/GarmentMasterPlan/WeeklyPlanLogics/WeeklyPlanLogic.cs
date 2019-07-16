@@ -70,14 +70,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
             base.Create(model);
         }
 
-        public override async Task<GarmentWeeklyPlan> ReadByIdAsync(int id)
+        public override async Task<GarmentWeeklyPlan> ReadByIdAsync(long id)
         {
             var model = await DbSet.AsNoTracking().Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
             model.Items = model.Items.OrderBy(i => i.WeekNumber).ToList();
             return model;
         }
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
             var model = await DbSet.Include(d => d.Items).FirstOrDefaultAsync(d => d.Id == id);
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
@@ -87,7 +87,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.W
             }
         }
 
-        public override void UpdateAsync(int id, GarmentWeeklyPlan newModel)
+        public override void UpdateAsync(long id, GarmentWeeklyPlan newModel)
         {
             var model = DbSet.Include(d => d.Items).FirstOrDefault(d => d.Id == id);
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");

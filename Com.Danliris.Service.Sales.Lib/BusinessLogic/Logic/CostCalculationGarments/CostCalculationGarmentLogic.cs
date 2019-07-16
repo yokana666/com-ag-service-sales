@@ -156,7 +156,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 													  select b).AsNoTracking().OrderByDescending(o => o.CreatedUtc.Year).ThenByDescending(t => t.AutoIncrementNumber).FirstOrDefault();
 			return result == null ? 0 : result.AutoIncrementNumber;
 		}
-		public override async void UpdateAsync(int id, CostCalculationGarment model)
+		public override void UpdateAsync(long id, CostCalculationGarment model)
 		{
             GeneratePONumbers(model);
             if (model.CostCalculationGarment_Materials != null)
@@ -169,11 +169,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                     {
                         CostCalculationGarment_Material dataItem = DbContext.CostCalculationGarment_Materials.FirstOrDefault(prop => prop.Id.Equals(itemId));
                         EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
-                        //await costCalculationGarmentMaterialLogic.DeleteAsync(Convert.ToInt32(itemId));
+                        //await costCalculationGarmentMaterialLogic.DeleteAsync(itemId);
                     }
                     else
                     {
-                        costCalculationGarmentMaterialLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                        costCalculationGarmentMaterialLogic.UpdateAsync(itemId, data);
                     }
 
 					foreach (CostCalculationGarment_Material item in model.CostCalculationGarment_Materials)

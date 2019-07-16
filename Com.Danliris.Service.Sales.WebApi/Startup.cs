@@ -62,6 +62,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.Garme
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.MaxWHConfirmInterfaces;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MaxWHConfirmFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MaxWHConfirmLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentPreSalesContractFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentPreSalesContractInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -107,8 +110,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ISewingBlockingPlanReportFacade, SewingBlockingPlanReportFacade>()
                 .AddTransient<IOverScheduleMonitoringFacade, OverScheduleMonitoringFacade>()
                 .AddTransient<IWeeklyWorkingScheduleMonitoringFacade, WeeklyWorkingScheduleMonitoringFacade>()
-                .AddTransient<IMaxWHConfirmFacade, MaxWHConfirmFacade>();
-
+                .AddTransient<IMaxWHConfirmFacade, MaxWHConfirmFacade>()
+                .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -143,7 +146,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<SewingBlockingPlanReportLogic>()
                 .AddTransient<OverScheduleMonitoringLogic>()
                 .AddTransient<WeeklyWorkingScheduleMonitoringLogic>()
-                .AddTransient<MaxWHConfirmLogic>();
+                .AddTransient<MaxWHConfirmLogic>()
+                .AddTransient<GarmentPreSalesContractLogic>();
             
         }
 
@@ -151,6 +155,7 @@ namespace Com.Danliris.Service.Sales.WebApi
         {
             services
                 .AddScoped<IIdentityService,IdentityService>()
+                .AddScoped<IHttpClientService, HttpClientService>()
                 .AddScoped<IValidateService,ValidateService>();
         }
 
@@ -162,6 +167,7 @@ namespace Com.Danliris.Service.Sales.WebApi
 			Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.StorageAccountKey = Configuration.GetValue<string>("StorageAccountKey") ?? Configuration["StorageAccountKey"];
             Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.AzurePurchasing = Configuration.GetValue<string>("AzurePurchasingEndpoint") ?? Configuration["PurchasingEndpoint"];
             Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.Core = Configuration.GetValue<string>("CoreEndpoint") ?? Configuration["CoreEndpoint"];
+            Lib.Helpers.APIEndpoint.Production = Configuration.GetValue<string>("ProductionEndpoint") ?? Configuration["ProductionEndpoint"];
 
         }
 

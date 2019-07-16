@@ -75,6 +75,7 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.ProductionOrderProfi
             .ForPath(d => d.Account.LastName, opt => opt.MapFrom(s => s.ProfileLastName))
             .ForPath(d => d.Account.Gender, opt => opt.MapFrom(s => s.ProfileGender))
 
+            .ForPath(d => d.RunWidth, opt => opt.MapFrom(s => s.RunWidths))
             .ReverseMap();
         }
     }

@@ -17,7 +17,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
         {
         }
 
-        public async override Task DeleteAsync(int id)
+        public async override Task DeleteAsync(long id)
         {
             var model = await ReadByIdAsync(id);
 
@@ -35,7 +35,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
             return new HashSet<long>(DbSet.Where(d => d.GarmentBookingOrder.Id == id).Select(d => d.Id));
         }
 
-        public override void UpdateAsync(int id, GarmentBookingOrderItem model)
+        public override void UpdateAsync(long id, GarmentBookingOrderItem model)
         {
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);

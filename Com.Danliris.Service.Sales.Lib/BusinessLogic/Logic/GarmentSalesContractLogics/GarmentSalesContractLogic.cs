@@ -76,7 +76,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
             return new ReadResponse<GarmentSalesContract>(data, totalData, OrderDictionary, SelectedFields);
         }
 
-        public async override void Create(GarmentSalesContract model)
+        public  override void Create(GarmentSalesContract model)
         {
             GenerateNo(model);
             if(model.Items.Count>0)
@@ -90,7 +90,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
             DbSet.Add(model);
         }
 
-        public override async Task<GarmentSalesContract> ReadByIdAsync(int id)
+        public override async Task<GarmentSalesContract> ReadByIdAsync(long id)
         {
             var garmentSalesContract = await DbSet.Include(p => p.Items).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
             garmentSalesContract.Items = garmentSalesContract.Items.OrderBy(s => s.Id).ToArray();
@@ -104,7 +104,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
             return garmentSalesContract;
         }
 
-        public override async void UpdateAsync(int id, GarmentSalesContract model)
+        public override void UpdateAsync(long id, GarmentSalesContract model)
         {
             if (model.Items != null)
             {
@@ -136,12 +136,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
                             GarmentSalesContractItem dataItem = DbContext.GarmentSalesContractItems.FirstOrDefault(prop => prop.Id.Equals(itemId));
                             EntityExtension.FlagForDelete(dataItem, IdentityService.Username, "sales-service");
                         }
-                            //await GarmentSalesContractItemLogic.DeleteAsync(Convert.ToInt32(itemId));
+                            //await GarmentSalesContractItemLogic.DeleteAsync(itemId);
                         else
                         {
                             //GarmentSalesContractItem dataItem = DbContext.GarmentSalesContractItems.FirstOrDefault(prop => prop.Id.Equals(itemId));
                             //EntityExtension.FlagForUpdate(dataItem, IdentityService.Username, "sales-service");
-                            GarmentSalesContractItemLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                            GarmentSalesContractItemLogic.UpdateAsync(itemId, data);
                         }
 
                         foreach (GarmentSalesContractItem item in model.Items)
@@ -159,7 +159,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContrac
             DbSet.Update(model);
         }
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
             var model = await ReadByIdAsync(id);
 

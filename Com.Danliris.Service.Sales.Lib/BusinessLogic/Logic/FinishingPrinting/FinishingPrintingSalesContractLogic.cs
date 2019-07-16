@@ -92,41 +92,57 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             DbSet.Add(model);
         }
 
-        public override async Task<FinishingPrintingSalesContractModel> ReadByIdAsync(int id)
+        public override async Task<FinishingPrintingSalesContractModel> ReadByIdAsync(long id)
         {
-            var finishingPrintingSalesContract = await DbSet.Include(p => p.Details).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
-            finishingPrintingSalesContract.Details = finishingPrintingSalesContract.Details.OrderBy(s => s.Id).ToArray();
-            return finishingPrintingSalesContract;
+            try
+            {
+                var finishingPrintingSalesContract = await DbSet.Include(p => p.Details).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
+                finishingPrintingSalesContract.Details = finishingPrintingSalesContract.Details.OrderBy(s => s.Id).ToArray();
+                return finishingPrintingSalesContract;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
-        public override async void UpdateAsync(int id, FinishingPrintingSalesContractModel model)
+        public override async void UpdateAsync(long id, FinishingPrintingSalesContractModel model)
         {
-            if (model.Details != null)
+            try
             {
-                HashSet<long> detailIds = FinishingPrintingSalesContractDetailLogic.GetFPSalesContractIds(id);
-                foreach (var itemId in detailIds)
-                {
-                    FinishingPrintingSalesContractDetailModel data = model.Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
-                    if (data == null)
-                    await FinishingPrintingSalesContractDetailLogic.DeleteAsync(Convert.ToInt32(itemId));
-                    else
-                    {
-                        FinishingPrintingSalesContractDetailLogic.UpdateAsync(Convert.ToInt32(itemId), data);
-                    }
 
-                    foreach (FinishingPrintingSalesContractDetailModel item in model.Details)
+                if (model.Details != null)
+                {
+                    HashSet<long> detailIds = FinishingPrintingSalesContractDetailLogic.GetFPSalesContractIds(id);
+                    foreach (var itemId in detailIds)
                     {
-                        if (item.Id == 0)
-                            FinishingPrintingSalesContractDetailLogic.Create(item);
+                        FinishingPrintingSalesContractDetailModel data = model.Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        if (data == null)
+                            await FinishingPrintingSalesContractDetailLogic.DeleteAsync(itemId);
+                        else
+                        {
+                            FinishingPrintingSalesContractDetailLogic.UpdateAsync(itemId, data);
+                        }
+
+                        foreach (FinishingPrintingSalesContractDetailModel item in model.Details)
+                        {
+                            if (item.Id == 0)
+                                FinishingPrintingSalesContractDetailLogic.Create(item);
+                        }
                     }
                 }
-            }
 
-            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-            DbSet.Update(model);
+                EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+                DbSet.Update(model);
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
             var model = await ReadByIdAsync(id);
 
@@ -141,29 +157,30 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
         private void SalesContractNumberGenerator(FinishingPrintingSalesContractModel model)
         {
-            FinishingPrintingSalesContractModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.OrderTypeName.Equals(model.OrderTypeName)).OrderByDescending(o => o.AutoIncrementNumber).FirstOrDefault();
+            FinishingPrintingSalesContractModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.BuyerType.Equals(model.BuyerType, StringComparison.OrdinalIgnoreCase)).OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
 
             string DocumentType = model.BuyerType.ToLower().Equals("ekspor") || model.BuyerType.ToLower().Equals("export") ? "FPE" : "FPL";
 
-            int YearNow = DateTime.Now.Year;
-            int MonthNow = DateTime.Now.Month;
+            DateTime Now = DateTime.Now;
+            string Year = Now.ToString("yyyy");
+            string month = Now.ToString("MM");
 
             if (lastData == null)
             {
                 model.AutoIncrementNumber = 1;
-                model.SalesContractNo = $"0001/{DocumentType}/{MonthNow}/{YearNow}";
+                model.SalesContractNo = $"0001/{DocumentType}/{month}.{Year}";
             }
             else
             {
-                if (YearNow > lastData.CreatedUtc.Year)
+                if (Now.Year > lastData.CreatedUtc.Year)
                 {
                     model.AutoIncrementNumber = 1;
-                    model.SalesContractNo = $"0001/{DocumentType}/{MonthNow}/{YearNow}";
+                    model.SalesContractNo = $"0001/{DocumentType}/{month}.{Year}";
                 }
                 else
                 {
                     model.AutoIncrementNumber = lastData.AutoIncrementNumber + 1;
-                    model.SalesContractNo = $"{model.AutoIncrementNumber.ToString().PadLeft(4, '0')}/{DocumentType}/{MonthNow}/{YearNow}";
+                    model.SalesContractNo = $"{model.AutoIncrementNumber.ToString().PadLeft(4, '0')}/{DocumentType}/{month}.{Year}";
                 }
             }
         }

@@ -30,7 +30,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private string GetCurrentMethod()
+        protected string GetCurrentMethod()
         {
             StackTrace st = new StackTrace();
             StackFrame sf = st.GetFrame(1);
@@ -38,7 +38,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
             return string.Concat(sf.GetMethod().Name, "_", _entity);
         }
 
-        private TDbContext DbContext(string testName)
+        protected TDbContext DbContext(string testName)
         {
             DbContextOptionsBuilder<TDbContext> optionsBuilder = new DbContextOptionsBuilder<TDbContext>();
             optionsBuilder

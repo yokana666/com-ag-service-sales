@@ -96,7 +96,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             DbSet.Add(model);
         }
 
-        public override async void UpdateAsync(int id, RO_Garment model)
+        public override void UpdateAsync(long id, RO_Garment model)
         {
             if (model.RO_Garment_SizeBreakdowns != null)
             {
@@ -119,7 +119,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                     }
                     else
                     {
-                        roGarmentSizeBreakdownLogic.UpdateAsync(Convert.ToInt32(itemId), data);
+                        roGarmentSizeBreakdownLogic.UpdateAsync(itemId, data);
                     }
 
                     foreach (RO_Garment_SizeBreakdown item in model.RO_Garment_SizeBreakdowns)
@@ -141,7 +141,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
         //    DbSet.Update(model);
         //}
 
-        public override async Task DeleteAsync(int id)
+        public override async Task DeleteAsync(long id)
         {
             RO_Garment model = await ReadByIdAsync(id);
             if (model.RO_Garment_SizeBreakdowns != null)
@@ -149,7 +149,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                 HashSet<long> detailIds = roGarmentSizeBreakdownLogic.GetIds(id);
                 foreach (var itemId in detailIds)
                 {
-                    await roGarmentSizeBreakdownLogic.DeleteAsync(Convert.ToInt32(itemId));
+                    await roGarmentSizeBreakdownLogic.DeleteAsync(itemId);
                 }
             }
 
