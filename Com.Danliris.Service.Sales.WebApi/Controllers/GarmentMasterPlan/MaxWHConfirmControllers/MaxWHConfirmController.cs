@@ -21,7 +21,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers.GarmentMasterPlan.MaxWHC
     {
         private readonly static string apiVersion = "1.0";
         private readonly IIdentityService Service;
-        public MaxWHConfirmController(IIdentityService identityService, IValidateService validateService, IMaxWHConfirmFacade facade, IMapper mapper) : base(identityService, validateService, facade, mapper, apiVersion)
+        public MaxWHConfirmController(IIdentityService identityService, IValidateService validateService, IMaxWHConfirmFacade facade, IMapper mapper, IServiceProvider serviceProvider) : base(identityService, validateService, facade, mapper, apiVersion)
         {
             Service = identityService;
         }
