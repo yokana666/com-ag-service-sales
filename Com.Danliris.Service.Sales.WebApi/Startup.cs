@@ -59,6 +59,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.Monit
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.GarmentSewingBlockingPlanFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.GarmentSewingBlockingPlanInterfaces;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.GarmentSewingBlockingPlanLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.MaxWHConfirmInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MaxWHConfirmFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MaxWHConfirmLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -103,7 +106,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IExpiredGarmentBookingOrder, ExpiredGarmentBookingOrderFacade>()
                 .AddTransient<ISewingBlockingPlanReportFacade, SewingBlockingPlanReportFacade>()
                 .AddTransient<IOverScheduleMonitoringFacade, OverScheduleMonitoringFacade>()
-                .AddTransient<IWeeklyWorkingScheduleMonitoringFacade, WeeklyWorkingScheduleMonitoringFacade>();
+                .AddTransient<IWeeklyWorkingScheduleMonitoringFacade, WeeklyWorkingScheduleMonitoringFacade>()
+                .AddTransient<IMaxWHConfirmFacade, MaxWHConfirmFacade>();
 
         }
 
@@ -138,7 +142,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<AcceptedOrderMonitoringLogic>()
                 .AddTransient<SewingBlockingPlanReportLogic>()
                 .AddTransient<OverScheduleMonitoringLogic>()
-                .AddTransient<WeeklyWorkingScheduleMonitoringLogic>();
+                .AddTransient<WeeklyWorkingScheduleMonitoringLogic>()
+                .AddTransient<MaxWHConfirmLogic>();
             
         }
 
