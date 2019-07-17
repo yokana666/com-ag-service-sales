@@ -28,7 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             var uom = "";
             var uom1 = "";
             List<string> details = new List<string>();
-            double convertion = 0;
+            //double convertion = 0;
 
             if (viewModel.UOM.Unit.ToLower() == "yds")
             {
@@ -72,22 +72,22 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             foreach (var i in viewModel.Details)
             {
-                var ppn = "";
-                if ((bool)viewModel.UseIncomeTax)
-                {
-                    if (i.UseIncomeTax)
-                    {
-                        ppn = "INCLUDING PPN 10%";
-                    }
-                    else
-                    {
-                        ppn = "EXCLUDING PPN";
-                    }
-                }
-                else
-                {
-                    ppn = "TANPA PPN";
-                }
+                //var ppn = "";
+                //if ((bool)viewModel.UseIncomeTax)
+                //{
+                //    if (i.UseIncomeTax)
+                //    {
+                //        ppn = "INCLUDING PPN 10%";
+                //    }
+                //    else
+                //    {
+                //        ppn = "EXCLUDING PPN";
+                //    }
+                //}
+                //else
+                //{
+                //    ppn = "TANPA PPN";
+                //}
                 var nominal = string.Format("{0:n2}", i.Price);
 
                 if (i.Currency.Code.ToLower() == "usd")
