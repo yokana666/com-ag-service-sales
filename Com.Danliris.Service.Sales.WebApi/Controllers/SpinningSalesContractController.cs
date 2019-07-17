@@ -61,7 +61,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 {
                     string BuyerUri = "master/buyers";
                     string BankUri = "master/account-banks";
-                    string CurrenciesUri = "master/currencies";
+                    //string CurrenciesUri = "master/currencies";
                     string Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
 
                     

@@ -13,11 +13,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 {
     public class CostCalculationGarmentMaterialLogic : BaseLogic<CostCalculationGarment_Material>
 	{
-		private CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic;
+		//private CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic;
 		private readonly SalesDbContext DbContext;
 		public CostCalculationGarmentMaterialLogic(IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService, serviceProvider, dbContext)
 		{
-		}
+            DbContext = dbContext;
+        }
 
 		public override ReadResponse<CostCalculationGarment_Material> Read(int page, int size, string order, List<string> select, string keyword, string filter)
 		{

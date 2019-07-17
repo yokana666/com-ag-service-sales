@@ -2,6 +2,7 @@
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
 using Com.Danliris.Service.Sales.Lib.ViewModels.Report;
+using Com.Danliris.Service.Sales.Lib.ViewModels.Report.OrderStatusReport;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,5 +21,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder
         Task<int> UpdateIsCompletedTrue(int id);
         Task<int> UpdateIsCompletedFalse(int id);
         Task<int> UpdateDistributedQuantity(List<int> id, List<double> distributedQuantity);
+        List<YearlyOrderQuantity> GetMonthlyOrderQuantityByYearAndOrderType(int year, int orderTypeId, int timeoffset);
+        List<int> GetMonthlyOrderIdsByOrderType(int year, int month, int orderTypeId, int timeoffset);
     }
 }

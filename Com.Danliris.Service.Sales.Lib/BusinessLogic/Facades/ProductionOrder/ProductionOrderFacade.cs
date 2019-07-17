@@ -7,6 +7,7 @@ using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.Report;
+using Com.Danliris.Service.Sales.Lib.ViewModels.Report.OrderStatusReport;
 using Com.Moonlay.NetCore.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -379,7 +380,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
 
 
@@ -569,7 +570,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             var fabricQuality = await GetFabricQualityItems(orderNo);
             var dailyOP = await GetDailyOperationItems(orderNo);
             //List<DailyOperationViewModel> dailies = new List<DailyOperationViewModel>();
-            
+
 
             List<ProductionOrderReportViewModel> query = new List<ProductionOrderReportViewModel>();
             foreach (var data in Query)
@@ -699,7 +700,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             {
                 try
                 {
-                    foreach(var id in ids)
+                    foreach (var id in ids)
                     {
                         ProductionOrderModel model = await ReadByIdAsync(id);
                         model.IsRequested = true;
@@ -786,7 +787,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                 try
                 {
                     var i = 0;
-                    foreach(var Id in id)
+                    foreach (var Id in id)
                     {
                         ProductionOrderModel model = await ReadByIdAsync(Id);
                         model.DistributedQuantity = distributedQuantity[i];
@@ -802,6 +803,120 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             }
 
             return await DbContext.SaveChangesAsync();
+        }
+
+        public List<YearlyOrderQuantity> GetMonthlyOrderQuantityByYearAndOrderType(int year, int orderTypeId, int timeoffset)
+        {
+            var ordersQuery = DbSet.Where(order => order.DeliveryDate.AddHours(timeoffset).Year.Equals(year));
+
+            if (!orderTypeId.Equals(0))
+            {
+                ordersQuery = ordersQuery.Where(order => order.OrderTypeId.Equals(orderTypeId));
+            }
+
+            var ordersResult = ordersQuery.Select(s => new { DeliveryDate = s.DeliveryDate.AddHours(timeoffset), s.Id, s.OrderQuantity }).ToList();
+
+            var result = new List<YearlyOrderQuantity>()
+            {
+                //Januari
+                new YearlyOrderQuantity()
+                {
+                    Month = 1,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 1).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 1).Sum(s => s.OrderQuantity)
+                },
+                //February
+                new YearlyOrderQuantity()
+                {
+                    Month = 2,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 2).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 2).Sum(s => s.OrderQuantity)
+                },
+                //March
+                new YearlyOrderQuantity()
+                {
+                    Month = 3,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 3).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 3).Sum(s => s.OrderQuantity)
+                },
+                //April
+                new YearlyOrderQuantity()
+                {
+                    Month = 4,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 4).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 4).Sum(s => s.OrderQuantity)
+                },
+                //May
+                new YearlyOrderQuantity()
+                {
+                    Month = 5,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 5).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 5).Sum(s => s.OrderQuantity)
+                },
+                //June
+                new YearlyOrderQuantity()
+                {
+                    Month = 6,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 6).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 6).Sum(s => s.OrderQuantity)
+                },
+                //July
+                new YearlyOrderQuantity()
+                {
+                    Month = 7,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 7).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 7).Sum(s => s.OrderQuantity)
+                },
+                //August
+                new YearlyOrderQuantity()
+                {
+                    Month = 8,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 8).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 8).Sum(s => s.OrderQuantity)
+                },
+                //September
+                new YearlyOrderQuantity()
+                {
+                    Month = 9,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 9).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 9).Sum(s => s.OrderQuantity)
+                },
+                //October
+                new YearlyOrderQuantity()
+                {
+                    Month = 10,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 10).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 10).Sum(s => s.OrderQuantity)
+                },
+                //November
+                new YearlyOrderQuantity()
+                {
+                    Month = 11,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 11).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 11).Sum(s => s.OrderQuantity)
+                },
+                //December
+                new YearlyOrderQuantity()
+                {
+                    Month = 12,
+                    OrderIds = ordersResult.Where(w => w.DeliveryDate.Month == 12).Select(s => (int)s.Id).ToList(),
+                    OrderQuantity = ordersResult.Where(w => w.DeliveryDate.Month == 12).Sum(s => s.OrderQuantity)
+                }
+            };
+
+            return result;
+        }
+
+        public List<int> GetMonthlyOrderIdsByOrderType(int year, int month, int orderTypeId, int timeoffset)
+        {
+            var query = DbSet.Where(w => w.DeliveryDate.AddHours(timeoffset).Year == year && w.DeliveryDate.AddHours(timeoffset).Month == month);
+
+            if (orderTypeId != 0)
+            {
+                query = query.Where(w => w.OrderTypeId == orderTypeId);
+            }
+
+            return query.Select(s => (int)s.Id).ToList();
         }
     }
 }
