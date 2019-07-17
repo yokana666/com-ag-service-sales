@@ -296,7 +296,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             data.SalesContractId = salesData.Id;
             await facade.CreateAsync(data);
 
-            var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Year, (int)data.OrderTypeId, 0);
+            var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Month, (int)data.OrderTypeId, 0);
 
             Assert.NotEqual(result.Count, 0);
         }
