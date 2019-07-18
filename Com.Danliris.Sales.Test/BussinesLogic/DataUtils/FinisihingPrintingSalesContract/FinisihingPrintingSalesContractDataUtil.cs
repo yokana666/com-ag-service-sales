@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSalesContract
 {
@@ -13,7 +14,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSale
         {
         }
 
-        public override FinishingPrintingSalesContractModel GetNewData()
+        public override async Task<FinishingPrintingSalesContractModel> GetNewData()
         {
             return new FinishingPrintingSalesContractModel() {
                 AccountBankAccountName = "a",

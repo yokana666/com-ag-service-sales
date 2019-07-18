@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.GarmentSewingBlockingPlanTests
@@ -142,7 +143,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
 
             GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider, dbContext);
 
-            var data = DataUtil(facade, dbContext).GetNewData();
+            var data = await DataUtil(facade, dbContext).GetNewData();
 
             var response = await facade.CreateAsync(data);
 
@@ -150,14 +151,14 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
         }
 
         [Fact]
-        public void Should_Success_Validate_Data()
+        public async Task Should_Success_Validate_Data()
         {
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
             GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider, dbContext);
 
-            var data = DataUtil(facade, dbContext).GetNewData();
+            var data = await DataUtil(facade, dbContext).GetNewData();
             GarmentSewingBlockingPlanViewModel nullViewModel = new GarmentSewingBlockingPlanViewModel();
             Assert.True(nullViewModel.Validate(null).Count() > 0);
 

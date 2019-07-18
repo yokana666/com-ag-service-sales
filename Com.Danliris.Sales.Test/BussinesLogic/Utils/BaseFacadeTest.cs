@@ -81,7 +81,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
 
             TFacade facade = Activator.CreateInstance(typeof(TFacade), serviceProvider, dbContext) as TFacade;
 
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade, dbContext).GetNewData();
 
             var response = await facade.CreateAsync(data);
 
@@ -96,7 +96,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
 
             TFacade facade = Activator.CreateInstance(typeof(TFacade), serviceProvider, dbContext) as TFacade;
 
-            var data = await DataUtil(facade).GetTestData();
+            var data = await DataUtil(facade, dbContext).GetTestData();
 
             var Response = facade.Read(1, 25, "{}", new List<string>(), "", "{}");
 
@@ -111,7 +111,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
 
             TFacade facade = Activator.CreateInstance(typeof(TFacade), serviceProvider, dbContext) as TFacade;
 
-            var data = await DataUtil(facade).GetTestData();
+            var data = await DataUtil(facade, dbContext).GetTestData();
 
             var Response = facade.ReadByIdAsync((int)data.Id);
 
@@ -126,7 +126,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
 
             TFacade facade = Activator.CreateInstance(typeof(TFacade), serviceProvider, dbContext) as TFacade;
 
-            var data = await DataUtil(facade).GetTestData();
+            var data = await DataUtil(facade, dbContext).GetTestData();
 
             var response = await facade.UpdateAsync((int)data.Id, data);
 
@@ -140,7 +140,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
             TFacade facade = Activator.CreateInstance(typeof(TFacade), serviceProvider, dbContext) as TFacade;
-            var data = await DataUtil(facade).GetTestData();
+            var data = await DataUtil(facade, dbContext).GetTestData();
 
             var Response = await facade.DeleteAsync((int)data.Id);
             Assert.NotEqual(Response, 0);

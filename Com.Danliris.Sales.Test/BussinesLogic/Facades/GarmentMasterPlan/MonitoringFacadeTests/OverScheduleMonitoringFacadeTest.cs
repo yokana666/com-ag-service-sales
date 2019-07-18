@@ -137,7 +137,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Monito
 
             GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider, dbContext);
 
-            var dataNew = DataUtil(facade, dbContext).GetNewData();
+            var dataNew = await DataUtil(facade, dbContext).GetNewData();
             dataNew.Items.First().DeliveryDate = dataNew.Items.First().StartDate.AddDays(-30);
             await facade.CreateAsync(dataNew);
 
@@ -161,7 +161,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Monito
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
             GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider, dbContext);
-            var dataNew = DataUtil(facade, dbContext).GetNewData();
+            var dataNew = await DataUtil(facade, dbContext).GetNewData();
             dataNew.Items.First().DeliveryDate = dataNew.Items.First().StartDate.AddDays(-30);
             await facade.CreateAsync(dataNew);
 
