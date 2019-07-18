@@ -67,32 +67,28 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 		}
 		public async Task<int> CreateAsync(CostCalculationGarment model)
 		{
-			do
-			{
-				model.Code = CodeGenerator.Generate();
-				await CustomCodeGenerator(model);
-			}
-			while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
-
-			model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
-			costCalculationGarmentLogic.Create(model);
-            if (model.ImagePath != null)
-            {
-                model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
-            }
-            model.IsValidated = false;
-            costCalculationGarmentLogic.Create(model);
-			return await DbContext.SaveChangesAsync();
-		}
-
-        public async Task<int> DeleteAsync(int id)
-		{
+            int Created = 0;
             using (var transaction = DbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    await costCalculationGarmentLogic.DeleteAsync(id);
-                    return await DbContext.SaveChangesAsync();
+                    do
+                    {
+                        model.Code = CodeGenerator.Generate();
+                        await CustomCodeGenerator(model);
+                    }
+                    while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
+
+                    model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+                    costCalculationGarmentLogic.Create(model);
+                    if (model.ImagePath != null)
+                    {
+                        model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+                    }
+                    model.IsValidated = false;
+                    costCalculationGarmentLogic.Create(model);
+                    Created = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
                 }
                 catch (Exception e)
                 {
@@ -100,6 +96,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                     throw new Exception(e.Message);
                 }
             }
+            return Created;
+		}
+
+        public async Task<int> DeleteAsync(int id)
+		{
+            int Deleted = 0;
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    await costCalculationGarmentLogic.DeleteAsync(id);
+                    Deleted = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+            return Deleted;
 		}
 
 		public ReadResponse<CostCalculationGarment> Read(int page, int size, string order, List<string> select, string keyword, string filter)

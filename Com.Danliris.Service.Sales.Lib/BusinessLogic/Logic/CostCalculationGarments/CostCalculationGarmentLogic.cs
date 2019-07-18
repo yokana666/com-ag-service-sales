@@ -101,7 +101,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 				//EntityExtension.FlagForCreate(detail, IdentityService.Username, "sales-service");
 			}
 
-			EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
+            var preSC = DbContext.GarmentPreSalesContracts.Single(w => w.Id == model.PreSCId);
+            preSC.IsCC = true;
+
+            EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
 			DbSet.Add(model);
 		}
 	 
@@ -190,7 +193,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
         public override async Task DeleteAsync(long id)
         {
-            var model = await ReadByIdAsync(id);
+            var model = await DbSet.Include(d => d.CostCalculationGarment_Materials).FirstOrDefaultAsync(d => d.Id == id);
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
             DbSet.Update(model);
 
