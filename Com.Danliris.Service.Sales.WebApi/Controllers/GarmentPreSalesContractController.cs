@@ -73,7 +73,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     }
                     await Facade.UpdateAsync(id, model);
 
-                    return Ok();
+                    return NoContent();
                 }
             }
             catch (ServiceValidationException e)
@@ -82,13 +82,6 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
                     .Fail(e);
                 return BadRequest(Result);
-            }
-            catch (DbUpdateConcurrencyException e)
-            {
-                Dictionary<string, object> Result =
-                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
-                    .Fail();
-                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
             catch (Exception e)
             {
