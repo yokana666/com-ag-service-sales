@@ -16,6 +16,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.JsonPatch;
+using Com.Danliris.Service.Sales.Lib.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Com.Danliris.Service.Sales.WebApi.Controllers
 {
@@ -33,5 +36,67 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             HttpClientService = serviceProvider.GetService<IHttpClientService>();
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Patch([FromRoute]int id, [FromBody]JsonPatchDocument<GarmentPreSalesContract> patch)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var model = await Facade.ReadByIdAsync(id);
+                if (model == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.NOT_FOUND_STATUS_CODE, Common.NOT_FOUND_MESSAGE)
+                        .Fail();
+                    return NotFound(Result);
+                }
+                else
+                {
+                    patch.ApplyTo(model);
+
+                    var viewModel = Mapper.Map<GarmentPreSalesContractViewModel>(model);
+                    ValidateService.Validate(viewModel);
+
+                    IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                    IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
+
+                    if (id != viewModel.Id)
+                    {
+                        Dictionary<string, object> Result =
+                            new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                            .Fail();
+                        return BadRequest(Result);
+                    }
+                    await Facade.UpdateAsync(id, model);
+
+                    return Ok();
+                }
+            }
+            catch (ServiceValidationException e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                    .Fail(e);
+                return BadRequest(Result);
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
     }
 }
