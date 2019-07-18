@@ -63,7 +63,12 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
-			if (string.IsNullOrWhiteSpace(this.Article))
+            if (PreSCId < 1 || string.IsNullOrWhiteSpace(PreSCNo))
+            {
+                yield return new ValidationResult("Sales Contract harus diisi", new List<string> { "PreSalesContract" });
+            }
+
+            if (string.IsNullOrWhiteSpace(this.Article))
 				yield return new ValidationResult("Nama Artikel harus diisi", new List<string> { "Article" });
 			if (Unit == null || string.IsNullOrWhiteSpace(this.Unit.Code))
 				yield return new ValidationResult("Konveksi harus diisi", new List<string> { "Unit" });
