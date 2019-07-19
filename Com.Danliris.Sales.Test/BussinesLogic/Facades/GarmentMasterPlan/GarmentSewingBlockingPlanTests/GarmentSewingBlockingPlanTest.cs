@@ -221,14 +221,14 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
                     {
                         IsConfirm=true,
                         DeliveryDate= DateTimeOffset.UtcNow.Date.AddDays(-2),
-                        WeeklyPlanItemId=1,
+                        WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
                         whConfirm=63
                     },
                     new GarmentSewingBlockingPlanItemViewModel
                     {
                         IsConfirm=true,
                         DeliveryDate= data.DeliveryDate.Date.AddDays(2),
-                        WeeklyPlanItemId=1,
+                        WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
                         whConfirm=63
                     }
                 }
