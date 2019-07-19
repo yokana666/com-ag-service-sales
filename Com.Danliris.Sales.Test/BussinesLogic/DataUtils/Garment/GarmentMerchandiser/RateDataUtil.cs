@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchandiser
 {
@@ -13,7 +14,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
         {
         }
 
-        public override Rate GetNewData()
+        public override async Task<Rate> GetNewData()
         {
             return new Rate
             {

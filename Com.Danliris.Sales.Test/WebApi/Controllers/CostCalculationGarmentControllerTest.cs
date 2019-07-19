@@ -6,6 +6,7 @@ using Com.Danliris.Service.Sales.WebApi.Controllers;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -60,6 +61,55 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var response = await controller.GetById_RO_Garment_Validation(It.IsAny<int>());
 
             Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
+
+        [Fact]
+        public void Validate_ViewModel()
+        {
+            List<CostCalculationGarmentViewModel> viewModels = new List<CostCalculationGarmentViewModel>
+            {
+                new CostCalculationGarmentViewModel()
+                {
+                    FabricAllowance = 0,
+                    AccessoriesAllowance = 0
+                },
+                new CostCalculationGarmentViewModel()
+                {
+                    Quantity = 0,
+                    DeliveryDate = DateTimeOffset.Now.AddDays(-1),
+                    SMV_Cutting = 0,
+                    SMV_Sewing = 0,
+                    SMV_Finishing = 0,
+                    ConfirmPrice = 0,
+                    CostCalculationGarment_Materials = new List<CostCalculationGarment_MaterialViewModel>
+                    {
+                        new CostCalculationGarment_MaterialViewModel(),
+                        new CostCalculationGarment_MaterialViewModel
+                        {
+                            Category = new CategoryViewModel { code = "CategoryCode" }
+                        },
+                        new CostCalculationGarment_MaterialViewModel
+                        {
+                            Category = new CategoryViewModel { code = "CategoryCode" },
+                            Quantity = 0,
+                            Conversion = 0
+                        },
+                        new CostCalculationGarment_MaterialViewModel
+                        {
+                            Category = new CategoryViewModel { code = "CategoryCode" },
+                            UOMPrice = new UOMViewModel() { Unit = "Unit" },
+                            UOMQuantity = new UOMViewModel() { Unit = "Unit" },
+                            Conversion = 2
+                        }
+                    }
+                }
+            };
+
+            foreach (var viewModel in viewModels)
+            {
+                var defaultValidationResult = viewModel.Validate(null);
+                Assert.True(defaultValidationResult.Count() > 0);
+            }
         }
     }
 }

@@ -18,19 +18,23 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrWhiteSpace(this.Name))
+            {
                 yield return new ValidationResult("Nama ongkos harus diisi", new List<string> { "Name" });
-
-            if (Unit == null || Unit.Id < 1)
-            {
-                yield return new ValidationResult("Unit harus diisi", new List<string> { "Unit" });
             }
-            else if (!string.IsNullOrWhiteSpace(Name))
+            else if (Unit != null)
             {
-                var rateFacade = (IRate)validationContext.GetService(typeof(IRate));
-                var rate = rateFacade.Read(1, 1, "{}", null, null, $"{{ Name: \"{Name}\", UnitId: \"{Unit.Id}\" }}");
-                if (rate.Data.Count(data => data.Id != Id) > 0)
+                if (Unit.Id < 1)
                 {
-                    yield return new ValidationResult($"Nama ongkos '{Name}' dan Unit '{Unit.Name}' sudah ada.", new List<string> { "Unit" });
+                    yield return new ValidationResult("Data Unit tidak benar", new List<string> { "Unit" });
+                }
+                else
+                {
+                    var rateFacade = (IRate)validationContext.GetService(typeof(IRate));
+                    var rate = rateFacade.Read(1, 1, "{}", null, null, $"{{ Name: \"{Name}\", UnitId: \"{Unit.Id}\" }}");
+                    if (rate.Data.Count(data => data.Id != Id) > 0)
+                    {
+                        yield return new ValidationResult($"Nama ongkos '{Name}' dan Unit '{Unit.Name}' sudah ada.", new List<string> { "Unit" });
+                    }
                 }
             }
 

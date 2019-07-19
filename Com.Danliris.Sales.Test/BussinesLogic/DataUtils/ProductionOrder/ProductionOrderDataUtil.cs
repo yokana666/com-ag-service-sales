@@ -3,6 +3,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.ProductionOrder
 {
@@ -12,7 +13,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.ProductionOrder
         {
         }
 
-        public override ProductionOrderModel GetNewData()
+        public override async Task<ProductionOrderModel> GetNewData()
         {
             return new ProductionOrderModel()
             {

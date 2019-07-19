@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments
 {
@@ -66,36 +67,65 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 		}
 		public async Task<int> CreateAsync(CostCalculationGarment model)
 		{
-			do
-			{
-				model.Code = CodeGenerator.Generate();
-				await CustomCodeGenerator(model);
-			}
-			while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
-
-			model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
-			costCalculationGarmentLogic.Create(model);
-            if (model.ImagePath != null)
+            int Created = 0;
+            using (var transaction = DbContext.Database.BeginTransaction())
             {
-                model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+                try
+                {
+                    do
+                    {
+                        model.Code = CodeGenerator.Generate();
+                        await CustomCodeGenerator(model);
+                    }
+                    while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
+
+                    model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+                    costCalculationGarmentLogic.Create(model);
+                    if (model.ImagePath != null)
+                    {
+                        model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
+                    }
+                    model.IsValidated = false;
+                    costCalculationGarmentLogic.Create(model);
+                    Created = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
             }
-            model.IsValidated = false;
-            costCalculationGarmentLogic.Create(model);
-			return await DbContext.SaveChangesAsync();
+            return Created;
 		}
-		public async Task<int> DeleteAsync(int id)
+
+        public async Task<int> DeleteAsync(int id)
 		{
-			await costCalculationGarmentLogic.DeleteAsync(id);
-			return await DbContext.SaveChangesAsync();
+            int Deleted = 0;
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    await costCalculationGarmentLogic.DeleteAsync(id);
+                    Deleted = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+            return Deleted;
 		}
 
 		public ReadResponse<CostCalculationGarment> Read(int page, int size, string order, List<string> select, string keyword, string filter)
 		{
 			return costCalculationGarmentLogic.Read(page, size, order, select, keyword, filter);
 		}
-		private AzureImageFacade AzureImageFacade
+		private IAzureImageFacade AzureImageFacade
 		{
-			get { return this.ServiceProvider.GetService<AzureImageFacade>(); }
+			get { return this.ServiceProvider.GetService<IAzureImageFacade>(); }
 		}
 		public async Task<CostCalculationGarment> ReadByIdAsync(int id)
 		{

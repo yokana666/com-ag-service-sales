@@ -5,6 +5,7 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.WeeklyPlanDataUtils
 {
@@ -14,7 +15,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Week
         {
         }
 
-        public override GarmentWeeklyPlan GetNewData()
+        public override async Task<GarmentWeeklyPlan> GetNewData()
         {
             var weeklyPlan = new GarmentWeeklyPlan
             {

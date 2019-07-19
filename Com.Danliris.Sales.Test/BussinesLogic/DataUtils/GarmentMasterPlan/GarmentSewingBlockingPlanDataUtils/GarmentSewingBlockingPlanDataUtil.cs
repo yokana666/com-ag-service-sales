@@ -25,7 +25,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Garm
             this.maxWHConfirmDataUtil = maxWHConfirmDataUtil;
         }
 
-        public override GarmentSewingBlockingPlan GetNewData()
+        public override async Task<GarmentSewingBlockingPlan> GetNewData()
         {
             var datas = Task.Run(() => garmentBookingOrderDataUtil.GetTestData()).Result;
             var dataWeek= Task.Run(() => weeklyPlanDataUtil.GetTestData()).Result;

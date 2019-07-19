@@ -4,7 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentPreSalesContractDataUtils
 {
@@ -14,7 +14,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentPreSalesContrac
         {
         }
 
-        public override GarmentPreSalesContract GetNewData()
+        public override async Task<GarmentPreSalesContract> GetNewData()
         {
             return new GarmentPreSalesContract()
             {

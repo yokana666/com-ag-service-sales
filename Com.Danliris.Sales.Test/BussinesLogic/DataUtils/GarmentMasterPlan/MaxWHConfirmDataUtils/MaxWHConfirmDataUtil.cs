@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.MaxWHConfirmModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.MaxWHConfirmDataUtils
 {
@@ -13,7 +14,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.MaxW
         {
         }
 
-        public override MaxWHConfirm GetNewData()
+        public override async Task<MaxWHConfirm> GetNewData()
         {
             var wh = new MaxWHConfirm
             {
