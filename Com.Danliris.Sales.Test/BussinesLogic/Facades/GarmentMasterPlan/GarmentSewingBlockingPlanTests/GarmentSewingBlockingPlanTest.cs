@@ -219,8 +219,6 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
 
             var validationResultCreate = vm.Validate(validationContext).ToList();
 
-            //var errorDuplicateRONo = validationResultCreate.SingleOrDefault(r => r.ErrorMessage.Equals("Tanggal Pengiriman Tidak Boleh Lebih dari Tanggal Pengiriman Booking"));
-            //Assert.NotNull(validationResultCreate);
 
             Assert.True(validationResultCreate.Count() > 0);
 
