@@ -1,13 +1,16 @@
 ﻿using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentBookingOrderDataUtils;
 using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.GarmentSewingBlockingPlanDataUtils;
+using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.MaxWHConfirmDataUtils;
 using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.WeeklyPlanDataUtils;
 using Com.Danliris.Sales.Test.BussinesLogic.Utils;
 using Com.Danliris.Service.Sales.Lib;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentBookingOrderFacade;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.GarmentSewingBlockingPlanFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MaxWHConfirmFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.WeeklyPlanFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrderLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.GarmentSewingBlockingPlanLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MaxWHConfirmLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.WeeklyPlanLogics;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 using Com.Danliris.Service.Sales.Lib.Services;
@@ -17,6 +20,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -58,6 +62,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
             var WeekserviceProvider = GetWeekServiceProviderMock(dbContext).Object;
             var BOserviceProvider = GetBOServiceProviderMock(dbContext).Object;
+            var WHServiceProviderMock = GetWHServiceProviderMock(dbContext).Object;
 
             var weeklyPlanFacade = new WeeklyPlanFacade(WeekserviceProvider, dbContext);
             var weeklyPlanDataUtil = new WeeklyPlanDataUtil(weeklyPlanFacade);
@@ -65,12 +70,15 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
             var bookingOrderFacade = new GarmentBookingOrderFacade(BOserviceProvider, dbContext);
             var garmentBookingOrderDataUtil = new GarmentBookingOrderDataUtil(bookingOrderFacade);
 
+            var maxWHConfirmFacade = new MaxWHConfirmFacade(WHServiceProviderMock, dbContext);
+            var maxWHConfirmDataUtil = new MaxWHConfirmDataUtil(maxWHConfirmFacade);
+
             var garmentSewingBlockingPlanFacade = new GarmentSewingBlockingPlanFacade(serviceProvider, dbContext);
-            var garmentPurchaseRequestDataUtil = new GarmentSewingBlockingPlanDataUtil(garmentSewingBlockingPlanFacade, weeklyPlanDataUtil, garmentBookingOrderDataUtil);
+            var garmentSewingBlockingPlanDataUtil = new GarmentSewingBlockingPlanDataUtil(garmentSewingBlockingPlanFacade, weeklyPlanDataUtil, garmentBookingOrderDataUtil, maxWHConfirmDataUtil);
 
             
 
-            return garmentPurchaseRequestDataUtil;
+            return garmentSewingBlockingPlanDataUtil;
         }
 
         protected virtual Mock<IServiceProvider> GetServiceProviderMock(SalesDbContext dbContext)
@@ -103,6 +111,23 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
             serviceProviderMock
                 .Setup(x => x.GetService(typeof(WeeklyPlanLogic)))
                 .Returns(new WeeklyPlanLogic( identityService, dbContext) );
+
+            return serviceProviderMock;
+        }
+
+        protected virtual Mock<IServiceProvider> GetWHServiceProviderMock(SalesDbContext dbContext)
+        {
+            var serviceProviderMock = new Mock<IServiceProvider>();
+
+            IIdentityService identityService = new IdentityService { Username = "Username" };
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(IdentityService)))
+                .Returns(identityService);
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(MaxWHConfirmLogic)))
+                .Returns(new MaxWHConfirmLogic(identityService, dbContext));
 
             return serviceProviderMock;
         }
@@ -153,9 +178,13 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
         public void Should_Success_Validate_Data()
         {
             var dbContext = DbContext(GetCurrentMethod());
-            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            var iserviceProvider = GetServiceProviderMock(dbContext).Object;
+            Mock<IServiceProvider> serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.
+                Setup(x => x.GetService(typeof(SalesDbContext)))
+                .Returns(dbContext);
 
-            GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider, dbContext);
+            GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider.Object, dbContext);
 
             var data = DataUtil(facade, dbContext).GetNewData();
             GarmentSewingBlockingPlanViewModel nullViewModel = new GarmentSewingBlockingPlanViewModel();
@@ -168,16 +197,31 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
                 Items = new List<GarmentSewingBlockingPlanItemViewModel> {
                     new GarmentSewingBlockingPlanItemViewModel
                     {
-                        DeliveryDate= DateTimeOffset.UtcNow.Date.AddDays(-2)
+                        IsConfirm=true,
+                        DeliveryDate= DateTimeOffset.UtcNow.Date.AddDays(-2),
+                        WeeklyPlanItemId=1,
+                        whConfirm=63
                     },
                     new GarmentSewingBlockingPlanItemViewModel
                     {
-                        DeliveryDate= data.DeliveryDate.Date.AddDays(2)
+                        IsConfirm=true,
+                        DeliveryDate= data.DeliveryDate.Date.AddDays(2),
+                        WeeklyPlanItemId=1,
+                        whConfirm=63
                     }
                 }
             };
 
-            Assert.True(vm.Validate(null).Count() > 0);
+            
+
+            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+
+            var validationResultCreate = vm.Validate(validationContext).ToList();
+
+            //var errorDuplicateRONo = validationResultCreate.SingleOrDefault(r => r.ErrorMessage.Equals("Tanggal Pengiriman Tidak Boleh Lebih dari Tanggal Pengiriman Booking"));
+            //Assert.NotNull(validationResultCreate);
+
+            Assert.True(validationResultCreate.Count() > 0);
 
 
         }
