@@ -189,7 +189,12 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
 
             var data = await DataUtil(facade, dbContext).GetNewData();
             GarmentSewingBlockingPlanViewModel nullViewModel = new GarmentSewingBlockingPlanViewModel();
-            Assert.True(nullViewModel.Validate(null).Count() > 0);
+            //Assert.True(nullViewModel.Validate(null).Count() > 0);
+
+            ValidationContext validationContext = new ValidationContext(nullViewModel, serviceProvider.Object, null);
+
+            var validationResultCreate = nullViewModel.Validate(validationContext).ToList();
+            Assert.True(validationResultCreate.Count() > 0);
 
             GarmentSewingBlockingPlanViewModel vm = new GarmentSewingBlockingPlanViewModel {
                 BookingOrderNo = data.BookingOrderNo,
@@ -215,12 +220,12 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
 
             
 
-            ValidationContext validationContext = new ValidationContext(vm, serviceProvider.Object, null);
+            ValidationContext validationContext1 = new ValidationContext(vm, serviceProvider.Object, null);
 
-            var validationResultCreate = vm.Validate(validationContext).ToList();
+            var validationResultCreate1 = vm.Validate(validationContext1).ToList();
 
 
-            Assert.True(validationResultCreate.Count() > 0);
+            Assert.True(validationResultCreate1.Count() > 0);
 
 
         }
