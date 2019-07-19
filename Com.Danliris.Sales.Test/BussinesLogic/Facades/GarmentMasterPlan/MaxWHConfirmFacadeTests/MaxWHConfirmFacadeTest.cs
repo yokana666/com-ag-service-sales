@@ -80,7 +80,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.MaxWHC
 
             MaxWHConfirmFacade facade = new MaxWHConfirmFacade(serviceProvider, dbContext);
 
-            var data = DataUtil(facade, dbContext).GetNewData();
+            var data = await DataUtil(facade, dbContext).GetNewData();
 
             var response = await facade.CreateAsync(data);
 
