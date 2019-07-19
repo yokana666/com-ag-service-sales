@@ -3,6 +3,7 @@ using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanViewModels
@@ -35,7 +36,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
             {
                 int Count = 0;
                 string ItemError = "[";
-
+                Dictionary<long,double> weeklyId = new Dictionary<long,double>();
                 foreach (GarmentSewingBlockingPlanItemViewModel item in Items)
                 {
                     ItemError += "{";
@@ -71,6 +72,29 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                         Count++;
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Lebih dari Tanggal Booking' , ";
                     }
+
+                    if(item.IsConfirm)
+                    {
+                        SalesDbContext dbContext = validationContext == null ? null : (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
+                        var wh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
+                        var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
+                        if (weeklyId.ContainsKey(item.WeeklyPlanItemId))
+                        {
+                            weeklyId[item.WeeklyPlanItemId] += item.whConfirm;
+                        }
+                        else
+                        {
+                            weeklyId.Add(item.WeeklyPlanItemId, (week.WHConfirm + item.whConfirm));
+                        }
+
+                        if (weeklyId[item.WeeklyPlanItemId] > wh.MaxValue)
+                        {
+                            Count++;
+                            ItemError += $" whConfirm: 'Tidak bisa simpan blocking plan sewing. WH Confirm > {wh.MaxValue}' , ";
+                        }
+                    }
+                    
+                    
                     ItemError += "}, ";
                 }
 
