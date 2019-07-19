@@ -199,7 +199,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
         }
 
         [Fact]
-        public async Task Should_Success_Validate_Data()
+        public async Task Should_Success_Validate_Data_Error_Items()
         {
             var dbContext = DbContext(GetCurrentMethod());
             var iserviceProvider = GetServiceProviderMock(dbContext).Object;
