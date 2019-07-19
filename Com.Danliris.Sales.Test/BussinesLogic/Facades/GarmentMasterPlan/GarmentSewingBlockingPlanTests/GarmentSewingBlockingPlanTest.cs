@@ -176,7 +176,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
         }
 
         [Fact]
-        public async Task Should_Success_Validate_Data()
+        public async Task Should_Success_Validate_Data_Null()
         {
             var dbContext = DbContext(GetCurrentMethod());
             var iserviceProvider = GetServiceProviderMock(dbContext).Object;
@@ -196,10 +196,26 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
             var validationResultCreate = nullViewModel.Validate(validationContext).ToList();
             Assert.True(validationResultCreate.Count() > 0);
 
-            GarmentSewingBlockingPlanViewModel vm = new GarmentSewingBlockingPlanViewModel {
+        }
+
+        [Fact]
+        public async Task Should_Success_Validate_Data()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var iserviceProvider = GetServiceProviderMock(dbContext).Object;
+            Mock<IServiceProvider> serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.
+                Setup(x => x.GetService(typeof(SalesDbContext)))
+                .Returns(dbContext);
+
+            GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider.Object, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetNewData();
+            GarmentSewingBlockingPlanViewModel vm = new GarmentSewingBlockingPlanViewModel
+            {
                 BookingOrderNo = data.BookingOrderNo,
-                BookingOrderDate=data.BookingOrderDate,
-                DeliveryDate=data.DeliveryDate,
+                BookingOrderDate = data.BookingOrderDate,
+                DeliveryDate = data.DeliveryDate,
                 Items = new List<GarmentSewingBlockingPlanItemViewModel> {
                     new GarmentSewingBlockingPlanItemViewModel
                     {
@@ -217,14 +233,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
                     }
                 }
             };
-
-            
-
             ValidationContext validationContext1 = new ValidationContext(vm, serviceProvider.Object, null);
-
             var validationResultCreate1 = vm.Validate(validationContext1).ToList();
-
-
             Assert.True(validationResultCreate1.Count() > 0);
 
 
