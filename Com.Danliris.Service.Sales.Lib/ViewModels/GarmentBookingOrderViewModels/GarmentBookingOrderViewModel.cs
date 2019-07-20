@@ -61,6 +61,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 int Count = 0;
                 string ItemError = "[";
 
+                var maxWh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
                 foreach (GarmentBookingOrderItemViewModel item in Items)
                 {
                     ItemError += "{";
@@ -117,7 +118,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                         }
                         averageWH = wh / (weeks.Count());
                     }
-                    var maxWh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
                     if (averageWH> maxWh.MaxValue)
                     {
                         Count++;

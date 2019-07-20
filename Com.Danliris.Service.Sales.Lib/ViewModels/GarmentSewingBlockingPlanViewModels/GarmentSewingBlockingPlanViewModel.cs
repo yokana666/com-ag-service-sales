@@ -37,6 +37,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                 int Count = 0;
                 string ItemError = "[";
                 Dictionary<long,double> weeklyId = new Dictionary<long,double>();
+
+                SalesDbContext dbContext = validationContext == null ? null : (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
+                var wh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
+
                 foreach (GarmentSewingBlockingPlanItemViewModel item in Items)
                 {
                     ItemError += "{";
@@ -75,8 +79,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
 
                     if(item.IsConfirm)
                     {
-                        SalesDbContext dbContext = validationContext == null ? null : (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
-                        var wh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
+                       
                         var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
                         if (weeklyId.ContainsKey(item.WeeklyPlanItemId))
                         {
