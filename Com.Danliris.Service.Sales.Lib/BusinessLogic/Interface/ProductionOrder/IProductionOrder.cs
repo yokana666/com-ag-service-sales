@@ -22,6 +22,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder
         Task<int> UpdateIsCompletedFalse(int id);
         Task<int> UpdateDistributedQuantity(List<int> id, List<double> distributedQuantity);
         List<YearlyOrderQuantity> GetMonthlyOrderQuantityByYearAndOrderType(int year, int orderTypeId, int timeoffset);
-        List<int> GetMonthlyOrderIdsByOrderType(int year, int month, int orderTypeId, int timeoffset);
+        List<MonthlyOrderQuantity> GetMonthlyOrderIdsByOrderType(int year, int month, int orderTypeId, int timeoffset);
     }
 }
