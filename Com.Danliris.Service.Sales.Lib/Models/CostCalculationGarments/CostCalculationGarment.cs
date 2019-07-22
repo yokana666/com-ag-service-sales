@@ -84,5 +84,25 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public long PreSCId { get; set; }
         [MaxLength(255)]
         public string PreSCNo { get; set; }
+
+        public bool IsApprovedMD { get; set; }
+        public DateTimeOffset ApprovedMDDate { get; set; }
+        [MaxLength(50)]
+        public string ApprovedMDBy { get; set; }
+
+        public bool IsApprovedPurchasing { get; set; }
+        public DateTimeOffset ApprovedPurchasingDate { get; set; }
+        [MaxLength(50)]
+        public string ApprovedPurchasingBy { get; set; }
+
+        public bool IsApprovedIE { get; set; }
+        public DateTimeOffset ApprovedIEDate { get; set; }
+        [MaxLength(50)]
+        public string ApprovedIEBy { get; set; }
+
+        public bool IsApprovedPPIC { get; set; }
+        public DateTimeOffset ApprovedPPICDate { get; set; }
+        [MaxLength(50)]
+        public string ApprovedPPICBy { get; set; }
     }
 }

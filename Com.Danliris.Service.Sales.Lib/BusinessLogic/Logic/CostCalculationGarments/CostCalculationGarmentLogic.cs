@@ -47,7 +47,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			List<string> SelectedFields = new List<string>()
 			{
-				  "Id", "Code", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+				  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
 					"Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand"
             };
 
@@ -79,6 +79,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      UOMUnit=ccg.UOMUnit,
 					 LastModifiedUtc = ccg.LastModifiedUtc,
                                           
+                     PreSCNo = ccg.PreSCNo
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
