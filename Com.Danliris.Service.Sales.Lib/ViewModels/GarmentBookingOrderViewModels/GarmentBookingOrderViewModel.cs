@@ -61,6 +61,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 int Count = 0;
                 string ItemError = "[";
 
+                var maxWh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
                 foreach (GarmentBookingOrderItemViewModel item in Items)
                 {
                     ItemError += "{";
@@ -91,6 +92,39 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                         Count++;
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Lebih dari Tanggal Booking' , ";
                     }
+
+                    var dateDelivery = item.DeliveryDate.Day;
+                    int year = item.DeliveryDate.Year;
+                    int month = item.DeliveryDate.Month;
+                    List<int> listWH = new List<int>();
+                    double averageWH = 0;
+                    if (dateDelivery < 6)
+                    {
+                        var weeks = dbContext.GarmentWeeklyPlanItems.Where(a => a.StartDate.Year == year && a.StartDate.Month== month-1);
+                        double wh = 0;
+                        foreach (var w in weeks)
+                        {
+                            wh += w.WHConfirm;
+                        }
+                        averageWH = wh / (weeks.Count());
+                    }
+                    else
+                    {
+                        var weeks = dbContext.GarmentWeeklyPlanItems.Where(a => a.StartDate.Year == year && a.StartDate.Month == month);
+                        double wh = 0;
+                        foreach (var w in weeks)
+                        {
+                            wh += w.WHConfirm;
+                        }
+                        averageWH = wh / (weeks.Count());
+                    }
+                    if (averageWH> maxWh.MaxValue)
+                    {
+                        Count++;
+                        ItemError += $" DeliveryDate: 'Tidak bisa simpan blocking plan sewing. WH Confirm > {maxWh.MaxValue}' , ";
+                    }
+
+                    
                     ItemError += "}, ";
                 }
 

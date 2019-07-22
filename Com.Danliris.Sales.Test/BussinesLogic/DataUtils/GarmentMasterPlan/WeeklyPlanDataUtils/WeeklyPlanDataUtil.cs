@@ -37,7 +37,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Week
                     Efficiency = 50,
                     Operator = 100,
                     StartDate = startDateOfYear.AddDays(i - 1),
-                    EndDate=startDateOfYear.AddDays(i*7)
+                    EndDate=startDateOfYear.AddDays(i*7),
+                    WHConfirm=62
                 });
             }
             return weeklyPlan;
