@@ -186,7 +186,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         public void Should_ReturnOK_GetMonthlyOrderIdsByOrderTypeId_Success()
         {
             var mocks = GetMocks();
-            mocks.Facade.Setup(x => x.GetMonthlyOrderIdsByOrderType(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new List<int>());
+            mocks.Facade.Setup(x => x.GetMonthlyOrderIdsByOrderType(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new List<MonthlyOrderQuantity>());
             var controller = GetController(mocks);
             var response = controller.GetMonthlyOrderIdsByOrderTypeId(0, 0, 1);
 

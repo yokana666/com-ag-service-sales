@@ -907,7 +907,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             return result;
         }
 
-        public List<int> GetMonthlyOrderIdsByOrderType(int year, int month, int orderTypeId, int timeoffset)
+        public List<MonthlyOrderQuantity> GetMonthlyOrderIdsByOrderType(int year, int month, int orderTypeId, int timeoffset)
         {
             var query = DbSet.Where(w => w.DeliveryDate.AddHours(timeoffset).Year == year && w.DeliveryDate.AddHours(timeoffset).Month == month);
 
@@ -916,7 +916,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                 query = query.Where(w => w.OrderTypeId == orderTypeId);
             }
 
-            return query.Select(s => (int)s.Id).ToList();
+            return query.Include(order => order.Details).Select(s => new MonthlyOrderQuantity()
+            {
+                accountName = s.AccountUserName,
+                buyerName = s.BuyerName,
+                colorRequest = s.Details.FirstOrDefault() != null ? s.Details.FirstOrDefault().ColorRequest : "",
+                constructionComposite = s.MaterialConstructionName,
+                deliveryDate = s.DeliveryDate,
+                designCode = s.DesignCode,
+                orderId = (int)s.Id,
+                orderNo = s.OrderNo,
+                orderQuantity = s.OrderQuantity,
+                processType = s.ProcessTypeName,
+                _createdDate = s.CreatedUtc.ToUniversalTime()
+            }).ToList();
         }
     }
 }
