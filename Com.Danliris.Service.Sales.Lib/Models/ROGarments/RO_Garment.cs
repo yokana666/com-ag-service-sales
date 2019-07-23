@@ -22,13 +22,13 @@ namespace Com.Danliris.Service.Sales.Lib.Models.ROGarments
 		public string ImagesPath { get; set; }
 		public string ImagesName { get; set; }
 
-		//public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-		//{
-		//	//RO_GarmentService service = validationContext.GetService<RO_GarmentService>();
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //	//RO_GarmentService service = validationContext.GetService<RO_GarmentService>();
 
-		//	//if (service.DbSet.Count(ro => ro.Id != this.Id && ro.CostCalculationGarmentId.Equals(this.CostCalculationGarmentId) && ro._IsDeleted.Equals(false)) > 0)
-		//	//	yield return new ValidationResult("Cost Calculation Garment telah terdaftar di RO", new List<string> { "CostCalculationGarment" });
-		//	return new List<ValidationResult>();
-		//}
-	}
+        //	//if (service.DbSet.Count(ro => ro.Id != this.Id && ro.CostCalculationGarmentId.Equals(this.CostCalculationGarmentId) && ro._IsDeleted.Equals(false)) > 0)
+        //	//	yield return new ValidationResult("Cost Calculation Garment telah terdaftar di RO", new List<string> { "CostCalculationGarment" });
+        //	return new List<ValidationResult>();
+        //}
+    }
 }

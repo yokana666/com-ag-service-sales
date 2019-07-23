@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190722074221_Update_RO_Garments")]
+    partial class Update_RO_Garments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,10 +192,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<bool>("IsDeleted");
 
                     b.Property<bool?>("IsValidated");
-
-                    b.Property<bool>("IsValidatedROPPIC");
-
-                    b.Property<bool>("IsValidatedROSample");
 
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
@@ -2040,6 +2038,10 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("Instruction");
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsValidatedPPIC");
+
+                    b.Property<bool>("IsValidatedSample");
 
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
