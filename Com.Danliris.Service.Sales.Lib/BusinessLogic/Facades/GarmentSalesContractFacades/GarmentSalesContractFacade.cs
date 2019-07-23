@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContr
             //    model.Code = CodeGenerator.Generate();
             //}
             //while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
-            CostCalculationGarment costCal = await DbContext.CostCalculationGarments.FirstOrDefaultAsync(a => a.Id.Equals(model.CostCalculationId));
+            CostCalculationGarment costCal = await costCalGarmentLogic.ReadByIdAsync(model.CostCalculationId); //await DbContext.CostCalculationGarments.FirstOrDefaultAsync(a => a.Id.Equals(model.CostCalculationId));
             //costCal.SCGarmentId=
             garmentSalesContractLogic.Create(model);
 
