@@ -32,10 +32,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             #region Header
 
-            string blankString = " ";
-            Paragraph bankSpace = new Paragraph(blankString, normal_font);
-            bankSpace.SpacingAfter = 30f;
-            document.Add(bankSpace);
+            //string blankString = " ";
+            //Paragraph bankSpace = new Paragraph(blankString, normal_font);
+            //bankSpace.SpacingAfter = 30f;
+            //document.Add(bankSpace);
 
 
             string codeNoString = "FM-PJ-00-03-021/R1";
