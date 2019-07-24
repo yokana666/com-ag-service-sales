@@ -180,30 +180,13 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 {
                     patch.ApplyTo(model);
 
-                    var viewModel = Mapper.Map<CostCalculationGarmentViewModel>(model);
-                    ValidateService.Validate(viewModel);
-
                     IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
                     IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
 
-                    if (id != viewModel.Id)
-                    {
-                        Dictionary<string, object> Result =
-                            new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
-                            .Fail();
-                        return BadRequest(Result);
-                    }
                     await Facade.UpdateAsync(id, model);
 
                     return NoContent();
                 }
-            }
-            catch (ServiceValidationException e)
-            {
-                Dictionary<string, object> Result =
-                    new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
-                    .Fail(e);
-                return BadRequest(Result);
             }
             catch (Exception e)
             {
