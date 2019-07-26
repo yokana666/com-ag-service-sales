@@ -25,7 +25,15 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             var data = await base.GetNewData();
             data.PreSCId = garmentPreSalesContractData.Id;
             data.PreSCNo = garmentPreSalesContractData.SCNo;
-            data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>();
+            data.UnitCode = "C2A";
+            data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
+            {
+                new CostCalculationGarment_Material
+                {
+                    ProductId = "1",
+                    CategoryName = "FABRIC"
+                }
+            };
 
             return data;
         }
