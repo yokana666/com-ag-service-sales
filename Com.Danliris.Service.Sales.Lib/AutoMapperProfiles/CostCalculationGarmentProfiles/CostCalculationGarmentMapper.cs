@@ -55,7 +55,7 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarme
 			  .ForPath(d => d.OTL2.Value, opt => opt.MapFrom(s => s.OTL2Rate))
               .ForPath(d => d.UnitName, opt => opt.MapFrom(s => s.UnitName))
               .ForPath(d => d.OTL2.CalculatedValue, opt => opt.MapFrom(s => s.OTL2CalculatedRate))
-			  .ForPath(d => d.NETFOBP, opt => opt.MapFrom(s => Percentage.ToPercent(s.NETFOBP)))
+			  .ForPath(d => d.NETFOBP, opt => opt.MapFrom(s => s.NETFOBP))
               .ForPath(d => d.Index, opt => opt.MapFrom(s =>s.Index))
 
               .ForPath(d => d.ApprovalMD.IsApproved, opt => opt.MapFrom(s => s.IsApprovedMD))

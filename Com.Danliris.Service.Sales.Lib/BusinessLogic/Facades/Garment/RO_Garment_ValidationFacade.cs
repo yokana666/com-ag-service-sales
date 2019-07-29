@@ -27,18 +27,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
             this.RO_Garment_ValidationLogic = serviceProvider.GetService<RO_Garment_ValidationLogic>();
         }
 
-        public List<CostCalculationGarment> Read()
-        {
-            return DbSet.ToList();
-        }
-
-        public CostCalculationGarment Read(int id)
-        {
-            return DbSet
-                .Include(m => m.CostCalculationGarment_Materials)
-                .FirstOrDefault(m => m.Id == id);
-        }
-
         public async Task<int> ValidateROGarment(CostCalculationGarment CostCalculationGarment, Dictionary<long, string> productDicts)
         {
             int Updated = 0;
