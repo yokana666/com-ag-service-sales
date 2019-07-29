@@ -37,7 +37,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			List<string> SearchAttributes = new List<string>()
 			{
-				"RO_Number","Article","UnitName"
+                "PreSCNo", "RO_Number","Article","UnitName"
 			};
 
 			Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
