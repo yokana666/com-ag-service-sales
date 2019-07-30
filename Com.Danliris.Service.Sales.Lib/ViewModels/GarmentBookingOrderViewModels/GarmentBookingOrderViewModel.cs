@@ -1,4 +1,5 @@
-﻿using Com.Danliris.Service.Sales.Lib.Utilities;
+﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,6 +31,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public double ConfirmedQuantity { get; set; }
         public bool HadConfirmed { get; set; }
         public bool cancelConfirm { get; set; }
+        public double maxWH { get; set; }
         public List<GarmentBookingOrderItemViewModel> Items { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -56,12 +58,49 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45))
                     yield return new ValidationResult("Tanggal Pengiriman harus lebih dari 45 Hari (" + dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")) + ")", new List<string> { "DeliveryDate" });
             }
+            var dateDeliveryBook = DeliveryDate.AddHours(7).Day;
+            int yearBook = DeliveryDate.AddHours(7).Year;
+            int monthBook = DeliveryDate.AddHours(7).Month;
+            double averageWHBook = 0;
+            if (dateDeliveryBook < 6)
+            {
+                var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                             join w in weekly on i.WeeklyPlanId equals w.Id
+                             where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook - 1
+                             select i).ToList();
+                double wh = 0;
+                foreach (var w in weeks)
+                {
+                    wh += w.WHConfirm;
+                }
+                averageWHBook = wh / (weeks.Count());
+            }
+            else
+            {
+                var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                             join w in weekly on i.WeeklyPlanId equals w.Id
+                             where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook
+                             select i).ToList();
+                double wh = 0;
+                foreach (var w in weeks)
+                {
+                    wh += w.WHConfirm;
+                }
+                averageWHBook = wh / (weeks.Count());
+            }
+            if (Math.Round(averageWHBook,2) >= maxWH)
+            {
+                yield return new ValidationResult("Tidak bisa simpan Boooking Order. WH Confirm sudah " + maxWH, new List<string> { "DeliveryDate" });
+            }
+
             if (Items != null)
             {
                 int Count = 0;
                 string ItemError = "[";
 
-                var maxWh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
+                //var maxWh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
                 foreach (GarmentBookingOrderItemViewModel item in Items)
                 {
                     ItemError += "{";
@@ -93,14 +132,16 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Lebih dari Tanggal Booking' , ";
                     }
 
-                    var dateDelivery = item.DeliveryDate.Day;
-                    int year = item.DeliveryDate.Year;
-                    int month = item.DeliveryDate.Month;
-                    List<int> listWH = new List<int>();
+                    var dateDelivery = item.DeliveryDate.AddHours(7).Day;
+                    int year = item.DeliveryDate.AddHours(7).Year;
+                    int month = item.DeliveryDate.AddHours(7).Month;
                     double averageWH = 0;
                     if (dateDelivery < 6)
                     {
-                        var weeks = dbContext.GarmentWeeklyPlanItems.Where(a => a.StartDate.Year == year && a.StartDate.Month== month-1);
+                        var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                        var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                     join w in weekly on i.WeeklyPlanId equals  w.Id where
+                                     i.StartDate.Year == year && i.StartDate.Month == month - 1 select i).ToList();
                         double wh = 0;
                         foreach (var w in weeks)
                         {
@@ -110,7 +151,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                     }
                     else
                     {
-                        var weeks = dbContext.GarmentWeeklyPlanItems.Where(a => a.StartDate.Year == year && a.StartDate.Month == month);
+                        var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                        var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                     join w in weekly on i.WeeklyPlanId equals w.Id
+                                     where i.StartDate.Year == year && i.StartDate.Month == month
+                                     select i).ToList();
                         double wh = 0;
                         foreach (var w in weeks)
                         {
@@ -118,10 +163,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                         }
                         averageWH = wh / (weeks.Count());
                     }
-                    if (averageWH> maxWh.MaxValue)
+                    if (Math.Round(averageWH, 2) >= maxWH)
                     {
                         Count++;
-                        ItemError += $" DeliveryDate: 'Tidak bisa simpan blocking plan sewing. WH Confirm > {maxWh.MaxValue}' , ";
+                        ItemError += $" DeliveryDate: 'Tidak bisa simpan Booking Order. WH Confirm sudah {maxWH}' , ";
                     }
 
                     
