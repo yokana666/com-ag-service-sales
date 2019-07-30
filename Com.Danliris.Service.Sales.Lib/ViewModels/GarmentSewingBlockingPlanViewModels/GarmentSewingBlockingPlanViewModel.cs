@@ -1,5 +1,6 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -79,21 +80,27 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
 
                     if(item.IsConfirm)
                     {
-                       
+                        double oldWH = 0;
                         var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
+                        if (item.Id >0)
+                        {
+                            var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == item.Id && a.WeeklyPlanItemId==item.WeeklyPlanItemId);
+                            oldWH = Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
+                        }
+                        
                         if (weeklyId.ContainsKey(item.WeeklyPlanItemId))
                         {
-                            weeklyId[item.WeeklyPlanItemId] += item.whConfirm;
+                            weeklyId[item.WeeklyPlanItemId] += Math.Round(item.whConfirm,2) - oldWH;
                         }
                         else
                         {
-                            weeklyId.Add(item.WeeklyPlanItemId, (week.WHConfirm + item.whConfirm));
+                            weeklyId.Add(item.WeeklyPlanItemId, (week.WHConfirm + Math.Round(item.whConfirm, 2) - oldWH));
                         }
-
-                        if (weeklyId[item.WeeklyPlanItemId] > wh.MaxValue)
+                        double maxValue = item.Unit.Code == "SK" ? wh.SKMaxValue : wh.UnitMaxValue;
+                        if (weeklyId[item.WeeklyPlanItemId] > maxValue)
                         {
                             Count++;
-                            ItemError += $" whConfirm: 'Tidak bisa simpan blocking plan sewing. WH Confirm > {wh.MaxValue}' , ";
+                            ItemError += $" whConfirm: 'Tidak bisa simpan blocking plan sewing. WH Confirm > {maxValue}' , ";
                         }
                     }
                     
