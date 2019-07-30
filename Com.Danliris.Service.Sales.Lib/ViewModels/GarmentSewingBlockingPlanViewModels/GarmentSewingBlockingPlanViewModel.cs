@@ -96,7 +96,18 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                         {
                             weeklyId.Add(item.WeeklyPlanItemId, (week.WHConfirm + Math.Round(item.whConfirm, 2) - oldWH));
                         }
-                        double maxValue = item.Unit.Code == "SK" ? wh.SKMaxValue : wh.UnitMaxValue;
+
+                        double maxValue = 0;
+                        if (item.Unit != null)
+                        {
+                            maxValue = item.Unit.Code == "SK" ? wh.SKMaxValue : wh.UnitMaxValue;
+                        }
+                        else
+                        {
+                            Count++;
+                            ItemError += " unit: 'Unit harus diisi' , ";
+                        }
+
                         if (weeklyId[item.WeeklyPlanItemId] > maxValue)
                         {
                             Count++;

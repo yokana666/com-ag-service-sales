@@ -15,6 +15,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.Weekl
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanViewModels;
+using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
@@ -222,14 +223,34 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
                         IsConfirm=true,
                         DeliveryDate= DateTimeOffset.UtcNow.Date.AddDays(-2),
                         WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
-                        whConfirm=63
+                        whConfirm=63,
+                        Unit=new UnitViewModel
+                        {
+                            Name="unit",
+                            Id=1,
+                            Code="unit"
+                        }
                     },
                     new GarmentSewingBlockingPlanItemViewModel
                     {
                         IsConfirm=true,
                         DeliveryDate= data.DeliveryDate.Date.AddDays(2),
                         WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
-                        whConfirm=63
+                        whConfirm=63,
+                        Unit=new UnitViewModel
+                        {
+                            Name="unit",
+                            Id=1,
+                            Code="unit"
+                        }
+                    },
+                    new GarmentSewingBlockingPlanItemViewModel
+                    {
+                        IsConfirm=true,
+                        DeliveryDate= data.DeliveryDate.Date.AddDays(2),
+                        WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
+                        whConfirm=63,
+                        
                     }
                 }
             };
