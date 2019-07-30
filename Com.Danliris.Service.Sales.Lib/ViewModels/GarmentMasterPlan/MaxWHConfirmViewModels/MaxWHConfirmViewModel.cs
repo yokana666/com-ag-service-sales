@@ -8,13 +8,19 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentMasterPlan.MaxWHConfi
 {
     public class MaxWHConfirmViewModel : BaseViewModel, IValidatableObject
     {
-        public double MaxValue { get; set; }
+        public double UnitMaxValue { get; set; }
+        public double SKMaxValue { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (MaxValue <=0)
+            if (UnitMaxValue <= 0)
             {
-                yield return new ValidationResult("Max WH Confirm tidak boleh kosong", new List<string> { "wh" });
+                yield return new ValidationResult("Max WH Confirm Unit tidak boleh kosong", new List<string> { "Unitwh" });
+            }
+
+            if (SKMaxValue <= 0)
+            {
+                yield return new ValidationResult("Max WH Confirm SK tidak boleh kosong", new List<string> { "SKwh" });
             }
         }
     }

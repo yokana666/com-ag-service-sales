@@ -27,7 +27,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
 
             if (keyword != null)
             {
-                Query = Query.Where(w => w.MaxValue.ToString().Contains(keyword) );
+                Query = Query.Where(w => w.UnitMaxValue.ToString().Contains(keyword) || w.SKMaxValue.ToString().Contains(keyword));
             }
 
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
@@ -43,7 +43,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.M
                 {
                     Id = field.Id,
                     CreatedUtc=field.CreatedUtc,
-                    MaxValue=field.MaxValue,
+                    UnitMaxValue=field.UnitMaxValue,
+                    SKMaxValue=field.SKMaxValue,
                     LastModifiedUtc = field.LastModifiedUtc
                 });
 

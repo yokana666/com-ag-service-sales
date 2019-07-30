@@ -7,6 +7,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.MaxWHConfirmMo
 {
     public class MaxWHConfirm : BaseModel
     {
-        public double MaxValue { get; set; }
+        public double UnitMaxValue { get; set; }
+        public double SKMaxValue { get; set; }
     }
 }
