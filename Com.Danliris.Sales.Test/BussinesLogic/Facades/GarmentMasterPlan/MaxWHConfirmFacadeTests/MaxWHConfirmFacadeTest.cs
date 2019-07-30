@@ -101,7 +101,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.MaxWHC
 
             MaxWHConfirmViewModel vm = new MaxWHConfirmViewModel
             {
-                MaxValue=-2
+                UnitMaxValue=-2,
+                SKMaxValue=-2
             };
 
             Assert.True(vm.Validate(null).Count() > 0);

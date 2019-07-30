@@ -18,7 +18,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.MaxW
         {
             var wh = new MaxWHConfirm
             {
-                MaxValue=70
+                UnitMaxValue=70,
+                SKMaxValue=2
             };
             
             return wh;
