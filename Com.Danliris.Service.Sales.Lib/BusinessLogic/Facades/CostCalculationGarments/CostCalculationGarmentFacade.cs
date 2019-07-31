@@ -85,7 +85,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                     {
                         model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
                     }
-                    model.IsValidated = false;
                     costCalculationGarmentLogic.Create(model);
                     Created = await DbContext.SaveChangesAsync();
                     transaction.Commit();
