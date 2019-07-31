@@ -40,13 +40,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                         .FirstOrDefault(m => m.Id == CostCalculationGarment.Id);
 
                     EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-                    model.IsValidated = true;
+                    model.IsValidatedROPPIC = true;
                     foreach (var material in model.CostCalculationGarment_Materials)
                     {
                         var sentMaterial = CostCalculationGarment.CostCalculationGarment_Materials.FirstOrDefault(m => m.Id == material.Id);
                         if (sentMaterial != null)
                         {
                             material.IsPosted = true;
+                            material.IsPRMaster = sentMaterial.IsPRMaster;
                             EntityExtension.FlagForUpdate(material, IdentityService.Username, "sales-service");
                         }
                     }
@@ -54,7 +55,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
 
                     Updated = await DbContext.SaveChangesAsync();
 
-                    model.CostCalculationGarment_Materials = model.CostCalculationGarment_Materials.Where(material => CostCalculationGarment.CostCalculationGarment_Materials.Any(oldMaterial => oldMaterial.Id == material.Id)).ToList();
+                    model.CostCalculationGarment_Materials = model.CostCalculationGarment_Materials
+                        .Where(material => CostCalculationGarment.CostCalculationGarment_Materials.Any(oldMaterial => oldMaterial.Id == material.Id) && material.IsPRMaster == false).ToList();
 
                     if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => !m.CategoryName.ToUpper().Equals("PROCESS")))
                     {
