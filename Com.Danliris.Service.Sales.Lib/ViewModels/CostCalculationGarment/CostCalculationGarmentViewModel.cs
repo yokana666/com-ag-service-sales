@@ -56,7 +56,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public string UnitName { get; set; }
 
         public long? SCGarmentId { get; set; }
-        public bool? IsValidated { get; set; }
 
         public long PreSCId { get; set; }
         public string PreSCNo { get; set; }
