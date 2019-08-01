@@ -65,6 +65,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public Approval ApprovalIE { get; set; }
         public Approval ApprovalPPIC { get; set; }
 
+        public bool IsValidatedROSample { get; set; }
+        public bool IsValidatedROPPIC { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
             if (PreSCId < 1 || string.IsNullOrWhiteSpace(PreSCNo))
