@@ -136,7 +136,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
         };
 
             ValidationContext validationContext = new ValidationContext(vm1, serviceProvider.Object, null);
-            var validationResultCreate = vm.Validate(validationContext).ToList();
+            var validationResultCreate = vm1.Validate(validationContext).ToList();
             Assert.True(validationResultCreate.Count() > 0);
 
         }
