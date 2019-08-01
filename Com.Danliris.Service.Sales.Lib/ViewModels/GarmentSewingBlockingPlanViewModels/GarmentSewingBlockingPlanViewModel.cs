@@ -94,7 +94,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                         }
                         else
                         {
-                            weeklyId.Add(item.WeeklyPlanItemId, (week.WHConfirm + Math.Round(item.whConfirm, 2) - oldWH));
+                            weeklyId.Add(item.WeeklyPlanItemId, (Math.Round(week.WHConfirm,2) + Math.Round(item.whConfirm, 2) - oldWH));
                         }
 
                         double maxValue = 0;
