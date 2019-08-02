@@ -58,17 +58,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                     model.CostCalculationGarment_Materials = model.CostCalculationGarment_Materials
                         .Where(material => CostCalculationGarment.CostCalculationGarment_Materials.Any(oldMaterial => oldMaterial.Id == material.Id) && material.IsPRMaster == false).ToList();
 
-                    if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => !m.CategoryName.ToUpper().Equals("PROCESS")))
+                    if (model.CostCalculationGarment_Materials.Count > 0)
                     {
-                        await RO_Garment_ValidationLogic.CreateGarmentPurchaseRequest(model, productDicts);
-                    }
-                    else if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => m.CategoryName.ToUpper().Equals("PROCESS")))
-                    {
-                        await RO_Garment_ValidationLogic.AddItemsGarmentPurchaseRequest(model, productDicts);
-                    }
-                    else
-                    {
-                        throw new Exception("Kategori Ada Proses dan Lainnnya");
+                        if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => !m.CategoryName.ToUpper().Equals("PROCESS")))
+                        {
+                            await RO_Garment_ValidationLogic.CreateGarmentPurchaseRequest(model, productDicts);
+                        }
+                        else if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => m.CategoryName.ToUpper().Equals("PROCESS")))
+                        {
+                            await RO_Garment_ValidationLogic.AddItemsGarmentPurchaseRequest(model, productDicts);
+                        }
+                        else
+                        {
+                            throw new Exception("Kategori Ada Proses dan Lainnnya");
+                        }
                     }
 
                     transaction.Commit();
