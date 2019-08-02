@@ -84,8 +84,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                         var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
                         if (item.Id >0)
                         {
-                            var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == item.Id && a.WeeklyPlanItemId==item.WeeklyPlanItemId);
-                            oldWH = Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
+                            var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == item.Id && a.WeeklyPlanItemId==item.WeeklyPlanItemId && a.IsConfirm);
+                            oldWH = bp==null? 0 :  Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
                         }
                         
                         if (weeklyId.ContainsKey(item.WeeklyPlanItemId))
