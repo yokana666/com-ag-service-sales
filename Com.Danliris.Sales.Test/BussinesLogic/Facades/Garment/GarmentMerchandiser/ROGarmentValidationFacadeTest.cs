@@ -9,6 +9,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.Helpers;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -98,6 +99,25 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
         }
 
         [Fact]
+        public async void Validate_RO_Garment_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var dataCostCalculationGarment = await DataUtil(facade, serviceProvider, dbContext).GetTestData();
+
+            RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
+
+            var productDict = dataCostCalculationGarment.CostCalculationGarment_Materials.ToDictionary(k => long.Parse(k.ProductId), v => v.ProductCode);
+
+            var result = await garmentValidationFacade.ValidateROGarment(dataCostCalculationGarment, productDict);
+
+            Assert.NotEqual(0, result);
+        }
+
+        [Fact]
         public async void Validate_RO_Garment_Error()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -106,6 +126,63 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
 
             var dataCostCalculationGarment = await DataUtil(facade, serviceProvider, dbContext).GetTestData();
+            foreach (var material in dataCostCalculationGarment.CostCalculationGarment_Materials)
+            {
+                material.IsPRMaster = false;
+            }
+
+            RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
+
+            var productDict = dataCostCalculationGarment.CostCalculationGarment_Materials.ToDictionary(k => long.Parse(k.ProductId), v => v.ProductCode);
+
+            Exception exception = await Assert.ThrowsAsync<Exception>(() => garmentValidationFacade.ValidateROGarment(dataCostCalculationGarment, productDict));
+
+            Assert.NotNull(exception);
+        }
+
+        [Fact]
+        public async void Validate_RO_Garment_Error_Category_PROCESS()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var dataCostCalculationGarment = await DataUtil(facade, serviceProvider, dbContext).GetTestData();
+            foreach (var material in dataCostCalculationGarment.CostCalculationGarment_Materials)
+            {
+                material.CategoryName = "PROCESS";
+                material.IsPRMaster = false;
+            }
+
+            RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
+
+            var productDict = dataCostCalculationGarment.CostCalculationGarment_Materials.ToDictionary(k => long.Parse(k.ProductId), v => v.ProductCode);
+
+            Exception exception = await Assert.ThrowsAsync<Exception>(() => garmentValidationFacade.ValidateROGarment(dataCostCalculationGarment, productDict));
+
+            Assert.NotNull(exception);
+        }
+
+        [Fact]
+        public async void Validate_RO_Garment_Error_Category_Mixed()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var dataCostCalculationGarment = await DataUtil(facade, serviceProvider, dbContext).GetTestData();
+            foreach (var material in dataCostCalculationGarment.CostCalculationGarment_Materials)
+            {
+                material.IsPRMaster = false;
+            }
+            dataCostCalculationGarment.CostCalculationGarment_Materials.Add(new CostCalculationGarment_Material
+            {
+                ProductId = "2",
+                CategoryName = "PROCESS",
+                IsPRMaster = false
+            });
 
             RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
 
