@@ -1,5 +1,6 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
 using Com.Danliris.Service.Sales.Lib.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,6 +33,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
         public bool HadConfirmed { get; set; }
         public bool cancelConfirm { get; set; }
         public double maxWH { get; set; }
+        public bool isUpdate { get; set; }
         public List<GarmentBookingOrderItemViewModel> Items { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -58,63 +60,68 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 else if (this.DeliveryDate < DateTimeOffset.Now.AddDays(45))
                     yield return new ValidationResult("Tanggal Pengiriman harus lebih dari 45 Hari (" + dt.ToOffset(new TimeSpan(clientTimeZoneOffset, 0, 0)).ToString("dd MMMM yyyy", new CultureInfo("id-ID")) + ")", new List<string> { "DeliveryDate" });
             }
-            var dateDeliveryBook = DeliveryDate.AddHours(7).Day;
-            int yearBook = DeliveryDate.AddHours(7).Year;
-            int monthBook = DeliveryDate.AddHours(7).Month;
-            double averageWHBook = 0;
-            double averageSKWHBook = 0;
-            if (dateDeliveryBook < 6)
+            if (Id<=0 || isUpdate)
             {
-                var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
-                             join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
-                             where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook - 1 && w.UnitCode=="SK"
-                             select i).ToList();
-                var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
-                var weeks = (from i in dbContext.GarmentWeeklyPlanItems
-                             join w in weekly on i.WeeklyPlanId equals w.Id
-                             where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook - 1
-                             select i).ToList();
-                double wh = 0;
-                double SKwh = 0;
-                foreach (var sk in SKweeks)
+                var dateDeliveryBook = DeliveryDate.Day;
+                int yearBook = DeliveryDate.Year;
+                int monthBook = DeliveryDate.Month;
+                double averageWHBook = 0;
+                double averageSKWHBook = 0;
+                if (dateDeliveryBook < 6)
                 {
-                    SKwh += Math.Round(sk.WHConfirm,2);
+                    var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                   join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
+                                   where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook - 1 && w.UnitCode == "SK"
+                                   select i).ToList();
+                    var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                    var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                 join w in weekly on i.WeeklyPlanId equals w.Id
+                                 where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook - 1
+                                 select i).ToList();
+                    double wh = 0;
+                    double SKwh = 0;
+                    foreach (var sk in SKweeks)
+                    {
+                        SKwh += Math.Round(sk.WHConfirm, 2);
+                    }
+                    averageSKWHBook = Math.Round((SKwh / SKweeks.Count()), 2);
+                    foreach (var w in weeks)
+                    {
+                        wh += Math.Round(w.WHConfirm, 2);
+                    }
+                    averageWHBook = Math.Round((wh / weeks.Count()), 2) + averageSKWHBook;
                 }
-                averageSKWHBook = Math.Round((SKwh / SKweeks.Count()),2);
-                foreach (var w in weeks)
+                else
                 {
-                    wh += Math.Round(w.WHConfirm,2);
+                    var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                   join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
+                                   where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook && w.UnitCode == "SK"
+                                   select i).ToList();
+                    var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                    var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                 join w in weekly on i.WeeklyPlanId equals w.Id
+                                 where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook
+                                 select i).ToList();
+                    double wh = 0;
+                    double SKWh = 0;
+                    foreach (var sk in SKweeks)
+                    {
+                        SKWh += Math.Round(sk.WHConfirm, 2);
+                    }
+                    averageSKWHBook = (SKWh / SKweeks.Count());
+                    foreach (var w in weeks)
+                    {
+                        wh += Math.Round(w.WHConfirm, 2);
+                    }
+                    averageWHBook = (wh / weeks.Count()) + averageSKWHBook;
                 }
-                averageWHBook = Math.Round((wh / weeks.Count() ),2)+ averageSKWHBook;
+
+                if (averageWHBook >= maxWH)
+                {
+                    yield return new ValidationResult("Tidak bisa simpan Boooking Order. WH Confirm sudah " + maxWH, new List<string> { "DeliveryDate" });
+                }
             }
-            else
-            {
-                var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
-                               join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
-                               where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook && w.UnitCode == "SK"
-                               select i).ToList();
-                var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
-                var weeks = (from i in dbContext.GarmentWeeklyPlanItems
-                             join w in weekly on i.WeeklyPlanId equals w.Id
-                             where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook
-                             select i).ToList();
-                double wh = 0;
-                double SKWh =0;
-                foreach (var sk in SKweeks)
-                {
-                    SKWh += Math.Round(sk.WHConfirm, 2);
-                }
-                averageSKWHBook = (SKWh / SKweeks.Count());
-                foreach (var w in weeks)
-                {
-                    wh += Math.Round(w.WHConfirm,2);
-                }
-                averageWHBook = (wh / weeks.Count()) + averageSKWHBook;
-            }
-            if (averageWHBook >= maxWH)
-            {
-                yield return new ValidationResult("Tidak bisa simpan Boooking Order. WH Confirm sudah " + maxWH, new List<string> { "DeliveryDate" });
-            }
+            
 
             if (Items != null)
             {
@@ -152,64 +159,77 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                         Count++;
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Lebih dari Tanggal Booking' , ";
                     }
-
-                    var dateDelivery = item.DeliveryDate.AddHours(7).Day;
-                    int year = item.DeliveryDate.AddHours(7).Year;
-                    int month = item.DeliveryDate.AddHours(7).Month;
-                    double averageWH = 0;
-                    double averageSK = 0;
-                    if (dateDelivery < 6)
+                    bool cekTanggal = true;
+                    if (item.Id > 0)
                     {
-                        var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
-                                       join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
-                                       where i.StartDate.Year == year && i.StartDate.Month == month - 1 && w.UnitCode == "SK"
-                                       select i).ToList();
-                        var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
-                        var weeks = (from i in dbContext.GarmentWeeklyPlanItems
-                                     join w in weekly on i.WeeklyPlanId equals  w.Id where
-                                     i.StartDate.Year == year && i.StartDate.Month == month - 1 select i).ToList();
-                        double wh = 0;
-                        double SKwh=  0;
-                        foreach (var sk in SKweeks)
+                        var book = dbContext.GarmentBookingOrderItems.AsNoTracking().FirstOrDefault(a => a.Id == item.Id);
+                        if (item.DeliveryDate == book.DeliveryDate)
                         {
-                            SKwh += Math.Round(sk.WHConfirm, 2);
+                            cekTanggal = false;
                         }
-                        averageSK = (SKwh / SKweeks.Count());
-                        foreach (var w in weeks)
-                        {
-                            wh += Math.Round(w.WHConfirm, 2);
-                        }
-                        averageWH =( wh / (weeks.Count())) + averageSK;
                     }
-                    else
+                    if (cekTanggal)
                     {
-                        var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
-                                       join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
-                                       where i.StartDate.Year == year && i.StartDate.Month == month && w.UnitCode == "SK"
-                                       select i).ToList();
-                        var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
-                        var weeks = (from i in dbContext.GarmentWeeklyPlanItems
-                                     join w in weekly on i.WeeklyPlanId equals w.Id
-                                     where i.StartDate.Year == year && i.StartDate.Month == month
-                                     select i).ToList();
-                        double wh = 0;
-                        double SKwh = 0;
-                        foreach (var sk in SKweeks)
+                        var dateDelivery = item.DeliveryDate.Day;
+                        int year = item.DeliveryDate.Year;
+                        int month = item.DeliveryDate.Month;
+                        double averageWH = 0;
+                        double averageSK = 0;
+                        if (dateDelivery < 6)
                         {
-                            SKwh += Math.Round(sk.WHConfirm, 2);
+                            var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                           join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
+                                           where i.StartDate.Year == year && i.StartDate.Month == month - 1 && w.UnitCode == "SK"
+                                           select i).ToList();
+                            var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                            var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                         join w in weekly on i.WeeklyPlanId equals w.Id
+                                         where i.StartDate.Year == year && i.StartDate.Month == month - 1
+                                         select i).ToList();
+                            double wh = 0;
+                            double SKwh = 0;
+                            foreach (var sk in SKweeks)
+                            {
+                                SKwh += Math.Round(sk.WHConfirm, 2);
+                            }
+                            averageSK = (SKwh / SKweeks.Count());
+                            foreach (var w in weeks)
+                            {
+                                wh += Math.Round(w.WHConfirm, 2);
+                            }
+                            averageWH = (wh / (weeks.Count())) + averageSK;
                         }
-                        averageSK = (SKwh / SKweeks.Count());
-                        foreach (var w in weeks)
+                        else
                         {
-                            wh += Math.Round(w.WHConfirm, 2);
+                            var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                           join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
+                                           where i.StartDate.Year == year && i.StartDate.Month == month && w.UnitCode == "SK"
+                                           select i).ToList();
+                            var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
+                            var weeks = (from i in dbContext.GarmentWeeklyPlanItems
+                                         join w in weekly on i.WeeklyPlanId equals w.Id
+                                         where i.StartDate.Year == year && i.StartDate.Month == month
+                                         select i).ToList();
+                            double wh = 0;
+                            double SKwh = 0;
+                            foreach (var sk in SKweeks)
+                            {
+                                SKwh += Math.Round(sk.WHConfirm, 2);
+                            }
+                            averageSK = (SKwh / SKweeks.Count());
+                            foreach (var w in weeks)
+                            {
+                                wh += Math.Round(w.WHConfirm, 2);
+                            }
+                            averageWH = (wh / (weeks.Count())) + averageSK;
                         }
-                        averageWH = (wh / (weeks.Count())) + averageSK;
+                        if (averageWH >= maxWH)
+                        {
+                            Count++;
+                            ItemError += $" DeliveryDate: 'Tidak bisa simpan Booking Order. WH Confirm sudah {maxWH}' , ";
+                        }
                     }
-                    if (Math.Round(averageWH, 2) >= maxWH)
-                    {
-                        Count++;
-                        ItemError += $" DeliveryDate: 'Tidak bisa simpan Booking Order. WH Confirm sudah {maxWH}' , ";
-                    }
+                    
 
                     
                     ItemError += "}, ";
