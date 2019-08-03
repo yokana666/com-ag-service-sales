@@ -41,6 +41,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
 
                     EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
                     model.IsValidatedROPPIC = true;
+                    model.ValidationPPICDate = model.LastModifiedUtc;
+                    model.ValidationPPICBy = model.LastModifiedBy;
+
                     foreach (var material in model.CostCalculationGarment_Materials)
                     {
                         var sentMaterial = CostCalculationGarment.CostCalculationGarment_Materials.FirstOrDefault(m => m.Id == material.Id);
