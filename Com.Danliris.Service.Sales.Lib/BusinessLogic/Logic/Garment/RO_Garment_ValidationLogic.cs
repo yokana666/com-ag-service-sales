@@ -144,7 +144,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
         {
             GarmentPurchaseRequestViewModel garmentPurchaseRequest = new GarmentPurchaseRequestViewModel
             {
+                PRType = "JOB ORDER",
                 RONo = costCalculation.RO_Number,
+                SCId = costCalculation.PreSCId,
+                SCNo = costCalculation.PreSCNo,
                 Buyer = new BuyerViewModel
                 {
                     Id = Convert.ToInt64(costCalculation.BuyerBrandId),
@@ -161,6 +164,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                     Name = costCalculation.UnitName
                 },
                 IsPosted = true,
+
+                IsValidate = true,
+                ValidatedBy = costCalculation.LastModifiedBy,
+                ValidatedDate = costCalculation.LastModifiedUtc,
+
                 Items = FillGarmentPurchaseRequestItems(costCalculation.CostCalculationGarment_Materials.ToList(), productDicts)
             };
             return garmentPurchaseRequest;
