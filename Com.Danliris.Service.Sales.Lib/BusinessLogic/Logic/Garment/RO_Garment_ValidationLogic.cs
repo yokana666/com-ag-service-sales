@@ -21,25 +21,18 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 {
     public class RO_Garment_ValidationLogic
     {
-        private HttpClient httpClient;
-        private IIdentityService IdentityService;
+        private IServiceProvider serviceProvider;
 
         private string GarmentPurchaseRequestUri = "garment-purchase-requests";
 
         public RO_Garment_ValidationLogic(IServiceProvider serviceProvider)
         {
-            IdentityService = serviceProvider.GetService<IIdentityService>();
-        }
-
-        private void SetHttpClient()
-        {
-            httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, IdentityService.Token);
+            this.serviceProvider = serviceProvider;
         }
 
         public async Task CreateGarmentPurchaseRequest(CostCalculationGarment costCalculationGarment, Dictionary<long, string> productDicts)
         {
-            SetHttpClient();
+            var httpClient = serviceProvider.GetService<IHttpClientService>();
 
             var stringContent = JsonConvert.SerializeObject(FillGarmentPurchaseRequest(costCalculationGarment, productDicts));
             var httpContent = new StringContent(stringContent, Encoding.UTF8, General.JsonMediaType);
@@ -51,7 +44,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 
         public async Task AddItemsGarmentPurchaseRequest(CostCalculationGarment costCalculationGarment, Dictionary<long, string> productDicts)
         {
-            SetHttpClient();
+            var httpClient = serviceProvider.GetService<IHttpClientService>();
 
             var oldGarmentPurchaseRequest = await GetGarmentPurchaseRequestByRONo(costCalculationGarment.RO_Number);
             var garmentPurchaseRequest = FillGarmentPurchaseRequest(costCalculationGarment, productDicts);
@@ -72,6 +65,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 
         private async Task<GarmentPurchaseRequestViewModel> GetGarmentPurchaseRequestByRONo(string roNo)
         {
+            var httpClient = serviceProvider.GetService<IHttpClientService>();
             var httpResponseMessage = await httpClient.GetAsync($@"{APIEndpoint.AzurePurchasing}{GarmentPurchaseRequestUri}/by-rono/{roNo}");
 
             if (httpResponseMessage.StatusCode.Equals(HttpStatusCode.OK))
