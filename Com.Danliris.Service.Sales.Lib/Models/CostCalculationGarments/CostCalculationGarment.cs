@@ -104,6 +104,10 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public string ApprovedPPICBy { get; set; }
 
         public bool IsValidatedROSample { get; set; }
+
         public bool IsValidatedROPPIC { get; set; }
+        public DateTimeOffset ValidationPPICDate { get; set; }
+        [MaxLength(50)]
+        public string ValidationPPICBy { get; set; }
     }
 }
