@@ -84,7 +84,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                     {
                         SKwh += Math.Round(sk.WHConfirm, 2);
                     }
-                    averageSKWHBook = Math.Round((SKwh / SKweeks.Count()), 2);
+                    averageSKWHBook =SKwh / SKweeks.Count();
                     foreach (var w in weeks)
                     {
                         wh += Math.Round(w.WHConfirm, 2);
