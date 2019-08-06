@@ -168,5 +168,45 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             int statusCode = await this.GetStatusCodePatch(mocks, id);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
+
+        [Fact]
+        public async Task Update_Ro_Sample()
+        {
+            var mocks = this.GetMocks();
+            mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
+            var id = 1;
+            var viewModel = new CostCalculationGarmentViewModel()
+            {
+                Id = id
+            };
+            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
+            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ReturnsAsync(1);
+            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+
+            var controller = GetController(mocks);
+            var response = await controller.PutRoSample(id, It.IsAny<CostCalculationGarmentViewModel>());
+
+            Assert.Equal((int)HttpStatusCode.NoContent, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Update_Ro_Sample_ThrowException()
+        {
+            var mocks = this.GetMocks();
+            mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
+            var id = 1;
+            var viewModel = new CostCalculationGarmentViewModel()
+            {
+                Id = id
+            };
+            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
+            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ThrowsAsync(new Exception());
+
+            var controller = GetController(mocks);
+            var response = await controller.PutRoSample(id, It.IsAny<CostCalculationGarmentViewModel>());
+
+            Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
     }
 }
