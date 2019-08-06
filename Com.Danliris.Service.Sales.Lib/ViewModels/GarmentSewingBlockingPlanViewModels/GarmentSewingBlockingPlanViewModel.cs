@@ -42,6 +42,27 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                 SalesDbContext dbContext = validationContext == null ? null : (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
                 var wh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
 
+                foreach(var i in Items)
+                {
+                    double oldWH = 0;
+                    var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == i.WeeklyPlanItemId);
+
+                    if (i.Id > 0)
+                    {
+                        var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == i.Id && a.WeeklyPlanItemId == i.WeeklyPlanItemId && a.IsConfirm);
+                        oldWH = bp == null ? 0 : Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
+
+                        if (weeklyId.ContainsKey(i.WeeklyPlanItemId))
+                        {
+                            weeklyId[i.WeeklyPlanItemId] -= oldWH;
+                        }
+                        else
+                        {
+                            weeklyId.Add(i.WeeklyPlanItemId, (Math.Round(week.WHConfirm, 2) - oldWH));
+                        }
+                    }
+                }
+
                 foreach (GarmentSewingBlockingPlanItemViewModel item in Items)
                 {
                     ItemError += "{";
@@ -78,23 +99,18 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Lebih dari Tanggal Booking' , ";
                     }
 
+
                     if(item.IsConfirm)
                     {
-                        double oldWH = 0;
                         var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
-                        if (item.Id >0)
-                        {
-                            var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == item.Id && a.WeeklyPlanItemId==item.WeeklyPlanItemId && a.IsConfirm);
-                            oldWH = bp==null? 0 :  Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
-                        }
-                        
+
                         if (weeklyId.ContainsKey(item.WeeklyPlanItemId))
                         {
-                            weeklyId[item.WeeklyPlanItemId] += Math.Round(item.whConfirm,2) - oldWH;
+                            weeklyId[item.WeeklyPlanItemId] += Math.Round(item.whConfirm,2);
                         }
                         else
                         {
-                            weeklyId.Add(item.WeeklyPlanItemId, (Math.Round(week.WHConfirm,2) + Math.Round(item.whConfirm, 2) - oldWH));
+                            weeklyId.Add(item.WeeklyPlanItemId, (Math.Round(week.WHConfirm,2) + Math.Round(item.whConfirm, 2)));
                         }
 
                         double maxValue = 0;
@@ -108,7 +124,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                             ItemError += " unit: 'Unit harus diisi' , ";
                         }
 
-                        if (weeklyId[item.WeeklyPlanItemId] > maxValue)
+                        if (Math.Round(weeklyId[item.WeeklyPlanItemId],2) > maxValue)
                         {
                             Count++;
                             ItemError += $" whConfirm: 'Tidak bisa simpan blocking plan sewing. WH Confirm > {maxValue}' , ";
