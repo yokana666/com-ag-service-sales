@@ -71,12 +71,12 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                 {
                     var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
                                    join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
-                                   where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook - 1 && w.UnitCode == "SK"
+                                   where i.StartDate.Year == (monthBook == 1 ? yearBook - 1 : yearBook) && i.StartDate.Month == (monthBook == 1 ? 12 : monthBook - 1) && w.UnitCode == "SK"
                                    select i).ToList();
                     var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
                     var weeks = (from i in dbContext.GarmentWeeklyPlanItems
                                  join w in weekly on i.WeeklyPlanId equals w.Id
-                                 where i.StartDate.Year == yearBook && i.StartDate.Month == monthBook - 1
+                                 where i.StartDate.Year == (monthBook == 1 ? yearBook-1 : yearBook) && i.StartDate.Month == (monthBook ==1 ? 12 : monthBook - 1)
                                  select i).ToList();
                     double wh = 0;
                     double SKwh = 0;
@@ -179,12 +179,12 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentBookingOrderViewModel
                         {
                             var SKweeks = (from i in dbContext.GarmentWeeklyPlanItems
                                            join w in dbContext.GarmentWeeklyPlans on i.WeeklyPlanId equals w.Id
-                                           where i.StartDate.Year == year && i.StartDate.Month == month - 1 && w.UnitCode == "SK"
+                                           where i.StartDate.Year == (month == 1 ? year-1 : year) && i.StartDate.Month == (month == 1 ? 12 : month - 1) && w.UnitCode == "SK"
                                            select i).ToList();
                             var weekly = dbContext.GarmentWeeklyPlans.Where(a => a.UnitCode != "SK");
                             var weeks = (from i in dbContext.GarmentWeeklyPlanItems
                                          join w in weekly on i.WeeklyPlanId equals w.Id
-                                         where i.StartDate.Year == year && i.StartDate.Month == month - 1
+                                         where i.StartDate.Year == (month == 1 ? year - 1 : year) && i.StartDate.Month == (month == 1 ? 12 : month - 1)
                                          select i).ToList();
                             double wh = 0;
                             double SKwh = 0;

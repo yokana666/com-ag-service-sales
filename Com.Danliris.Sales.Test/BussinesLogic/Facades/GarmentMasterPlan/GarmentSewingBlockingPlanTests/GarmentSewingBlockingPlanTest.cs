@@ -262,6 +262,69 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentMasterPlan.Garmen
         }
 
         [Fact]
+        public async Task Should_Success_Validate_Updated_Data()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var iserviceProvider = GetServiceProviderMock(dbContext).Object;
+            Mock<IServiceProvider> serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.
+                Setup(x => x.GetService(typeof(SalesDbContext)))
+                .Returns(dbContext);
+
+            GarmentSewingBlockingPlanFacade facade = new GarmentSewingBlockingPlanFacade(serviceProvider.Object, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            GarmentSewingBlockingPlanViewModel vm = new GarmentSewingBlockingPlanViewModel
+            {
+                BookingOrderNo = data.BookingOrderNo,
+                BookingOrderDate = data.BookingOrderDate,
+                DeliveryDate = data.DeliveryDate,
+                Id = data.Id,
+                Items = new List<GarmentSewingBlockingPlanItemViewModel> {
+                    new GarmentSewingBlockingPlanItemViewModel
+                    {
+                        IsConfirm=true,
+                        DeliveryDate= DateTimeOffset.UtcNow.Date.AddDays(-2),
+                        WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
+                        whConfirm=63,
+                        Id=data.Items.First().Id,
+                        Unit=new UnitViewModel
+                        {
+                            Name="unit",
+                            Id=1,
+                            Code="unit"
+                        }
+                    },
+                    new GarmentSewingBlockingPlanItemViewModel
+                    {
+                        IsConfirm=true,
+                        DeliveryDate= data.DeliveryDate.Date.AddDays(2),
+                        WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
+                        whConfirm=63,
+                        Unit=new UnitViewModel
+                        {
+                            Name="unit",
+                            Id=1,
+                            Code="unit"
+                        }
+                    },
+                    new GarmentSewingBlockingPlanItemViewModel
+                    {
+                        IsConfirm=true,
+                        DeliveryDate= data.DeliveryDate.Date.AddDays(2),
+                        WeeklyPlanItemId=data.Items.First().WeeklyPlanItemId,
+                        whConfirm=63,
+
+                    }
+                }
+            };
+            ValidationContext validationContext1 = new ValidationContext(vm, serviceProvider.Object, null);
+            var validationResultCreate1 = vm.Validate(validationContext1).ToList();
+            Assert.True(validationResultCreate1.Count() > 0);
+        }
+
+        [Fact]
         public virtual async void Get_All_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());

@@ -41,27 +41,31 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
 
                 SalesDbContext dbContext = validationContext == null ? null : (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
                 var wh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
-
-                foreach(var i in Items)
+                if (Id > 0)
                 {
-                    double oldWH = 0;
-                    var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == i.WeeklyPlanItemId);
-
-                    if (i.Id > 0)
+                    var oldItems = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().Where(a => a.BlockingPlanId == Id).ToList();
+                    foreach (var i in oldItems)
                     {
-                        var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == i.Id && a.WeeklyPlanItemId == i.WeeklyPlanItemId && a.IsConfirm);
-                        oldWH = bp == null ? 0 : Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
+                        double oldWH = 0;
+                        var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == i.WeeklyPlanItemId);
 
-                        if (weeklyId.ContainsKey(i.WeeklyPlanItemId))
+                        if (i.Id > 0)
                         {
-                            weeklyId[i.WeeklyPlanItemId] -= oldWH;
-                        }
-                        else
-                        {
-                            weeklyId.Add(i.WeeklyPlanItemId, (Math.Round(week.WHConfirm, 2) - oldWH));
+                            var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == i.Id && a.WeeklyPlanItemId == i.WeeklyPlanItemId && a.IsConfirm);
+                            oldWH = bp == null ? 0 : Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
+
+                            if (weeklyId.ContainsKey(i.WeeklyPlanItemId))
+                            {
+                                weeklyId[i.WeeklyPlanItemId] -= oldWH;
+                            }
+                            else
+                            {
+                                weeklyId.Add(i.WeeklyPlanItemId, (Math.Round(week.WHConfirm, 2) - oldWH));
+                            }
                         }
                     }
                 }
+                
 
                 foreach (GarmentSewingBlockingPlanItemViewModel item in Items)
                 {
