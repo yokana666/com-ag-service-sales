@@ -27,18 +27,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
             this.RO_Garment_ValidationLogic = serviceProvider.GetService<RO_Garment_ValidationLogic>();
         }
 
-        public List<CostCalculationGarment> Read()
-        {
-            return DbSet.ToList();
-        }
-
-        public CostCalculationGarment Read(int id)
-        {
-            return DbSet
-                .Include(m => m.CostCalculationGarment_Materials)
-                .FirstOrDefault(m => m.Id == id);
-        }
-
         public async Task<int> ValidateROGarment(CostCalculationGarment CostCalculationGarment, Dictionary<long, string> productDicts)
         {
             int Updated = 0;
@@ -52,13 +40,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                         .FirstOrDefault(m => m.Id == CostCalculationGarment.Id);
 
                     EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-                    model.IsValidated = true;
+                    model.IsValidatedROPPIC = true;
+                    model.ValidationPPICDate = model.LastModifiedUtc;
+                    model.ValidationPPICBy = model.LastModifiedBy;
+
                     foreach (var material in model.CostCalculationGarment_Materials)
                     {
                         var sentMaterial = CostCalculationGarment.CostCalculationGarment_Materials.FirstOrDefault(m => m.Id == material.Id);
                         if (sentMaterial != null)
                         {
                             material.IsPosted = true;
+                            material.IsPRMaster = sentMaterial.IsPRMaster;
                             EntityExtension.FlagForUpdate(material, IdentityService.Username, "sales-service");
                         }
                     }
@@ -66,19 +58,23 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
 
                     Updated = await DbContext.SaveChangesAsync();
 
-                    model.CostCalculationGarment_Materials = model.CostCalculationGarment_Materials.Where(material => CostCalculationGarment.CostCalculationGarment_Materials.Any(oldMaterial => oldMaterial.Id == material.Id)).ToList();
+                    model.CostCalculationGarment_Materials = model.CostCalculationGarment_Materials
+                        .Where(material => CostCalculationGarment.CostCalculationGarment_Materials.Any(oldMaterial => oldMaterial.Id == material.Id) && material.IsPRMaster == false).ToList();
 
-                    if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => !m.CategoryName.ToUpper().Equals("PROCESS")))
+                    if (model.CostCalculationGarment_Materials.Count > 0)
                     {
-                        await RO_Garment_ValidationLogic.CreateGarmentPurchaseRequest(model, productDicts);
-                    }
-                    else if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => m.CategoryName.ToUpper().Equals("PROCESS")))
-                    {
-                        await RO_Garment_ValidationLogic.AddItemsGarmentPurchaseRequest(model, productDicts);
-                    }
-                    else
-                    {
-                        throw new Exception("Kategori Ada Proses dan Lainnnya");
+                        if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => !m.CategoryName.ToUpper().Equals("PROCESS")))
+                        {
+                            await RO_Garment_ValidationLogic.CreateGarmentPurchaseRequest(model, productDicts);
+                        }
+                        else if (CostCalculationGarment.CostCalculationGarment_Materials.All(m => m.CategoryName.ToUpper().Equals("PROCESS")))
+                        {
+                            await RO_Garment_ValidationLogic.AddItemsGarmentPurchaseRequest(model, productDicts);
+                        }
+                        else
+                        {
+                            throw new Exception("Kategori Ada Proses dan Lainnnya");
+                        }
                     }
 
                     transaction.Commit();

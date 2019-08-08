@@ -37,7 +37,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			List<string> SearchAttributes = new List<string>()
 			{
-				"RO_Number","Article","UnitName"
+                "PreSCNo", "RO_Number","Article","UnitName"
 			};
 
 			Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
@@ -47,7 +47,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			List<string> SelectedFields = new List<string>()
 			{
-				  "Id", "Code", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+				  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
 					"Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand"
             };
 
@@ -79,6 +79,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      UOMUnit=ccg.UOMUnit,
 					 LastModifiedUtc = ccg.LastModifiedUtc,
                                           
+                     PreSCNo = ccg.PreSCNo
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -101,7 +102,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 				//EntityExtension.FlagForCreate(detail, IdentityService.Username, "sales-service");
 			}
 
-			EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
+            var preSC = DbContext.GarmentPreSalesContracts.Single(w => w.Id == model.PreSCId);
+            preSC.IsCC = true;
+
+            EntityExtension.FlagForCreate(model, IdentityService.Username, "sales-service");
 			DbSet.Add(model);
 		}
 	 
@@ -187,6 +191,25 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 			EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
 			DbSet.Update(model);
 		}
+
+        public override async Task DeleteAsync(long id)
+        {
+            var model = await DbSet.Include(d => d.CostCalculationGarment_Materials).FirstOrDefaultAsync(d => d.Id == id);
+            EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service", true);
+            DbSet.Update(model);
+
+            var countPreSCinOtherCC = DbSet.Count(c => c.Id != id && c.PreSCId == model.PreSCId);
+            if (countPreSCinOtherCC == 0)
+            {
+                var preSC = DbContext.GarmentPreSalesContracts.Single(w => w.Id == model.PreSCId);
+                preSC.IsCC = false;
+            }
+
+            foreach (var material in model.CostCalculationGarment_Materials)
+            {
+                await costCalculationGarmentMaterialLogic.DeleteAsync(material.Id);
+            }
+        }
 
         public async Task<Dictionary<long, string>> GetProductNames(List<long> productIds)
         {

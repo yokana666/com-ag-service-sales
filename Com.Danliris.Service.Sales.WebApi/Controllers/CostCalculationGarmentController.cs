@@ -16,6 +16,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Com.Danliris.Service.Sales.Lib.PDFTemplates;
 using Com.Danliris.Service.Sales.Lib.Helpers;
+using Microsoft.AspNetCore.JsonPatch;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 
 namespace Com.Danliris.Service.Sales.WebApi.Controllers
 {
@@ -146,6 +148,82 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                         .Ok<CostCalculationGarmentViewModel>(viewModel);
                     return Ok(Result);
                 }
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Patch([FromRoute]int id, [FromBody]JsonPatchDocument<CostCalculationGarment> patch)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var model = await Facade.ReadByIdAsync(id);
+                if (model == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.NOT_FOUND_STATUS_CODE, Common.NOT_FOUND_MESSAGE)
+                        .Fail();
+                    return NotFound(Result);
+                }
+                else
+                {
+                    patch.ApplyTo(model);
+
+                    IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                    IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
+
+                    await Facade.UpdateAsync(id, model);
+
+                    return NoContent();
+                }
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("isvalidate-ro-sample/{Id}")]
+        public async Task<IActionResult> PutRoSample([FromRoute] int id, [FromBody] CostCalculationGarmentViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var model = await Facade.ReadByIdAsync(id);
+
+                if (model == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.NOT_FOUND_STATUS_CODE, Common.NOT_FOUND_MESSAGE)
+                        .Fail();
+                    return NotFound(Result);
+                }
+
+                model.IsValidatedROSample = true;
+                IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+                IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
+
+                await Facade.UpdateAsync(id, model);
+
+                return NoContent();
             }
             catch (Exception e)
             {

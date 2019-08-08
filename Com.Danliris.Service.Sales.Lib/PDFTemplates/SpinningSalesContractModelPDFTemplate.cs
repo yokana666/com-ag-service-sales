@@ -169,7 +169,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Harga", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + detailprice, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + detailprice + uomLocal, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Syarat Pembayaran", normal_font);
             tableBody.AddCell(bodyContentLeft);

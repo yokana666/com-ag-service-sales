@@ -1,8 +1,10 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanViewModels
@@ -35,6 +37,35 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
             {
                 int Count = 0;
                 string ItemError = "[";
+                Dictionary<long,double> weeklyId = new Dictionary<long,double>();
+
+                SalesDbContext dbContext = validationContext == null ? null : (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
+                var wh = dbContext.MaxWHConfirms.OrderByDescending(a => a.CreatedUtc).First();
+                if (Id > 0)
+                {
+                    var oldItems = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().Where(a => a.BlockingPlanId == Id).ToList();
+                    foreach (var i in oldItems)
+                    {
+                        double oldWH = 0;
+                        var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == i.WeeklyPlanItemId);
+
+                        if (i.Id > 0)
+                        {
+                            var bp = dbContext.GarmentSewingBlockingPlanItems.AsNoTracking().FirstOrDefault(a => a.Id == i.Id && a.WeeklyPlanItemId == i.WeeklyPlanItemId && a.IsConfirm);
+                            oldWH = bp == null ? 0 : Math.Round((bp.EHBooking / (week.Operator * week.Efficiency)), 2);
+
+                            if (weeklyId.ContainsKey(i.WeeklyPlanItemId))
+                            {
+                                weeklyId[i.WeeklyPlanItemId] -= oldWH;
+                            }
+                            else
+                            {
+                                weeklyId.Add(i.WeeklyPlanItemId, (Math.Round(week.WHConfirm, 2) - oldWH));
+                            }
+                        }
+                    }
+                }
+                
 
                 foreach (GarmentSewingBlockingPlanItemViewModel item in Items)
                 {
@@ -71,6 +102,40 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSewingBlockingPlanVie
                         Count++;
                         ItemError += " DeliveryDate: 'Tanggal Pengiriman Harus Lebih dari Tanggal Booking' , ";
                     }
+
+
+                    if(item.IsConfirm)
+                    {
+                        var week = dbContext.GarmentWeeklyPlanItems.FirstOrDefault(a => a.Id == item.WeeklyPlanItemId);
+
+                        if (weeklyId.ContainsKey(item.WeeklyPlanItemId))
+                        {
+                            weeklyId[item.WeeklyPlanItemId] += Math.Round(item.whConfirm,2);
+                        }
+                        else
+                        {
+                            weeklyId.Add(item.WeeklyPlanItemId, (Math.Round(week.WHConfirm,2) + Math.Round(item.whConfirm, 2)));
+                        }
+
+                        double maxValue = 0;
+                        if (item.Unit != null)
+                        {
+                            maxValue = item.Unit.Code == "SK" ? wh.SKMaxValue : wh.UnitMaxValue;
+                        }
+                        else
+                        {
+                            Count++;
+                            ItemError += " unit: 'Unit harus diisi' , ";
+                        }
+
+                        if (Math.Round(weeklyId[item.WeeklyPlanItemId],2) > maxValue)
+                        {
+                            Count++;
+                            ItemError += $" whConfirm: 'Tidak bisa simpan blocking plan sewing. WH Confirm > {maxValue}' , ";
+                        }
+                    }
+                    
+                    
                     ItemError += "}, ";
                 }
 

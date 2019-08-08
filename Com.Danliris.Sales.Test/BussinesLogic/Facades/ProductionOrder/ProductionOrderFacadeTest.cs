@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
@@ -33,7 +34,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             
@@ -52,7 +53,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -70,7 +71,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var response = await facade.CreateAsync(data);
 
@@ -86,7 +87,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -104,7 +105,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -167,7 +168,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -189,7 +190,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -211,7 +212,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -229,7 +230,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -247,7 +248,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
             FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
             var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
-            var data = DataUtil(facade).GetNewData();
+            var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
@@ -262,6 +263,42 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var response = await facade.UpdateRequestedFalse(ids);
 
             Assert.NotEqual(response, 0);
+        }
+
+        [Fact]
+        public async Task Should_Success_GetMonthlyOrderQuantityByYearAndOrderType()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            await facade.CreateAsync(data);
+
+            var result = facade.GetMonthlyOrderQuantityByYearAndOrderType(data.DeliveryDate.Year, (int)data.OrderTypeId, 0);
+
+            Assert.NotEqual(result.Count, 0);
+        }
+
+        [Fact]
+        public async Task Should_Success_GetMonthlyOrderIdsByOrderType()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            await facade.CreateAsync(data);
+
+            var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Month, (int)data.OrderTypeId, 0);
+
+            Assert.NotEqual(result.Count, 0);
         }
     }
 }
