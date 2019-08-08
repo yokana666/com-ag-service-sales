@@ -17,9 +17,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Utils
             _facade = facade;
         }
 
-        public virtual async Task<TModel> GetNewData()
+        public virtual Task<TModel> GetNewData()
         {
-            return Activator.CreateInstance(typeof(TModel)) as TModel;
+            return Task.FromResult(Activator.CreateInstance(typeof(TModel)) as TModel);
         }
 
         public virtual async Task<TModel> GetTestData()
