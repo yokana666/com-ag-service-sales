@@ -120,7 +120,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 
 
 
-                if (id == 0 || id == null)
+                if (id == 0)
                 {
                     Dictionary<string, object> Result =
                         new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
@@ -156,7 +156,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 
 
 
-                if (id == 0 || id == null)
+                if (id == 0)
                 {
                     Dictionary<string, object> Result =
                         new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
@@ -253,6 +253,71 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                             FileDownloadName = "Production Order" + viewModel.OrderNo+ ".pdf"
                         };                    
                 }
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpGet("by-year-and-order-type")]
+        public IActionResult GetMonthlySummaryByYearAndOrderType([FromQuery] int year = 0, [FromQuery] int orderTypeId = 0)
+        {
+            if (year == 0)
+            {
+                year = DateTime.Now.Year;
+            }
+
+            try
+            {
+                var indexAcceptPdf = Request.Headers["Accept"].ToList().IndexOf("application/pdf");
+                int timeoffsset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
+
+                var result = Facade.GetMonthlyOrderQuantityByYearAndOrderType(year, orderTypeId, timeoffsset);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok(result);
+                return Ok(Result);
+
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpGet("monthly-by-order-type")]
+        public IActionResult GetMonthlyOrderIdsByOrderTypeId([FromQuery] int year = 0, [FromQuery] int month = 0, [FromQuery] int orderTypeId = 0)
+        {
+            if (year == 0)
+            {
+                year = DateTime.UtcNow.Year;
+            }
+
+            if (month == 0)
+            {
+                month = DateTime.UtcNow.Month;
+            }
+
+            try
+            {
+                var indexAcceptPdf = Request.Headers["Accept"].ToList().IndexOf("application/pdf");
+                int timeoffsset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
+
+                var result = Facade.GetMonthlyOrderIdsByOrderType(year, month, orderTypeId, timeoffsset);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok(result);
+                return Ok(Result);
+
             }
             catch (Exception e)
             {

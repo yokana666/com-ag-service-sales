@@ -61,7 +61,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 {
                     string BuyerUri = "master/buyers";
                     string BankUri = "master/account-banks";
-                    string CurrenciesUri = "master/currencies";
+                    //string CurrenciesUri = "master/currencies";
                     string Token = Request.Headers["Authorization"].First().Replace("Bearer ", "");
 
                     
@@ -146,7 +146,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             catch (Exception e)
             {
                 Dictionary<string, object> Result =
-                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message + " \n " + APIEndpoint.Core + " \n " + e.StackTrace)
                     .Fail();
                 return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }

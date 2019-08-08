@@ -1350,7 +1350,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan
             }
             #endregion
 
-            var c = 0;
+            //var c = 0;
             foreach (var s in smv.Keys.OrderBy(a=>a))
             {
                 var buy = "Total Booking";

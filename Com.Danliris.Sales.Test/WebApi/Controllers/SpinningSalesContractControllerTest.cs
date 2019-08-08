@@ -65,7 +65,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                         Code = "a"
                     }
                 },
-                OrderQuantity = 1,
+                OrderQuantity = 0.59,
                 UomUnit = "unit",
                 Comodity = new Service.Sales.Lib.ViewModels.IntegrationViewModel.CommodityViewModel()
                 {
