@@ -513,7 +513,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_ccm_center.Phrase = new Phrase("RP.TOTAL", bold_font);
 			table_ccm.AddCell(cell_ccm_center);
 
-			double Total = 0;
+			//double Total = 0;
 			float row1Height = imageHeight > table_detail1.TotalHeight ? imageHeight : table_detail1.TotalHeight;
 			float row2Y = row1Y - row1Height - 10;
 			float[] row3Heights = { table_bottom_column1_1.TotalHeight + 10 + table_bottom_column1_2.TotalHeight + 10 + table_bottom_column1_3.TotalHeight, table_bottom_column2_1.TotalHeight + 10 + table_bottom_column2_2.TotalHeight, table_bottom_column3_1.TotalHeight };
