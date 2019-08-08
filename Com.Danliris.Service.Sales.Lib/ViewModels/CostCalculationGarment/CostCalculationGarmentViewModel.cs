@@ -56,11 +56,29 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public string UnitName { get; set; }
 
         public long? SCGarmentId { get; set; }
-        public bool? IsValidated { get; set; }
+
+        public long PreSCId { get; set; }
+        public string PreSCNo { get; set; }
+
+        public Approval ApprovalMD { get; set; }
+        public Approval ApprovalPurchasing { get; set; }
+        public Approval ApprovalIE { get; set; }
+        public Approval ApprovalPPIC { get; set; }
+
+        public bool IsValidatedROSample { get; set; }
+
+        public bool IsValidatedROPPIC { get; set; }
+        public DateTimeOffset ValidationPPICDate { get; set; }
+        public string ValidationPPICBy { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
-			if (string.IsNullOrWhiteSpace(this.Article))
+            if (PreSCId < 1 || string.IsNullOrWhiteSpace(PreSCNo))
+            {
+                yield return new ValidationResult("Sales Contract harus diisi", new List<string> { "PreSalesContract" });
+            }
+
+            if (string.IsNullOrWhiteSpace(this.Article))
 				yield return new ValidationResult("Nama Artikel harus diisi", new List<string> { "Article" });
 			if (Unit == null || string.IsNullOrWhiteSpace(this.Unit.Code))
 				yield return new ValidationResult("Konveksi harus diisi", new List<string> { "Unit" });
@@ -203,4 +221,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 			}
 		}
 	}
+
+    public class Approval
+    {
+        public bool IsApproved { get; set; }
+        public DateTimeOffset ApprovedDate { get; set; }
+        public string ApprovedBy { get; set; }
+    }
 }

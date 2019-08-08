@@ -8,8 +8,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment
 {
     public interface IRO_Garment_Validation
     {
-        List<CostCalculationGarment> Read();
-        CostCalculationGarment Read(int id);
         Task<int> ValidateROGarment(CostCalculationGarment model, Dictionary<long, string> productDicts);
     }
 }

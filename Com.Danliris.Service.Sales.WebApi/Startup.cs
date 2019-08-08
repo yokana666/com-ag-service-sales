@@ -59,6 +59,12 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.Monit
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.GarmentSewingBlockingPlanFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.GarmentSewingBlockingPlanInterfaces;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.GarmentSewingBlockingPlanLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentMasterPlan.MaxWHConfirmInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentMasterPlan.MaxWHConfirmFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MaxWHConfirmLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentPreSalesContractFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentPreSalesContractInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -91,8 +97,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IArticleColor, ArticleColorFacade>()
                 .AddTransient<IRate, RateFacade>()
                 .AddTransient<IEfficiency, EfficiencyFacade>()
-                .AddTransient<AzureImageFacade>()
-				.AddTransient<AzureImageFacade>()
+                .AddTransient<IAzureImageFacade, AzureImageFacade>()
                 .AddTransient<IRO_Garment_Validation, RO_Garment_ValidationFacade>()
                 .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
                 .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>()
@@ -103,8 +108,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IExpiredGarmentBookingOrder, ExpiredGarmentBookingOrderFacade>()
                 .AddTransient<ISewingBlockingPlanReportFacade, SewingBlockingPlanReportFacade>()
                 .AddTransient<IOverScheduleMonitoringFacade, OverScheduleMonitoringFacade>()
-                .AddTransient<IWeeklyWorkingScheduleMonitoringFacade, WeeklyWorkingScheduleMonitoringFacade>();
-
+                .AddTransient<IWeeklyWorkingScheduleMonitoringFacade, WeeklyWorkingScheduleMonitoringFacade>()
+                .AddTransient<IMaxWHConfirmFacade, MaxWHConfirmFacade>()
+                .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -138,7 +144,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<AcceptedOrderMonitoringLogic>()
                 .AddTransient<SewingBlockingPlanReportLogic>()
                 .AddTransient<OverScheduleMonitoringLogic>()
-                .AddTransient<WeeklyWorkingScheduleMonitoringLogic>();
+                .AddTransient<WeeklyWorkingScheduleMonitoringLogic>()
+                .AddTransient<MaxWHConfirmLogic>()
+                .AddTransient<GarmentPreSalesContractLogic>();
             
         }
 

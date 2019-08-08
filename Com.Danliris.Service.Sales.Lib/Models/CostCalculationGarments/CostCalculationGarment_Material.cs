@@ -44,5 +44,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
 		public double BudgetQuantity { get; set; }
 		public string Information { get; set; }
 		public bool IsPosted { get; set; }
-	}
+
+        public bool? IsPRMaster { get; set; } // Terisi waktu validasi RO, cek apakah barang dibuat PR Master
+    }
 }

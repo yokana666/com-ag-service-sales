@@ -14,6 +14,7 @@ using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
 {
@@ -35,12 +36,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
             costCalGarmentLogic = serviceProvider.GetService<ICostCalculationGarment>();
             ServiceProvider = serviceProvider;
         }
-        private AzureImageFacade AzureImageFacade
+        private IAzureImageFacade AzureImageFacade
         {
-            get { return this.ServiceProvider.GetService<AzureImageFacade>(); }
+            get { return this.ServiceProvider.GetService<IAzureImageFacade>(); }
         }
-
-        
 
         public async Task<int> CreateAsync(RO_Garment Model)
         {
