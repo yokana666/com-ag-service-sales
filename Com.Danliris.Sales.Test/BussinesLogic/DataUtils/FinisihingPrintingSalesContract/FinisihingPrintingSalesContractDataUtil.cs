@@ -14,9 +14,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSale
         {
         }
 
-        public override async Task<FinishingPrintingSalesContractModel> GetNewData()
+        public override Task<FinishingPrintingSalesContractModel> GetNewData()
         {
-            return new FinishingPrintingSalesContractModel() {
+            return Task.FromResult(new FinishingPrintingSalesContractModel() {
                 AccountBankAccountName = "a",
                 AccountBankCode = "a",
                 AccountBankCurrencyCode = "a",
@@ -36,7 +36,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSale
                     }
                 },
                 BuyerType = "type"
-            };
+            });
 
         }
     }
