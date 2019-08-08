@@ -14,9 +14,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentPreSalesContrac
         {
         }
 
-        public override async Task<GarmentPreSalesContract> GetNewData()
+        public override Task<GarmentPreSalesContract> GetNewData()
         {
-            return new GarmentPreSalesContract()
+            return Task.FromResult(new GarmentPreSalesContract()
             {
                 SCNo = "",
                 SCDate = new DateTimeOffset(),
@@ -33,7 +33,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentPreSalesContrac
                 Remark = "Test",
                 IsCC = false,
                 IsPR = false
-            };
+            });
         }
 
     }
