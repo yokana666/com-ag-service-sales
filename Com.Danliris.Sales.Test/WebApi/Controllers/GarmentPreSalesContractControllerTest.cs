@@ -29,6 +29,23 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             return this.GetStatusCode(response);
         }
 
+        private async Task<int> GetPreSalesPost((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IGarmentPreSalesContract> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks, int id)
+        {
+            GarmentPreSalesContractController controller = GetController(mocks);
+            List<long> Id = new List<long> { 1};
+            IActionResult response = await controller.PreSalesPost(Id);
+
+            return this.GetStatusCode(response);
+        }
+
+        private async Task<int> GetPreSalesUnPost((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IGarmentPreSalesContract> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks, int id)
+        {
+            GarmentPreSalesContractController controller = GetController(mocks);
+            IActionResult response = await controller.PreSalesUnpost(id);
+
+            return this.GetStatusCode(response);
+        }
+
         [Fact]
         public async Task Patch_InvalidId_ReturnNotFound()
         {
@@ -98,6 +115,50 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
             int statusCode = await this.GetStatusCodePatch(mocks, id);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public async Task Should_Success_PreSalesPost()
+        {
+            var mocks = GetMocks();
+            mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<GarmentPreSalesContractViewModel>())).Verifiable();
+            var id = 1;
+            var viewModel = new GarmentPreSalesContractViewModel()
+            {
+                Id = id
+            };
+            mocks.Mapper.Setup(m => m.Map<GarmentPreSalesContractViewModel>(It.IsAny<GarmentPreSalesContract>())).Returns(viewModel);
+            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentPreSalesContract>())).ReturnsAsync(1);
+
+            List<long> listId = new List<long> { viewModel.Id };
+
+            var controller = GetController(mocks);
+            var response = await controller.PreSalesPost(listId);
+            Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_Success_PreSalesUnpost()
+        {
+            {
+                var mocks = GetMocks();
+                mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<GarmentPreSalesContractViewModel>())).Verifiable();
+                var id = 1;
+                var viewModel = new GarmentPreSalesContractViewModel()
+                {
+                    Id = id
+                };
+                mocks.Mapper.Setup(m => m.Map<GarmentPreSalesContractViewModel>(It.IsAny<GarmentPreSalesContract>())).Returns(viewModel);
+                mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+                mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentPreSalesContract>())).ReturnsAsync(1);
+
+                List<long> listId = new List<long> { viewModel.Id };
+
+                var controller = GetController(mocks);
+                var response = await controller.PreSalesUnpost(id);
+                Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
+            }
         }
     }
 }
