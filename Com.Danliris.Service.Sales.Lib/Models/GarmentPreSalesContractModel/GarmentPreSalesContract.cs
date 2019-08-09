@@ -24,5 +24,6 @@ namespace Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel
         public string Remark { get; set; }
         public bool IsCC { get; set; }
         public bool IsPR { get; set; }
+        public bool IsPosted { get; set; }
     }
 }

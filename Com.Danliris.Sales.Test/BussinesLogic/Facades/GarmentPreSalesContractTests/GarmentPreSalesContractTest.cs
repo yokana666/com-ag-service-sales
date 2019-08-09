@@ -21,6 +21,29 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentPreSalesContractT
         {
         }
 
+        [Fact]
+        public async void PreSalesPost_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            GarmentPreSalesContractFacade facade = new GarmentPreSalesContractFacade(serviceProvider, dbContext);
 
+            var data = await DataUtil(facade).GetTestData();
+            List<long> listData = new List<long> { data.Id };
+            var Response = await facade.PreSalesPost(listData,"test");
+            Assert.NotEqual(Response, 0);
+        }
+
+        [Fact]
+        public async void PreSalesUnPost_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            GarmentPreSalesContractFacade facade = new GarmentPreSalesContractFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+            var Response = await facade.PreSalesUnpost(data.Id, "test");
+            Assert.NotEqual(Response, 0);
+        }
     }
 }
