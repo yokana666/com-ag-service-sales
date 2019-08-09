@@ -19,11 +19,15 @@ using System.Net.Http.Headers;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
+using System.Linq;
+using Com.Moonlay.Models;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentPreSalesContractFacades
 {
     public class GarmentPreSalesContractFacade : IGarmentPreSalesContract
     {
+        private string USER_AGENT = "Facade";
+
         private readonly SalesDbContext DbContext;
         private readonly DbSet<GarmentPreSalesContract> DbSet;
         private readonly IdentityService identityService;
@@ -63,6 +67,71 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentPreSalesCo
         {
             await garmentPreSalesContractLogic.DeleteAsync(id);
             return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> PreSalesPost(List<long> listId, string user)
+        {
+            int Updated = 0;
+
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var listData = DbSet.
+                        Where(w => listId.Contains(w.Id))
+                        .ToList();
+
+                    foreach (var data in listData)
+                    {
+                        EntityExtension.FlagForUpdate(data, user, USER_AGENT);
+                        data.IsPosted = true;
+                    }
+
+                    Updated = await DbContext.SaveChangesAsync();
+
+                    if (Updated < 1)
+                    {
+                        throw new Exception("No data updated");
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return Updated;
+        }
+
+        public async Task<int> PreSalesUnpost(long id, string user)
+        {
+            int Updated = 0;
+
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var data = DbSet
+                        .Where(w => w.Id == id)
+                        .Single();
+
+                    EntityExtension.FlagForUpdate(data, user, USER_AGENT);
+                    data.IsPosted = false;
+
+                    Updated = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return Updated;
         }
     }
 }

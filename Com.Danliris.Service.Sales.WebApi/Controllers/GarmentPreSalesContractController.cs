@@ -91,5 +91,45 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
+
+        [HttpPost("post")]
+        public async Task<IActionResult> PreSalesPost([FromBody]List<long> listId)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+                await Facade.PreSalesPost(listId, IdentityService.Username);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("unpost/{id}")]
+        public async Task<IActionResult> PreSalesUnpost([FromRoute]long id)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+                await Facade.PreSalesUnpost(id, IdentityService.Username);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
     }
 }
