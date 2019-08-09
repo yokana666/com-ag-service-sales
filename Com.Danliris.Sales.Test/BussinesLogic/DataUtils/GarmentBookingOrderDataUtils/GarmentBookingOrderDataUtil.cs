@@ -14,7 +14,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentBookingOrderDat
         {
         }
 
-        public override async Task<GarmentBookingOrder> GetNewData()
+        public override Task<GarmentBookingOrder> GetNewData()
         {
             var bookingOrder = new GarmentBookingOrder
             {
@@ -46,7 +46,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentBookingOrderDat
                 Remark = "Remark",
                 ConfirmDate= new DateTimeOffset()
             });
-            return bookingOrder;
+            return Task.FromResult(bookingOrder);
         }
     }
 }

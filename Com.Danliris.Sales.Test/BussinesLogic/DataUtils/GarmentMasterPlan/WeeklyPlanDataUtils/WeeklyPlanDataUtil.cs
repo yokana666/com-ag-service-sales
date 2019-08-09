@@ -15,7 +15,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Week
         {
         }
 
-        public override async Task<GarmentWeeklyPlan> GetNewData()
+        public override Task<GarmentWeeklyPlan> GetNewData()
         {
             var weeklyPlan = new GarmentWeeklyPlan
             {
@@ -41,7 +41,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.Week
                     WHConfirm=62
                 });
             }
-            return weeklyPlan;
+            return Task.FromResult(weeklyPlan);
         }
     }
 }

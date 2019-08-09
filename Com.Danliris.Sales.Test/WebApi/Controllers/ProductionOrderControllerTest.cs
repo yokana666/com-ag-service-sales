@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder;
+using Com.Danliris.Service.Sales.Lib.ViewModels.Report.OrderStatusReport;
 using Com.Danliris.Service.Sales.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -157,7 +158,53 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
 
+        [Fact]
+        public void Should_ReturnOK_GetMonthlySummaryByYearAndOrderType_Success()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.GetMonthlyOrderQuantityByYearAndOrderType(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new List<YearlyOrderQuantity>());
+            var controller = GetController(mocks);
+            var response = controller.GetMonthlySummaryByYearAndOrderType(0, 1);
 
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Should_ReturnFailed_GetMonthlySummaryByYearAndOrderType_ThrowException()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.GetMonthlyOrderQuantityByYearAndOrderType(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Throws(new Exception());
+            var controller = GetController(mocks);
+            var response = controller.GetMonthlySummaryByYearAndOrderType(1, 1);
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public void Should_ReturnOK_GetMonthlyOrderIdsByOrderTypeId_Success()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.GetMonthlyOrderIdsByOrderType(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new List<MonthlyOrderQuantity>());
+            var controller = GetController(mocks);
+            var response = controller.GetMonthlyOrderIdsByOrderTypeId(0, 0, 1);
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Should_ReturnFailed_GetMonthlyOrderIdsByOrderTypeId_ThrowException()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.GetMonthlyOrderIdsByOrderType(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>())).Throws(new Exception());
+            var controller = GetController(mocks);
+            var response = controller.GetMonthlyOrderIdsByOrderTypeId(1, 1, 1);
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
 
     }
 }

@@ -14,12 +14,12 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
         {
         }
 
-        public override async Task<Rate> GetNewData()
+        public override Task<Rate> GetNewData()
         {
-            return new Rate
+            return Task.FromResult(new Rate
             {
                 Name = ""
-            };
+            });
         }
     }
 }
