@@ -236,7 +236,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var controller = GetController(mocks);
             var response = await controller.PutIsCalculated(0, true);
             int statusCode = GetStatusCode(response);
-            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+            Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
         }
 
     }
