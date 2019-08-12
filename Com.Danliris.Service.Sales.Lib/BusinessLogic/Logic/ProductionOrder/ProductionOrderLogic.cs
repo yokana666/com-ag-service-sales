@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
             {
 
                 "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber", "OrderQuantity", "Uom",
-                "DistributedQuantity", "IsCompleted", "IsClosed", "Account"
+                "DistributedQuantity", "IsCompleted", "IsClosed", "IsCalculated", "Account"
 
             };
 
@@ -66,6 +66,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
                     SalesContractNo = field.SalesContractNo,
                     BuyerType = field.BuyerType,
                     BuyerName = field.BuyerName,
+                    IsCalculated = field.IsCalculated,
                     BuyerId = field.BuyerId,
                     OrderNo = field.OrderNo,
                     ProcessTypeId = field.ProcessTypeId,

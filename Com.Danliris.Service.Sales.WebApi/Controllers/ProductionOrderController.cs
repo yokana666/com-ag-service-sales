@@ -246,12 +246,12 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 {
                     ProductionOrderViewModel viewModel = Mapper.Map<ProductionOrderViewModel>(model);
 
-                        ProductionOrderPDFTemplate PdfTemplate = new ProductionOrderPDFTemplate();
-                        MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel, timeoffsset);
-                        return new FileStreamResult(stream, "application/pdf")
-                        {
-                            FileDownloadName = "Production Order" + viewModel.OrderNo+ ".pdf"
-                        };                    
+                    ProductionOrderPDFTemplate PdfTemplate = new ProductionOrderPDFTemplate();
+                    MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel, timeoffsset);
+                    return new FileStreamResult(stream, "application/pdf")
+                    {
+                        FileDownloadName = "Production Order" + viewModel.OrderNo + ".pdf"
+                    };
                 }
             }
             catch (Exception e)
@@ -318,6 +318,33 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     .Ok(result);
                 return Ok(Result);
 
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("update-iscalculated/{id}")]
+        public async Task<IActionResult> PutIsCalculated([FromRoute] int id, [FromBody] bool flag)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
+               
+                if (id == 0)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail();
+                    return BadRequest(Result);
+                }
+                await _facade.UpdateIsCalculated(id, flag);
+
+                return NoContent();
             }
             catch (Exception e)
             {
