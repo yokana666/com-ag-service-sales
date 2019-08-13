@@ -139,6 +139,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                             IsCompleted = model.IsCompleted,
                             IsDeleted = model.IsDeleted,
                             IsRequested = model.IsRequested,
+                            IsCalculated = model.IsCalculated,
                             IsUsed = model.IsUsed,
                             LastModifiedAgent = model.LastModifiedAgent,
                             LastModifiedBy = model.LastModifiedBy,
@@ -930,6 +931,26 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                 processType = s.ProcessTypeName,
                 _createdDate = s.CreatedUtc.ToUniversalTime()
             }).ToList();
+        }
+
+        public async Task<int> UpdateIsCalculated(int id, bool flag)
+        {
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    ProductionOrderModel model = await ReadByIdAsync(id);
+                    model.IsCalculated = flag;
+                    productionOrderLogic.UpdateAsync(id, model);
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return await DbContext.SaveChangesAsync();
         }
     }
 }

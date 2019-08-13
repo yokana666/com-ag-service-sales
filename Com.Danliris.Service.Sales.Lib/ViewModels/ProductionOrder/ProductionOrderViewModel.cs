@@ -52,6 +52,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
         public bool? IsClosed { get; set; }
         public bool? IsRequested { get; set; }
         public bool? IsCompleted { get; set; }
+        public bool? IsCalculated { get; set; }
         public long? AutoIncreament { get; set; }
         public string SalesContractNo { get; set; }
 

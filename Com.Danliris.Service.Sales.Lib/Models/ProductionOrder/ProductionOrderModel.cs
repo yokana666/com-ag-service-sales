@@ -50,6 +50,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.ProductionOrder
         public bool IsClosed { get; set; }
         public bool IsRequested { get; set; }
         public bool IsCompleted { get; set; }
+        public bool IsCalculated { get; set; }
         public long AutoIncreament { get; set; }
 
 

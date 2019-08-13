@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190812045846_AddIsCalculatedProductionOrder")]
+    partial class AddIsCalculatedProductionOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,8 +191,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsROAccepted");
-
                     b.Property<bool>("IsValidatedROPPIC");
 
                     b.Property<bool>("IsValidatedROSample");
@@ -231,10 +231,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<double>("ProductionCost");
 
                     b.Property<int>("Quantity");
-
-                    b.Property<string>("ROAcceptedBy");
-
-                    b.Property<DateTimeOffset>("ROAcceptedDate");
 
                     b.Property<int?>("RO_GarmentId");
 

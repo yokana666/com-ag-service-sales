@@ -206,5 +206,38 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
+        [Fact]
+        public async Task Put_IsCalculated_Success()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.UpdateIsCalculated(It.IsAny<int>(), It.IsAny<bool>())).ReturnsAsync(1);
+            var controller = GetController(mocks);
+            var response = await controller.PutIsCalculated(1, true);
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
+        }
+
+        [Fact]
+        public async Task Put_IsCalculated_Exception()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.UpdateIsCalculated(It.IsAny<int>(), It.IsAny<bool>())).ThrowsAsync(new Exception());
+            var controller = GetController(mocks);
+            var response = await controller.PutIsCalculated(1, true);
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public async Task Put_IsCalculated_ID_0()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.UpdateIsCalculated(It.IsAny<int>(), It.IsAny<bool>())).ThrowsAsync(new Exception());
+            var controller = GetController(mocks);
+            var response = await controller.PutIsCalculated(0, true);
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
+        }
+
     }
 }
