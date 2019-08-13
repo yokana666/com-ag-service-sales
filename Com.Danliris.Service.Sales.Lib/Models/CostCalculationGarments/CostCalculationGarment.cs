@@ -109,5 +109,9 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public DateTimeOffset ValidationPPICDate { get; set; }
         [MaxLength(50)]
         public string ValidationPPICBy { get; set; }
+
+        public bool IsROAccepted { get; set; }
+        public DateTimeOffset ROAcceptedDate { get; set; }
+        public string ROAcceptedBy { get; set; }
     }
 }

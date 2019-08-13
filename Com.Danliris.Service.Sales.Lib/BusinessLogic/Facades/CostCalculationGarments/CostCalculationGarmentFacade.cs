@@ -11,12 +11,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
+using Com.Moonlay.Models;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments
 {
     public class CostCalculationGarmentFacade : ICostCalculationGarment
 	{
-		private readonly SalesDbContext DbContext;
+        private string USER_AGENT = "Facade";
+
+        private readonly SalesDbContext DbContext;
 		private readonly DbSet<CostCalculationGarment> DbSet;
 		private readonly IdentityService identityService;
 		private readonly CostCalculationGarmentLogic costCalculationGarmentLogic ;
@@ -155,6 +158,50 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
         public async Task<Dictionary<long, string>> GetProductNames(List<long> productIds)
         {
             return await costCalculationGarmentLogic.GetProductNames(productIds);
+        }
+
+        public ReadResponse<CostCalculationGarment> ReadForROAcceptance(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            return costCalculationGarmentLogic.ReadForROAcceptance(page, size, order, select, keyword, filter);
+        }
+
+        public async Task<int> AcceptanceCC(List<long> listId, string user)
+        {
+            int Updated = 0;
+
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var listData = DbSet.
+                        Where(w => listId.Contains(w.Id))
+                        .ToList();
+
+                    foreach (var data in listData)
+                    {
+                        EntityExtension.FlagForUpdate(data, user, USER_AGENT);
+                        data.IsROAccepted = true;
+                        data.ROAcceptedDate = DateTimeOffset.Now;
+                        data.ROAcceptedBy = user;
+                    }
+
+                    Updated = await DbContext.SaveChangesAsync();
+
+                    if (Updated < 1)
+                    {
+                        throw new Exception("No data updated");
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return Updated;
         }
     }
 }
