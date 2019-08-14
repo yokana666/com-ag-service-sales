@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190812040240_Add_Column_IsROAccepted_on_CostCalculationGarment")]
+    partial class Add_Column_IsROAccepted_on_CostCalculationGarment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1811,8 +1813,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<string>("HandlingStandard")
                         .HasMaxLength(255);
-
-                    b.Property<bool>("IsCalculated");
 
                     b.Property<bool>("IsClosed");
 

@@ -70,6 +70,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public bool IsValidatedROPPIC { get; set; }
         public DateTimeOffset ValidationPPICDate { get; set; }
         public string ValidationPPICBy { get; set; }
+        public bool IsROAccepted { get; set; }
+        public DateTimeOffset ROAcceptedDate { get; set; }
+        public string ROAcceptedBy { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{

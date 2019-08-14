@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandiser
 {
@@ -67,6 +68,34 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 .Returns(azureImageFacadeMock.Object);
 
             return serviceProviderMock;
+        }
+
+        [Fact]
+        public virtual async void Get_ROAcceptance_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = Activator.CreateInstance(typeof(CostCalculationGarmentFacade), serviceProvider, dbContext) as CostCalculationGarmentFacade;
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = facade.ReadForROAcceptance(1, 25, "{}", new List<string>(), "", "{}");
+
+            Assert.NotEqual(Response.Data.Count, 0);
+        }
+
+        [Fact]
+        public async void ROAcceptance_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+            List<long> listData = new List<long> { data.Id };
+            var Response = await facade.AcceptanceCC(listData, "test");
+            Assert.NotEqual(Response, 0);
         }
     }
 }

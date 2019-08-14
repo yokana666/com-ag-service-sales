@@ -23,9 +23,16 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             var garmentPreSalesContractData = await garmentPreSalesContractDataUtil.GetTestData();
 
             var data = await base.GetNewData();
+            data.Section = "A";
+            data.Article = "test";
+            
             data.PreSCId = garmentPreSalesContractData.Id;
             data.PreSCNo = garmentPreSalesContractData.SCNo;
             data.UnitCode = "C2A";
+            data.UnitName = "test";
+            data.IsROAccepted = false;
+            data.ROAcceptedBy = "test";
+            data.ROAcceptedDate = DateTimeOffset.Now;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {
                 new CostCalculationGarment_Material
