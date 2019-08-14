@@ -255,17 +255,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
         public ReadResponse<CostCalculationGarment> ReadForROAcceptance(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             IQueryable<CostCalculationGarment> Query = DbSet;
-
             List<string> SearchAttributes = new List<string>()
             {
-                "Section", "RO_Number","Article","UnitName", "Section","Quantity"
+                "Section", "RO_Number","Article","UnitName",
             };
 
             Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
-
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
-
             List<string> SelectedFields = new List<string>()
             {
                   "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
@@ -310,7 +307,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
             Query = QueryHelper<CostCalculationGarment>.Order(Query, OrderDictionary);
-
             Pageable<CostCalculationGarment> pageable = new Pageable<CostCalculationGarment>(Query, page - 1, size);
             List<CostCalculationGarment> data = pageable.Data.ToList<CostCalculationGarment>();
             int totalData = pageable.TotalCount;
