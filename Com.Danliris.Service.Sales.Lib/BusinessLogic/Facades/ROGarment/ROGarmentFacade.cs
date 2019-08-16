@@ -50,6 +50,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
             while (this.DbSet.Any(d => d.Code.Equals(Model.Code)));
 
             CostCalculationGarment costCalculationGarment = await costCalGarmentLogic.ReadByIdAsync((int)Model.CostCalculationGarment.Id); //Model.CostCalculationGarment;
+            foreach(var item in costCalculationGarment.CostCalculationGarment_Materials)
+            {
+                foreach(var itemModel in Model.CostCalculationGarment.CostCalculationGarment_Materials)
+                {
+                    if(item.Id == itemModel.Id)
+                    {
+                        item.Information = itemModel.Information;
+                    }
+                }
+            }
             Model.CostCalculationGarment = null;
 
             Model.ImagesPath = await this.AzureImageFacade.UploadMultipleImage(Model.GetType().Name, (int)Model.Id, Model.CreatedUtc, Model.ImagesFile, Model.ImagesPath);
