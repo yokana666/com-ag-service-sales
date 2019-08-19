@@ -64,13 +64,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
 
             Model.ImagesPath = await this.AzureImageFacade.UploadMultipleImage(Model.GetType().Name, (int)Model.Id, Model.CreatedUtc, Model.ImagesFile, Model.ImagesPath);
             roGarmentLogic.Create(Model);
-            await DbContext.SaveChangesAsync();
-            //Model.ImagesPath = await this.AzureImageService.UploadMultipleImage(Model.GetType().Name, Model.Id, Model._CreatedUtc, Model.ImagesFile, Model.ImagesPath);
-
-            //await this.UpdateAsync((int)Model.Id, Model);
-            //update CostCal
-
-            return await UpdateCostCalAsync(costCalculationGarment, (int)Model.Id);
+            int created = await DbContext.SaveChangesAsync();
+                        
+            await UpdateCostCalAsync(costCalculationGarment, (int)Model.Id);
+            return created;
         }
 
         public async Task<int> UpdateCostCalAsync(CostCalculationGarment costCalculationGarment, int Id)
@@ -87,9 +84,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
             await this.AzureImageFacade.RemoveMultipleImage(deletedImage.GetType().Name, deletedImage.ImagesPath);
 
             await roGarmentLogic.DeleteAsync(id);
-            await DbContext.SaveChangesAsync();
+            int deleted = await DbContext.SaveChangesAsync();
 
-            return await DeletedROCostCalAsync(deletedImage.CostCalculationGarment, (int)deletedImage.CostCalculationGarmentId);
+            await DeletedROCostCalAsync(deletedImage.CostCalculationGarment, (int)deletedImage.CostCalculationGarmentId);
+            return deleted;
         }
 
         public async Task<int> DeletedROCostCalAsync(CostCalculationGarment costCalculationGarment, int Id)
@@ -136,9 +134,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ROGarment
             Model.ImagesPath = await this.AzureImageFacade.UploadMultipleImage(Model.GetType().Name, (int)Model.Id, Model.CreatedUtc, Model.ImagesFile, Model.ImagesPath);
 
             roGarmentLogic.UpdateAsync(id,Model);
-            await DbContext.SaveChangesAsync();
+            int updated = await DbContext.SaveChangesAsync();
 
-            return await UpdateCostCalAsync(costCalculationGarment, (int)Model.Id);
+            await UpdateCostCalAsync(costCalculationGarment, (int)Model.Id);
+            return updated;
         }
 
     }
