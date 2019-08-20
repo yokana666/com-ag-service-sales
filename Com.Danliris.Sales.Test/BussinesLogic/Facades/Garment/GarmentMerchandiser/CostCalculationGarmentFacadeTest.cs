@@ -97,5 +97,33 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var Response = await facade.AcceptanceCC(listData, "test");
             Assert.NotEqual(Response, 0);
         }
+
+        [Fact]
+        public virtual async void Get_ROAvailable_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = Activator.CreateInstance(typeof(CostCalculationGarmentFacade), serviceProvider, dbContext) as CostCalculationGarmentFacade;
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = facade.ReadForROAvailable(1, 25, "{}", new List<string>(), "", "{}");
+
+            Assert.NotEqual(Response.Data.Count, 0);
+        }
+
+        [Fact]
+        public async void ROAvailable_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+            List<long> listData = new List<long> { data.Id };
+            var Response = await facade.AvailableCC(listData, "test");
+            Assert.NotEqual(Response, 0);
+        }
     }
 }
