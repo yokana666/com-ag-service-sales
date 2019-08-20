@@ -113,5 +113,8 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public bool IsROAccepted { get; set; }
         public DateTimeOffset ROAcceptedDate { get; set; }
         public string ROAcceptedBy { get; set; }
+        public bool IsROAvailable { get; set; }
+        public DateTimeOffset ROAvailableDate { get; set; }
+        public string ROAvailableBy { get; set; }
     }
 }

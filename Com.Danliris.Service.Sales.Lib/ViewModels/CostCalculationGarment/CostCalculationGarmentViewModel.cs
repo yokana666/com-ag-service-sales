@@ -73,6 +73,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public bool IsROAccepted { get; set; }
         public DateTimeOffset ROAcceptedDate { get; set; }
         public string ROAcceptedBy { get; set; }
+        public bool IsROAvailable { get; set; }
+        public DateTimeOffset ROAvailableDate { get; set; }
+        public string ROAvailableBy { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{

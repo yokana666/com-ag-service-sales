@@ -13,5 +13,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculation
         Task<Dictionary<long, string>> GetProductNames(List<long> productIds);
         ReadResponse<CostCalculationGarment> ReadForROAcceptance(int page, int size, string order, List<string> select, string keyword, string filter);
         Task<int> AcceptanceCC(List<long> listId, string user);
+        ReadResponse<CostCalculationGarment> ReadForROAvailable(int page, int size, string order, List<string> select, string keyword, string filter);
+        Task<int> AvailableCC(List<long> listId, string user);
     }
 }

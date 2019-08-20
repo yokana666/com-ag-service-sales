@@ -203,5 +203,49 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 
             return Updated;
         }
+
+        public ReadResponse<CostCalculationGarment> ReadForROAvailable(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            return costCalculationGarmentLogic.ReadForROAvailable(page, size, order, select, keyword, filter);
+        }
+
+        public async Task<int> AvailableCC(List<long> listId, string user)
+        {
+            int Updated = 0;
+
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var listData = DbSet.
+                        Where(w => listId.Contains(w.Id))
+                        .ToList();
+
+                    foreach (var data in listData)
+                    {
+                        EntityExtension.FlagForUpdate(data, user, USER_AGENT);
+                        data.IsROAvailable = true;
+                        data.ROAvailableDate = DateTimeOffset.Now;
+                        data.ROAvailableBy = user;
+                    }
+
+                    Updated = await DbContext.SaveChangesAsync();
+
+                    if (Updated < 1)
+                    {
+                        throw new Exception("No data updated");
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw new Exception(e.Message);
+                }
+            }
+
+            return Updated;
+        }
     }
 }
