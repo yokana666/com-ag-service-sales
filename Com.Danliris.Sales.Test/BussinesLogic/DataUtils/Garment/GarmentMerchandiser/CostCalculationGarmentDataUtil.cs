@@ -36,6 +36,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.IsROAvailable = false;
             data.ROAvailableBy = "test";
             data.ROAvailableDate = DateTimeOffset.Now;
+            data.IsRODistributed = false;
+            data.RODistributionBy = "test";
+            data.RODistributionDate = DateTimeOffset.Now;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {
                 new CostCalculationGarment_Material
