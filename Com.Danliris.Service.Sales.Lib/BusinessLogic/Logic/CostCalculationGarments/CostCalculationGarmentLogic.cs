@@ -375,5 +375,67 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
             return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
         }
+
+        public ReadResponse<CostCalculationGarment> ReadForRODistribution(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            IQueryable<CostCalculationGarment> Query = DbSet;
+            List<string> SearchAttributes = new List<string>()
+            {
+                "Section", "RO_Number","Article","UnitName",
+            };
+
+            Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "Section", "IsRODistributed", "RODistributionBy", "RODistributionDate"
+            };
+
+            Query = Query
+                 .Select(ccg => new CostCalculationGarment
+                 {
+                     Id = ccg.Id,
+                     Code = ccg.Code,
+                     RO_Number = ccg.RO_Number,
+                     Article = ccg.Article,
+                     UnitId = ccg.UnitId,
+                     UnitCode = ccg.UnitCode,
+                     UnitName = ccg.UnitName,
+                     Quantity = ccg.Quantity,
+                     ConfirmPrice = ccg.ConfirmPrice,
+                     BuyerCode = ccg.BuyerCode,
+                     BuyerId = ccg.BuyerId,
+                     BuyerName = ccg.BuyerName,
+                     BuyerBrandCode = ccg.BuyerBrandCode,
+                     BuyerBrandId = ccg.BuyerBrandId,
+                     BuyerBrandName = ccg.BuyerBrandName,
+                     Commodity = ccg.Commodity,
+                     ComodityCode = ccg.ComodityCode,
+                     CommodityDescription = ccg.CommodityDescription,
+                     ComodityID = ccg.ComodityID,
+                     DeliveryDate = ccg.DeliveryDate,
+                     UOMCode = ccg.UOMCode,
+                     UOMID = ccg.UOMID,
+                     UOMUnit = ccg.UOMUnit,
+                     LastModifiedUtc = ccg.LastModifiedUtc,
+                     CostCalculationGarment_Materials = ccg.CostCalculationGarment_Materials,
+
+                     PreSCNo = ccg.PreSCNo,
+                     Section = ccg.Section,
+                     IsRODistributed = ccg.IsRODistributed,
+                     RODistributionBy = ccg.RODistributionBy,
+                     RODistributionDate = ccg.RODistributionDate,
+                 });
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<CostCalculationGarment>.Order(Query, OrderDictionary);
+            Pageable<CostCalculationGarment> pageable = new Pageable<CostCalculationGarment>(Query, page - 1, size);
+            List<CostCalculationGarment> data = pageable.Data.ToList<CostCalculationGarment>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
+        }
     }
 }
