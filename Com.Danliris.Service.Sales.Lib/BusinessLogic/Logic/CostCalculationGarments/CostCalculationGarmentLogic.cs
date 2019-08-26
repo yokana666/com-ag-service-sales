@@ -44,6 +44,26 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
 			Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+            var checkAllUser = false;
+
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+
+            if (FilterDictionary.ContainsKey("AllUser"))
+            {
+                try
+                {
+                    checkAllUser = (bool)FilterDictionary.GetValueOrDefault("AllUser");
+                }
+                catch (Exception) { }
+                FilterDictionary.Remove("AllUser");
+            }
+
+            if (!checkAllUser)
+            {
+                Query = Query.Where(w => w.CreatedBy == IdentityService.Username);
+            }
+
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
 
 			List<string> SelectedFields = new List<string>()
 			{
