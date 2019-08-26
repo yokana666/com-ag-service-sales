@@ -57,6 +57,7 @@ namespace Com.Danliris.Service.Sales.Lib
 
         public DbSet<MaxWHConfirm> MaxWHConfirms { get; set; }
         public DbSet<GarmentPreSalesContract> GarmentPreSalesContracts { get; set; }
+        public DbSet<CostCalculationGarmentUnpostReason> CostCalculationGarmentUnpostReasons { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
