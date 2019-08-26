@@ -22,6 +22,8 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public double FabricAllowance { get; set; }
         public double AccessoriesAllowance { get; set; }
         public string Section { get; set; }
+        [MaxLength(255)]
+        public string SectionName { get; set; }
         public string UOMID { get; set; }
         public string UOMCode { get; set; }
         public string UOMUnit { get; set; }
@@ -119,5 +121,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public bool IsRODistributed { get; set; }
         public DateTimeOffset RODistributionDate { get; set; }
         public string RODistributionBy { get; set; }
+
+        public bool IsPosted { get; set; }
     }
 }
