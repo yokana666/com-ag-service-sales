@@ -291,5 +291,46 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 
             return Updated;
         }
+
+        public async Task<int> PostCC(string listIdString)
+        {
+            int Updated = 0;
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    costCalculationGarmentLogic.PostCC(listIdString);
+                    Updated = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw e;
+                }
+            }
+            return Updated;
+        }
+
+        public async Task<int> UnpostCC(long id, string reason)
+        {
+            int Updated = 0;
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    costCalculationGarmentLogic.UnpostCC(id);
+                    costCalculationGarmentLogic.InsertUnpostReason(id, reason);
+                    Updated = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw e;
+                }
+            }
+            return Updated;
+        }
     }
 }

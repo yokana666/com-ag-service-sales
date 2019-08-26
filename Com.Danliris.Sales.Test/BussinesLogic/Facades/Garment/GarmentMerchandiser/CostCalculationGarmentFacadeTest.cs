@@ -168,5 +168,60 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var Response = await facade.DistributeCC(listData, "test");
             Assert.NotEqual(Response, 0);
         }
+
+        [Fact]
+        public async Task PostCC_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = await facade.PostCC($"[{data.Id}]");
+            Assert.NotEqual(Response, 0);
+
+            var ResultData = await facade.ReadByIdAsync((int)data.Id);
+            Assert.Equal(ResultData.IsPosted, true);
+        }
+
+        [Fact]
+        public async Task PostCC_Error()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            await Assert.ThrowsAnyAsync<Exception>(async () => await facade.PostCC("[A]"));
+        }
+
+        [Fact]
+        public async Task UnpostCC_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var reason = "Alasan kenapa melakukan unpost.";
+            var Response = await facade.UnpostCC(data.Id, reason);
+            Assert.NotEqual(Response, 0);
+
+            var ResultData = await facade.ReadByIdAsync((int)data.Id);
+            Assert.Equal(ResultData.IsPosted || ResultData.IsApprovedMD || ResultData.IsApprovedPurchasing || ResultData.IsApprovedIE || ResultData.IsApprovedPPIC, false);
+        }
+
+        [Fact]
+        public async Task UnpostCC_Error()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            await Assert.ThrowsAnyAsync<Exception>(async () => await facade.UnpostCC(0, string.Empty));
+        }
     }
 }
