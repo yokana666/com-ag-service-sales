@@ -63,10 +63,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
             Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
 
-			List<string> SelectedFields = new List<string>()
-			{
-				  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
-					"Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand"
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "ApprovalMD", "ApprovalPurchasing", "ApprovalIE", "ApprovalPPIC",
+                    "IsPosted"
             };
 
             Query = Query
@@ -95,9 +96,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      UOMCode = ccg.UOMCode,
                      UOMID = ccg.UOMID,
                      UOMUnit = ccg.UOMUnit,
+
+                     PreSCNo = ccg.PreSCNo,
+
+                     IsApprovedMD = ccg.IsApprovedMD,
+                     IsApprovedPurchasing = ccg.IsApprovedPurchasing,
+                     IsApprovedIE = ccg.IsApprovedIE,
+                     IsApprovedPPIC = ccg.IsApprovedPPIC,
+
+                     IsPosted = ccg.IsPosted,
+
                      LastModifiedUtc = ccg.LastModifiedUtc,
-                                          
-                     PreSCNo = ccg.PreSCNo
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
