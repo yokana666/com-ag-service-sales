@@ -387,6 +387,81 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
         }
 
+        [Fact]
+        public async Task PostCC_Success_ReturnNoContent()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.PostCC(It.IsAny<List<long>>())).ReturnsAsync(1);
 
+            var controller = GetController(mocks);
+            var response = await controller.PostCC(It.IsAny<List<long>>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
+        }
+
+        [Fact]
+        public async Task PostCC_NoChanges_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.PostCC(It.IsAny<List<long>>())).ReturnsAsync(0);
+
+            var controller = GetController(mocks);
+            var response = await controller.PostCC(It.IsAny<List<long>>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public async Task PostCC_Failed_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.PostCC(It.IsAny<List<long>>())).ThrowsAsync(new Exception(string.Empty));
+
+            var controller = GetController(mocks);
+            var response = await controller.PostCC(It.IsAny<List<long>>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public async Task UnpostCC_Success_ReturnNoContent()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.UnpostCC(It.IsAny<long>(), It.IsAny<string>())).ReturnsAsync(1);
+
+            var controller = GetController(mocks);
+            var response = await controller.UnpostCC(It.IsAny<long>(), "Reason");
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
+        }
+
+        [Fact]
+        public async Task UnpostCC_Invalid_ReturnBadRequest()
+        {
+            var mocks = GetMocks();
+
+            var controller = GetController(mocks);
+            var response = await controller.UnpostCC(It.IsAny<long>(), null);
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
+        }
+
+        [Fact]
+        public async Task UnpostCC_Failed_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.UnpostCC(It.IsAny<long>(), It.IsAny<string>())).ThrowsAsync(new Exception(string.Empty));
+
+            var controller = GetController(mocks);
+            var response = await controller.UnpostCC(It.IsAny<long>(), "Reason");
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
     }
 }

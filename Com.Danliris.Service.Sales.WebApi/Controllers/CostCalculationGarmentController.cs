@@ -180,8 +180,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 {
                     patch.ApplyTo(model);
 
-                    IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
-                    IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
+                    ValidateUser();
 
                     await Facade.UpdateAsync(id, model);
 
@@ -359,6 +358,60 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 await Facade.DistributeCC(listId, IdentityService.Username);
 
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPost("post")]
+        public async Task<IActionResult> PostCC([FromBody]List<long> listId)
+        {
+            try
+            {
+                ValidateUser();
+
+                int result = await Facade.PostCC(listId);
+                if (result < 1)
+                {
+                    Dictionary<string, object> Result = 
+                        new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, "No changes applied.")
+                        .Fail();
+                    return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+                }
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("unpost/{id}")]
+        public async Task<IActionResult> UnpostCC(long id, [FromBody]string reason)
+        {
+            try
+            {
+                ValidateUser();
+
+                if (string.IsNullOrWhiteSpace(reason))
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail("Alasan tidak diisi.");
+                    return BadRequest(Result);
+
+                }
+
+                await Facade.UnpostCC(id, reason);
+                return NoContent();
             }
             catch (Exception e)
             {
