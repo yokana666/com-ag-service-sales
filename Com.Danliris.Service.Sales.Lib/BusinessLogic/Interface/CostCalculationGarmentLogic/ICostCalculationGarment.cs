@@ -17,5 +17,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculation
         Task<int> AvailableCC(List<long> listId, string user);
         ReadResponse<CostCalculationGarment> ReadForRODistribution(int page, int size, string order, List<string> select, string keyword, string filter);
         Task<int> DistributeCC(List<long> listId, string user);
+        Task<int> PostCC(List<long> listId);
+        Task<int> UnpostCC(long id, string reason);
     }
 }

@@ -42,13 +42,32 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
 
-			Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
-			Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+            var checkAllUser = false;
 
-			List<string> SelectedFields = new List<string>()
-			{
-				  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
-					"Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand"
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+
+            if (FilterDictionary.ContainsKey("AllUser"))
+            {
+                try
+                {
+                    checkAllUser = (bool)FilterDictionary.GetValueOrDefault("AllUser");
+                }
+                catch (Exception) { }
+                FilterDictionary.Remove("AllUser");
+            }
+
+            if (!checkAllUser)
+            {
+                Query = Query.Where(w => w.CreatedBy == IdentityService.Username);
+            }
+
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "ApprovalMD", "ApprovalPurchasing", "ApprovalIE", "ApprovalPPIC",
+                    "IsPosted"
             };
 
             Query = Query
@@ -77,9 +96,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      UOMCode = ccg.UOMCode,
                      UOMID = ccg.UOMID,
                      UOMUnit = ccg.UOMUnit,
+
+                     PreSCNo = ccg.PreSCNo,
+
+                     IsApprovedMD = ccg.IsApprovedMD,
+                     IsApprovedPurchasing = ccg.IsApprovedPurchasing,
+                     IsApprovedIE = ccg.IsApprovedIE,
+                     IsApprovedPPIC = ccg.IsApprovedPPIC,
+
+                     IsPosted = ccg.IsPosted,
+
                      LastModifiedUtc = ccg.LastModifiedUtc,
-                                          
-                     PreSCNo = ccg.PreSCNo
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -436,6 +463,41 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             int totalData = pageable.TotalCount;
 
             return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        internal void PostCC(List<long> listId)
+        {
+            var models = DbSet.Where(w => listId.Contains(w.Id));
+            foreach (var model in models)
+            {
+                model.IsPosted = true;
+                EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            }
+        }
+
+        internal void UnpostCC(long id)
+        {
+            var model = DbSet.Single(m => m.Id == id);
+            model.IsPosted = false;
+            model.IsApprovedMD = false;
+            model.IsApprovedPurchasing = false;
+            model.IsApprovedIE = false;
+            model.IsApprovedPPIC = false;
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+        }
+
+        internal void InsertUnpostReason(long id, string reason)
+        {
+            var costCalculation = DbSet.AsNoTracking().Single(m => m.Id == id);
+            var reasonDbSet = DbContext.Set<CostCalculationGarmentUnpostReason>();
+            CostCalculationGarmentUnpostReason costCalculationGarmentUnpostReason = new CostCalculationGarmentUnpostReason
+            {
+                CostCalculationId = costCalculation.Id,
+                RONo = costCalculation.RO_Number,
+                UnpostReason = reason
+            };
+            EntityExtension.FlagForCreate(costCalculationGarmentUnpostReason, IdentityService.Username, "sales-service");
+            reasonDbSet.Add(costCalculationGarmentUnpostReason);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
             this.ApiVersion = apiVersion;
         }
 
-        private void ValidateUser()
+        protected void ValidateUser()
         {
             IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
             IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
@@ -55,6 +55,8 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
 
             try
             {
+                ValidateUser();
+
                 ReadResponse<TModel> read = Facade.Read(page, size, order, select, keyword, filter);
 
                 //Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Data = Facade.Read(page, size, order, select, keyword, filter);

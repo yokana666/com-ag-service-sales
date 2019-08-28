@@ -35,6 +35,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
 		public int? RO_GarmentId { get; set; }
 		public string RO_Number { get; set; }
 		public string Section { get; set; }
+		public string SectionName { get; set; }
 		public int? Quantity { get; set; }
 		public string SizeRange { get; set; }
 		public double? SMV_Cutting { get; set; }
@@ -79,6 +80,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public bool IsRODistributed { get; set; }
         public DateTimeOffset RODistributionDate { get; set; }
         public string RODistributionBy { get; set; }
+
+        public bool IsPosted { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
