@@ -10,6 +10,8 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -178,22 +180,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
             var data = await DataUtil(facade, dbContext).GetTestData();
 
-            var Response = await facade.PostCC($"[{data.Id}]");
+            var Response = await facade.PostCC(new List<long> { data.Id });
             Assert.NotEqual(Response, 0);
 
             var ResultData = await facade.ReadByIdAsync((int)data.Id);
             Assert.Equal(ResultData.IsPosted, true);
-        }
-
-        [Fact]
-        public async Task PostCC_Error()
-        {
-            var dbContext = DbContext(GetCurrentMethod());
-            var serviceProvider = GetServiceProviderMock(dbContext).Object;
-
-            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
-
-            await Assert.ThrowsAnyAsync<Exception>(async () => await facade.PostCC("[A]"));
         }
 
         [Fact]

@@ -292,14 +292,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             return Updated;
         }
 
-        public async Task<int> PostCC(string listIdString)
+        public async Task<int> PostCC(List<long> listId)
         {
             int Updated = 0;
             using (var transaction = DbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    costCalculationGarmentLogic.PostCC(listIdString);
+                    costCalculationGarmentLogic.PostCC(listId);
                     Updated = await DbContext.SaveChangesAsync();
                     transaction.Commit();
                 }

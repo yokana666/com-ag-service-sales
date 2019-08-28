@@ -465,9 +465,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
         }
 
-        internal void PostCC(string listIdString)
+        internal void PostCC(List<long> listId)
         {
-            var listId = JsonConvert.DeserializeObject<List<long>>(listIdString);
             var models = DbSet.Where(w => listId.Contains(w.Id));
             foreach (var model in models)
             {
