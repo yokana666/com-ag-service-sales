@@ -8,7 +8,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public long CostCalculationId { get; set; }
         [MaxLength(50)]
         public string RONo { get; set; }
-        [MaxLength(255)]
+        [MaxLength(2000)]
         public string UnpostReason { get; set; }
     }
 }
