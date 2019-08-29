@@ -40,9 +40,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                         .FirstOrDefault(m => m.Id == CostCalculationGarment.Id);
 
                     EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-                    model.IsValidatedROPPIC = true;
-                    model.ValidationPPICDate = model.LastModifiedUtc;
-                    model.ValidationPPICBy = model.LastModifiedBy;
+                    //model.IsValidatedROPPIC = true;
+                    //model.ValidationPPICDate = model.LastModifiedUtc;
+                    //model.ValidationPPICBy = model.LastModifiedBy;
+                    model.IsApprovedPPIC = true;
+                    model.ApprovedPPICDate = model.LastModifiedUtc;
+                    model.ApprovedPPICBy = model.LastModifiedBy;
 
                     foreach (var material in model.CostCalculationGarment_Materials)
                     {
