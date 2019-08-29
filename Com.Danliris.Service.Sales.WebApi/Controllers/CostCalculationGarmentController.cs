@@ -109,7 +109,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 			}
 		}
 
-        [HttpGet("ro-garment-validation/{Id}")]
+        [HttpGet("with-product-names/{Id}")]
         public async Task<IActionResult> GetById_RO_Garment_Validation([FromRoute] int id)
         {
             if (!ModelState.IsValid)

@@ -19,13 +19,13 @@ using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 {
-    public class RO_Garment_ValidationLogic
+    public class Garment_BudgetValidationPPICLogic
     {
         private IServiceProvider serviceProvider;
 
         private string GarmentPurchaseRequestUri = "garment-purchase-requests";
 
-        public RO_Garment_ValidationLogic(IServiceProvider serviceProvider)
+        public Garment_BudgetValidationPPICLogic(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }

@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Com.Danliris.Sales.Test.WebApi.Controllers
 {
-    public class RO_Garment_ValidationControllerTest : BaseEmptyControllerTest<RO_Garment_ValidationController, CostCalculationGarment, CostCalculationGarment_RO_Garment_ValidationViewModel, IRO_Garment_Validation>
+    public class Garment_BudgetValidationPPICControllerTest : BaseEmptyControllerTest<Garment_BudgetValidationPPICController, CostCalculationGarment, CostCalculationGarment_RO_Garment_ValidationViewModel, IGarment_BudgetValidationPPIC>
     {
         protected override CostCalculationGarment_RO_Garment_ValidationViewModel ViewModel
         {
