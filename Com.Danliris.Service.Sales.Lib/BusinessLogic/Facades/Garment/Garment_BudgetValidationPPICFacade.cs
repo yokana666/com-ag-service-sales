@@ -12,19 +12,19 @@ using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
 {
-    public class RO_Garment_ValidationFacade : IRO_Garment_Validation
+    public class Garment_BudgetValidationPPICFacade : IGarment_BudgetValidationPPIC
     {
         private readonly SalesDbContext DbContext;
         private readonly DbSet<CostCalculationGarment> DbSet;
         private IIdentityService IdentityService;
-        private RO_Garment_ValidationLogic RO_Garment_ValidationLogic;
+        private Garment_BudgetValidationPPICLogic RO_Garment_ValidationLogic;
 
-        public RO_Garment_ValidationFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
+        public Garment_BudgetValidationPPICFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             this.DbContext = dbContext;
             this.DbSet = this.DbContext.Set<CostCalculationGarment>();
             this.IdentityService = serviceProvider.GetService<IIdentityService>();
-            this.RO_Garment_ValidationLogic = serviceProvider.GetService<RO_Garment_ValidationLogic>();
+            this.RO_Garment_ValidationLogic = serviceProvider.GetService<Garment_BudgetValidationPPICLogic>();
         }
 
         public async Task<int> ValidateROGarment(CostCalculationGarment CostCalculationGarment, Dictionary<long, string> productDicts)
