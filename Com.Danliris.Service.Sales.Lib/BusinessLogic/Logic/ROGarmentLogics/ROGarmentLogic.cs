@@ -159,5 +159,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             EntityExtension.FlagForDelete(model, IdentityService.Username, "sales-service");
             DbSet.Update(model);
         }
+
+        internal void PostRO(List<long> listId)
+        {
+            var models = DbSet.Where(w => listId.Contains(w.Id));
+            foreach (var model in models)
+            {
+                model.IsPosted = true;
+                EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            }
+        }
+
+        internal void UnpostRO(long id)
+        {
+            var model = DbSet.Single(m => m.Id == id);
+            model.IsPosted = false;
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+
+            var cc = DbContext.CostCalculationGarments.Single(m => m.Id == model.CostCalculationGarmentId);
+            cc.IsValidatedROPPIC = false;
+            cc.IsValidatedROSample = false;
+            EntityExtension.FlagForUpdate(cc, IdentityService.Username, "sales-service");
+        }
     }
 }
