@@ -128,7 +128,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                     Id = Convert.ToInt64(i.CategoryId),
                     Name = i.CategoryName
                 },
-                ProductRemark = i.Description
+                ProductRemark = $"{i.Description}\n{i.ProductRemark}"
             }).ToList();
 
             return GarmentPurchaseRequestItems;
