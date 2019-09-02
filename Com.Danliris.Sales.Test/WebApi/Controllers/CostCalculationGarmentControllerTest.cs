@@ -3,6 +3,7 @@ using Com.Danliris.Sales.Test.WebApi.Utils;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment;
 using Com.Danliris.Service.Sales.WebApi.Controllers;
 using Microsoft.AspNetCore.JsonPatch;
@@ -207,6 +208,260 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var response = await controller.PutRoSample(id, It.IsAny<CostCalculationGarmentViewModel>());
 
             Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
+
+        private int GetStatusCodeGet((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<ICostCalculationGarment> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
+        {
+            CostCalculationGarmentController controller = this.GetController(mocks);
+            IActionResult response = controller.GetForROAcceptance();
+
+            return this.GetStatusCode(response);
+        }
+
+        [Fact]
+        public void Get_ForROAcceptance_WithoutException_ReturnOK()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.ReadForROAcceptance(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<CostCalculationGarment>(new List<CostCalculationGarment>(), 0, new Dictionary<string, string>(), new List<string>()));
+            mocks.Mapper.Setup(f => f.Map<List<CostCalculationGarmentViewModel>>(It.IsAny<List<CostCalculationGarment>>())).Returns(this.ViewModels);
+
+            int statusCode = this.GetStatusCodeGet(mocks);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Get_ForROAcceptance_ReadThrowException_ReturnInternalServerError()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.ReadForROAcceptance(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
+
+            int statusCode = this.GetStatusCodeGet(mocks);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        private async Task<int> GetAcceptCC((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<ICostCalculationGarment> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks, int id)
+        {
+            CostCalculationGarmentController controller = GetController(mocks);
+            List<long> Id = new List<long> { 1 };
+            IActionResult response = await controller.AcceptCC(Id);
+
+            return this.GetStatusCode(response);
+        }
+
+        [Fact]
+        public async Task Should_Success_AcceptCC()
+        {
+            var mocks = GetMocks();
+            mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
+            var id = 1;
+            var viewModel = new CostCalculationGarmentViewModel()
+            {
+                Id = id
+            };
+            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
+            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ReturnsAsync(1);
+
+            List<long> listId = new List<long> { viewModel.Id };
+
+            var controller = GetController(mocks);
+            var response = await controller.AcceptCC(listId);
+            Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
+        }
+
+        private int GetStatusCodeGetAvailable((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<ICostCalculationGarment> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
+        {
+            CostCalculationGarmentController controller = this.GetController(mocks);
+            IActionResult response = controller.GetForROAvailable();
+
+            return this.GetStatusCode(response);
+        }
+
+        [Fact]
+        public void Get_ForROAvailable_WithoutException_ReturnOK()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.ReadForROAvailable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<CostCalculationGarment>(new List<CostCalculationGarment>(), 0, new Dictionary<string, string>(), new List<string>()));
+            mocks.Mapper.Setup(f => f.Map<List<CostCalculationGarmentViewModel>>(It.IsAny<List<CostCalculationGarment>>())).Returns(this.ViewModels);
+
+            int statusCode = this.GetStatusCodeGetAvailable(mocks);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Get_ForROAvailable_ReadThrowException_ReturnInternalServerError()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.ReadForROAvailable(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
+
+            int statusCode = this.GetStatusCodeGetAvailable(mocks);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        private async Task<int> GetAvailableCC((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<ICostCalculationGarment> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks, int id)
+        {
+            CostCalculationGarmentController controller = GetController(mocks);
+            List<long> Id = new List<long> { 1 };
+            IActionResult response = await controller.AvailableCC(Id);
+
+            return this.GetStatusCode(response);
+        }
+
+        [Fact]
+        public async Task Should_Success_AvailableCC()
+        {
+            var mocks = GetMocks();
+            mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
+            var id = 1;
+            var viewModel = new CostCalculationGarmentViewModel()
+            {
+                Id = id
+            };
+            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
+            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ReturnsAsync(1);
+
+            List<long> listId = new List<long> { viewModel.Id };
+
+            var controller = GetController(mocks);
+            var response = await controller.AvailableCC(listId);
+            Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
+        }
+
+        private int GetStatusCodeGetDistribute((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<ICostCalculationGarment> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
+        {
+            CostCalculationGarmentController controller = this.GetController(mocks);
+            IActionResult response = controller.GetForRODistribute();
+
+            return this.GetStatusCode(response);
+        }
+
+        [Fact]
+        public void Get_ForRODistribute_WithoutException_ReturnOK()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.ReadForRODistribution(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<CostCalculationGarment>(new List<CostCalculationGarment>(), 0, new Dictionary<string, string>(), new List<string>()));
+            mocks.Mapper.Setup(f => f.Map<List<CostCalculationGarmentViewModel>>(It.IsAny<List<CostCalculationGarment>>())).Returns(this.ViewModels);
+
+            int statusCode = this.GetStatusCodeGetDistribute(mocks);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Get_ForRODistribute_ReadThrowException_ReturnInternalServerError()
+        {
+            var mocks = this.GetMocks();
+            mocks.Facade.Setup(f => f.ReadForRODistribution(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
+
+            int statusCode = this.GetStatusCodeGetDistribute(mocks);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        private async Task<int> GetDistributeCC((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<ICostCalculationGarment> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks, int id)
+        {
+            CostCalculationGarmentController controller = GetController(mocks);
+            List<long> Id = new List<long> { 1 };
+            IActionResult response = await controller.DistributeCC(Id);
+
+            return this.GetStatusCode(response);
+        }
+
+        [Fact]
+        public async Task Should_Success_DistributeCC()
+        {
+            var mocks = GetMocks();
+            mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
+            var id = 1;
+            var viewModel = new CostCalculationGarmentViewModel()
+            {
+                Id = id
+            };
+            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
+            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ReturnsAsync(1);
+
+            List<long> listId = new List<long> { viewModel.Id };
+
+            var controller = GetController(mocks);
+            var response = await controller.DistributeCC(listId);
+            Assert.Equal((int)HttpStatusCode.OK, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task PostCC_Success_ReturnNoContent()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.PostCC(It.IsAny<List<long>>())).ReturnsAsync(1);
+
+            var controller = GetController(mocks);
+            var response = await controller.PostCC(It.IsAny<List<long>>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
+        }
+
+        [Fact]
+        public async Task PostCC_NoChanges_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.PostCC(It.IsAny<List<long>>())).ReturnsAsync(0);
+
+            var controller = GetController(mocks);
+            var response = await controller.PostCC(It.IsAny<List<long>>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public async Task PostCC_Failed_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.PostCC(It.IsAny<List<long>>())).ThrowsAsync(new Exception(string.Empty));
+
+            var controller = GetController(mocks);
+            var response = await controller.PostCC(It.IsAny<List<long>>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public async Task UnpostCC_Success_ReturnNoContent()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.UnpostCC(It.IsAny<long>(), It.IsAny<string>())).ReturnsAsync(1);
+
+            var controller = GetController(mocks);
+            var response = await controller.UnpostCC(It.IsAny<long>(), "Reason");
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
+        }
+
+        [Fact]
+        public async Task UnpostCC_Invalid_ReturnBadRequest()
+        {
+            var mocks = GetMocks();
+
+            var controller = GetController(mocks);
+            var response = await controller.UnpostCC(It.IsAny<long>(), null);
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
+        }
+
+        [Fact]
+        public async Task UnpostCC_Failed_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.UnpostCC(It.IsAny<long>(), It.IsAny<string>())).ThrowsAsync(new Exception(string.Empty));
+
+            var controller = GetController(mocks);
+            var response = await controller.UnpostCC(It.IsAny<long>(), "Reason");
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
     }
 }

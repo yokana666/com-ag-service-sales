@@ -42,44 +42,71 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
 
-			Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
-			Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+            var checkAllUser = false;
 
-			List<string> SelectedFields = new List<string>()
-			{
-				  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
-					"Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand"
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+
+            if (FilterDictionary.ContainsKey("AllUser"))
+            {
+                try
+                {
+                    checkAllUser = (bool)FilterDictionary.GetValueOrDefault("AllUser");
+                }
+                catch (Exception) { }
+                FilterDictionary.Remove("AllUser");
+            }
+
+            if (!checkAllUser)
+            {
+                Query = Query.Where(w => w.CreatedBy == IdentityService.Username);
+            }
+
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "ApprovalMD", "ApprovalPurchasing", "ApprovalIE", "ApprovalPPIC",
+                    "IsPosted"
             };
 
-			Query = Query
-				 .Select(ccg => new CostCalculationGarment
-				 {
-					 Id = ccg.Id,
-					 Code = ccg.Code,
-					 RO_Number = ccg.RO_Number,
-					 Article = ccg.Article,
-					 UnitId = ccg.UnitId,
-					 UnitCode=ccg.UnitCode,
-					 UnitName=ccg.UnitName,
-					 Quantity = ccg.Quantity,
-					 ConfirmPrice = ccg.ConfirmPrice,
-                     BuyerCode=ccg.BuyerCode,
-                     BuyerId=ccg.BuyerId,
-                     BuyerName=ccg.BuyerName,
-                     BuyerBrandCode=ccg.BuyerBrandCode,
-                     BuyerBrandId=ccg.BuyerBrandId,
-                     BuyerBrandName=ccg.BuyerBrandName,
-                     Commodity=ccg.Commodity,
-                     ComodityCode=ccg.ComodityCode,
-                     CommodityDescription=ccg.CommodityDescription,
-                     ComodityID=ccg.ComodityID,
-                     DeliveryDate=ccg.DeliveryDate,
-                     UOMCode=ccg.UOMCode,
-                     UOMID=ccg.UOMID,
-                     UOMUnit=ccg.UOMUnit,
-					 LastModifiedUtc = ccg.LastModifiedUtc,
-                                          
-                     PreSCNo = ccg.PreSCNo
+            Query = Query
+                 .Select(ccg => new CostCalculationGarment
+                 {
+                     Id = ccg.Id,
+                     Code = ccg.Code,
+                     RO_Number = ccg.RO_Number,
+                     Article = ccg.Article,
+                     UnitId = ccg.UnitId,
+                     UnitCode = ccg.UnitCode,
+                     UnitName = ccg.UnitName,
+                     Quantity = ccg.Quantity,
+                     ConfirmPrice = ccg.ConfirmPrice,
+                     BuyerCode = ccg.BuyerCode,
+                     BuyerId = ccg.BuyerId,
+                     BuyerName = ccg.BuyerName,
+                     BuyerBrandCode = ccg.BuyerBrandCode,
+                     BuyerBrandId = ccg.BuyerBrandId,
+                     BuyerBrandName = ccg.BuyerBrandName,
+                     Commodity = ccg.Commodity,
+                     ComodityCode = ccg.ComodityCode,
+                     CommodityDescription = ccg.CommodityDescription,
+                     ComodityID = ccg.ComodityID,
+                     DeliveryDate = ccg.DeliveryDate,
+                     UOMCode = ccg.UOMCode,
+                     UOMID = ccg.UOMID,
+                     UOMUnit = ccg.UOMUnit,
+
+                     PreSCNo = ccg.PreSCNo,
+
+                     IsApprovedMD = ccg.IsApprovedMD,
+                     IsApprovedPurchasing = ccg.IsApprovedPurchasing,
+                     IsApprovedIE = ccg.IsApprovedIE,
+                     IsApprovedPPIC = ccg.IsApprovedPPIC,
+
+                     IsPosted = ccg.IsPosted,
+
+                     LastModifiedUtc = ccg.LastModifiedUtc,
 				 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -250,6 +277,227 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             {
                 return new Dictionary<long, string>();
             }
+        }
+
+        public ReadResponse<CostCalculationGarment> ReadForROAcceptance(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            IQueryable<CostCalculationGarment> Query = DbSet;
+            List<string> SearchAttributes = new List<string>()
+            {
+                "Section", "RO_Number","Article","UnitName",
+            };
+
+            Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "Section", "IsROAccepted", "ROAcceptedBy", "ROAcceptedDate"
+            };
+
+            Query = Query
+                 .Select(ccg => new CostCalculationGarment
+                 {
+                     Id = ccg.Id,
+                     Code = ccg.Code,
+                     RO_Number = ccg.RO_Number,
+                     Article = ccg.Article,
+                     UnitId = ccg.UnitId,
+                     UnitCode = ccg.UnitCode,
+                     UnitName = ccg.UnitName,
+                     Quantity = ccg.Quantity,
+                     ConfirmPrice = ccg.ConfirmPrice,
+                     BuyerCode = ccg.BuyerCode,
+                     BuyerId = ccg.BuyerId,
+                     BuyerName = ccg.BuyerName,
+                     BuyerBrandCode = ccg.BuyerBrandCode,
+                     BuyerBrandId = ccg.BuyerBrandId,
+                     BuyerBrandName = ccg.BuyerBrandName,
+                     Commodity = ccg.Commodity,
+                     ComodityCode = ccg.ComodityCode,
+                     CommodityDescription = ccg.CommodityDescription,
+                     ComodityID = ccg.ComodityID,
+                     DeliveryDate = ccg.DeliveryDate,
+                     UOMCode = ccg.UOMCode,
+                     UOMID = ccg.UOMID,
+                     UOMUnit = ccg.UOMUnit,
+                     LastModifiedUtc = ccg.LastModifiedUtc,
+                     CostCalculationGarment_Materials = ccg.CostCalculationGarment_Materials,
+
+                     PreSCNo = ccg.PreSCNo,
+                     Section = ccg.Section,
+                     IsROAccepted = ccg.IsROAccepted,
+                     ROAcceptedBy = ccg.ROAcceptedBy,
+                     ROAcceptedDate = ccg.ROAcceptedDate,
+                 });
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<CostCalculationGarment>.Order(Query, OrderDictionary);
+            Pageable<CostCalculationGarment> pageable = new Pageable<CostCalculationGarment>(Query, page - 1, size);
+            List<CostCalculationGarment> data = pageable.Data.ToList<CostCalculationGarment>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        public ReadResponse<CostCalculationGarment> ReadForROAvailable(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            IQueryable<CostCalculationGarment> Query = DbSet;
+            List<string> SearchAttributes = new List<string>()
+            {
+                "Section", "RO_Number","Article","UnitName",
+            };
+
+            Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "Section", "IsROAvailable", "ROAvailableBy", "ROAvailableDate"
+            };
+
+            Query = Query
+                 .Select(ccg => new CostCalculationGarment
+                 {
+                     Id = ccg.Id,
+                     Code = ccg.Code,
+                     RO_Number = ccg.RO_Number,
+                     Article = ccg.Article,
+                     UnitId = ccg.UnitId,
+                     UnitCode = ccg.UnitCode,
+                     UnitName = ccg.UnitName,
+                     Quantity = ccg.Quantity,
+                     ConfirmPrice = ccg.ConfirmPrice,
+                     BuyerCode = ccg.BuyerCode,
+                     BuyerId = ccg.BuyerId,
+                     BuyerName = ccg.BuyerName,
+                     BuyerBrandCode = ccg.BuyerBrandCode,
+                     BuyerBrandId = ccg.BuyerBrandId,
+                     BuyerBrandName = ccg.BuyerBrandName,
+                     Commodity = ccg.Commodity,
+                     ComodityCode = ccg.ComodityCode,
+                     CommodityDescription = ccg.CommodityDescription,
+                     ComodityID = ccg.ComodityID,
+                     DeliveryDate = ccg.DeliveryDate,
+                     UOMCode = ccg.UOMCode,
+                     UOMID = ccg.UOMID,
+                     UOMUnit = ccg.UOMUnit,
+                     LastModifiedUtc = ccg.LastModifiedUtc,
+                     CostCalculationGarment_Materials = ccg.CostCalculationGarment_Materials,
+
+                     PreSCNo = ccg.PreSCNo,
+                     Section = ccg.Section,
+                     IsROAvailable = ccg.IsROAvailable,
+                     ROAvailableBy = ccg.ROAvailableBy,
+                     ROAvailableDate = ccg.ROAvailableDate,
+                 });
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<CostCalculationGarment>.Order(Query, OrderDictionary);
+            Pageable<CostCalculationGarment> pageable = new Pageable<CostCalculationGarment>(Query, page - 1, size);
+            List<CostCalculationGarment> data = pageable.Data.ToList<CostCalculationGarment>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        public ReadResponse<CostCalculationGarment> ReadForRODistribution(int page, int size, string order, List<string> select, string keyword, string filter)
+        {
+            IQueryable<CostCalculationGarment> Query = DbSet;
+            List<string> SearchAttributes = new List<string>()
+            {
+                "Section", "RO_Number","Article","UnitName",
+            };
+
+            Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+            List<string> SelectedFields = new List<string>()
+            {
+                  "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "Section", "IsRODistributed", "RODistributionBy", "RODistributionDate"
+            };
+
+            Query = Query
+                 .Select(ccg => new CostCalculationGarment
+                 {
+                     Id = ccg.Id,
+                     Code = ccg.Code,
+                     RO_Number = ccg.RO_Number,
+                     Article = ccg.Article,
+                     UnitId = ccg.UnitId,
+                     UnitCode = ccg.UnitCode,
+                     UnitName = ccg.UnitName,
+                     Quantity = ccg.Quantity,
+                     ConfirmPrice = ccg.ConfirmPrice,
+                     BuyerCode = ccg.BuyerCode,
+                     BuyerId = ccg.BuyerId,
+                     BuyerName = ccg.BuyerName,
+                     BuyerBrandCode = ccg.BuyerBrandCode,
+                     BuyerBrandId = ccg.BuyerBrandId,
+                     BuyerBrandName = ccg.BuyerBrandName,
+                     Commodity = ccg.Commodity,
+                     ComodityCode = ccg.ComodityCode,
+                     CommodityDescription = ccg.CommodityDescription,
+                     ComodityID = ccg.ComodityID,
+                     DeliveryDate = ccg.DeliveryDate,
+                     UOMCode = ccg.UOMCode,
+                     UOMID = ccg.UOMID,
+                     UOMUnit = ccg.UOMUnit,
+                     LastModifiedUtc = ccg.LastModifiedUtc,
+                     CostCalculationGarment_Materials = ccg.CostCalculationGarment_Materials,
+
+                     PreSCNo = ccg.PreSCNo,
+                     Section = ccg.Section,
+                     IsRODistributed = ccg.IsRODistributed,
+                     RODistributionBy = ccg.RODistributionBy,
+                     RODistributionDate = ccg.RODistributionDate,
+                 });
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<CostCalculationGarment>.Order(Query, OrderDictionary);
+            Pageable<CostCalculationGarment> pageable = new Pageable<CostCalculationGarment>(Query, page - 1, size);
+            List<CostCalculationGarment> data = pageable.Data.ToList<CostCalculationGarment>();
+            int totalData = pageable.TotalCount;
+
+            return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        internal void PostCC(List<long> listId)
+        {
+            var models = DbSet.Where(w => listId.Contains(w.Id));
+            foreach (var model in models)
+            {
+                model.IsPosted = true;
+                EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            }
+        }
+
+        internal void UnpostCC(long id)
+        {
+            var model = DbSet.Single(m => m.Id == id);
+            model.IsPosted = false;
+            model.IsApprovedMD = false;
+            model.IsApprovedPurchasing = false;
+            model.IsApprovedIE = false;
+            model.IsApprovedPPIC = false;
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+        }
+
+        internal void InsertUnpostReason(long id, string reason)
+        {
+            var costCalculation = DbSet.AsNoTracking().Single(m => m.Id == id);
+            var reasonDbSet = DbContext.Set<CostCalculationGarmentUnpostReason>();
+            CostCalculationGarmentUnpostReason costCalculationGarmentUnpostReason = new CostCalculationGarmentUnpostReason
+            {
+                CostCalculationId = costCalculation.Id,
+                RONo = costCalculation.RO_Number,
+                UnpostReason = reason
+            };
+            EntityExtension.FlagForCreate(costCalculationGarmentUnpostReason, IdentityService.Username, "sales-service");
+            reasonDbSet.Add(costCalculationGarmentUnpostReason);
         }
     }
 }

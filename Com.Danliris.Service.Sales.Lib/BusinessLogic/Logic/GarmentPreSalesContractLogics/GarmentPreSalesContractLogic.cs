@@ -38,7 +38,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "SectionId", "SectionCode", "BuyerBrandId", "BuyerBrandName", "BuyerBrandCode", "SCNo", "SCDate", "SCType", "LastModifiedUtc", "CreatedUtc", "BuyerAgentId", "BuyerAgentName", "BuyerAgentCode", "OrderQuantity"
+                "Id", "SectionId", "SectionCode", "BuyerBrandId", "BuyerBrandName", "BuyerBrandCode", "SCNo", "SCDate", "SCType", "LastModifiedUtc", "CreatedUtc", "BuyerAgentId", "BuyerAgentName", "BuyerAgentCode", "OrderQuantity", "IsPosted"
             };
 
             Query = Query
@@ -59,7 +59,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
                     BuyerAgentName = sc.BuyerAgentName,
                     BuyerAgentCode = sc.BuyerAgentCode,
                     OrderQuantity = sc.OrderQuantity,
-                    IsDeleted = sc.IsDeleted
+                    IsDeleted = sc.IsDeleted,
+                    IsPosted = sc.IsPosted,
                 }).OrderByDescending(s => s.LastModifiedUtc);
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);

@@ -12,7 +12,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -37,7 +36,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var data = await DataUtil(facade).GetNewData();
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
-            
+
 
             var Response = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
 
@@ -57,7 +56,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             data.SalesContractId = salesData.Id;
             await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
-            var Response =await facade.ReadByIdAsync((int)all.Data.FirstOrDefault().Id);
+            var Response = await facade.ReadByIdAsync((int)all.Data.FirstOrDefault().Id);
 
             Assert.NotEqual(Response.Id, 0);
         }
@@ -95,7 +94,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             Assert.NotEqual(Response, 0);
         }
 
-        
+
 
         public override async void Update_Success()
         {
@@ -109,7 +108,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             data.SalesContractId = salesData.Id;
             var model = await facade.CreateAsync(data);
             var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
-            
+
             var response = await facade.UpdateAsync((int)all.Data.FirstOrDefault().Id, data);
 
             Assert.NotEqual(response, 0);
@@ -143,7 +142,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
                 .Setup(x => x.GetService(typeof(ProductionOrder_RunWidthLogic)))
                 .Returns(productionOrderrwLogic);
 
-            
+
             var finishingprintingDetailObject = new FinishingPrintingSalesContractDetailLogic(serviceProviderMock.Object, identityService, dbContext);
             var finishingprintingLogic = new FinishingPrintingSalesContractLogic(finishingprintingDetailObject, serviceProviderMock.Object, identityService, dbContext);
             serviceProviderMock
@@ -155,7 +154,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             serviceProviderMock
                 .Setup(x => x.GetService(typeof(ProductionOrderLogic)))
                 .Returns(productionOrderLogic);
-            
+
             return serviceProviderMock;
         }
 
@@ -299,6 +298,41 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Month, (int)data.OrderTypeId, 0);
 
             Assert.NotEqual(result.Count, 0);
+        }
+
+        [Fact]
+        public async void UpdateIsCalculated_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = await DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            var model = await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            var response = await facade.UpdateIsCalculated((int)all.Data.FirstOrDefault().Id, true);
+
+            Assert.NotEqual(response, 0);
+        }
+
+        [Fact]
+        public async void UpdateIsCalculated_Exception()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ProductionOrderFacade facade = Activator.CreateInstance(typeof(ProductionOrderFacade), serviceProvider, dbContext) as ProductionOrderFacade;
+            FinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade = new FinishingPrintingSalesContractFacade(GetServiceProviderMock(dbContext).Object, dbContext);
+            FinisihingPrintingSalesContractDataUtil finisihingPrintingSalesContractDataUtil = new FinisihingPrintingSalesContractDataUtil(finishingPrintingSalesContractFacade);
+            var salesData = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data = await DataUtil(facade).GetNewData();
+            data.SalesContractId = salesData.Id;
+            var model = await facade.CreateAsync(data);
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            await Assert.ThrowsAnyAsync<Exception>(() => facade.UpdateIsCalculated(0, true));
+
         }
     }
 }

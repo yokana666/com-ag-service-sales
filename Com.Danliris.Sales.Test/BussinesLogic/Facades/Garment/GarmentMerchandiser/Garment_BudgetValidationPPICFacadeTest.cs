@@ -24,7 +24,7 @@ using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandiser
 {
-    public class ROGarmentValidationFacadeTest
+    public class Garment_BudgetValidationPPICFacadeTest
     {
         private const string ENTITY = "ROGarmentValidation";
 
@@ -89,10 +89,10 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 .Setup(x => x.GetService(typeof(IAzureImageFacade)))
                 .Returns(azureImageFacadeMock.Object);
 
-            RO_Garment_ValidationLogic rOGarmentValidationLogic = new RO_Garment_ValidationLogic(serviceProviderMock.Object);
+            Garment_BudgetValidationPPICLogic rOGarmentValidationLogic = new Garment_BudgetValidationPPICLogic(serviceProviderMock.Object);
 
             serviceProviderMock
-                .Setup(x => x.GetService(typeof(RO_Garment_ValidationLogic)))
+                .Setup(x => x.GetService(typeof(Garment_BudgetValidationPPICLogic)))
                 .Returns(rOGarmentValidationLogic);
 
             return serviceProviderMock;
@@ -108,7 +108,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var dataCostCalculationGarment = await DataUtil(facade, serviceProvider, dbContext).GetTestData();
 
-            RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
+            Garment_BudgetValidationPPICFacade garmentValidationFacade = new Garment_BudgetValidationPPICFacade(serviceProvider, dbContext);
 
             var productDict = dataCostCalculationGarment.CostCalculationGarment_Materials.ToDictionary(k => long.Parse(k.ProductId), v => v.ProductCode);
 
@@ -131,7 +131,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 material.IsPRMaster = false;
             }
 
-            RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
+            Garment_BudgetValidationPPICFacade garmentValidationFacade = new Garment_BudgetValidationPPICFacade(serviceProvider, dbContext);
 
             var productDict = dataCostCalculationGarment.CostCalculationGarment_Materials.ToDictionary(k => long.Parse(k.ProductId), v => v.ProductCode);
 
@@ -155,7 +155,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 material.IsPRMaster = false;
             }
 
-            RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
+            Garment_BudgetValidationPPICFacade garmentValidationFacade = new Garment_BudgetValidationPPICFacade(serviceProvider, dbContext);
 
             var productDict = dataCostCalculationGarment.CostCalculationGarment_Materials.ToDictionary(k => long.Parse(k.ProductId), v => v.ProductCode);
 
@@ -184,7 +184,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 IsPRMaster = false
             });
 
-            RO_Garment_ValidationFacade garmentValidationFacade = new RO_Garment_ValidationFacade(serviceProvider, dbContext);
+            Garment_BudgetValidationPPICFacade garmentValidationFacade = new Garment_BudgetValidationPPICFacade(serviceProvider, dbContext);
 
             var productDict = dataCostCalculationGarment.CostCalculationGarment_Materials.ToDictionary(k => long.Parse(k.ProductId), v => v.ProductCode);
 

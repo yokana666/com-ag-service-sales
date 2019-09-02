@@ -17,17 +17,17 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 {
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    [Route("v{version:apiVersion}/merchandiser/ro-garment-validations")]
+    [Route("v{version:apiVersion}/merchandiser/budget-validations/ppic")]
     [Authorize]
-    public class RO_Garment_ValidationController : Controller
+    public class Garment_BudgetValidationPPICController : Controller
     {
         private readonly string ApiVersion = "1.0.0";
-        private IRO_Garment_Validation facade;
+        private IGarment_BudgetValidationPPIC facade;
         protected IIdentityService IdentityService;
         protected readonly IValidateService ValidateService;
         protected readonly IMapper Mapper;
 
-        public RO_Garment_ValidationController(IIdentityService identityService, IValidateService validateService, IRO_Garment_Validation facade, IMapper mapper)
+        public Garment_BudgetValidationPPICController(IIdentityService identityService, IValidateService validateService, IGarment_BudgetValidationPPIC facade, IMapper mapper)
         {
             this.facade = facade;
             this.IdentityService = identityService;

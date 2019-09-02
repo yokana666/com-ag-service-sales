@@ -28,6 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentPreSalesContractViewM
         public string Remark { get; set; }
         public bool IsCC { get; set; }
         public bool IsPR { get; set; }
+        public bool IsPosted { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

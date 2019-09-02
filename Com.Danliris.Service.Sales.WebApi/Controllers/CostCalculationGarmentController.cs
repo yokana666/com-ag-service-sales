@@ -109,7 +109,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 			}
 		}
 
-        [HttpGet("ro-garment-validation/{Id}")]
+        [HttpGet("with-product-names/{Id}")]
         public async Task<IActionResult> GetById_RO_Garment_Validation([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -180,8 +180,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 {
                     patch.ApplyTo(model);
 
-                    IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
-                    IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
+                    ValidateUser();
 
                     await Facade.UpdateAsync(id, model);
 
@@ -223,6 +222,195 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 
                 await Facade.UpdateAsync(id, model);
 
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpGet("ro-acceptance")]
+        public IActionResult GetForROAcceptance(int page = 1, int size = 25, string order = "{}", [Bind(Prefix = "Select[]")]List<string> select = null, string keyword = null, string filter = "{}")
+        {
+            try
+            {
+                ReadResponse<CostCalculationGarment> read = Facade.ReadForROAcceptance(page, size, order, select, keyword, filter);
+
+                //Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Data = Facade.Read(page, size, order, select, keyword, filter);
+                List<CostCalculationGarmentViewModel> DataVM = Mapper.Map<List<CostCalculationGarmentViewModel>>(read.Data);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok<CostCalculationGarmentViewModel>(Mapper, DataVM, page, size, read.Count, DataVM.Count, read.Order, read.Selected);
+                return Ok(Result);
+
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPost("acceptance")]
+        public async Task<IActionResult> AcceptCC([FromBody]List<long> listId)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+                await Facade.AcceptanceCC(listId, IdentityService.Username);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpGet("ro-available")]
+        public IActionResult GetForROAvailable(int page = 1, int size = 25, string order = "{}", [Bind(Prefix = "Select[]")]List<string> select = null, string keyword = null, string filter = "{}")
+        {
+            try
+            {
+                ReadResponse<CostCalculationGarment> read = Facade.ReadForROAvailable(page, size, order, select, keyword, filter);
+
+                //Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Data = Facade.Read(page, size, order, select, keyword, filter);
+                List<CostCalculationGarmentViewModel> DataVM = Mapper.Map<List<CostCalculationGarmentViewModel>>(read.Data);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok<CostCalculationGarmentViewModel>(Mapper, DataVM, page, size, read.Count, DataVM.Count, read.Order, read.Selected);
+                return Ok(Result);
+
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPost("available")]
+        public async Task<IActionResult> AvailableCC([FromBody]List<long> listId)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+                await Facade.AvailableCC(listId, IdentityService.Username);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpGet("ro-distribute")]
+        public IActionResult GetForRODistribute(int page = 1, int size = 25, string order = "{}", [Bind(Prefix = "Select[]")]List<string> select = null, string keyword = null, string filter = "{}")
+        {
+            try
+            {
+                ReadResponse<CostCalculationGarment> read = Facade.ReadForRODistribution(page, size, order, select, keyword, filter);
+
+                //Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Data = Facade.Read(page, size, order, select, keyword, filter);
+                List<CostCalculationGarmentViewModel> DataVM = Mapper.Map<List<CostCalculationGarmentViewModel>>(read.Data);
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok<CostCalculationGarmentViewModel>(Mapper, DataVM, page, size, read.Count, DataVM.Count, read.Order, read.Selected);
+                return Ok(Result);
+
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPost("distribute")]
+        public async Task<IActionResult> DistributeCC([FromBody]List<long> listId)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+                await Facade.DistributeCC(listId, IdentityService.Username);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPost("post")]
+        public async Task<IActionResult> PostCC([FromBody]List<long> listId)
+        {
+            try
+            {
+                ValidateUser();
+
+                int result = await Facade.PostCC(listId);
+                if (result < 1)
+                {
+                    Dictionary<string, object> Result = 
+                        new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, "No changes applied.")
+                        .Fail();
+                    return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+                }
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("unpost/{id}")]
+        public async Task<IActionResult> UnpostCC(long id, [FromBody]string reason)
+        {
+            try
+            {
+                ValidateUser();
+
+                if (string.IsNullOrWhiteSpace(reason))
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
+                        .Fail("Alasan tidak diisi.");
+                    return BadRequest(Result);
+
+                }
+
+                await Facade.UnpostCC(id, reason);
                 return NoContent();
             }
             catch (Exception e)

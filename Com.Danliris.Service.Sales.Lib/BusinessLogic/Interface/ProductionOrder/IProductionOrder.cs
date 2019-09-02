@@ -19,6 +19,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder
         Task<int> UpdateRequestedTrue(List<int> ids);
         Task<int> UpdateRequestedFalse(List<int> ids);
         Task<int> UpdateIsCompletedTrue(int id);
+        Task<int> UpdateIsCalculated(int id, bool flag);
         Task<int> UpdateIsCompletedFalse(int id);
         Task<int> UpdateDistributedQuantity(List<int> id, List<double> distributedQuantity);
         List<YearlyOrderQuantity> GetMonthlyOrderQuantityByYearAndOrderType(int year, int orderTypeId, int timeoffset);

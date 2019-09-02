@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment
 {
-    public interface IRO_Garment_Validation
+    public interface IGarment_BudgetValidationPPIC
     {
         Task<int> ValidateROGarment(CostCalculationGarment model, Dictionary<long, string> productDicts);
     }

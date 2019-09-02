@@ -10,5 +10,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentPreSales
 {
     public interface IGarmentPreSalesContract : IBaseFacade<GarmentPreSalesContract>
     {
+        Task<int> PreSalesPost(List<long> listId, string user);
+        Task<int> PreSalesUnpost(long id, string user);
     }
 }

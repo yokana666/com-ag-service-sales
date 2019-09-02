@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 uomLocal = viewModel.UomUnit;
             }
-            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", viewModel.Price) + " / " + ppn;
+            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", viewModel.Price) + " / " + uomLocal + ppn;
 
             var appxLocal = "";
             var date = (viewModel.DeliverySchedule.Value.Day);
@@ -169,7 +169,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Harga", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase(": " + detailprice + uomLocal, normal_font);
+            bodyContentLeft.Phrase = new Phrase(": " + detailprice, normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Syarat Pembayaran", normal_font);
             tableBody.AddCell(bodyContentLeft);
