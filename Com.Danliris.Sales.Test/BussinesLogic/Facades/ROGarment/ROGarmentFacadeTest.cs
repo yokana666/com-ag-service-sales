@@ -260,5 +260,49 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ROGarment
 
         //    Assert.NotEqual(response, 0);
         //}
+
+        [Fact]
+        public async Task PostRO_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            ROGarmentFacade facade = new ROGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = await facade.PostRO(new List<long> { data.Id });
+            Assert.NotEqual(Response, 0);
+
+            var ResultData = await facade.ReadByIdAsync((int)data.Id);
+            Assert.Equal(ResultData.IsPosted, true);
+        }
+
+        [Fact]
+        public async Task UnpostRO_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            ROGarmentFacade facade = new ROGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = await facade.UnpostRO(data.Id);
+            Assert.NotEqual(Response, 0);
+
+            var ResultData = await facade.ReadByIdAsync((int)data.Id);
+            Assert.Equal(ResultData.IsPosted, false);
+        }
+
+        [Fact]
+        public async Task UnpostRO_Error()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            ROGarmentFacade facade = new ROGarmentFacade(serviceProvider, dbContext);
+
+            await Assert.ThrowsAnyAsync<Exception>(async () => await facade.UnpostRO(0));
+        }
+
     }
 }

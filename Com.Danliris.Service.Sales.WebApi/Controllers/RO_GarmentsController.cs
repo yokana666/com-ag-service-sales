@@ -72,6 +72,50 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             }
         }
 
-        
+
+        [HttpPost("post")]
+        public async Task<IActionResult> PostRO([FromBody]List<long> listId)
+        {
+            try
+            {
+                ValidateUser();
+
+                int result = await Facade.PostRO(listId);
+                if (result < 1)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, "No changes applied.")
+                        .Fail();
+                    return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+                }
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("unpost/{id}")]
+        public async Task<IActionResult> UnpostRO(long id)
+        {
+            try
+            {
+                ValidateUser();
+
+                await Facade.UnpostRO(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
     }
 }
