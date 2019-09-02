@@ -53,7 +53,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                          RO_Number = ccg.RO_Number,
                          Article = ccg.Article,
                          UnitCode = ccg.UnitCode,
-                         UnitName = ccg.UnitName
+                         UnitName = ccg.UnitName,
+                         IsValidatedROPPIC = ccg.IsValidatedROPPIC,
+                         IsValidatedROSample = ccg.IsValidatedROSample
                      },
                      Total = ro.Total,
                      IsPosted = ro.IsPosted,
