@@ -28,7 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel.Garment
         public bool IsUsed { get; set; }
         public string Remark { get; set; }
 
-        public bool IsValidate { get; set; }
+        public bool IsValidated { get; set; }
         public string ValidatedBy { get; set; }
         public DateTimeOffset ValidatedDate { get; set; }
 
