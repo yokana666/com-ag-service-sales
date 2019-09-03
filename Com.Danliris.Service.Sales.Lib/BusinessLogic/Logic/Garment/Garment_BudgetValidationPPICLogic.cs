@@ -159,7 +159,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                 },
                 IsPosted = true,
 
-                IsValidate = true,
+                IsValidated = true,
                 ValidatedBy = costCalculation.LastModifiedBy,
                 ValidatedDate = costCalculation.LastModifiedUtc,
 
