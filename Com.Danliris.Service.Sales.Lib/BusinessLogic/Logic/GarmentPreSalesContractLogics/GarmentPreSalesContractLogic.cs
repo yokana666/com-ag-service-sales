@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -71,6 +72,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
             int totalData = pageable.TotalCount;
 
             return new ReadResponse<GarmentPreSalesContract>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        internal void Patch(long id, JsonPatchDocument<GarmentPreSalesContract> jsonPatch)
+        {
+            var data = DbSet.Where(d => d.Id == id)
+                .Single();
+
+            EntityExtension.FlagForUpdate(data, IdentityService.Username, "sales-service");
+
+            jsonPatch.ApplyTo(data);
         }
 
         public override void Create(GarmentPreSalesContract model)

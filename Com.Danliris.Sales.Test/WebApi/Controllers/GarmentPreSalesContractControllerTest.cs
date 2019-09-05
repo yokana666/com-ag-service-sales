@@ -54,49 +54,15 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         }
 
         [Fact]
-        public async Task Patch_InvalidId_ReturnBadRequest()
-        {
-            var mocks = GetMocks();
-            mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<GarmentPreSalesContractViewModel>())).Verifiable();
-            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            var id = 1;
-            var viewModel = new GarmentPreSalesContractViewModel()
-            {
-                Id = id + 1
-            };
-            mocks.Mapper.Setup(m => m.Map<GarmentPreSalesContractViewModel>(It.IsAny<GarmentPreSalesContract>())).Returns(viewModel);
-
-            int statusCode = await this.GetStatusCodePatch(mocks, id);
-            Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
-        }
-
-        [Fact]
         public async Task Patch_ValidId_ReturnNoContent()
         {
             var mocks = GetMocks();
             mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<GarmentPreSalesContractViewModel>())).Verifiable();
-            var id = 1;
-            var viewModel = new GarmentPreSalesContractViewModel()
-            {
-                Id = id
-            };
-            mocks.Mapper.Setup(m => m.Map<GarmentPreSalesContractViewModel>(It.IsAny<GarmentPreSalesContract>())).Returns(viewModel);
-            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentPreSalesContract>())).ReturnsAsync(1);
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-
-            int statusCode = await this.GetStatusCodePatch(mocks, id);
-            Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
-        }
-
-        [Fact]
-        public async Task Patch_ThrowServiceValidationExeption_ReturnBadRequest()
-        {
-            var mocks = GetMocks();
-            mocks.ValidateService.Setup(s => s.Validate(It.IsAny<GarmentPreSalesContractViewModel>())).Throws(this.GetServiceValidationException());
-            mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.Patch(It.IsAny<long>(), It.IsAny<JsonPatchDocument<GarmentPreSalesContract>>())).ReturnsAsync(1);
 
             int statusCode = await this.GetStatusCodePatch(mocks, 1);
-            Assert.Equal((int)HttpStatusCode.BadRequest, statusCode);
+            Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
 
         [Fact]
@@ -104,16 +70,10 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         {
             var mocks = GetMocks();
             mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<GarmentPreSalesContractViewModel>())).Verifiable();
-            var id = 1;
-            var viewModel = new GarmentPreSalesContractViewModel()
-            {
-                Id = id
-            };
-            mocks.Mapper.Setup(m => m.Map<GarmentPreSalesContractViewModel>(It.IsAny<GarmentPreSalesContract>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentPreSalesContract>())).ThrowsAsync(new Exception());
+            mocks.Facade.Setup(f => f.Patch(It.IsAny<long>(), It.IsAny<JsonPatchDocument<GarmentPreSalesContract>>())).ThrowsAsync(new Exception());
 
-            int statusCode = await this.GetStatusCodePatch(mocks, id);
+            int statusCode = await this.GetStatusCodePatch(mocks, 1);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
