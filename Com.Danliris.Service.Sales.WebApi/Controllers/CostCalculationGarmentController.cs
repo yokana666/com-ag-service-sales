@@ -178,11 +178,9 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 }
                 else
                 {
-                    patch.ApplyTo(model);
-
                     ValidateUser();
 
-                    await Facade.UpdateAsync(id, model);
+                    await Facade.Patch(id, patch);
 
                     return NoContent();
                 }

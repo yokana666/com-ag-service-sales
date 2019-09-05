@@ -139,16 +139,10 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         {
             var mocks = GetMocks();
             mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
-            var id = 1;
-            var viewModel = new CostCalculationGarmentViewModel()
-            {
-                Id = id
-            };
-            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
-            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ReturnsAsync(1);
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.Patch(It.IsAny<long>(), It.IsAny<JsonPatchDocument<CostCalculationGarment>>())).ReturnsAsync(1);
 
-            int statusCode = await this.GetStatusCodePatch(mocks, id);
+            int statusCode = await this.GetStatusCodePatch(mocks, 1);
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
 
@@ -157,16 +151,10 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         {
             var mocks = GetMocks();
             mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
-            var id = 1;
-            var viewModel = new CostCalculationGarmentViewModel()
-            {
-                Id = id
-            };
-            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ThrowsAsync(new Exception());
+            mocks.Facade.Setup(f => f.Patch(It.IsAny<long>(), It.IsAny<JsonPatchDocument<CostCalculationGarment>>())).ThrowsAsync(new Exception());
 
-            int statusCode = await this.GetStatusCodePatch(mocks, id);
+            int statusCode = await this.GetStatusCodePatch(mocks, 1);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
