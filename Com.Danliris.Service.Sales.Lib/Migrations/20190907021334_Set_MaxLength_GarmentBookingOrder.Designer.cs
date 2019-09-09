@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190907021334_Set_MaxLength_GarmentBookingOrder")]
+    partial class Set_MaxLength_GarmentBookingOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1233,21 +1235,17 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<string>("BuyerAgentCode")
-                        .HasMaxLength(25);
+                    b.Property<string>("BuyerAgentCode");
 
                     b.Property<int>("BuyerAgentId");
 
-                    b.Property<string>("BuyerAgentName")
-                        .HasMaxLength(100);
+                    b.Property<string>("BuyerAgentName");
 
-                    b.Property<string>("BuyerBrandCode")
-                        .HasMaxLength(25);
+                    b.Property<string>("BuyerBrandCode");
 
                     b.Property<int>("BuyerBrandId");
 
-                    b.Property<string>("BuyerBrandName")
-                        .HasMaxLength(100);
+                    b.Property<string>("BuyerBrandName");
 
                     b.Property<string>("CreatedAgent")
                         .IsRequired()
@@ -1294,13 +1292,11 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTimeOffset>("SCDate");
 
                     b.Property<string>("SCNo")
-                        .HasMaxLength(50);
+                        .HasMaxLength(255);
 
-                    b.Property<string>("SCType")
-                        .HasMaxLength(25);
+                    b.Property<string>("SCType");
 
-                    b.Property<string>("SectionCode")
-                        .HasMaxLength(25);
+                    b.Property<string>("SectionCode");
 
                     b.Property<int>("SectionId");
 

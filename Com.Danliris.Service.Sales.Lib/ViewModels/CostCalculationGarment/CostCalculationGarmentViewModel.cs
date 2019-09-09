@@ -220,11 +220,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
                             Count++;
                             costCalculationGarment_MaterialsError += "Description: 'Deskripsi harus diisi', ";
                         }
-                        if (costCalculation_Material.ProductRemark == null || string.IsNullOrWhiteSpace(costCalculation_Material.ProductRemark))
-                        {
-                            Count++;
-                            costCalculationGarment_MaterialsError += "ProductRemark: 'Detail Barang harus diisi', ";
-                        }
+                        //if (costCalculation_Material.ProductRemark == null || string.IsNullOrWhiteSpace(costCalculation_Material.ProductRemark))
+                        //{
+                        //    Count++;
+                        //    costCalculationGarment_MaterialsError += "ProductRemark: 'Detail Barang harus diisi', ";
+                        //}
                     }
                     costCalculationGarment_MaterialsError += "},";
                 }

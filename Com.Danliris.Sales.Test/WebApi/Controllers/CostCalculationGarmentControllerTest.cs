@@ -21,6 +21,49 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
     public class CostCalculationGarmentControllerTest : BaseControllerTest<CostCalculationGarmentController, CostCalculationGarment, CostCalculationGarmentViewModel, ICostCalculationGarment>
     {
         [Fact]
+        public void Get_PDF_NotFound()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(default(CostCalculationGarment));
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.NotFound, statusCode);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Exception()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception("error"));
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Local_OK()
+        {
+            var mocks = GetMocks();
+
+            var viewModel = this.ViewModel;
+
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(f => f.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarmentViewModel>())).Returns(viewModel);
+
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            Assert.NotNull(response);
+
+        }
+
+        [Fact]
         public async Task GetById_RO_Garment_Validation_NotNullModel_ReturnOK()
         {
             var ViewModel = this.ViewModel;
