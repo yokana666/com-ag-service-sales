@@ -25,7 +25,21 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             var data = await base.GetNewData();
             data.Section = "A";
             data.Article = "test";
-            
+            data.ConfirmDate = DateTimeOffset.Now;
+            data.DeliveryDate = DateTimeOffset.Now;
+            data.BuyerId = "1";
+            data.BuyerCode = "Test";
+            data.BuyerName = "Text";
+            data.BuyerBrandId = 1;
+            data.BuyerBrandCode = "Test";
+            data.BuyerBrandName = "Test";
+            data.RO_Number = "Test";
+            data.Description = "Test";
+            data.ComodityCode = "Test";
+            data.Quantity = 1;
+            data.ConfirmPrice = 1;
+            data.UOMUnit = "Test";
+            data.SectionName = "FRANSISKA YULIANI";
             data.PreSCId = garmentPreSalesContractData.Id;
             data.PreSCNo = garmentPreSalesContractData.SCNo;
             data.UnitCode = "C2A";
