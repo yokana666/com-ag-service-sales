@@ -75,6 +75,21 @@ namespace Com.Danliris.Service.Sales.Lib
 
             modelBuilder.Entity<RO_Garment>()
             .Ignore(c => c.ImagesFile);
+
+            modelBuilder.Entity<GarmentPreSalesContract>()
+                .HasIndex(i => i.SCNo)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
+
+            modelBuilder.Entity<CostCalculationGarment>()
+                .HasIndex(i => i.RO_Number)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
+
+            modelBuilder.Entity<GarmentSalesContract>()
+                .HasIndex(i => i.SalesContractNo)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
         }
     }
 }
