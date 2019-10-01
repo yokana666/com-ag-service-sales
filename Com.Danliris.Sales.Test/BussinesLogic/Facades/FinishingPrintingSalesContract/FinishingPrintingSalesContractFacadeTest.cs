@@ -9,6 +9,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingSalesContract
 {
@@ -37,6 +38,22 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingSalesCo
                 .Returns(finishingprintingLogic);
 
             return serviceProviderMock;
+        }
+
+        [Fact]
+        public virtual async void Create_Buyer_Type_Ekspor_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            FinishingPrintingSalesContractFacade facade = new FinishingPrintingSalesContractFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetNewData();
+            data.BuyerType = "ekspor";
+
+            var response = await facade.CreateAsync(data);
+
+            Assert.NotEqual(response, 0);
         }
     }
 }
