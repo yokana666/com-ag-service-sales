@@ -157,7 +157,19 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
         private void SalesContractNumberGenerator(FinishingPrintingSalesContractModel model)
         {
-            FinishingPrintingSalesContractModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.BuyerType.Equals(model.BuyerType, StringComparison.OrdinalIgnoreCase)).OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+            FinishingPrintingSalesContractModel lastData;
+            if (model.BuyerType.Equals("ekspor", StringComparison.OrdinalIgnoreCase) || model.BuyerType.Equals("export", StringComparison.OrdinalIgnoreCase))
+            {
+                lastData = DbSet.IgnoreQueryFilters()
+                    .Where(w => w.BuyerType == "ekspor" || w.BuyerType == "export")
+                    .OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+            }
+            else
+            {
+                lastData = DbSet.IgnoreQueryFilters()
+                    .Where(w => w.BuyerType != "ekspor" && w.BuyerType != "export")
+                    .OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+            }
 
             string DocumentType = model.BuyerType.ToLower().Equals("ekspor") || model.BuyerType.ToLower().Equals("export") ? "FPE" : "FPL";
 
