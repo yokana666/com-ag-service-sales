@@ -494,5 +494,33 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var statusCode = GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
+
+        [Fact]
+        public void Read_Unpost_Reason_Return_OK()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new List<string>());
+
+            var controller = GetController(mocks);
+            var response = controller.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Read_Unpost_Reason_Return_InternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Throws(new Exception(string.Empty));
+
+            var controller = GetController(mocks);
+            var response = controller.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
     }
 }

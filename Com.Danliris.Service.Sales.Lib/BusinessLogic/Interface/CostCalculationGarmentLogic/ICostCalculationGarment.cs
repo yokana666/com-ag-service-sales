@@ -21,5 +21,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculation
         Task<int> PostCC(List<long> listId);
         Task<int> UnpostCC(long id, string reason);
         Task<int> Patch(long id, JsonPatchDocument<CostCalculationGarment> jsonPatch);
+        List<string> ReadUnpostReasonCreators(string keyword, int page, int size);
     }
 }

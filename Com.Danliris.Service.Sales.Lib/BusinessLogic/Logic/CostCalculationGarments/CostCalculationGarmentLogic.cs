@@ -510,5 +510,23 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             EntityExtension.FlagForCreate(costCalculationGarmentUnpostReason, IdentityService.Username, "sales-service");
             reasonDbSet.Add(costCalculationGarmentUnpostReason);
         }
+
+        internal List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
+        {
+            IQueryable<CostCalculationGarmentUnpostReason> Query = DbContext.Set<CostCalculationGarmentUnpostReason>();
+
+            if (keyword != null)
+            {
+                Query = Query.Where(w => w.CreatedBy.StartsWith(keyword));
+            }
+
+            return Query
+                .OrderBy(o => o.CreatedBy)
+                .Select(s => s.CreatedBy)
+                .Distinct()
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
+        }
     }
 }

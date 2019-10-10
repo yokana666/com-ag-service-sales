@@ -250,5 +250,21 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var Response = await Assert.ThrowsAnyAsync<Exception>(async () => await facade.Patch(data.Id, jsonPatch));
             Assert.NotEqual(Response.Message, null);
         }
+
+        [Fact]
+        public async Task Get_Unpost_Reason_Creators_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+            await facade.PostCC(new List<long> { data.Id });
+            await facade.UnpostCC(data.Id, "Alasan Unpost");
+
+            var Response = facade.ReadUnpostReasonCreators(data.CreatedBy, 1, 25);
+
+            Assert.NotEmpty(Response);
+        }
     }
 }
