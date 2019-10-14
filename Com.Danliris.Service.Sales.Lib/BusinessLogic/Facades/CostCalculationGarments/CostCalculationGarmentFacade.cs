@@ -355,5 +355,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             }
             return Updated;
         }
+
+        public List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
+        {
+            return costCalculationGarmentLogic.ReadUnpostReasonCreators(keyword, page, size);
+        }
     }
 }
