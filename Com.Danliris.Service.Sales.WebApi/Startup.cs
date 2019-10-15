@@ -114,6 +114,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IMaxWHConfirmFacade, MaxWHConfirmFacade>()
                 .AddTransient<IBudgetJobOrderDisplayFacade, BudgetJobOrderDisplayFacade>()
                 .AddTransient<IMonitoringUnpostCostCalculationFacade, MonitoringUnpostCostCalculationFacade>()
+                .AddTransient<IGarmentProductionOrderReportFacade, GarmentProductionOrderReportFacade>()
                 .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>();
         }
 
@@ -154,6 +155,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<MaxWHConfirmLogic>()
                 .AddTransient<BudgetJobOrderDisplayLogic>()
                 .AddTransient<MonitoringUnpostCostCalculationLogic>()
+                .AddTransient<GarmentProductionOrderReportLogic>()
                 .AddTransient<GarmentPreSalesContractLogic>();
             
         }
