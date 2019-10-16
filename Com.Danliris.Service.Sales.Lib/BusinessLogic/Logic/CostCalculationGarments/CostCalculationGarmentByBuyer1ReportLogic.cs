@@ -11,32 +11,29 @@ using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments
 {
-    public class CostCalculationByUnitReportLogic : BaseMonitoringLogic<CostCalculationGarmentByUnitReportViewModel>
+    public class CostCalculationByBuyer1ReportLogic : BaseMonitoringLogic<CostCalculationGarmentByBuyer1ReportViewModel>
     {
         private IIdentityService identityService;
         private SalesDbContext dbContext;
         private DbSet<CostCalculationGarment> dbSet;
 
-        public CostCalculationByUnitReportLogic(IIdentityService identityService, SalesDbContext dbContext)
+        public CostCalculationByBuyer1ReportLogic(IIdentityService identityService, SalesDbContext dbContext)
         {
             this.identityService = identityService;
             this.dbContext = dbContext;
             dbSet = dbContext.Set<CostCalculationGarment>();
         }
 
-        public override IQueryable<CostCalculationGarmentByUnitReportViewModel> GetQuery(string filter)
+        public override IQueryable<CostCalculationGarmentByBuyer1ReportViewModel> GetQuery(string filter)
         {
-            Dictionary<string, object> FilterDictionary = new Dictionary<string, object>(JsonConvert.DeserializeObject<Dictionary<string, object>>(filter), StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, string> FilterDictionary = new Dictionary<string, string>(JsonConvert.DeserializeObject<Dictionary<string, string>>(filter), StringComparer.OrdinalIgnoreCase);
 
             IQueryable<CostCalculationGarment> Query = dbSet;
 
             try
             {
-                var dateFrom = (DateTime) (FilterDictionary["dateFrom"]);
-                var dateTo= (DateTime) (FilterDictionary["dateTo"]);
-
-                Query = dbSet.Where(d => d.ConfirmDate >= dateFrom && 
-                                         d.ConfirmDate <= dateTo
+                var year = int.Parse(FilterDictionary["year"]);
+                Query = dbSet.Where(d => d.ConfirmDate.Year == year 
                 );
             }
             catch (KeyNotFoundException e)
@@ -44,28 +41,30 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                 throw new Exception(e.Message);
             }
 
-            if (FilterDictionary.TryGetValue("unitName", out object unitName))
+            if (FilterDictionary.TryGetValue("buyerAgent", out string buyerAgent))
             {
-                Query = Query.Where(d => d.UnitName == unitName.ToString());
+                Query = Query.Where(d => d.BuyerCode == buyerAgent.ToString());
             }
 
-            Query = Query.OrderBy(o => o.UnitName).ThenBy(o => o.BuyerBrandName);
+            if (FilterDictionary.TryGetValue("buyerBrand", out string buyerBrand))
+            {
+                Query = Query.Where(d => d.BuyerBrandCode == buyerBrand.ToString());
+            }
+
+            Query = Query.OrderBy(o => o.BuyerBrandName).ThenBy(o => o.RO_Number);
 
             var newQ = (from a in Query
-                    select new CostCalculationGarmentByUnitReportViewModel
+                    select new CostCalculationGarmentByBuyer1ReportViewModel
                     {
                         RO_Number = a.RO_Number,
-                        ConfirmDate = a.ConfirmDate,
                         DeliveryDate = a.DeliveryDate,
-                        UnitName = a.UnitName,
                         Description = a.Description,
-                        Section = a.Section,
                         Article = a.Article,
                         BuyerCode = a.BuyerCode,
                         BuyerName = a.BuyerName,
                         BrandCode = a.BuyerBrandCode,
                         BrandName = a.BuyerBrandName,
-                        Comodity = a.ComodityCode,
+                        Commission = a.CommissionPortion,
                         Quantity = a.Quantity,
                         ConfirmPrice = a.ConfirmPrice,
                         UOMUnit = a.UOMUnit,
