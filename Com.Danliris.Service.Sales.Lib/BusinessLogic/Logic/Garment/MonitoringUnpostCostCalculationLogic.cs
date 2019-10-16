@@ -63,15 +63,24 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 
             var costCalculationsIds = costCalculations.Select(cc => cc.Id).ToHashSet();
 
-            var unpostReasons = dbContext.CostCalculationGarmentUnpostReasons
-                .Where(cc => costCalculationsIds.Contains(cc.CostCalculationId))
-                .Select(reason => new
-                {
-                    reason.CostCalculationId,
-                    reason.CreatedUtc,
-                    reason.CreatedBy,
-                    reason.UnpostReason,
-                }).ToList();
+            IQueryable<CostCalculationGarmentUnpostReason> ReasonQuery = dbContext.CostCalculationGarmentUnpostReasons;
+
+            if (!string.IsNullOrWhiteSpace(filter.CreatedBy))
+            {
+                ReasonQuery = ReasonQuery.Where(reason => costCalculationsIds.Contains(reason.CostCalculationId) && reason.CreatedBy == filter.CreatedBy);
+            }
+            else
+            {
+                ReasonQuery = ReasonQuery.Where(reason => costCalculationsIds.Contains(reason.CostCalculationId));
+            }
+
+            var unpostReasons = ReasonQuery.Select(reason => new
+            {
+                reason.CostCalculationId,
+                reason.CreatedUtc,
+                reason.CreatedBy,
+                reason.UnpostReason,
+            }).ToList();
 
             var result = costCalculations.Select(s => new MonitoringUnpostCostCalculationViewModel
             {
