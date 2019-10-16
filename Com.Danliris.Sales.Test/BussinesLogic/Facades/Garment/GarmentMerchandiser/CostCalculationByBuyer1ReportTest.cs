@@ -147,7 +147,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var Response = costCalculationGarmentByBuyer1Report.Read(filter: JsonConvert.SerializeObject(filter));
 
-            Assert.Equal(Response.Item2, 0);
+            Assert.NotEqual(Response.Item2, 0);
         }
 
         [Fact]
