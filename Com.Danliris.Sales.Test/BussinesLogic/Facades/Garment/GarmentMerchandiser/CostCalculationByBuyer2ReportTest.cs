@@ -1,15 +1,18 @@
 ﻿using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchandiser;
 using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentPreSalesContractDataUtils;
+using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentSalesContractDataUtils;
 using Com.Danliris.Sales.Test.BussinesLogic.Utils;
 using Com.Danliris.Service.Sales.Lib;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentPreSalesContractFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContractFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MonitoringLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Microsoft.AspNetCore.JsonPatch;
@@ -58,12 +61,16 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             IIdentityService identityService = new IdentityService { Username = "Username" };
 
+            GarmentPreSalesContractLogic garmentPreSalesContractLogic = new GarmentPreSalesContractLogic(identityService, dbContext);
+
             CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic = new CostCalculationGarmentMaterialLogic(serviceProviderMock.Object, identityService, dbContext);
             CostCalculationGarmentLogic costCalculationGarmentLogic = new CostCalculationGarmentLogic(costCalculationGarmentMaterialLogic, serviceProviderMock.Object, identityService, dbContext);
             CostCalculationByBuyer2ReportLogic costCalculationByBuyer2ReportLogic = new CostCalculationByBuyer2ReportLogic(identityService, dbContext);
 
-            GarmentPreSalesContractLogic garmentPreSalesContractLogic = new GarmentPreSalesContractLogic(identityService, dbContext);
-
+            Mock<ICostCalculationGarment> mockCostCalculation = new Mock<ICostCalculationGarment>();
+            mockCostCalculation.Setup(x => x.ReadByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(new CostCalculationGarment()); 
+            
             var azureImageFacadeMock = new Mock<IAzureImageFacade>();
             azureImageFacadeMock
                 .Setup(s => s.DownloadImage(It.IsAny<string>(), It.IsAny<string>()))
@@ -80,6 +87,21 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 .Returns(garmentPreSalesContractLogic);
 
             serviceProviderMock
+                .Setup(x => x.GetService(typeof(ICostCalculationGarment)))
+                .Returns(mockCostCalculation.Object);
+
+            GarmentSalesContractItemLogic garmentSalesContractItemLogic = new GarmentSalesContractItemLogic(serviceProviderMock.Object, identityService, dbContext);
+            GarmentSalesContractLogic garmentSalesContractLogic = new GarmentSalesContractLogic(garmentSalesContractItemLogic, serviceProviderMock.Object, identityService, dbContext);
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(GarmentSalesContractItemLogic)))
+                .Returns(garmentSalesContractItemLogic);
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(GarmentSalesContractLogic)))
+                .Returns(garmentSalesContractLogic);
+
+            serviceProviderMock
                 .Setup(x => x.GetService(typeof(CostCalculationByBuyer2ReportLogic)))
                 .Returns(costCalculationByBuyer2ReportLogic);
 
@@ -90,16 +112,20 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             return serviceProviderMock;
         }
 
-        protected CostCalculationGarmentDataUtil DataUtil(CostCalculationGarmentFacade facade, SalesDbContext dbContext = null)
+        protected GarmentSalesContractDataUtil DataUtil(GarmentSalesContractFacade facade, SalesDbContext dbContext = null)
         {
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
             GarmentPreSalesContractFacade garmentPreSalesContractFacade = new GarmentPreSalesContractFacade(serviceProvider, dbContext);
             GarmentPreSalesContractDataUtil garmentPreSalesContractDataUtil = new GarmentPreSalesContractDataUtil(garmentPreSalesContractFacade);
 
-            CostCalculationGarmentDataUtil costCalculationGarmentDataUtil = new CostCalculationGarmentDataUtil(facade, garmentPreSalesContractDataUtil);
+            CostCalculationGarmentFacade costCalculationGarmentFacade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            CostCalculationGarmentDataUtil costCalculationGarmentDataUtil = new CostCalculationGarmentDataUtil(costCalculationGarmentFacade, garmentPreSalesContractDataUtil);
 
-            return costCalculationGarmentDataUtil;
+            GarmentSalesContractFacade garmentSalesContractFacade = new GarmentSalesContractFacade(serviceProvider, dbContext);
+            GarmentSalesContractDataUtil garmentSalesContractDataUtil = new GarmentSalesContractDataUtil(garmentSalesContractFacade, costCalculationGarmentDataUtil);
+
+            return garmentSalesContractDataUtil;
         }
 
         [Fact]
@@ -108,7 +134,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
-            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            GarmentSalesContractFacade facade = new GarmentSalesContractFacade(serviceProvider, dbContext);
 
             var data = await DataUtil(facade, dbContext).GetTestData();
 
@@ -116,33 +142,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var filter = new
             {
-              buyerAgent = data.BuyerCode,
+              buyerAgent = "Test",
               buyerBrand = data.BuyerBrandCode,
-              year = data.ConfirmDate.Year,
-            };
-
-            var Response = costCalculationGarmentByBuyer2Report.Read(filter: JsonConvert.SerializeObject(filter));
-
-            Assert.NotEqual(Response.Item2, 0);
-        }
-
-        [Fact]
-        public async void Get_Report_Error()
-        {
-            var dbContext = DbContext(GetCurrentMethod());
-            var serviceProvider = GetServiceProviderMock(dbContext).Object;
-
-            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
-
-            var data = await DataUtil(facade, dbContext).GetTestData();
-
-            ICostCalculationGarmentByBuyer2Report costCalculationGarmentByBuyer2Report = new CostCalculationGarmentByBuyer2ReportFacade(serviceProvider, dbContext);
-
-            var filter = new
-            {
-                buyerAgent = data.BuyerCode,
-                buyerBrand = data.BuyerBrandCode,
-                year = data.ConfirmDate.Year,
+              year = DateTimeOffset.Now.Year,
             };
 
             var Response = costCalculationGarmentByBuyer2Report.Read(filter: JsonConvert.SerializeObject(filter));
@@ -156,7 +158,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
-            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            GarmentSalesContractFacade facade = new GarmentSalesContractFacade(serviceProvider, dbContext);
 
             var data = await DataUtil(facade, dbContext).GetTestData();
 
@@ -164,37 +166,14 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var filter = new
             {
-                buyerAgent = data.BuyerCode,
+                buyerAgent = "Test",
                 buyerBrand = data.BuyerBrandCode,
-                year = data.ConfirmDate.Year,
+                year = DateTimeOffset.Now.Year,
             };
 
             var Response = costCalculationGarmentByBuyer2Report.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
            
             Assert.NotNull(Response.Item2);
-        }
-        [Fact]
-        public async void Get_Excel_Error()
-        {
-            var dbContext = DbContext(GetCurrentMethod());
-            var serviceProvider = GetServiceProviderMock(dbContext).Object;
-
-            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
-
-            var data = await DataUtil(facade, dbContext).GetTestData();
-
-            ICostCalculationGarmentByBuyer2Report costCalculationGarmentByBuyer2Report = new CostCalculationGarmentByBuyer2ReportFacade(serviceProvider, dbContext);
-
-            var filter = new
-            {
-                buyerAgent = data.BuyerCode,
-                buyerBrand = data.BuyerBrandCode,
-                year = data.ConfirmDate.Year,
-            };
-
-            var Response = costCalculationGarmentByBuyer2Report.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
-
-            Assert.NotNull(Response.Item2);
-        }
+        }    
     }
 }
