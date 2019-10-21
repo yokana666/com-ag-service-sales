@@ -144,8 +144,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             CostCalculationGarmentFacade costCalculationGarmentFacade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
 
-            var data = await DataUtil(costCalculationGarmentFacade, serviceProvider, dbContext).GetTestData();
-            await DataUtil(costCalculationGarmentFacade, serviceProvider, dbContext).GetTestData();
+            var dataUtil = DataUtil(costCalculationGarmentFacade, serviceProvider, dbContext);
+            var data = await dataUtil.GetTestData();
+            var data2 = await dataUtil.GetNewData();
+            data2.UOMUnit = $"UOM-{ENTITY}";
+            await dataUtil.GetTestData(data2);
 
             var facade = new GarmentProductionOrderReportFacade(serviceProvider);
 
