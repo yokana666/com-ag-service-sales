@@ -72,7 +72,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             serviceProviderMock
                 .Setup(x => x.GetService(typeof(AcceptedROReportLogic)))
-                .Returns(new AcceptedROReportLogic(dbContext));
+                .Returns(new AcceptedROReportLogic(dbContext, identityService));
 
             var azureImageFacadeMock = new Mock<IAzureImageFacade>();
             azureImageFacadeMock
