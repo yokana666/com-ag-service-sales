@@ -64,10 +64,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                 ConfirmPrice = s.ConfirmPrice,
                 ConfirmDate = s.ConfirmDate,
                 IsApprovedPPIC = s.IsApprovedPPIC
-            });
+            }).OrderBy(o => o.DeliveryDate);
 
+            var diffFirstDayInYearWithMonday = new DateTime(filter.year, 1, 1).DayOfWeek - DayOfWeek.Monday;
+            diffFirstDayInYearWithMonday = diffFirstDayInYearWithMonday + (diffFirstDayInYearWithMonday > -1 ? 0 : 7);
             var garmentProductionOrders = costCalculations.ToList()
-                .GroupBy(cc => $"W - {Math.Ceiling((decimal)cc.DeliveryDate.DayOfYear / 7)}")
+                .GroupBy(cc => {
+                    var week = Math.Ceiling((decimal)(cc.DeliveryDate.ToOffset(TimeSpan.FromHours(identityService.TimezoneOffset)).DayOfYear + diffFirstDayInYearWithMonday) / 7);
+                    week = week > 52 ? 1 : week;
+                    return $"W - {week}";
+                })
                 .Select(groupWeek => new GarmentProductionOrderReportViewModel
                 {
                     Week = groupWeek.Key,
@@ -76,22 +82,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
                         .Select(groupBuyer => new GarmentProductionOrderReportBuyerViewModel
                         {
                             Buyer = groupBuyer.Key,
+                            Quantities = groupBuyer.Sum(s => s.Quantity),
+                            Amounts = groupBuyer.Sum(s => s.Quantity * s.ConfirmPrice),
                             Details = groupBuyer
                                 .Select(detail => GetGarmentProductionOrder(detail))
+                                .OrderBy(o => o.Date)
                                 .ToList()
                         })
+                        .OrderBy(o => o.Buyer)
                         .ToList()
                 })
                 .ToList();
-
-            garmentProductionOrders.ForEach(po =>
-            {
-                po.Buyers.ForEach(buyer =>
-                {
-                    buyer.Quantities = buyer.Details.Sum(s => s.Quantity);
-                    buyer.Amounts = buyer.Details.Sum(s => s.Quantity * s.ConfirmPrice);
-                });
-            });
 
             return garmentProductionOrders.AsQueryable();
         }
