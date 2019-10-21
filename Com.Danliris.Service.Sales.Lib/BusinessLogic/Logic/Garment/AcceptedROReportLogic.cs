@@ -13,10 +13,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
     public class AcceptedROReportLogic : BaseMonitoringLogic<CostCalculationGarment>
     {
         private SalesDbContext dbContext;
+        private readonly IIdentityService identityService;
 
-        public AcceptedROReportLogic(SalesDbContext dbContext)
+        public AcceptedROReportLogic(SalesDbContext dbContext, IIdentityService identityService)
         {
             this.dbContext = dbContext;
+            this.identityService = identityService;
         }
 
         public override IQueryable<CostCalculationGarment> GetQuery(string filterString)
@@ -39,11 +41,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
             }
             if (filter.acceptedDateStart != null)
             {
-                Query = Query.Where(cc => cc.ROAcceptedDate >= filter.acceptedDateStart);
+                var filterDate = filter.acceptedDateStart.GetValueOrDefault().ToOffset(TimeSpan.FromHours(identityService.TimezoneOffset)).Date;
+                Query = Query.Where(cc => cc.ROAcceptedDate.AddHours(identityService.TimezoneOffset).Date >= filterDate);
             }
             if (filter.acceptedDateEnd != null)
             {
-                Query = Query.Where(cc => cc.ROAcceptedDate <= filter.acceptedDateEnd);
+                var filterDate = filter.acceptedDateEnd.GetValueOrDefault().ToOffset(TimeSpan.FromHours(identityService.TimezoneOffset)).AddDays(1).Date;
+                Query = Query.Where(cc => cc.ROAcceptedDate.AddHours(identityService.TimezoneOffset).Date < filterDate);
             }
 
             var result = Query.Select(cc => new CostCalculationGarment
