@@ -2,6 +2,7 @@
 using Com.Danliris.Sales.Test.BussinesLogic.Utils;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
         {
             var garmentPreSalesContractData = await garmentPreSalesContractDataUtil.GetTestData();
 
+            return await GetNewData(garmentPreSalesContractData);
+        }
+
+        public async Task<CostCalculationGarment> GetNewData(GarmentPreSalesContract garmentPreSalesContractData)
+        {
             var data = await base.GetNewData();
             data.Section = "A";
             data.Article = "test";
