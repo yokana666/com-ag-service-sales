@@ -171,8 +171,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<AvailableROReportLogic>()
                 .AddTransient<AvailableBudgetReportLogic>()
                 .AddTransient<GarmentPreSalesContractLogic>()
-                .AddTransient<GarmentOmzetTargetLogic>();
-            
+                .AddTransient<GarmentOmzetTargetLogic>();            
         }
 
         private void RegisterServices(IServiceCollection services)

@@ -2,6 +2,7 @@
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentOmzetTargetInterface;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentOmzetTargetModel;
 using Com.Danliris.Service.Sales.Lib.Utilities;
+using Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment;
 using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentOmzetTargetViewModels
         public string SectionCode { get; set; }
         public string SectionName { get; set; }
         public double Amount { get; set; }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            SalesDbContext dbContext = (SalesDbContext)validationContext.GetService(typeof(SalesDbContext));
-                
+        {               
             if (YearOfPeriod == null)
             {
                 yield return new ValidationResult("Tahun harus diisi", new List<string> { "YearOfPeriod" });
