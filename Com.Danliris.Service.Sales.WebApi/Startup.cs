@@ -123,6 +123,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IAcceptedROReportFacade, AcceptedROReportFacade>()
                 .AddTransient<IAvailableROReportFacade, AvailableROReportFacade>()
                 .AddTransient<IAvailableBudgetReportFacade, AvailableBudgetReportFacade>()
+                .AddTransient<IMonitoringPreSalesContractFacade, MonitoringPreSalesContractFacade>()
                 .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>()
                 .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>();
         }
@@ -170,6 +171,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<AcceptedROReportLogic>()
                 .AddTransient<AvailableROReportLogic>()
                 .AddTransient<AvailableBudgetReportLogic>()
+                .AddTransient<MonitoringPreSalesContractLogic>()
                 .AddTransient<GarmentPreSalesContractLogic>()
                 .AddTransient<GarmentOmzetTargetLogic>();            
         }
