@@ -65,6 +65,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MaxWH
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentPreSalesContractFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentPreSalesContractInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentOmzetTargetInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentOmzetTargetFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentOmzetTargetLogics;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -121,7 +124,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IAvailableROReportFacade, AvailableROReportFacade>()
                 .AddTransient<IAvailableBudgetReportFacade, AvailableBudgetReportFacade>()
                 .AddTransient<IMonitoringPreSalesContractFacade, MonitoringPreSalesContractFacade>()
-                .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>();
+                .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>()
+                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -168,8 +172,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<AvailableROReportLogic>()
                 .AddTransient<AvailableBudgetReportLogic>()
                 .AddTransient<MonitoringPreSalesContractLogic>()
-                .AddTransient<GarmentPreSalesContractLogic>();
-            
+                .AddTransient<GarmentPreSalesContractLogic>()
+                .AddTransient<GarmentOmzetTargetLogic>();            
         }
 
         private void RegisterServices(IServiceCollection services)
