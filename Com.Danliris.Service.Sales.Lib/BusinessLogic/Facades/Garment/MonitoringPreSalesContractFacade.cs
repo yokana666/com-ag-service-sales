@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment;
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Garment;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment;
-using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.ViewModels.Garment;
 using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel.GarmentPurchaseRequestViewModel;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using OfficeOpenXml.Table;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
 {
@@ -45,19 +46,25 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
             result.Columns.Add(new DataColumn() { ColumnName = "No PR Master", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "No RO Master", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jenis PR Master", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Unit", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Unit (PR Master)", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tgl PR Master", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Artikel", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Artikel (PR Master)", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Tgl Cost Calculation", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "No RO JOB", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Artikel ", DataType = typeof(string) });
-            result.Columns.Add(new DataColumn() { ColumnName = "Unit ", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Artikel (Cost Calculation)", DataType = typeof(string) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Unit (Cost Calculation)", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Kuantitas", DataType = typeof(double) });
             result.Columns.Add(new DataColumn() { ColumnName = "Satuan", DataType = typeof(string) });
             result.Columns.Add(new DataColumn() { ColumnName = "Confirm Price", DataType = typeof(double) });
 
             int rowPosition = 2;
             List<(string, Enum, Enum)> mergeCells = new List<(string, Enum, Enum)>() { };
+
+            ExcelPackage package = new ExcelPackage();
+
+            var sheet = package.Workbook.Worksheets.Add("PreSC");
+            //sheet.Cells[1, 1, 1, 20].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            //sheet.Cells[1, 1, 1, 20].Style.Fill.BackgroundColor.SetColor(Color.Gray);
 
             if (data != null && data.Count() > 0)
             {
@@ -96,6 +103,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                             mergeCells.Add(($"{col}{firstMergedRowPosition}:{col}{lastMergedRowPosition}", col == "G" ? ExcelHorizontalAlignment.Right : ExcelHorizontalAlignment.Left, ExcelVerticalAlignment.Center));
                         }
                     }
+
+                    sheet.Cells[firstMergedRowPosition, 1, lastMergedRowPosition, 20].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    sheet.Cells[firstMergedRowPosition, 1, lastMergedRowPosition, 20].Style.Fill.BackgroundColor.SetColor(data.IndexOf(d) % 2 != 0 ? Color.White : Color.LightGray);
                 }
             }
             else
@@ -103,9 +113,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Garment
                 result.Rows.Add(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             }
 
-            var excel = Excel.CreateExcel(new List<(DataTable, string, List<(string, Enum, Enum)>)>() { (result, "PreSC", mergeCells) }, false);
+            sheet.Cells["A1"].LoadFromDataTable(result, true, TableStyles.Light16);
 
-            return new Tuple<MemoryStream, string>(excel, "Monitoring Unpost Cost Calculation");
+            foreach ((string cells, Enum hAlign, Enum vAlign) in mergeCells)
+            {
+                sheet.Cells[cells].Merge = true;
+                sheet.Cells[cells].Style.HorizontalAlignment = (ExcelHorizontalAlignment)hAlign;
+                sheet.Cells[cells].Style.VerticalAlignment = (ExcelVerticalAlignment)vAlign;
+            }
+            sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+
+            MemoryStream stream = new MemoryStream();
+            package.SaveAs(stream);
+
+            return new Tuple<MemoryStream, string>(stream, "Monitoring Unpost Cost Calculation");
         }
 
         public Tuple<List<MonitoringPreSalesContractViewModel>, int> Read(int page = 1, int size = 25, string filter = "{}")
