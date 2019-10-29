@@ -116,20 +116,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                             string ShipDate = item.DeliveryDate == new DateTime(1970, 1, 1) ? "-" : item.DeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                             string QtyOrder = string.Format("{0:N2}", item.Quantity);
                             string Amount = string.Format("{0:N2}", item.Amount);
-                             string CnfmPrice = string.Format("{0:N2}", item.ConfirmPrice);
+                             string CnfmPrice = string.Format("{0:N4}", item.ConfirmPrice);
 
                             result.Rows.Add(index, item.RO_Number, ShipDate, item.Article, item.SalesContractNo, item.BuyerCode, 
                                             item.BuyerName, item.BrandCode, item.BrandName, QtyOrder, item.UOMUnit, CnfmPrice, Amount );
                             rowPosition += 1;
                             BrandCode = item.BrandName;
                         }
-                        result.Rows.Add("", "", "", "", "", "SUB TOTAL", "", BrandCode, Math.Round(subTotalQty[BuyerBrand.Key], 2), "", "", Math.Round(subTotalAmount[BuyerBrand.Key], 2), "");
+                        result.Rows.Add("", "", "", "", "", "SUB TOTAL", "", BrandCode, "", Math.Round(subTotalQty[BuyerBrand.Key], 2), "", "", Math.Round(subTotalAmount[BuyerBrand.Key], 2));
 
                         rowPosition += 1;
                         totalQty += subTotalQty[BuyerBrand.Key];
                         totalAmount += subTotalAmount[BuyerBrand.Key];
                     }
-                        result.Rows.Add("", "", "", "", "", "T O T A L", "", "", Math.Round(totalQty, 2), "", "", Math.Round(totalAmount, 2),"");
+                        result.Rows.Add("", "", "", "", "", "T O T A L", "", "", "", Math.Round(totalQty, 2), "", "", Math.Round(totalAmount, 2));
                         rowPosition += 1;
             }
             ExcelPackage package = new ExcelPackage();
