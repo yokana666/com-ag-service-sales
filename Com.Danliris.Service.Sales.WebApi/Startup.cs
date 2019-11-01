@@ -68,6 +68,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContract
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentOmzetTargetInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentOmzetTargetFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentOmzetTargetLogics;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -246,9 +247,32 @@ namespace Com.Danliris.Service.Sales.WebApi
             /* API */
             services
                .AddMvcCore()
+               .AddApiExplorer()
                .AddAuthorization()
                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                .AddJsonFormatters();
+
+            #region Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info() { Title = "My API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                {
+                    In = "header",
+                    Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                    Name = "Authorization",
+                    Type = "apiKey",
+                });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>()
+                {
+                    {
+                        "Bearer",
+                        Enumerable.Empty<string>()
+                    }
+                });
+                c.CustomSchemaIds(i => i.FullName);
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -269,6 +293,12 @@ namespace Com.Danliris.Service.Sales.WebApi
             app.UseAuthentication();
             app.UseCors(SALES_POLICY);
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
         }
     }
 }
