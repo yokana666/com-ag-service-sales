@@ -119,20 +119,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                             string QtyOrder = string.Format("{0:N2}", item.Quantity);
                             string Amount = string.Format("{0:N2}", item.Amount);
                             string Commission = string.Format("{0:N2}", item.Commission);
-                            string CnfmPrice = string.Format("{0:N2}", item.ConfirmPrice);
+                            string CnfmPrice = string.Format("{0:N4}", item.ConfirmPrice);
 
                             result.Rows.Add(index, item.RO_Number, ShipDate, item.Article, item.Description, item.BuyerCode, 
                                             item.BuyerName, item.BrandCode, item.BrandName, Commission, QtyOrder, item.UOMUnit, CnfmPrice, Amount );
                             rowPosition += 1;
                             BrandCode = item.BrandName;
                         }
-                        result.Rows.Add("", "", "", "", "", "", "SUB TOTAL", "", BrandCode, Math.Round(subTotalQty[BuyerBrand.Key], 2), "", "", Math.Round(subTotalAmount[BuyerBrand.Key], 2), "");
+                        result.Rows.Add("", "", "", "", "", "", "SUB TOTAL", "", BrandCode, "", Math.Round(subTotalQty[BuyerBrand.Key], 2), "", "", Math.Round(subTotalAmount[BuyerBrand.Key], 2));
 
                         rowPosition += 1;
                         totalQty += subTotalQty[BuyerBrand.Key];
                         totalAmount += subTotalAmount[BuyerBrand.Key];
                     }
-                        result.Rows.Add("", "", "", "", "", "", "T O T A L", "", "", Math.Round(totalQty, 2), "", "", Math.Round(totalAmount, 2),"");
+                        result.Rows.Add("", "", "", "", "", "", "T O T A L", "", "", "", Math.Round(totalQty, 2), "", "", Math.Round(totalAmount, 2));
                         rowPosition += 1;
             }
             ExcelPackage package = new ExcelPackage();
