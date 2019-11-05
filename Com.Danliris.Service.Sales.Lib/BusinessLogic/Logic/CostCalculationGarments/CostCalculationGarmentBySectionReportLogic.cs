@@ -26,27 +26,23 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
         public override IQueryable<CostCalculationGarmentBySectionReportViewModel> GetQuery(string filter)
         {
-            Dictionary<string, object> FilterDictionary = new Dictionary<string, object>(JsonConvert.DeserializeObject<Dictionary<string, object>>(filter), StringComparer.OrdinalIgnoreCase);
+            Filter _filter = JsonConvert.DeserializeObject<Filter>(filter);
 
             IQueryable<CostCalculationGarment> Query = dbSet;
 
-            try
+            if (!string.IsNullOrWhiteSpace(_filter.section))
             {
-                var dateFrom = (DateTime) (FilterDictionary["dateFrom"]);
-                var dateTo= (DateTime) (FilterDictionary["dateTo"]);
-
-                Query = dbSet.Where(d => d.ConfirmDate >= dateFrom && 
-                                         d.ConfirmDate <= dateTo
-                );
+                Query = Query.Where(cc => cc.Section == _filter.section);
             }
-            catch (KeyNotFoundException e)
+            if (_filter.dateFrom != null)
             {
-                throw new Exception(e.Message);
+                var filterDate = _filter.dateFrom.GetValueOrDefault().ToOffset(TimeSpan.FromHours(identityService.TimezoneOffset)).Date;
+                Query = Query.Where(cc => cc.ConfirmDate.AddHours(identityService.TimezoneOffset).Date >= filterDate);
             }
-
-            if (FilterDictionary.TryGetValue("section", out object section))
+            if (_filter.dateTo != null)
             {
-                Query = Query.Where(d => d.Section == section.ToString());
+                var filterDate = _filter.dateTo.GetValueOrDefault().ToOffset(TimeSpan.FromHours(identityService.TimezoneOffset)).AddDays(1).Date;
+                Query = Query.Where(cc => cc.ConfirmDate.AddHours(identityService.TimezoneOffset).Date < filterDate);
             }
 
             Query = Query.OrderBy(o => o.Section).ThenBy(o => o.BuyerBrandName);
@@ -74,6 +70,14 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                     });
 
             return newQ;
+        }
+
+        private class Filter
+        {
+            public string section { get; set; }
+
+            public DateTimeOffset? dateFrom { get; set; }
+            public DateTimeOffset? dateTo { get; set; }
         }
     }
 }

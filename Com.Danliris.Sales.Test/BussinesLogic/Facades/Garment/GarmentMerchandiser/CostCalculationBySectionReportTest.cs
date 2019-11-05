@@ -140,7 +140,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var filter = new
             {
-                unitName = data.UnitName,
+                section = data.Section,
                 dateFrom = data.ConfirmDate.AddDays(30),
                 dateTo = data.ConfirmDate.AddDays(30),
             };
