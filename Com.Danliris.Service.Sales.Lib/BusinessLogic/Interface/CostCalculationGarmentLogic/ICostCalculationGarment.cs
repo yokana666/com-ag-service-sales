@@ -1,6 +1,7 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseInterface;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,5 +20,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculation
         Task<int> DistributeCC(List<long> listId, string user);
         Task<int> PostCC(List<long> listId);
         Task<int> UnpostCC(long id, string reason);
+        Task<int> Patch(long id, JsonPatchDocument<CostCalculationGarment> jsonPatch);
+        List<string> ReadUnpostReasonCreators(string keyword, int page, int size);
     }
 }

@@ -21,6 +21,49 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
     public class CostCalculationGarmentControllerTest : BaseControllerTest<CostCalculationGarmentController, CostCalculationGarment, CostCalculationGarmentViewModel, ICostCalculationGarment>
     {
         [Fact]
+        public void Get_PDF_NotFound()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(default(CostCalculationGarment));
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.NotFound, statusCode);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Exception()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception("error"));
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            int statusCode = this.GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+
+        }
+
+        [Fact]
+        public void Get_PDF_Local_OK()
+        {
+            var mocks = GetMocks();
+
+            var viewModel = this.ViewModel;
+
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(f => f.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarmentViewModel>())).Returns(viewModel);
+
+            var controller = GetController(mocks);
+            var response = controller.GetPDF(1).Result;
+
+            Assert.NotNull(response);
+
+        }
+
+        [Fact]
         public async Task GetById_RO_Garment_Validation_NotNullModel_ReturnOK()
         {
             var ViewModel = this.ViewModel;
@@ -139,16 +182,10 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         {
             var mocks = GetMocks();
             mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
-            var id = 1;
-            var viewModel = new CostCalculationGarmentViewModel()
-            {
-                Id = id
-            };
-            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
-            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ReturnsAsync(1);
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Facade.Setup(f => f.Patch(It.IsAny<long>(), It.IsAny<JsonPatchDocument<CostCalculationGarment>>())).ReturnsAsync(1);
 
-            int statusCode = await this.GetStatusCodePatch(mocks, id);
+            int statusCode = await this.GetStatusCodePatch(mocks, 1);
             Assert.Equal((int)HttpStatusCode.NoContent, statusCode);
         }
 
@@ -157,16 +194,10 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         {
             var mocks = GetMocks();
             mocks.ValidateService.Setup(vs => vs.Validate(It.IsAny<CostCalculationGarmentViewModel>())).Verifiable();
-            var id = 1;
-            var viewModel = new CostCalculationGarmentViewModel()
-            {
-                Id = id
-            };
-            mocks.Mapper.Setup(m => m.Map<CostCalculationGarmentViewModel>(It.IsAny<CostCalculationGarment>())).Returns(viewModel);
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
-            mocks.Facade.Setup(f => f.UpdateAsync(It.IsAny<int>(), It.IsAny<CostCalculationGarment>())).ThrowsAsync(new Exception());
+            mocks.Facade.Setup(f => f.Patch(It.IsAny<long>(), It.IsAny<JsonPatchDocument<CostCalculationGarment>>())).ThrowsAsync(new Exception());
 
-            int statusCode = await this.GetStatusCodePatch(mocks, id);
+            int statusCode = await this.GetStatusCodePatch(mocks, 1);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
 
@@ -459,6 +490,34 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
             var controller = GetController(mocks);
             var response = await controller.UnpostCC(It.IsAny<long>(), "Reason");
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public void Read_Unpost_Reason_Return_OK()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new List<string>());
+
+            var controller = GetController(mocks);
+            var response = controller.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>());
+
+            var statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Read_Unpost_Reason_Return_InternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Throws(new Exception(string.Empty));
+
+            var controller = GetController(mocks);
+            var response = controller.ReadUnpostReasonCreators(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>());
 
             var statusCode = GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);

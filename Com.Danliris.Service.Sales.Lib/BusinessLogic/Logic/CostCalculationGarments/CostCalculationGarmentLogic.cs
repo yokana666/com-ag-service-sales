@@ -7,6 +7,7 @@ using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -279,6 +280,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             }
         }
 
+        internal void Patch(long id, JsonPatchDocument<CostCalculationGarment> jsonPatch)
+        {
+            var data = DbSet.Where(d => d.Id == id)
+                .Single();
+
+            EntityExtension.FlagForUpdate(data, IdentityService.Username, "sales-service");
+
+            jsonPatch.ApplyTo(data);
+        }
+
         public ReadResponse<CostCalculationGarment> ReadForROAcceptance(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             IQueryable<CostCalculationGarment> Query = DbSet;
@@ -498,6 +509,24 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             };
             EntityExtension.FlagForCreate(costCalculationGarmentUnpostReason, IdentityService.Username, "sales-service");
             reasonDbSet.Add(costCalculationGarmentUnpostReason);
+        }
+
+        internal List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
+        {
+            IQueryable<CostCalculationGarmentUnpostReason> Query = DbContext.Set<CostCalculationGarmentUnpostReason>();
+
+            if (keyword != null)
+            {
+                Query = Query.Where(w => w.CreatedBy.StartsWith(keyword));
+            }
+
+            return Query
+                .OrderBy(o => o.CreatedBy)
+                .Select(s => s.CreatedBy)
+                .Distinct()
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToList();
         }
     }
 }

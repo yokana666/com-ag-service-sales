@@ -65,6 +65,10 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentMasterPlan.MaxWH
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentPreSalesContractFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentPreSalesContractInterface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentOmzetTargetInterface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentOmzetTargetFacades;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentOmzetTargetLogics;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -93,6 +97,10 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IProductionOrder, ProductionOrderFacade>()
                 .AddTransient<WeavingSalesContractReportFacade>()
 				.AddTransient<ICostCalculationGarment,CostCalculationGarmentFacade>()
+                .AddTransient<ICostCalculationGarmentByUnitReport, CostCalculationGarmentByUnitReportFacade>()
+                .AddTransient<ICostCalculationGarmentBySectionReport, CostCalculationGarmentBySectionReportFacade>()
+                .AddTransient<ICostCalculationGarmentByBuyer1Report, CostCalculationGarmentByBuyer1ReportFacade>()
+                .AddTransient<ICostCalculationGarmentByBuyer2Report, CostCalculationGarmentByBuyer2ReportFacade>()
                 .AddTransient<IROGarment, ROGarmentFacade>()
                 .AddTransient<IArticleColor, ArticleColorFacade>()
                 .AddTransient<IRate, RateFacade>()
@@ -110,7 +118,16 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IOverScheduleMonitoringFacade, OverScheduleMonitoringFacade>()
                 .AddTransient<IWeeklyWorkingScheduleMonitoringFacade, WeeklyWorkingScheduleMonitoringFacade>()
                 .AddTransient<IMaxWHConfirmFacade, MaxWHConfirmFacade>()
-                .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>();
+                .AddTransient<IBudgetJobOrderDisplayFacade, BudgetJobOrderDisplayFacade>()
+                .AddTransient<IMonitoringUnpostCostCalculationFacade, MonitoringUnpostCostCalculationFacade>()
+                .AddTransient<IGarmentProductionOrderReportFacade, GarmentProductionOrderReportFacade>()
+                .AddTransient<IAcceptedROReportFacade, AcceptedROReportFacade>()
+                .AddTransient<IAvailableROReportFacade, AvailableROReportFacade>()
+                .AddTransient<IAvailableBudgetReportFacade, AvailableBudgetReportFacade>()
+                .AddTransient<IMonitoringPreSalesContractFacade, MonitoringPreSalesContractFacade>()
+                .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>()
+                .AddTransient<IGarmentPurchasingQualityObjectiveReportFacade, GarmentPurchasingQualityObjectiveReportFacade>()
+                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -127,6 +144,10 @@ namespace Com.Danliris.Service.Sales.WebApi
 				.AddTransient<ProductionOrderLogic>()
 				.AddTransient<CostCalculationGarmentLogic>()
 				.AddTransient<CostCalculationGarmentMaterialLogic>()
+                .AddTransient<CostCalculationByUnitReportLogic>()
+                .AddTransient<CostCalculationBySectionReportLogic>()
+                .AddTransient<CostCalculationByBuyer1ReportLogic>()
+                .AddTransient<CostCalculationByBuyer2ReportLogic>()
                 .AddTransient<GarmentSalesContractLogic>()
                 .AddTransient<GarmentSalesContractItemLogic>()
                 .AddTransient<ArticleColorLogic>()
@@ -146,8 +167,16 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<OverScheduleMonitoringLogic>()
                 .AddTransient<WeeklyWorkingScheduleMonitoringLogic>()
                 .AddTransient<MaxWHConfirmLogic>()
-                .AddTransient<GarmentPreSalesContractLogic>();
-            
+                .AddTransient<BudgetJobOrderDisplayLogic>()
+                .AddTransient<MonitoringUnpostCostCalculationLogic>()
+                .AddTransient<GarmentProductionOrderReportLogic>()
+                .AddTransient<AcceptedROReportLogic>()
+                .AddTransient<AvailableROReportLogic>()
+                .AddTransient<AvailableBudgetReportLogic>()
+                .AddTransient<MonitoringPreSalesContractLogic>()
+                .AddTransient<GarmentPreSalesContractLogic>()
+                .AddTransient<GarmentPurchasingQualityObjectiveReportLogic>()
+                .AddTransient<GarmentOmzetTargetLogic>();            
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -218,9 +247,32 @@ namespace Com.Danliris.Service.Sales.WebApi
             /* API */
             services
                .AddMvcCore()
+               .AddApiExplorer()
                .AddAuthorization()
                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                .AddJsonFormatters();
+
+            #region Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info() { Title = "My API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                {
+                    In = "header",
+                    Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                    Name = "Authorization",
+                    Type = "apiKey",
+                });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>()
+                {
+                    {
+                        "Bearer",
+                        Enumerable.Empty<string>()
+                    }
+                });
+                c.CustomSchemaIds(i => i.FullName);
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -241,6 +293,12 @@ namespace Com.Danliris.Service.Sales.WebApi
             app.UseAuthentication();
             app.UseCors(SALES_POLICY);
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
         }
     }
 }

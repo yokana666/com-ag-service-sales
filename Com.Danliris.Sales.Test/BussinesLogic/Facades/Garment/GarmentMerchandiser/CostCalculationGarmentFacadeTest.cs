@@ -10,6 +10,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
@@ -213,6 +214,57 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
 
             await Assert.ThrowsAnyAsync<Exception>(async () => await facade.UnpostCC(0, string.Empty));
+        }
+
+        [Fact]
+        public async Task Patch_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            JsonPatchDocument<CostCalculationGarment> jsonPatch = new JsonPatchDocument<CostCalculationGarment>();
+            jsonPatch.Replace(m => m.IsPosted, true);
+
+            int Response = await facade.Patch(data.Id, jsonPatch);
+            Assert.NotEqual(Response, 0);
+
+            var ResultData = await facade.ReadByIdAsync((int)data.Id);
+            Assert.Equal(ResultData.IsPosted, true);
+        }
+
+        [Fact]
+        public async Task Patch_Error()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            JsonPatchDocument<CostCalculationGarment> jsonPatch = new JsonPatchDocument<CostCalculationGarment>();
+            jsonPatch.Replace(m => m.Id, 0);
+
+            var Response = await Assert.ThrowsAnyAsync<Exception>(async () => await facade.Patch(data.Id, jsonPatch));
+            Assert.NotEqual(Response.Message, null);
+        }
+
+        [Fact]
+        public async Task Get_Unpost_Reason_Creators_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+            var data = await DataUtil(facade, dbContext).GetTestData();
+            await facade.PostCC(new List<long> { data.Id });
+            await facade.UnpostCC(data.Id, "Alasan Unpost");
+
+            var Response = facade.ReadUnpostReasonCreators(data.CreatedBy, 1, 25);
+
+            Assert.NotEmpty(Response);
         }
     }
 }

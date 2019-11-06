@@ -15,6 +15,7 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.MaxWHConfirmModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentOmzetTargetModel;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -58,6 +59,7 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<MaxWHConfirm> MaxWHConfirms { get; set; }
         public DbSet<GarmentPreSalesContract> GarmentPreSalesContracts { get; set; }
         public DbSet<CostCalculationGarmentUnpostReason> CostCalculationGarmentUnpostReasons { get; set; }
+        public DbSet<GarmentOmzetTarget> GarmentOmzetTargets { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -75,6 +77,21 @@ namespace Com.Danliris.Service.Sales.Lib
 
             modelBuilder.Entity<RO_Garment>()
             .Ignore(c => c.ImagesFile);
+
+            modelBuilder.Entity<GarmentPreSalesContract>()
+                .HasIndex(i => i.SCNo)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
+
+            modelBuilder.Entity<CostCalculationGarment>()
+                .HasIndex(i => i.RO_Number)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
+
+            modelBuilder.Entity<GarmentSalesContract>()
+                .HasIndex(i => i.SalesContractNo)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
         }
     }
 }

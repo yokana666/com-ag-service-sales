@@ -12,12 +12,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 using Com.Moonlay.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments
 {
     public class CostCalculationGarmentFacade : ICostCalculationGarment
 	{
-        private string USER_AGENT = "Facade";
+        private string USER_AGENT = "sales-service";
 
         private readonly SalesDbContext DbContext;
 		private readonly DbSet<CostCalculationGarment> DbSet;
@@ -292,6 +293,28 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             return Updated;
         }
 
+        public async Task<int> Patch(long id, JsonPatchDocument<CostCalculationGarment> jsonPatch)
+        {
+            int Updated = 0;
+
+            using (var transaction = DbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    costCalculationGarmentLogic.Patch(id, jsonPatch);
+                    Updated = await DbContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw e;
+                }
+            }
+
+            return Updated;
+        }
+
         public async Task<int> PostCC(List<long> listId)
         {
             int Updated = 0;
@@ -331,6 +354,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                 }
             }
             return Updated;
+        }
+
+        public List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
+        {
+            return costCalculationGarmentLogic.ReadUnpostReasonCreators(keyword, page, size);
         }
     }
 }
