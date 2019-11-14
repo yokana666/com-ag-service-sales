@@ -112,8 +112,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 section = data.Section,
                 roNo = data.RO_Number,
                 buyer = data.BuyerBrandCode,
-                availableDateStart = data.ROAvailableDate,
-                availableDateEnd = data.ROAvailableDate,
+                availableDateStart = data.ROAvailableDate.AddDays(-30),
+                availableDateEnd = data.ROAvailableDate.AddDays(30),
                 status = "OK"
             };
 
