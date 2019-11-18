@@ -58,7 +58,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         }
 
 
-        protected TController GetController((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
+        protected virtual TController GetController((Mock<IIdentityService> IdentityService, Mock<IValidateService> ValidateService, Mock<IFacade> Facade, Mock<IMapper> Mapper, Mock<IServiceProvider> ServiceProvider) mocks)
         {
             var user = new Mock<ClaimsPrincipal>();
             var claims = new Claim[]

@@ -58,5 +58,110 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var filledValidationResult = filledViewModel.Validate(validationContext);
             Assert.True(filledValidationResult.Count() > 0);
         }
+
+        [Fact]
+        public async Task Should_Success_Patch()
+        {
+
+            var mocks = GetMocks();
+            mocks.Mapper
+                .Setup(s => s.Map<GarmentOmzetTargetViewModel>(It.IsAny<GarmentOmzetTarget>()))
+                .Returns(ViewModel);
+            mocks.Facade
+                .Setup(s => s.ReadByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(Model);
+            mocks.Facade
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentOmzetTarget>()))
+                .ReturnsAsync(1);
+            var controller = GetController(mocks);
+            var response = await controller.Patch((int)ViewModel.Id, new JsonPatchDocument<GarmentOmzetTarget>());
+
+            Assert.Equal((int)HttpStatusCode.NoContent, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_BadRequest_Patch()
+        {
+
+            var mocks = GetMocks();
+            mocks.Mapper
+                .Setup(s => s.Map<GarmentOmzetTargetViewModel>(It.IsAny<GarmentOmzetTarget>()))
+                .Returns(ViewModel);
+            mocks.Facade
+                .Setup(s => s.ReadByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(Model);
+            mocks.Facade
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentOmzetTarget>()))
+                .ReturnsAsync(1);
+            var controller = GetController(mocks);
+            var response = await controller.Patch(2, new JsonPatchDocument<GarmentOmzetTarget>());
+
+            Assert.Equal((int)HttpStatusCode.BadRequest, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_NotFound_Patch()
+        {
+
+            var mocks = GetMocks();
+            mocks.Mapper
+                .Setup(s => s.Map<GarmentOmzetTargetViewModel>(It.IsAny<GarmentOmzetTarget>()))
+                .Returns(ViewModel);
+            mocks.Facade
+                .Setup(s => s.ReadByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(default(GarmentOmzetTarget));
+            mocks.Facade
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentOmzetTarget>()))
+                .ReturnsAsync(1);
+            var controller = GetController(mocks);
+            var response = await controller.Patch(2, new JsonPatchDocument<GarmentOmzetTarget>());
+
+            Assert.Equal((int)HttpStatusCode.NotFound, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_ValidateError_Patch()
+        {
+
+            var mocks = GetMocks();
+            mocks.ValidateService
+                .Setup(s => s.Validate(It.IsAny<GarmentOmzetTargetViewModel>()))
+                .Throws(GetServiceValidationException());
+
+            mocks.Mapper
+                .Setup(s => s.Map<GarmentOmzetTargetViewModel>(It.IsAny<GarmentOmzetTarget>()))
+                .Returns(ViewModel);
+            mocks.Facade
+                .Setup(s => s.ReadByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(Model);
+            mocks.Facade
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentOmzetTarget>()))
+                .ReturnsAsync(1);
+            var controller = GetController(mocks);
+            var response = await controller.Patch(2, new JsonPatchDocument<GarmentOmzetTarget>());
+
+            Assert.Equal((int)HttpStatusCode.BadRequest, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_InternalServer_Patch()
+        {
+
+            var mocks = GetMocks();
+            
+            mocks.Mapper
+                .Setup(s => s.Map<GarmentOmzetTargetViewModel>(It.IsAny<GarmentOmzetTarget>()))
+                .Returns(ViewModel);
+            mocks.Facade
+                .Setup(s => s.ReadByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(Model);
+            mocks.Facade
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<GarmentOmzetTarget>()))
+                .ThrowsAsync(new Exception());
+            var controller = GetController(mocks);
+            var response = await controller.Patch((int)ViewModel.Id, new JsonPatchDocument<GarmentOmzetTarget>());
+
+            Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
     }
 }
