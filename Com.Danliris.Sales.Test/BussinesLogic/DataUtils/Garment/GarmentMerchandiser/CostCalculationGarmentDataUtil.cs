@@ -59,6 +59,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.IsRODistributed = false;
             data.RODistributionBy = "test";
             data.RODistributionDate = DateTimeOffset.Now;
+            data.SMV_Cutting = 1.25;
+            data.SMV_Sewing = 7.54;
+            data.SMV_Finishing = 3.32;
+            data.SMV_Total = 12.11;
+            data.IsApprovedMD = false;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {
                 new CostCalculationGarment_Material
