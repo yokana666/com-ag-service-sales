@@ -8,6 +8,7 @@ using Com.Danliris.Service.Sales.WebApi.Controllers;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -184,6 +185,18 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
             var statusCode = GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public void Validate_ViewModel()
+        {
+            RO_GarmentViewModel viewModel = new RO_GarmentViewModel
+            {
+                DocumentsFile = new List<string> { null, "aiueo" },
+            };
+
+            var defaultValidationResult = viewModel.Validate(null);
+            Assert.True(defaultValidationResult.Count() > 0);
         }
     }
 }

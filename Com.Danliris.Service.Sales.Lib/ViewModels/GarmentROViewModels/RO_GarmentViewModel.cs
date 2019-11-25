@@ -17,6 +17,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
         public List<string> ImagesFile { get; set; }
         public List<string> ImagesPath { get; set; }
         public List<string> ImagesName { get; set; }
+        public List<string> DocumentsFile { get; set; }
 
         public bool IsPosted { get; set; }
 
@@ -30,13 +31,39 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
                 yield return new ValidationResult("Instruksi harus diisi", new List<string> { "Instruction" });
             }
 
-            if (ImagesFile.Count.Equals(0))
+            if (ImagesFile == null || ImagesFile.Count.Equals(0))
             {
                 yield return new ValidationResult("Gambar harus Ada", new List<string> { "ImageFile" });
             }
             else if (ImagesName.Count.Equals(0) || ImagesName.Count != ImagesFile.Count)
             {
                 yield return new ValidationResult("Nama Gambar harus diisi", new List<string> { "ImageFile" });
+            }
+
+            if (DocumentsFile != null && DocumentsFile.Count > 0)
+            {
+                int DocumentsFileErrorCount = 0;
+                string DocumentsFileError = "[";
+
+                foreach (var doc in DocumentsFile)
+                {
+                    if (string.IsNullOrWhiteSpace(doc) || !doc.StartsWith("data"))
+                    {
+                        DocumentsFileError += "'Tidak ada file dipilih',";
+                        DocumentsFileErrorCount++;
+                    }
+                    else
+                    {
+                        DocumentsFileError += ",";
+                    }
+                }
+
+                DocumentsFileError += "]";
+
+                if (DocumentsFileErrorCount > 0)
+                {
+                    yield return new ValidationResult(DocumentsFileError, new List<string> { "DocumentsFile" });
+                }
             }
 
             if (this.RO_Garment_SizeBreakdowns == null || this.RO_Garment_SizeBreakdowns.Count == 0)

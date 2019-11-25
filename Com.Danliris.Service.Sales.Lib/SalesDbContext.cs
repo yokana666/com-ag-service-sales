@@ -78,6 +78,11 @@ namespace Com.Danliris.Service.Sales.Lib
             modelBuilder.Entity<RO_Garment>()
             .Ignore(c => c.ImagesFile);
 
+            modelBuilder.Entity<RO_Garment>()
+                .Ignore(c => c.DocumentsFile);
+            modelBuilder.Entity<RO_Garment>()
+                .Ignore(c => c.DocumentsFileName);
+
             modelBuilder.Entity<GarmentPreSalesContract>()
                 .HasIndex(i => i.SCNo)
                 .IsUnique()
