@@ -89,7 +89,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
 
                     error += " { ";
 
-                    if (item.Color == null)
+                    if (item.Color == null || item.Color.Name == null)
                     {
                         Count++;
                         error += "Color: 'Color harus diisi', ";
