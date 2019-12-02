@@ -29,6 +29,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         {
             try
             {
+                ValidateUser();
                 int result = await Facade.PreSalesPost(listId);
 
                 return Ok(result);
@@ -47,6 +48,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         {
             try
             {
+                ValidateUser();
                 int result = await Facade.PreSalesUnpost(id);
 
                 return Ok(result);
