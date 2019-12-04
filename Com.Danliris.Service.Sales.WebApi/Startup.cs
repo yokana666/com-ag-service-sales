@@ -128,7 +128,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IMonitoringPreSalesContractFacade, MonitoringPreSalesContractFacade>()
                 .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>()
                 .AddTransient<IGarmentPurchasingQualityObjectiveReportFacade, GarmentPurchasingQualityObjectiveReportFacade>()
-                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>();
+                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>()
+                .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -178,7 +179,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<MonitoringPreSalesContractLogic>()
                 .AddTransient<GarmentPreSalesContractLogic>()
                 .AddTransient<GarmentPurchasingQualityObjectiveReportLogic>()
-                .AddTransient<GarmentOmzetTargetLogic>();            
+                .AddTransient<GarmentOmzetTargetLogic>()
+                .AddTransient<FinishingPrintingPreSalesContractLogic>();            
         }
 
         private void RegisterServices(IServiceCollection services)
