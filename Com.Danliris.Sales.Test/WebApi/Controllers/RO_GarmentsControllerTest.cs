@@ -203,6 +203,11 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             new RO_Garment_SizeBreakdown_DetailViewModel()
                         }
                     }
+                },
+                DocumentsFileName = new List<string>
+                {
+                    null,
+                    "FileName"
                 }
             };
 
