@@ -192,7 +192,18 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         {
             RO_GarmentViewModel viewModel = new RO_GarmentViewModel
             {
+                Total = 1,
                 DocumentsFile = new List<string> { null, "aiueo" },
+                RO_Garment_SizeBreakdowns = new List<RO_Garment_SizeBreakdownViewModel>
+                {
+                    new RO_Garment_SizeBreakdownViewModel
+                    {
+                        RO_Garment_SizeBreakdown_Details = new List<RO_Garment_SizeBreakdown_DetailViewModel>
+                        {
+                            new RO_Garment_SizeBreakdown_DetailViewModel()
+                        }
+                    }
+                }
             };
 
             var defaultValidationResult = viewModel.Validate(null);
