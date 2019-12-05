@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191203035846_ROGarment_DocumentsFileName")]
+    partial class ROGarment_DocumentsFileName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -583,93 +585,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Efficiencies");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting.FinishingPrintingPreSalesContractModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("BuyerCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("BuyerId");
-
-                    b.Property<string>("BuyerName")
-                        .HasMaxLength(512);
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<DateTimeOffset>("Date");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsPosted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<string>("No")
-                        .HasMaxLength(64);
-
-                    b.Property<double>("OrderQuantity");
-
-                    b.Property<string>("ProcessTypeCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("ProcessTypeId");
-
-                    b.Property<string>("ProcessTypeName")
-                        .HasMaxLength(512);
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(4096);
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(32);
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UnitCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("UnitId");
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(512);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FinishingPrintingPreSalesContractModel");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting.FinishingPrintingSalesContractDetailModel", b =>
