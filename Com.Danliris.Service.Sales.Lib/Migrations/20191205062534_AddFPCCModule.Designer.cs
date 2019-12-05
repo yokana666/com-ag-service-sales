@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191205062534_AddFPCCModule")]
+    partial class AddFPCCModule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1017,8 +1019,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
-                    b.Property<decimal>("Price");
-
                     b.Property<string>("UId")
                         .HasMaxLength(255);
 
@@ -1059,8 +1059,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("DeletedUtc");
 
-                    b.Property<decimal>("Depretiation");
-
                     b.Property<int>("Index");
 
                     b.Property<bool>("IsDeleted");
@@ -1079,12 +1077,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<int>("StepProcessId");
 
-                    b.Property<decimal>("Total");
-
                     b.Property<string>("UId")
                         .HasMaxLength(255);
-
-                    b.Property<decimal>("Utility");
 
                     b.HasKey("Id");
 
@@ -1172,7 +1166,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<double>("RFDFabricWeight");
 
-                    b.Property<string>("Remark")
+                    b.Property<double>("Remark")
                         .HasMaxLength(2048);
 
                     b.Property<int>("TKLQuantity");

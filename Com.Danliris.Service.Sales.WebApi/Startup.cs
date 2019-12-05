@@ -69,6 +69,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentOmzetTargetI
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentOmzetTargetFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentOmzetTargetLogics;
 using Swashbuckle.AspNetCore.Swagger;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -130,7 +133,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>()
                 .AddTransient<IGarmentPurchasingQualityObjectiveReportFacade, GarmentPurchasingQualityObjectiveReportFacade>()
                 .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>()
-                .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>();
+                .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>()
+                .AddTransient<IFinishingPrintingCostCalculationService, FinishingPrintingCostCalculationFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -181,7 +185,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<GarmentPreSalesContractLogic>()
                 .AddTransient<GarmentPurchasingQualityObjectiveReportLogic>()
                 .AddTransient<GarmentOmzetTargetLogic>()
-                .AddTransient<FinishingPrintingPreSalesContractLogic>();            
+                .AddTransient<FinishingPrintingPreSalesContractLogic>()
+                .AddTransient<FinishingPrintingCostCalculationLogic>();            
         }
 
         private void RegisterServices(IServiceCollection services)
