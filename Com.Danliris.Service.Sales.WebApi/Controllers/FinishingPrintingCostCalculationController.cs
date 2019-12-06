@@ -20,7 +20,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     public class FinishingPrintingCostCalculationController : BaseController<FinishingPrintingCostCalculationModel, FinishingPrintingCostCalculationViewModel, IFinishingPrintingCostCalculationService>
     {
         private readonly static string apiVersion = "1.0";
-        public FinishingPrintingCostCalculationController(IIdentityService identityService, IValidateService validateService, IFinishingPrintingCostCalculationService facade, IMapper mapper) : base(identityService, validateService, facade, mapper, apiVersion)
+        public FinishingPrintingCostCalculationController(IIdentityService identityService, IValidateService validateService, IFinishingPrintingCostCalculationService facade, IMapper mapper, IServiceProvider serviceProvider) : base(identityService, validateService, facade, mapper, apiVersion)
         {
         }
 

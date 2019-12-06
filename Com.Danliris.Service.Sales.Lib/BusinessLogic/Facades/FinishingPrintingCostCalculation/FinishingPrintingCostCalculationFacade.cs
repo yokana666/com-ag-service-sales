@@ -55,11 +55,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
             return await DbContext.SaveChangesAsync();
         }
 
-        public Task<bool> IsDataExistsById(int id)
-        {
-            return DbSet.AnyAsync(entity => entity.Id == id);
-        }
-
         public ReadResponse<FinishingPrintingCostCalculationModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             return finishingPrintingCostCalculationLogic.Read(page, size, order, select, keyword, filter);

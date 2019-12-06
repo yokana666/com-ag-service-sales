@@ -9,6 +9,5 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrinti
 {
     public interface IFinishingPrintingCostCalculationService : IBaseFacade<FinishingPrintingCostCalculationModel>
     {
-        Task<bool> IsDataExistsById(int id);
     }
 }
