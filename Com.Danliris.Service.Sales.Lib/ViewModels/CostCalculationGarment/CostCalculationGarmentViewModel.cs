@@ -65,6 +65,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public Approval ApprovalPurchasing { get; set; }
         public Approval ApprovalIE { get; set; }
         public Approval ApprovalPPIC { get; set; }
+        public Approval ApprovalKadivMD { get; set; }
 
         public bool IsValidatedROSample { get; set; }
 
