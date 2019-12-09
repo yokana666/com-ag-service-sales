@@ -1,5 +1,7 @@
 ﻿using Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.Utilities;
+using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting;
+using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,34 +12,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
 {
     public class FinishingPrintingCostCalculationViewModel : BaseViewModel, IValidatableObject
     {
-        public FinishingPrintingCostCalculationViewModel()
-        {
-            Date = DateTimeOffset.UtcNow;
-        }
-        //public FinishingPrintingCostCalculationViewModel(FinishingPrintingCostCalculationModel costCalculation, List<FinishingPrintingCostCalculationMachineModel> costCalculationMachines, List<FinishingPrintingCostCalculationChemicalModel> costCalculationChemicals)
-        //{
-        //    Id = costCalculation.Id;
-        //    InstructionId = costCalculation.InstructionId;
-        //    PreparationValue = costCalculation.PreparationValue;
-        //    CurrencyRate = costCalculation.CurrencyRate;
-        //    ProductionUnitValue = costCalculation.ProductionUnitValue;
-        //    TKLQuantity = costCalculation.TKLQuantity;
-        //    GreigeId = costCalculation.GreigeId;
-        //    PreparationFabricWeight = costCalculation.PreparationFabricWeight;
-        //    RFDFabricWeight = costCalculation.RFDFabricWeight;
-        //    ActualPrice = costCalculation.ActualPrice;
-        //    CargoCost = costCalculation.CargoCost;
-        //    InsuranceCost = costCalculation.InsuranceCost;
-        //    Remark = costCalculation.Remark;
 
-        //    Machines = costCalculationMachines.Select(entity => new FinishingPrintingCostCalculationMachineViewModel(entity, costCalculationChemicals)).ToList();
-        //}
-        public int InstructionId { get; set; }
-        public double PreparationValue { get; set; }
         public double CurrencyRate { get; set; }
         public double ProductionUnitValue { get; set; }
         public int TKLQuantity { get; set; }
-        public int GreigeId { get; set; }
         public double PreparationFabricWeight { get; set; }
         public double RFDFabricWeight { get; set; }
         public double ActualPrice { get; set; }
@@ -45,62 +23,49 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
         public double InsuranceCost { get; set; }
         public string Remark { get; set; }
         public List<FinishingPrintingCostCalculationMachineViewModel> Machines { get; set; }
-        public string BuyerName { get; set; }
         public DateTimeOffset Date { get; set; }
-        public string GreigeName { get; set; }
-        public string InstructionName { get; set; }
-        public int ProductionOrderId { get; set; }
         public string ProductionOrderNo { get; set; }
-
-        //public FinishingPrintingCostCalculationModel MapViewModelToCreateModel()
-        //{
-        //    return new FinishingPrintingCostCalculationModel()
-        //    {
-        //        ActualPrice = ActualPrice,
-        //        BuyerName = BuyerName,
-        //        CargoCost = CargoCost,
-        //        CurrencyRate = CurrencyRate,
-        //        Date = Date,
-        //        GreigeId = GreigeId,
-        //        GreigeName = GreigeName,
-        //        InstructionId = InstructionId,
-        //        InstructionName = InstructionName,
-        //        InsuranceCost = InsuranceCost,
-        //        PreparationFabricWeight = PreparationFabricWeight,
-        //        PreparationValue = PreparationValue,
-        //        ProductionOrderId = ProductionOrderId,
-        //        ProductionOrderNo = ProductionOrderNo,
-        //        ProductionUnitValue = ProductionUnitValue,
-        //        Remark = Remark,
-        //        RFDFabricWeight = RFDFabricWeight,
-        //        TKLQuantity = TKLQuantity,
-        //        Machines = Machines.Select(machineEntity => new FinishingPrintingCostCalculationMachineModel()
-        //        {
-        //            Index = machineEntity.Index,
-        //            StepProcessId = machineEntity.StepProcessId,
-        //            MachineId = machineEntity.MachineId,
-        //            Chemicals = machineEntity.Chemicals.Select(chemicalEntity => new FinishingPrintingCostCalculationChemicalModel()
-        //            {
-        //                ChemicalId = chemicalEntity.ChemicalId,
-        //                ChemicalQuantity = chemicalEntity.ChemicalQuantity,
-        //                Index = chemicalEntity.Index
-        //            }).ToList()
-
-        //        }).ToList()
-        //    };
-        //}
-
+        public InstructionViewModel Instruction { get; set; }
+        public FinishingPrintingPreSalesContractViewModel PreSalesContract { get; set; }
+        public UomViewModel UOM { get; set; }
+        public ProductViewModel Greige { get; set; }
+        public double OrderQuantity { get; set; }
+        public MaterialViewModel Material { get; set; }
+        public string Color { get; set; }
+        public AccountViewModel Sales { get; set; }
+        public decimal ConfirmPrice { get; set; }
+        public double Comission { get; set; }
+        public decimal FreightCost { get; set; }
+        public decimal OTL1 { get; set; }
+        public decimal OTL2 { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (ProductionOrderId == 0)
-                yield return new ValidationResult("Nomor SPP harus diisi!", new List<string> { "ProductionOrder" });
+            if (PreSalesContract == null)
+                yield return new ValidationResult("Sales Contract harus diisi!", new List<string> { "PreSalesContract" });
 
-            if (InstructionId == 0)
+            if (Instruction == null)
                 yield return new ValidationResult("Instruksi harus diisi!", new List<string> { "Instruction" });
 
-            if (PreparationValue <= 0)
-                yield return new ValidationResult("Preparasi harus lebih dari 0!", new List<string> { "PreparationValue" });
+            if (UOM == null)
+            {
+                yield return new ValidationResult("Satuan harus diisi!", new List<string> { "UOM" });
+            }
+
+            if (Sales == null)
+                yield return new ValidationResult("Sales harus diisi!", new List<string> { "Sales" });
+
+            if (string.IsNullOrEmpty(Color))
+                yield return new ValidationResult("Warna harus diisi!", new List<string> { "Color" });
+
+            if (Greige == null)
+                yield return new ValidationResult("Greige harus diisi!", new List<string> { "Greige" });
+
+            if(Date == null)
+                yield return new ValidationResult("Tanggal harus diisi!", new List<string> { "Date" });
+
+            if (Material == null)
+                yield return new ValidationResult("Material harus diisi!", new List<string> { "Material" });
 
             if (CurrencyRate <= 0)
                 yield return new ValidationResult("Kurs harus lebih dari 0!", new List<string> { "CurrencyRate" });
@@ -111,8 +76,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
             if (TKLQuantity <= 0)
                 yield return new ValidationResult("Jumlah TKL harus lebih dari 0!", new List<string> { "TKLQuantity" });
 
-            if (GreigeId == 0)
-                yield return new ValidationResult("Greige harus diisi!", new List<string> { "Greige" });
 
             if (PreparationFabricWeight <= 0)
                 yield return new ValidationResult("Berat Kain Prep harus lebih dari 0!", new List<string> { "PreparationFabricWeight" });
@@ -122,6 +85,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
 
             if (ActualPrice <= 0)
                 yield return new ValidationResult("Harga Real harus lebih dari 0!", new List<string> { "ActualPrice" });
+
+            if(ConfirmPrice <=0)
+                yield return new ValidationResult("Confirm Price harus diisi!", new List<string> { "ConfirmPrice" });
+
 
             if (CargoCost <= 0)
                 yield return new ValidationResult("Biaya Kargo harus lebih dari 0!", new List<string> { "CargoCost" });
@@ -140,13 +107,13 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
                 {
                     machinesErrors += "{";
 
-                    if (machine.MachineId == 0)
+                    if (machine.Machine == null)
                     {
                         anyError = true;
                         machinesErrors += "Machine: 'Mesin harus diisi!', ";
                     }
 
-                    if (machine.StepProcessId == 0)
+                    if (machine.Step == null)
                     {
                         anyError = true;
                         machinesErrors += "StepProcess: 'Proses harus diisi!', ";
@@ -165,7 +132,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
                         {
                             machinesErrors += "{";
 
-                            if (chemical.ChemicalId == 0)
+                            if (chemical.Chemical == null)
                             {
                                 anyError = true;
                                 machinesErrors += "Chemical: 'Chemical harus diisi!', ";

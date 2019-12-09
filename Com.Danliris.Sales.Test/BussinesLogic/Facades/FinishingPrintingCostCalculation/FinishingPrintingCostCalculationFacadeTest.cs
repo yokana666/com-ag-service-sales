@@ -4,7 +4,9 @@ using Com.Danliris.Service.Sales.Lib;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,23 +28,30 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             var vm = new FinishingPrintingCostCalculationViewModel()
             {
                 Remark = "1",
-                BuyerName = "1",
-                GreigeName = "name",
-                InstructionName = "ae",
+                
                 ProductionOrderNo = "ee",
             };
             var response = vm.Validate(null);
             Assert.NotEmpty(response);
 
-            vm.ProductionOrderId = 1;
+            vm.PreSalesContract = new FinishingPrintingPreSalesContractViewModel()
+            {
+                Id = 1
+            };
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
-            vm.InstructionId = 1;
+            vm.Instruction = new InstructionViewModel()
+            {
+                Id = 1
+            };
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
-            vm.PreparationValue = 1;
+            vm.UOM = new UomViewModel()
+            {
+                Id = 1,
+            };
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
@@ -58,7 +67,10 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
-            vm.GreigeId = 1;
+            vm.Greige = new ProductViewModel()
+            {
+                Id = 1
+            };
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
@@ -106,10 +118,22 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             {
                 new FinishingPrintingCostCalculationMachineViewModel()
                 {
-                    MachineId = 1,
-                    StepProcessId =1,
-                    Total = 1,
-                    Utility = 1,
+                    Machine = new MachineViewModel()
+                    {
+                        Id = 1,
+                        Name = "a",
+                        Process = "a",
+                        LPG = 1,
+                        Solar = 1,
+                        Steam = 1,
+                        Water = 1,
+                        Electric = 1,
+                    },
+                    Step = new StepViewModel()
+                    {
+                        Id = 1,
+                        Process = "a"
+                    },
                     Depretiation = 1,
                     Index = 1,
                     CostCalculationId = 1,
@@ -118,9 +142,13 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
                     {
                         new FinishingPrintingCostCalculationChemicalViewModel()
                         {
-                            ChemicalId = 1,
+                            Chemical = new ProductViewModel()
+                            {
+                                Id = 1,
+                                Price = 1,
+                                Name = "a"
+                            },
                             ChemicalQuantity = 1,
-                            Price = 1,
                             CostCalculationId = 1,
                             CostCalculationMachineId = 1
                         }

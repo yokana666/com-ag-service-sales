@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191209104837_RemoveBuyerNameFromFPCC")]
+    partial class RemoveBuyerNameFromFPCC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1126,9 +1128,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<decimal>("ActualPrice");
+                    b.Property<double>("ActualPrice");
 
-                    b.Property<decimal>("CargoCost");
+                    b.Property<double>("CargoCost");
 
                     b.Property<string>("Code")
                         .HasMaxLength(16);
@@ -1150,7 +1152,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("CreatedUtc");
 
-                    b.Property<decimal>("CurrencyRate");
+                    b.Property<double>("CurrencyRate");
 
                     b.Property<DateTimeOffset>("Date");
 
@@ -1164,14 +1166,10 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("DeletedUtc");
 
-                    b.Property<decimal>("FreightCost");
-
                     b.Property<long>("GreigeId");
 
                     b.Property<string>("GreigeName")
                         .HasMaxLength(1024);
-
-                    b.Property<decimal>("GreigePrice");
 
                     b.Property<int>("InstructionId");
 
