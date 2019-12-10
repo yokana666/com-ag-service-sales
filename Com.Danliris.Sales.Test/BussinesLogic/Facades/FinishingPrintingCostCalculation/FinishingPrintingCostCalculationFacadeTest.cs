@@ -12,7 +12,9 @@ using Com.Danliris.Service.Sales.Lib.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AutoMapper;
 using Xunit;
+using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingCostCalculationProfiles;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCalculation
 {
@@ -237,6 +239,23 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
 
             response = vm.Validate(null);
             Assert.Empty(response);
+        }
+
+        [Fact]
+        public void Mapping_With_AutoMapper_Profiles()
+        {
+            var configuration = new MapperConfiguration(cfg => {
+                cfg.AddProfile<FinishingPrintingCostCalculationMapper>();
+                cfg.AddProfile<FinishingPrintingCostCalculationMachineMapper>();
+                cfg.AddProfile<FinishingPrintingCostCalculationChemicalMapper>();
+            });
+            var mapper = configuration.CreateMapper();
+
+            FinishingPrintingCostCalculationViewModel vm = new FinishingPrintingCostCalculationViewModel { Id = 1 };
+            FinishingPrintingCostCalculationModel model = mapper.Map<FinishingPrintingCostCalculationModel>(vm);
+
+            Assert.Equal(vm.Id, model.Id);
+
         }
     }
 }
