@@ -26,12 +26,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
             var query = DbSet.AsQueryable();
             List<string> SearchAttributes = new List<string>()
             {
-                "ProductionOrderNo", "BuyerName", "InstructionName"
+                "ProductionOrderNo", "PreSalesContractNo", "UnitName"
             };
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Search(query, SearchAttributes, keyword);
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "OrderQuantity", "ConfirmPrice"
+                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "OrderQuantity", "ConfirmPrice", "IsPosted"
             };
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Filter(query, FilterDictionary);
@@ -102,6 +102,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
                 }
             }
             base.UpdateAsync(id, model);
+        }
+
+        public async Task CCPost(List<long> listId)
+        {
+            foreach (var id in listId)
+            {
+                var model = await ReadByIdAsync(id);
+                model.IsPosted = true;
+                UpdateAsync(id, model);
+            }
         }
 
         private void ProductionOrderNumberGenerator(FinishingPrintingCostCalculationModel model)

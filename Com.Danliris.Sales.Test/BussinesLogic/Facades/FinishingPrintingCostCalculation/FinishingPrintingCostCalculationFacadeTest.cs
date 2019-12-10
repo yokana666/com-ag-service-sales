@@ -7,6 +7,8 @@ using Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
+using Moq;
+using Com.Danliris.Service.Sales.Lib.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,16 +25,56 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
         }
 
         [Fact]
+        public virtual async void Create_Printing_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            FinishingPrintingCostCalculationFacade facade = Activator.CreateInstance(typeof(FinishingPrintingCostCalculationFacade), serviceProvider, dbContext) as FinishingPrintingCostCalculationFacade;
+
+            var data = await DataUtil(facade, dbContext).GetNewData();
+            data.UnitName = "Printing";
+            var response = await facade.CreateAsync(data);
+
+            Assert.NotEqual(response, 0);
+        }
+
+        [Fact]
+        public async void CCPost_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            FinishingPrintingCostCalculationFacade facade = new FinishingPrintingCostCalculationFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+            List<long> listData = new List<long> { data.Id };
+            var Response = await facade.CCPost(listData);
+            Assert.NotEqual(Response, 0);
+        }
+
+        [Fact]
         public void ValidateVM()
         {
             var vm = new FinishingPrintingCostCalculationViewModel()
             {
                 Remark = "1",
-                
+
                 ProductionOrderNo = "ee",
+                OrderQuantity = 1,
+                OTL1 = 1,
+                OTL2 = 1,
+                Comission = 1,
+                IsPosted = false
             };
             var response = vm.Validate(null);
             Assert.NotEmpty(response);
+            Assert.NotNull(vm.Remark);
+            Assert.NotNull(vm.ProductionOrderNo);
+            Assert.NotEqual(0, vm.OrderQuantity);
+            Assert.NotEqual(0, vm.OTL2);
+            Assert.NotEqual(0, vm.OTL1);
+            Assert.NotEqual(0, vm.Comission);
+            Assert.False(vm.IsPosted);
 
             vm.PreSalesContract = new FinishingPrintingPreSalesContractViewModel()
             {
@@ -55,6 +97,40 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
+            vm.Sales = new AccountViewModel()
+            {
+                profile = new ProfileViewModel()
+                {
+                    firstname = "a",
+                    lastname = "a"
+                },
+                UserName = "a"
+            };
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
+            vm.Color = "a";
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
+            vm.Greige = new ProductViewModel()
+            {
+                Id = 1
+            };
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
+            vm.Date = DateTimeOffset.UtcNow;
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
+            vm.Material = new MaterialViewModel()
+            {
+                Id = 1
+            };
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
             vm.CurrencyRate = 1;
             response = vm.Validate(null);
             Assert.NotEmpty(response);
@@ -67,12 +143,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
-            vm.Greige = new ProductViewModel()
-            {
-                Id = 1
-            };
-            response = vm.Validate(null);
-            Assert.NotEmpty(response);
+            
 
             vm.PreparationFabricWeight = 1;
             response = vm.Validate(null);
@@ -86,11 +157,19 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
+            vm.ConfirmPrice = 1;
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
             vm.CargoCost = 1;
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
             vm.InsuranceCost = 1;
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
+            vm.FreightCost = 1;
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 

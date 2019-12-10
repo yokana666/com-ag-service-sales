@@ -89,5 +89,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation
         
         [MaxLength(16)]
         public string Code { get; set; }
+
+        public bool IsPosted { get; set; }
     }
 }

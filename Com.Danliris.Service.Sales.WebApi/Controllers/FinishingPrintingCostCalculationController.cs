@@ -31,11 +31,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
 
         public override async Task<IActionResult> GetById([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+            
             try
             {
                 FinishingPrintingCostCalculationModel model = await Facade.ReadByIdAsync(id);
@@ -58,6 +54,25 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                         .Ok<FinishingPrintingCostCalculationViewModel>(viewModel);
                     return Ok(Result);
                 }
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("post")]
+        public async Task<IActionResult> CCPost([FromBody]List<long> listId)
+        {
+            try
+            {
+                ValidateUser();
+                int result = await Facade.CCPost(listId);
+
+                return Ok(result);
             }
             catch (Exception e)
             {

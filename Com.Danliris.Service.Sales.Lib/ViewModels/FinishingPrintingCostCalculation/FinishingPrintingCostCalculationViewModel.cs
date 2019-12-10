@@ -39,6 +39,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
         public decimal OTL1 { get; set; }
         public decimal OTL2 { get; set; }
 
+        public bool IsPosted { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (PreSalesContract == null)
@@ -61,8 +63,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
             if (Greige == null)
                 yield return new ValidationResult("Greige harus diisi!", new List<string> { "Greige" });
 
-            if(Date == null)
-                yield return new ValidationResult("Tanggal harus diisi!", new List<string> { "Date" });
 
             if (Material == null)
                 yield return new ValidationResult("Material harus diisi!", new List<string> { "Material" });
@@ -95,6 +95,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
 
             if (InsuranceCost <= 0)
                 yield return new ValidationResult("Asuransi harus lebih dari 0!", new List<string> { "InsuranceCost" });
+
+            if (FreightCost <= 0)
+                yield return new ValidationResult("Biaya Angkut harus lebih dari 0!", new List<string> { "FreightCost" });
 
             if (Machines == null || Machines.Count == 0)
                 yield return new ValidationResult("Asuransi harus lebih dari 0!", new List<string> { "Machine" });
