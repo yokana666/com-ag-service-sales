@@ -68,10 +68,17 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public Approval ApprovalKadivMD { get; set; }
 
         public bool IsValidatedROSample { get; set; }
+        public DateTimeOffset ValidationSampleDate { get; set; }
+        public string ValidationSampleBy { get; set; }
+
+        public bool IsValidatedROMD { get; set; }
+        public DateTimeOffset ValidationMDDate { get; set; }
+        public string ValidationMDBy { get; set; }
 
         public bool IsValidatedROPPIC { get; set; }
         public DateTimeOffset ValidationPPICDate { get; set; }
         public string ValidationPPICBy { get; set; }
+
         public bool IsROAccepted { get; set; }
         public DateTimeOffset ROAcceptedDate { get; set; }
         public string ROAcceptedBy { get; set; }
