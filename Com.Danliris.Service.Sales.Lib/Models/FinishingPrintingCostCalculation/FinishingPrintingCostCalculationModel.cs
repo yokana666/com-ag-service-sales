@@ -16,19 +16,17 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation
         [MaxLength(128)]
         public string InstructionName { get; set; }
         
-        [MaxLength(128)]
-        public string BuyerName { get; set; }
         
         public DateTimeOffset Date { get; set; }
         
-        public int GreigeId { get; set; }
+        public long GreigeId { get; set; }
         
-        [MaxLength(128)]
+        [MaxLength(1024)]
         public string GreigeName { get; set; }
-        
-        public double PreparationValue { get; set; }
-        
-        public double CurrencyRate { get; set; }
+
+        public decimal GreigePrice { get; set; }
+
+        public decimal CurrencyRate { get; set; }
         
         public double ProductionUnitValue { get; set; }
         
@@ -38,20 +36,60 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation
         
         public double RFDFabricWeight { get; set; }
         
-        public double ActualPrice { get; set; }
+        public decimal ActualPrice { get; set; }
         
-        public double CargoCost { get; set; }
-        
+        public decimal CargoCost { get; set; }
+
+        public decimal FreightCost { get; set; }
+
         public double InsuranceCost { get; set; }
         
-        [MaxLength(2048)]
+        [MaxLength(4096)]
         public string Remark { get; set; }
         
-        public int ProductionOrderId { get; set; }
+        public long PreSalesContractId { get; set; }
+
+        [MaxLength(64)]
+        public string PreSalesContractNo { get; set; }
+
+        public int UnitId { get; set; }
+
+        [MaxLength(512)]
+        public string UnitName { get; set; }
+
+        public long UomId { get; set; }
+
+        [MaxLength(128)]
+        public string UomUnit { get; set; }
+
+        public double OrderQuantity { get; set; }
+
+        public long MaterialId { get; set; }
+
+        [MaxLength(1024)]
+        public string MaterialName { get; set; }
+
+        [MaxLength(256)]
+        public string Color { get; set; }
+
+        public long SalesId { get; set; }
         
+        [MaxLength(1024)]
+        public string SalesUserName { get; set; }
+
+        [MaxLength(1024)]
+        public string SalesFirstName { get; set; }
+
+        [MaxLength(1024)]
+        public string SalesLastName { get; set; }
+        public decimal ConfirmPrice { get; set; }
+        public double Comission { get; set; }
+
         public ICollection<FinishingPrintingCostCalculationMachineModel> Machines { get; set; }
         
         [MaxLength(16)]
         public string Code { get; set; }
+
+        public bool IsPosted { get; set; }
     }
 }

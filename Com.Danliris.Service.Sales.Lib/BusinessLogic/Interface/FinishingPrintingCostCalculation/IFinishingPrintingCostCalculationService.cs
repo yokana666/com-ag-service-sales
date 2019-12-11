@@ -9,5 +9,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrinti
 {
     public interface IFinishingPrintingCostCalculationService : IBaseFacade<FinishingPrintingCostCalculationModel>
     {
+        Task<int> CCPost(List<long> listId);
     }
 }

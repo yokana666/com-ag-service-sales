@@ -26,12 +26,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
             var query = DbSet.AsQueryable();
             List<string> SearchAttributes = new List<string>()
             {
-                "ProductionOrderNo", "BuyerName", "InstructionName"
+                "ProductionOrderNo", "PreSalesContractNo", "UnitName"
             };
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Search(query, SearchAttributes, keyword);
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "InstructionName", "Date", "GreigeName", "BuyerName"
+                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "OrderQuantity", "ConfirmPrice", "IsPosted"
             };
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Filter(query, FilterDictionary);
@@ -58,8 +58,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
                 model.Code = CodeGenerator.Generate();
             }
             while (DbSet.Any(entity => entity.Code.Equals(model.Code)));
+            ProductionOrderNumberGenerator(model);
+            int indexM = 0;
             model.Machines.ToList().ForEach(machine =>
             {
+                machine.Index = indexM;
+                indexM++;
                 EntityExtension.FlagForCreate(machine, IdentityService.Username, "sales-service");
                 machine.Chemicals.ToList().ForEach(chemical =>
                 {
@@ -98,6 +102,46 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
                 }
             }
             base.UpdateAsync(id, model);
+        }
+
+        public async Task CCPost(List<long> listId)
+        {
+            foreach (var id in listId)
+            {
+                var model = await ReadByIdAsync(id);
+                model.IsPosted = true;
+                UpdateAsync(id, model);
+            }
+        }
+
+        private void ProductionOrderNumberGenerator(FinishingPrintingCostCalculationModel model)
+        {
+            var lastData = DbSet.IgnoreQueryFilters().Where(w => w.UnitName.Equals(model.UnitName)).OrderByDescending(x => x.CreatedUtc);
+
+            string DocumentType = model.UnitName.ToLower().Equals("printing") ? "P" : "F";
+
+            int YearNow = DateTime.Now.Year;
+            int MonthNow = DateTime.Now.Month;
+            int count = 0;
+            if (lastData.Count() == 0)
+            {
+                count = 1;
+                model.ProductionOrderNo = $"{DocumentType}/{YearNow}/{count.ToString().PadLeft(4, '0')}";
+            }
+            else
+            {
+                var lastCC = lastData.FirstOrDefault();
+                if (YearNow > lastCC.CreatedUtc.Year)
+                {
+                    count = 1;
+                    model.ProductionOrderNo = $"{DocumentType}/{YearNow}/{count.ToString().PadLeft(4, '0')}";
+                }
+                else
+                {
+                    count = lastData.Count() + 1;
+                    model.ProductionOrderNo = $"{DocumentType}/{YearNow}/{count.ToString().PadLeft(4, '0')}";
+                }
+            }
         }
 
     }

@@ -55,6 +55,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
             return await DbContext.SaveChangesAsync();
         }
 
+        public async Task<int> CCPost(List<long> listId)
+        {
+            await finishingPrintingCostCalculationLogic.CCPost(listId);
+            return await DbContext.SaveChangesAsync();
+        }
+
         public ReadResponse<FinishingPrintingCostCalculationModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             return finishingPrintingCostCalculationLogic.Read(page, size, order, select, keyword, filter);
@@ -70,5 +76,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
             finishingPrintingCostCalculationLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
+
     }
 }

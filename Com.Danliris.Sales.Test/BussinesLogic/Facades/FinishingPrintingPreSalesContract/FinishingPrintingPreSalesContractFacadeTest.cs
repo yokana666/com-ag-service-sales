@@ -1,6 +1,8 @@
-﻿using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinishingPrintingPreSalesContract;
+﻿using AutoMapper;
+using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinishingPrintingPreSalesContract;
 using Com.Danliris.Sales.Test.BussinesLogic.Utils;
 using Com.Danliris.Service.Sales.Lib;
+using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingProfiles;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
@@ -129,6 +131,21 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingPreSale
             vm.OrderQuantity = 1;
             response = vm.Validate(null);
             Assert.Empty(response);
+        }
+
+        [Fact]
+        public void Mapping_With_AutoMapper_Profiles()
+        {
+            var configuration = new MapperConfiguration(cfg => {
+                cfg.AddProfile<FinishingPrintingPreSalesContractMapper>();
+            });
+            var mapper = configuration.CreateMapper();
+
+            FinishingPrintingPreSalesContractViewModel vm = new FinishingPrintingPreSalesContractViewModel { Id = 1 };
+            FinishingPrintingPreSalesContractModel model = mapper.Map<FinishingPrintingPreSalesContractModel>(vm);
+
+            Assert.Equal(vm.Id, model.Id);
+
         }
     }
 }
