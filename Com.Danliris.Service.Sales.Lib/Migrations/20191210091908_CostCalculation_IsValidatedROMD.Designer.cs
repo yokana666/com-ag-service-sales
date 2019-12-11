@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191210091908_CostCalculation_IsValidatedROMD")]
+    partial class CostCalculation_IsValidatedROMD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -994,20 +996,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<string>("ChemicalCurrency")
-                        .HasMaxLength(64);
-
-                    b.Property<long>("ChemicalId");
-
-                    b.Property<string>("ChemicalName")
-                        .HasMaxLength(1024);
-
-                    b.Property<double>("ChemicalPrice");
+                    b.Property<int>("ChemicalId");
 
                     b.Property<int>("ChemicalQuantity");
-
-                    b.Property<string>("ChemicalUom")
-                        .HasMaxLength(64);
 
                     b.Property<long>("CostCalculationId");
 
@@ -1033,6 +1024,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("DeletedUtc");
 
+                    b.Property<int>("Index");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("LastModifiedAgent")
@@ -1044,6 +1037,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<DateTime>("LastModifiedUtc");
+
+                    b.Property<decimal>("Price");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
@@ -1101,34 +1096,16 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
-                    b.Property<decimal>("MachineElectric");
+                    b.Property<int>("MachineId");
 
-                    b.Property<long>("MachineId");
+                    b.Property<int>("StepProcessId");
 
-                    b.Property<decimal>("MachineLPG");
-
-                    b.Property<string>("MachineName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("MachineProcess")
-                        .HasMaxLength(1024);
-
-                    b.Property<decimal>("MachineSolar");
-
-                    b.Property<decimal>("MachineSteam");
-
-                    b.Property<decimal>("MachineWater");
-
-                    b.Property<int>("StepId");
-
-                    b.Property<string>("StepProcess")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("StepProcessArea")
-                        .HasMaxLength(1024);
+                    b.Property<decimal>("Total");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
+
+                    b.Property<decimal>("Utility");
 
                     b.HasKey("Id");
 
@@ -1145,19 +1122,15 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<decimal>("ActualPrice");
+                    b.Property<double>("ActualPrice");
 
-                    b.Property<decimal>("CargoCost");
+                    b.Property<string>("BuyerName")
+                        .HasMaxLength(128);
+
+                    b.Property<double>("CargoCost");
 
                     b.Property<string>("Code")
                         .HasMaxLength(16);
-
-                    b.Property<string>("Color")
-                        .HasMaxLength(256);
-
-                    b.Property<double>("Comission");
-
-                    b.Property<decimal>("ConfirmPrice");
 
                     b.Property<string>("CreatedAgent")
                         .IsRequired()
@@ -1169,7 +1142,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("CreatedUtc");
 
-                    b.Property<decimal>("CurrencyRate");
+                    b.Property<double>("CurrencyRate");
 
                     b.Property<DateTimeOffset>("Date");
 
@@ -1183,14 +1156,10 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("DeletedUtc");
 
-                    b.Property<decimal>("FreightCost");
-
-                    b.Property<long>("GreigeId");
+                    b.Property<int>("GreigeId");
 
                     b.Property<string>("GreigeName")
-                        .HasMaxLength(1024);
-
-                    b.Property<decimal>("GreigePrice");
+                        .HasMaxLength(128);
 
                     b.Property<int>("InstructionId");
 
@@ -1200,8 +1169,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<double>("InsuranceCost");
 
                     b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsPosted");
 
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
@@ -1213,19 +1180,11 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
-                    b.Property<long>("MaterialId");
-
-                    b.Property<string>("MaterialName")
-                        .HasMaxLength(1024);
-
-                    b.Property<double>("OrderQuantity");
-
-                    b.Property<long>("PreSalesContractId");
-
-                    b.Property<string>("PreSalesContractNo")
-                        .HasMaxLength(64);
-
                     b.Property<double>("PreparationFabricWeight");
+
+                    b.Property<double>("PreparationValue");
+
+                    b.Property<int>("ProductionOrderId");
 
                     b.Property<string>("ProductionOrderNo")
                         .HasMaxLength(64);
@@ -1235,33 +1194,12 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<double>("RFDFabricWeight");
 
                     b.Property<string>("Remark")
-                        .HasMaxLength(4096);
-
-                    b.Property<string>("SalesFirstName")
-                        .HasMaxLength(1024);
-
-                    b.Property<long>("SalesId");
-
-                    b.Property<string>("SalesLastName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("SalesUserName")
-                        .HasMaxLength(1024);
+                        .HasMaxLength(2048);
 
                     b.Property<int>("TKLQuantity");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
-
-                    b.Property<int>("UnitId");
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(512);
-
-                    b.Property<long>("UomId");
-
-                    b.Property<string>("UomUnit")
-                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 

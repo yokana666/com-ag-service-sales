@@ -202,7 +202,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             Assert.NotEqual(Response, 0);
 
             var ResultData = await facade.ReadByIdAsync((int)data.Id);
-            Assert.Equal(ResultData.IsPosted || ResultData.IsApprovedMD || ResultData.IsApprovedPurchasing || ResultData.IsApprovedIE || ResultData.IsApprovedPPIC, false);
+            Assert.Equal(ResultData.IsPosted || ResultData.IsApprovedMD || ResultData.IsApprovedPurchasing || ResultData.IsApprovedIE || ResultData.IsApprovedKadivMD || ResultData.IsApprovedPPIC, false);
         }
 
         [Fact]

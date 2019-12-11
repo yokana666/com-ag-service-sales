@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Com.Danliris.Sales.Test.WebApi.Utils;
+using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.CostCalculationGarmentProfiles;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
@@ -140,7 +141,12 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 new CostCalculationGarmentViewModel()
                 {
                     FabricAllowance = 0,
-                    AccessoriesAllowance = 0
+                    AccessoriesAllowance = 0,
+                    ApprovalMD = new Approval(),
+                    ApprovalPurchasing = new Approval(),
+                    ApprovalIE = new Approval(),
+                    ApprovalPPIC = new Approval(),
+                    ApprovalKadivMD = new Approval(),
                 },
                 new CostCalculationGarmentViewModel()
                 {
@@ -718,6 +724,26 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var statusCode = GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
 
+        }
+
+        [Fact]
+        public void Mapping_With_AutoMapper_Profiles()
+        {
+            var configuration = new MapperConfiguration(cfg => {
+                cfg.AddProfile<CostCalculationGarmentMapper>();
+                cfg.AddProfile<CostCalculationGarmentMaterialMapper>();
+            });
+            var mapper = configuration.CreateMapper();
+
+            CostCalculationGarmentViewModel costCalculationGarmentViewModel = new CostCalculationGarmentViewModel { Id = 1 };
+            CostCalculationGarment costCalculationGarment = mapper.Map<CostCalculationGarment>(costCalculationGarmentViewModel);
+
+            Assert.Equal(costCalculationGarmentViewModel.Id, costCalculationGarment.Id);
+
+            CostCalculationGarment_MaterialViewModel costCalculationGarment_MaterialViewModel = new CostCalculationGarment_MaterialViewModel { Id = 1 };
+            CostCalculationGarment_Material costCalculationGarment_Material = mapper.Map<CostCalculationGarment_Material>(costCalculationGarment_MaterialViewModel);
+
+            Assert.Equal(costCalculationGarment_MaterialViewModel.Id, costCalculationGarment_Material.Id);
         }
     }
 }
