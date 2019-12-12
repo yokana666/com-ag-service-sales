@@ -105,15 +105,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
             if (Comodity == null || string.IsNullOrWhiteSpace(Comodity.Code))
                 yield return new ValidationResult("Komoditi harus diisi", new List<string> { "Commodity" });
 
-            if (this.FabricAllowance.Equals(0))
-                yield return new ValidationResult("Fabric harus lebih dari 0", new List<string> { "FabricAllowance" });
-            else if (this.FabricAllowance <= 0)
-                yield return new ValidationResult("Fabric harus lebih besar dari 0", new List<string> { "FabricAllowance" });
+            if (FabricAllowance.GetValueOrDefault() < 0)
+                yield return new ValidationResult("Fabric harus lebih dari atau sama dengan 0", new List<string> { "FabricAllowance" });
 
-            if (this.AccessoriesAllowance.Equals(0))
-                yield return new ValidationResult("Access harus lebih dari 0", new List<string> { "AccessoriesAllowance" });
-            else if (this.AccessoriesAllowance <= 0)
-                yield return new ValidationResult("Access harus lebih besar dari 0", new List<string> { "AccessoriesAllowance" });
+            if (AccessoriesAllowance.GetValueOrDefault() < 0)
+                yield return new ValidationResult("Access harus lebih dari atau sama dengan 0", new List<string> { "AccessoriesAllowance" });
 
             if (UOM == null || string.IsNullOrWhiteSpace(UOM.Unit))
                 yield return new ValidationResult("Satuan harus diisi", new List<string> { "UOM" });
