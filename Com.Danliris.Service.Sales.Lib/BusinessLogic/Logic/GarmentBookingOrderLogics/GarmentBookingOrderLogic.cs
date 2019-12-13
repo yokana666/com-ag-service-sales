@@ -45,7 +45,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentBookingOrder
         public override void UpdateAsync(long id, GarmentBookingOrder newModel)
         {
             var model = DbSet.AsNoTracking().Include(d => d.Items).FirstOrDefault(d => d.Id == id);
-            newModel.IsBlockingPlan = model.IsBlockingPlan;
 
             foreach (var item in model.Items)
             {
