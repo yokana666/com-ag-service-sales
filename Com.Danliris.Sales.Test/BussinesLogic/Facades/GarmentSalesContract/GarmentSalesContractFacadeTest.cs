@@ -12,10 +12,14 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentSalesContractLogics;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.ViewModels.GarmentSalesContractViewModels;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentSalesContract
 {
@@ -86,9 +90,47 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentSalesContract
                 .Setup(x => x.GetService(typeof(GarmentSalesContractLogic)))
                 .Returns(spinningLogic);
 
-            
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(SalesDbContext)))
+                .Returns(dbContext);
 
             return serviceProviderMock;
+        }
+
+        [Fact]
+        public async void Validate_ViewModel()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            GarmentSalesContractFacade facade = new GarmentSalesContractFacade(serviceProvider, dbContext);
+
+            var dataUtil = DataUtil(facade, dbContext);
+            var data = await dataUtil.GetTestData();
+
+            List<GarmentSalesContractViewModel> viewModels = new List<GarmentSalesContractViewModel>()
+            {
+                new GarmentSalesContractViewModel
+                {
+                    CostCalculationId = data.CostCalculationId,
+                    Items = new List<GarmentSalesContractItemViewModel>()
+                    {
+                        new GarmentSalesContractItemViewModel()
+                    }
+                },
+                new GarmentSalesContractViewModel
+                {
+                    Items = new List<GarmentSalesContractItemViewModel>()
+                }
+            };
+
+            ValidationContext validationContext = new ValidationContext(viewModels, serviceProvider, null);
+
+            foreach (var viewModel in viewModels)
+            {
+                var defaultValidationResult = viewModel.Validate(validationContext);
+                Assert.True(defaultValidationResult.Count() > 0);
+            }
         }
     }
 }
