@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using Com.Danliris.Service.Sales.Lib;
-using Com.Danliris.Service.Sales.Lib.Helpers;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.Weaving;
@@ -20,18 +17,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
-using Com.Danliris.Service.Sales.WebApi.Utilities;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Weaving;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.Spinning;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
-using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.CostCalculationGarmentLogic;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
@@ -69,6 +62,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentOmzetTargetI
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentOmzetTargetFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentOmzetTargetLogics;
 using Swashbuckle.AspNetCore.Swagger;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.SalesInvoice;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesInvoice;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -128,7 +124,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IMonitoringPreSalesContractFacade, MonitoringPreSalesContractFacade>()
                 .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>()
                 .AddTransient<IGarmentPurchasingQualityObjectiveReportFacade, GarmentPurchasingQualityObjectiveReportFacade>()
-                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>();
+                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>()
+                .AddTransient<ISalesInvoiceContract, SalesInvoiceFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -178,7 +175,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<MonitoringPreSalesContractLogic>()
                 .AddTransient<GarmentPreSalesContractLogic>()
                 .AddTransient<GarmentPurchasingQualityObjectiveReportLogic>()
-                .AddTransient<GarmentOmzetTargetLogic>();            
+                .AddTransient<GarmentOmzetTargetLogic>()
+                .AddTransient<SalesInvoiceLogic>()
+                .AddTransient<SalesInvoiceDetailLogic>();            
         }
 
         private void RegisterServices(IServiceCollection services)

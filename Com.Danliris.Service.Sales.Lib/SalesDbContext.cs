@@ -3,7 +3,6 @@ using Com.Danliris.Service.Sales.Lib.Models.Weaving;
 using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
 using Com.Moonlay.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
@@ -16,6 +15,7 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.MaxWHConfirmModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentOmzetTargetModel;
+using Com.Danliris.Service.Sales.Lib.Models.SalesInvoice;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -60,6 +60,9 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<GarmentPreSalesContract> GarmentPreSalesContracts { get; set; }
         public DbSet<CostCalculationGarmentUnpostReason> CostCalculationGarmentUnpostReasons { get; set; }
         public DbSet<GarmentOmzetTarget> GarmentOmzetTargets { get; set; }
+
+        public DbSet<SalesInvoiceModel> SalesInvoices { get; set; }
+        public DbSet<SalesInvoiceDetailModel> SalesInvoiceDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
