@@ -18,8 +18,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
         public List<string> ImagesPath { get; set; }
         public List<string> ImagesName { get; set; }
         public List<string> DocumentsFile { get; set; }
-        public List<string> DocumentsFileName { get; set; }
-        public List<string> DocumentsPath { get; set; }
 
         public bool IsPosted { get; set; }
 
@@ -42,14 +40,14 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
                 yield return new ValidationResult("Nama Gambar harus diisi", new List<string> { "ImageFile" });
             }
 
-            if (DocumentsFileName != null && DocumentsFileName.Count > 0)
+            if (DocumentsFile != null && DocumentsFile.Count > 0)
             {
                 int DocumentsFileErrorCount = 0;
                 string DocumentsFileError = "[";
 
-                foreach (var doc in DocumentsFileName)
+                foreach (var doc in DocumentsFile)
                 {
-                    if (string.IsNullOrWhiteSpace(doc))
+                    if (string.IsNullOrWhiteSpace(doc) || !doc.StartsWith("data"))
                     {
                         DocumentsFileError += "'Tidak ada file dipilih',";
                         DocumentsFileErrorCount++;
@@ -91,7 +89,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.GarmentROViewModels
 
                     error += " { ";
 
-                    if (item.Color == null || string.IsNullOrWhiteSpace(item.Color.Name))
+                    if (item.Color == null || item.Color.Name == null)
                     {
                         Count++;
                         error += "Color: 'Color harus diisi', ";

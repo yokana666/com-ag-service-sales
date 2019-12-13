@@ -123,21 +123,6 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ROGarment
                 .Setup(x => x.GetService(typeof(IAzureImageFacade)))
                 .Returns(azureImageFacadeMock.Object);
 
-            var azureDocumentFacadeMock = new Mock<IAzureDocumentFacade>();
-            azureDocumentFacadeMock
-                .Setup(s => s.DownloadMultipleFiles(It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new List<string> { "[\"test\"]" });
-            azureDocumentFacadeMock
-                .Setup(s => s.UploadMultipleFile(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync("[\"test\"]");
-            azureDocumentFacadeMock
-                .Setup(s => s.RemoveMultipleFile(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(0));
-
-            serviceProviderMock
-                .Setup(x => x.GetService(typeof(IAzureDocumentFacade)))
-                .Returns(azureDocumentFacadeMock.Object);
-
             ROGarmentSizeBreakdownDetailLogic roGarmentSizeBreakdownDetailLogic = new ROGarmentSizeBreakdownDetailLogic(serviceProviderMock.Object, identityService, dbContext);
             serviceProviderMock
                 .Setup(x => x.GetService(typeof(ROGarmentSizeBreakdownDetailLogic)))

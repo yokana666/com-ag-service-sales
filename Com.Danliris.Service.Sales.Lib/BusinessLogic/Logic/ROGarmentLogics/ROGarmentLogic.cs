@@ -55,8 +55,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
                          UnitCode = ccg.UnitCode,
                          UnitName = ccg.UnitName,
                          IsValidatedROPPIC = ccg.IsValidatedROPPIC,
-                         IsValidatedROSample = ccg.IsValidatedROSample,
-                         IsValidatedROMD = ccg.IsValidatedROMD
+                         IsValidatedROSample = ccg.IsValidatedROSample
                      },
                      Total = ro.Total,
                      IsPosted = ro.IsPosted,
@@ -178,19 +177,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ROGarmentLogics
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
 
             var cc = DbContext.CostCalculationGarments.Single(m => m.Id == model.CostCalculationGarmentId);
-
             cc.IsValidatedROPPIC = false;
-            cc.ValidationPPICBy = null;
-            cc.ValidationPPICDate = DateTimeOffset.MinValue;
-
             cc.IsValidatedROSample = false;
-            cc.ValidationSampleBy = null;
-            cc.ValidationSampleDate = DateTimeOffset.MinValue;
-
-            cc.IsValidatedROMD = false;
-            cc.ValidationMDBy = null;
-            cc.ValidationMDDate = DateTimeOffset.MinValue;
-
             EntityExtension.FlagForUpdate(cc, IdentityService.Username, "sales-service");
         }
     }

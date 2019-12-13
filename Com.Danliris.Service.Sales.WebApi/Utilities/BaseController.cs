@@ -46,7 +46,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
         }
 
         [HttpGet]
-        public virtual IActionResult Get(int page = 1, int size = 25, string order = "{}", [Bind(Prefix = "Select[]")]List<string> select = null, string keyword = null, string filter = "{}")
+        public IActionResult Get(int page = 1, int size = 25, string order = "{}", [Bind(Prefix = "Select[]")]List<string> select = null, string keyword = null, string filter = "{}")
         {
             //if (!ModelState.IsValid)
             //{
@@ -78,7 +78,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
         }
 
         [HttpPost]
-        public virtual async Task<ActionResult> Post([FromBody] TViewModel viewModel)
+        public async Task<ActionResult> Post([FromBody] TViewModel viewModel)
         {
             try
             {
@@ -109,8 +109,8 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
             }
         }
 
-        [HttpGet("{id}")]
-        public virtual async Task<IActionResult> GetById([FromRoute] int id)
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -147,7 +147,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
         }
 
         [HttpPut("{Id}")]
-        public virtual async Task<IActionResult> Put([FromRoute] int id, [FromBody] TViewModel viewModel)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] TViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -197,7 +197,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
         }
 
         [HttpDelete("{Id}")]
-        public virtual async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

@@ -16,7 +16,6 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.MaxWHConfirmModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentOmzetTargetModel;
 using Com.Danliris.Service.Sales.Lib.Models.SalesInvoice;
-using Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -65,11 +64,6 @@ namespace Com.Danliris.Service.Sales.Lib
         public DbSet<SalesInvoiceModel> SalesInvoices { get; set; }
         public DbSet<SalesInvoiceDetailModel> SalesInvoiceDetails { get; set; }
 
-        public DbSet<FinishingPrintingPreSalesContractModel> FinishingPrintingPreSalesContracts { get; set; }
-        
-        public DbSet<FinishingPrintingCostCalculationModel> FinishingPrintingCostCalculations { get; set; }
-        public DbSet<FinishingPrintingCostCalculationMachineModel> FinishingPrintingCostCalculationMachines { get; set; }
-        public DbSet<FinishingPrintingCostCalculationChemicalModel> FinishingPrintingCostCalculationChemicals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -89,6 +83,8 @@ namespace Com.Danliris.Service.Sales.Lib
 
             modelBuilder.Entity<RO_Garment>()
                 .Ignore(c => c.DocumentsFile);
+            modelBuilder.Entity<RO_Garment>()
+                .Ignore(c => c.DocumentsFileName);
 
             modelBuilder.Entity<GarmentPreSalesContract>()
                 .HasIndex(i => i.SCNo)

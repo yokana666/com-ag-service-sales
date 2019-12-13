@@ -15,7 +15,5 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel
         public double Price { get; set; }
         [MaxLength(255)]
         public string Tags { get; set; }
-        public UomViewModel UOM { get; set; }
-        public CurrencyViewModel Currency { get; set; }
     }
 }
