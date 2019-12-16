@@ -441,5 +441,26 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
-    }
+		[HttpGet("data/{ro}")]
+		public IActionResult GetComodityQtyOrderHoursBuyerByRo(string ro)
+		{
+			try
+			{
+				var indexAcceptPdf = Request.Headers["Accept"].ToList().IndexOf("application/pdf");
+				var viewModel = Facade.GetComodityQtyOrderHoursBuyerByRo(ro);
+				Dictionary<string, object> Result =
+				new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+				.Ok(viewModel);
+				return Ok(Result);
+
+			}
+			catch (Exception e)
+			{
+				Dictionary<string, object> Result =
+					new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+					.Fail();
+				return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+			}
+		}
+	}
 }

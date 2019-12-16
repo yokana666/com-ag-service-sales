@@ -719,5 +719,54 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
 
         }
-    }
+
+        [Fact]
+        public void Mapping_With_AutoMapper_Profiles()
+        {
+            var configuration = new MapperConfiguration(cfg => {
+                cfg.AddProfile<CostCalculationGarmentMapper>();
+                cfg.AddProfile<CostCalculationGarmentMaterialMapper>();
+            });
+            var mapper = configuration.CreateMapper();
+
+            CostCalculationGarmentViewModel costCalculationGarmentViewModel = new CostCalculationGarmentViewModel { Id = 1 };
+            CostCalculationGarment costCalculationGarment = mapper.Map<CostCalculationGarment>(costCalculationGarmentViewModel);
+
+            Assert.Equal(costCalculationGarmentViewModel.Id, costCalculationGarment.Id);
+
+            CostCalculationGarment_MaterialViewModel costCalculationGarment_MaterialViewModel = new CostCalculationGarment_MaterialViewModel { Id = 1 };
+            CostCalculationGarment_Material costCalculationGarment_Material = mapper.Map<CostCalculationGarment_Material>(costCalculationGarment_MaterialViewModel);
+
+            Assert.Equal(costCalculationGarment_MaterialViewModel.Id, costCalculationGarment_Material.Id);
+        }
+
+		[Fact]
+		public void GetComodityQtyOrderHoursBuyerByRo_Return_OK()
+		{
+			var mocks = GetMocks();
+			mocks.Facade.Setup(f => f.GetComodityQtyOrderHoursBuyerByRo(It.IsAny<string>()))
+				.Returns(new CostCalculationGarmentDataProductionReport());
+
+			var controller = GetController(mocks);
+			var response = controller.GetComodityQtyOrderHoursBuyerByRo(It.IsAny<string>());
+
+			var statusCode = GetStatusCode(response);
+			Assert.Equal((int)HttpStatusCode.OK, statusCode);
+		}
+
+
+		[Fact]
+		public void GetComodityQtyOrderHoursBuyerByRo_Return_InternalServerError()
+		{
+			var mocks = GetMocks();
+			mocks.Facade.Setup(f => f.GetComodityQtyOrderHoursBuyerByRo(It.IsAny<string>()))
+				.Throws(new Exception(string.Empty));
+
+			var controller = GetController(mocks);
+			var response = controller.GetComodityQtyOrderHoursBuyerByRo(It.IsAny<string>());
+
+			var statusCode = GetStatusCode(response);
+			Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+		}
+	}
 }

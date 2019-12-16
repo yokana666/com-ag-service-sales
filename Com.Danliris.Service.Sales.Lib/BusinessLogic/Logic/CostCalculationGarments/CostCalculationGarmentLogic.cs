@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
+using Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -511,7 +512,18 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             reasonDbSet.Add(costCalculationGarmentUnpostReason);
         }
 
-        internal List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
+		internal CostCalculationGarmentDataProductionReport GetComodityQtyOrderHoursBuyerByRo(string ro)
+		{
+			CostCalculationGarmentDataProductionReport costCalculationGarmentDataProductionReport = new CostCalculationGarmentDataProductionReport();
+			var costCalculation = DbSet.Single(m => m.RO_Number == ro);
+			costCalculationGarmentDataProductionReport.ro = costCalculation.RO_Number;
+			costCalculationGarmentDataProductionReport.buyerCode = costCalculation.BuyerCode;
+			costCalculationGarmentDataProductionReport.hours = costCalculation.SMV_Cutting;
+			costCalculationGarmentDataProductionReport.comodityName = costCalculation.Commodity;
+			costCalculationGarmentDataProductionReport.qtyOrder = costCalculation.Quantity;
+			return costCalculationGarmentDataProductionReport;
+		}
+		internal List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
         {
             IQueryable<CostCalculationGarmentUnpostReason> Query = DbContext.Set<CostCalculationGarmentUnpostReason>();
 
