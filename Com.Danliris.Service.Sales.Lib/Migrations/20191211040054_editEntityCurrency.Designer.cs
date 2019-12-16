@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191211040054_editEntityCurrency")]
+    partial class editEntityCurrency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2556,9 +2558,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("DeliveryOrderNo")
                         .HasMaxLength(25);
 
-                    b.Property<string>("Disp")
-                        .HasMaxLength(25);
-
                     b.Property<DateTimeOffset>("DueDate");
 
                     b.Property<bool>("IsDeleted");
@@ -2582,15 +2581,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(500);
 
-                    b.Property<string>("Op")
-                        .HasMaxLength(25);
-
                     b.Property<DateTimeOffset>("SalesInvoiceDate");
 
                     b.Property<string>("SalesInvoiceNo")
-                        .HasMaxLength(25);
-
-                    b.Property<string>("Sc")
                         .HasMaxLength(25);
 
                     b.Property<string>("UId")
