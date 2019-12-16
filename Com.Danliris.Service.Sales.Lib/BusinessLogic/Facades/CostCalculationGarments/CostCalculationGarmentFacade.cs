@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 using Com.Moonlay.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGarments
 {
@@ -355,8 +356,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             }
             return Updated;
         }
+		public CostCalculationGarmentDataProductionReport GetComodityQtyOrderHoursBuyerByRo(string ro)
+		{
+			return costCalculationGarmentLogic.GetComodityQtyOrderHoursBuyerByRo(ro);
 
-        public List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
+		}
+		public List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
         {
             return costCalculationGarmentLogic.ReadUnpostReasonCreators(keyword, page, size);
         }

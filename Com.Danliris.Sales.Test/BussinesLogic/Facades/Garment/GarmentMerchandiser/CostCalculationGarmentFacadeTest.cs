@@ -266,5 +266,21 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             Assert.NotEmpty(Response);
         }
-    }
+
+		[Fact]
+		public virtual async void CostCalculationGarmentDataProductionReport_Success()
+		{
+			var dbContext = DbContext(GetCurrentMethod());
+			var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+			CostCalculationGarmentFacade facade = Activator.CreateInstance(typeof(CostCalculationGarmentFacade), serviceProvider, dbContext) as CostCalculationGarmentFacade;
+
+			var data = await DataUtil(facade, dbContext).GetTestData();
+
+			var Response = facade.GetComodityQtyOrderHoursBuyerByRo("1910001");
+
+			Assert.NotNull(Response);
+		}
+
+	}
 }
