@@ -69,7 +69,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             {
                 Id = 1
             },
-            Instruction= new InstructionViewModel()
+            Instruction = new InstructionViewModel()
             {
 
             },
@@ -83,6 +83,11 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                     }
                 }
             }
+        };
+
+        protected override List<FinishingPrintingCostCalculationViewModel> ViewModels => new List<FinishingPrintingCostCalculationViewModel>()
+        {
+            ViewModel
         };
 
         [Fact]
