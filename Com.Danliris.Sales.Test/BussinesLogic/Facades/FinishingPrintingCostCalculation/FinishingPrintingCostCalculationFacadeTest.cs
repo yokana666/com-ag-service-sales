@@ -62,25 +62,33 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
                 Remark = "1",
 
                 ProductionOrderNo = "ee",
-                OrderQuantity = 1,
-                OTL1 = 1,
-                OTL2 = 1,
-                Comission = 1,
-                IsPosted = false
+                IsPosted = false,
+                ManufacturingServiceCost = 1,
+                HelperMaterial = 1,
+                MiscMaterial = 1,
+                Lubricant = 1,
+                SparePart = 1,
+                StructureMaintenance = 1,
+                MachineMaintenance = 1,
+                Embalase = 1,
+                GeneralAdministrationCost = 1,
+                DirectorOfficeCost = 1,
+                BankMiscCost = 1
+
             };
             var response = vm.Validate(null);
             Assert.NotEmpty(response);
             Assert.NotNull(vm.Remark);
             Assert.NotNull(vm.ProductionOrderNo);
-            Assert.NotEqual(0, vm.OrderQuantity);
-            Assert.NotEqual(0, vm.OTL2);
-            Assert.NotEqual(0, vm.OTL1);
-            Assert.NotEqual(0, vm.Comission);
             Assert.False(vm.IsPosted);
 
             vm.PreSalesContract = new FinishingPrintingPreSalesContractViewModel()
             {
-                Id = 1
+                Id = 1,
+                Unit = new UnitViewModel()
+                {
+                    Name = "Printing"
+                }
             };
             response = vm.Validate(null);
             Assert.NotEmpty(response);
@@ -141,11 +149,13 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
-            vm.TKLQuantity = 1;
+            vm.ScreenCost = 1;
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
-            
+            vm.ScreenDocumentNo = "as";
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
 
             vm.PreparationFabricWeight = 1;
             response = vm.Validate(null);
@@ -160,14 +170,6 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             Assert.NotEmpty(response);
 
             vm.ConfirmPrice = 1;
-            response = vm.Validate(null);
-            Assert.NotEmpty(response);
-
-            vm.CargoCost = 1;
-            response = vm.Validate(null);
-            Assert.NotEmpty(response);
-
-            vm.InsuranceCost = 1;
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
