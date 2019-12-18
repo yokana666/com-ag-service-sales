@@ -94,9 +94,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
 
         public override void UpdateAsync(long id, FinishingPrintingCostCalculationModel model)
         {
-            var addedMachines = model.Machines.Where(x =>  !_dbContext.FinishingPrintingCostCalculationMachines.Any(y => y.Id == x.Id));
-            var updateMachines = model.Machines.Where(x => _dbContext.FinishingPrintingCostCalculationMachines.Any(y => y.Id == x.Id));
-            var deletedMachines = _dbContext.FinishingPrintingCostCalculationMachines.Where(x => x.CostCalculationId == model.Id && !model.Machines.Any(y => y.Id == x.Id));
+            var dbModel = DbSet.Include(x => x.Machines).ThenInclude(x => x.Chemicals).FirstOrDefault(x => x.Id == id);
+
+            var addedMachines = model.Machines.Where(x => !dbModel.Machines.Any(y => y.Id == x.Id));
+            var updateMachines = dbModel.Machines.Where(x => model.Machines.Any(y => y.Id == x.Id));
+            var deletedMachines = dbModel.Machines.Where(x => !model.Machines.Any(y => y.Id == x.Id));
 
             foreach (var item in addedMachines)
             {
@@ -106,17 +108,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
                     EntityExtension.FlagForCreate(chemical, IdentityService.Username, "sales-service");
 
                 }
+                dbModel.Machines.Add(item);
             }
 
             foreach (var item in updateMachines)
             {
-                var addedChemicals = item.Chemicals.Where(x => !_dbContext.FinishingPrintingCostCalculationChemicals.Any(y => y.Id == x.Id));
-                var updatedChemicals = item.Chemicals.Where(x => _dbContext.FinishingPrintingCostCalculationChemicals.Any(y => y.Id == x.Id));
-                var deletedChemicals = _dbContext.FinishingPrintingCostCalculationChemicals.Where(x => x.CostCalculationMachineId == item.Id && !item.Chemicals.Any(y => y.Id == x.Id));
+                var specificMachineModel = model.Machines.FirstOrDefault(x => x.Id == item.Id);
+                var addedChemicals = specificMachineModel.Chemicals.Where(x => !item.Chemicals.Any(y => y.Id == x.Id));
+                var updatedChemicals = item.Chemicals.Where(x => specificMachineModel.Chemicals.Any(y => y.Id == x.Id));
+                var deletedChemicals = item.Chemicals.Where(x => !specificMachineModel.Chemicals.Any(y => y.Id == x.Id));
 
                 foreach (var chemical in addedChemicals)
                 {
                     EntityExtension.FlagForCreate(chemical, IdentityService.Username, "sales-service");
+                    item.Chemicals.Add(chemical);
                 }
 
                 foreach (var chemical in updatedChemicals)
@@ -141,17 +146,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
 
                 }
             }
-
-            //foreach(var machine in model.Machines)
-            //{
-            //    EntityExtension.FlagForUpdate(machine, IdentityService.Username, "sales-service");
-            //    foreach(var chemical in machine.Chemicals)
-            //    {
-            //        EntityExtension.FlagForUpdate(chemical, IdentityService.Username, "sales-service");
-
-            //    }
-            //}
-            base.UpdateAsync(id, model);
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+            
         }
 
         public async Task CCPost(List<long> listId)

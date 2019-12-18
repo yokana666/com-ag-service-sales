@@ -45,68 +45,103 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
             FinishingPrintingCostCalculationFacade facade = Activator.CreateInstance(typeof(FinishingPrintingCostCalculationFacade), serviceProvider, dbContext) as FinishingPrintingCostCalculationFacade;
 
             var data = await DataUtil(facade, dbContext).GetTestData();
-            var ch = new FinishingPrintingCostCalculationChemicalModel()
+            var vmch = mapper.Map<FinishingPrintingCostCalculationViewModel>(data);
+            vmch.Machines.FirstOrDefault().Chemicals.Add(new FinishingPrintingCostCalculationChemicalViewModel()
             {
-                ChemicalId = 1,
+                Chemical = new ProductViewModel()
+                {
+                    Id = 1,
+                    Name = "a",
+                    Price = 1,
+                    Currency = new CurrencyViewModel()
+                    {
+                        Id = 1
+                    },
+                },
                 ChemicalQuantity = 1,
-                ChemicalPrice = 1,
-                ChemicalCurrency = "rp",
-                ChemicalName = "name",
-                ChemicalUom = "m"
+            });
 
-            };
-            data.Machines.FirstOrDefault().Chemicals.Add(ch);
-            var response = await facade.UpdateAsync((int)data.Id, data);
+            var modelCH = mapper.Map<FinishingPrintingCostCalculationModel>(vmch);
+           
+            var response = await facade.UpdateAsync((int)modelCH.Id, modelCH);
 
             Assert.NotEqual(response, 0);
 
-            //var vmData = mapper.Map<FinishingPrintingCostCalculationViewModel>(data);
-            //vmData.Machines.FirstOrDefault().Chemicals.Clear();
 
-            //var model = mapper.Map<FinishingPrintingCostCalculationModel>(vmData);
-            //response = await facade.UpdateAsync((int)model.Id, model);
-            //Assert.NotEqual(response, 0);
+            var vmData = mapper.Map<FinishingPrintingCostCalculationViewModel>(data);
+            vmData.Machines.FirstOrDefault().Chemicals.Clear();
+
+            var model = mapper.Map<FinishingPrintingCostCalculationModel>(vmData);
+            FinishingPrintingCostCalculationFacade facade2 = Activator.CreateInstance(typeof(FinishingPrintingCostCalculationFacade), serviceProvider, dbContext) as FinishingPrintingCostCalculationFacade;
+
+            response = await facade2.UpdateAsync((int)model.Id, model);
+            Assert.NotEqual(response, 0);
         }
 
         [Fact]
         public async void UpdateMachine_Success()
         {
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<FinishingPrintingCostCalculationMapper>();
+                cfg.AddProfile<FinishingPrintingCostCalculationMachineMapper>();
+                cfg.AddProfile<FinishingPrintingCostCalculationChemicalMapper>();
+            });
+            var mapper = configuration.CreateMapper();
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
 
             FinishingPrintingCostCalculationFacade facade = Activator.CreateInstance(typeof(FinishingPrintingCostCalculationFacade), serviceProvider, dbContext) as FinishingPrintingCostCalculationFacade;
 
             var data = await DataUtil(facade, dbContext).GetTestData();
-            data.Machines.Add(new FinishingPrintingCostCalculationMachineModel()
+            var vmDataCreated = mapper.Map<FinishingPrintingCostCalculationViewModel>(data);
+
+            vmDataCreated.Machines.Add(new FinishingPrintingCostCalculationMachineViewModel()
             {
-                Chemicals = new List<FinishingPrintingCostCalculationChemicalModel>()
+                Chemicals = new List<FinishingPrintingCostCalculationChemicalViewModel>()
                         {
-                            new FinishingPrintingCostCalculationChemicalModel()
+                            new FinishingPrintingCostCalculationChemicalViewModel()
                             {
-                                ChemicalId = 1,
+                                Chemical = new ProductViewModel()
+                                {
+                                    Id = 1,
+                                    Name = "a",
+                                    Price = 1,
+                                    Currency = new CurrencyViewModel(){
+                                        Id = 1
+                                    },
+                                },
                                 ChemicalQuantity = 1,
-                                ChemicalPrice = 1,
-                                ChemicalCurrency = "rp",
-                                ChemicalName = "name",
-                                ChemicalUom = "m"
 
                             }
                         },
-                MachineElectric = 1,
-                MachineLPG = 1,
-                MachineName = "name",
-                MachineProcess = "process",
-                MachineSolar = 1,
-                MachineSteam = 1,
-                MachineWater = 1,
-                StepId = 1,
-                StepProcess = "prec",
-                StepProcessArea = "area",
+                Machine = new MachineViewModel()
+                {
+                    Name = "name",
+                    Id = 1,
+                    Electric = 1
+                },
+                Step = new StepViewModel()
+                {
+                    Id = 1,
+                    Process = "aa"
+                },
                 Depretiation = 1,
-                MachineId = 1
             });
-            var response = await facade.UpdateAsync((int)data.Id, data);
+            var modelCreated = mapper.Map<FinishingPrintingCostCalculationModel>(vmDataCreated);
+            
+            var response = await facade.UpdateAsync((int)modelCreated.Id, modelCreated);
 
+            Assert.NotEqual(response, 0);
+
+
+            var vmData = mapper.Map<FinishingPrintingCostCalculationViewModel>(data);
+            vmData.Machines.Clear();
+
+            var model = mapper.Map<FinishingPrintingCostCalculationModel>(vmData);
+            FinishingPrintingCostCalculationFacade facade2 = Activator.CreateInstance(typeof(FinishingPrintingCostCalculationFacade), serviceProvider, dbContext) as FinishingPrintingCostCalculationFacade;
+
+            response = await facade2.UpdateAsync((int)model.Id, model);
             Assert.NotEqual(response, 0);
         }
 
@@ -347,5 +382,5 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
         }
     }
 
-    
+
 }
