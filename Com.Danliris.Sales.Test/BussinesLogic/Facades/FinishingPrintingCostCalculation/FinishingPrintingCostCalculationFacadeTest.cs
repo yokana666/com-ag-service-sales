@@ -15,6 +15,8 @@ using System.Text;
 using AutoMapper;
 using Xunit;
 using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingCostCalculationProfiles;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCalculation
 {
@@ -25,6 +27,89 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
         public FinishingPrintingCostCalculationFacadeTest() : base(ENTITY)
         {
         }
+
+        [Fact]
+        public async void Update_Chemical_Success()
+        {
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<FinishingPrintingCostCalculationMapper>();
+                cfg.AddProfile<FinishingPrintingCostCalculationMachineMapper>();
+                cfg.AddProfile<FinishingPrintingCostCalculationChemicalMapper>();
+            });
+            var mapper = configuration.CreateMapper();
+
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            FinishingPrintingCostCalculationFacade facade = Activator.CreateInstance(typeof(FinishingPrintingCostCalculationFacade), serviceProvider, dbContext) as FinishingPrintingCostCalculationFacade;
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+            var ch = new FinishingPrintingCostCalculationChemicalModel()
+            {
+                ChemicalId = 1,
+                ChemicalQuantity = 1,
+                ChemicalPrice = 1,
+                ChemicalCurrency = "rp",
+                ChemicalName = "name",
+                ChemicalUom = "m"
+
+            };
+            data.Machines.FirstOrDefault().Chemicals.Add(ch);
+            var response = await facade.UpdateAsync((int)data.Id, data);
+
+            Assert.NotEqual(response, 0);
+
+            //var vmData = mapper.Map<FinishingPrintingCostCalculationViewModel>(data);
+            //vmData.Machines.FirstOrDefault().Chemicals.Clear();
+
+            //var model = mapper.Map<FinishingPrintingCostCalculationModel>(vmData);
+            //response = await facade.UpdateAsync((int)model.Id, model);
+            //Assert.NotEqual(response, 0);
+        }
+
+        [Fact]
+        public async void UpdateMachine_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            FinishingPrintingCostCalculationFacade facade = Activator.CreateInstance(typeof(FinishingPrintingCostCalculationFacade), serviceProvider, dbContext) as FinishingPrintingCostCalculationFacade;
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+            data.Machines.Add(new FinishingPrintingCostCalculationMachineModel()
+            {
+                Chemicals = new List<FinishingPrintingCostCalculationChemicalModel>()
+                        {
+                            new FinishingPrintingCostCalculationChemicalModel()
+                            {
+                                ChemicalId = 1,
+                                ChemicalQuantity = 1,
+                                ChemicalPrice = 1,
+                                ChemicalCurrency = "rp",
+                                ChemicalName = "name",
+                                ChemicalUom = "m"
+
+                            }
+                        },
+                MachineElectric = 1,
+                MachineLPG = 1,
+                MachineName = "name",
+                MachineProcess = "process",
+                MachineSolar = 1,
+                MachineSteam = 1,
+                MachineWater = 1,
+                StepId = 1,
+                StepProcess = "prec",
+                StepProcessArea = "area",
+                Depretiation = 1,
+                MachineId = 1
+            });
+            var response = await facade.UpdateAsync((int)data.Id, data);
+
+            Assert.NotEqual(response, 0);
+        }
+
 
         [Fact]
         public virtual async void Create_Printing_Success()
@@ -220,7 +305,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
                     Depretiation = 1,
                     Index = 1,
                     CostCalculationId = 1,
-                    
+
                     Chemicals = new List<FinishingPrintingCostCalculationChemicalViewModel>()
                     {
                         new FinishingPrintingCostCalculationChemicalViewModel()
@@ -246,7 +331,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
         [Fact]
         public void Mapping_With_AutoMapper_Profiles()
         {
-            var configuration = new MapperConfiguration(cfg => {
+            var configuration = new MapperConfiguration(cfg =>
+            {
                 cfg.AddProfile<FinishingPrintingCostCalculationMapper>();
                 cfg.AddProfile<FinishingPrintingCostCalculationMachineMapper>();
                 cfg.AddProfile<FinishingPrintingCostCalculationChemicalMapper>();
@@ -260,4 +346,6 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
 
         }
     }
+
+    
 }

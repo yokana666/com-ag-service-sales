@@ -17,8 +17,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
 {
     public class FinishingPrintingCostCalculationLogic : BaseLogic<FinishingPrintingCostCalculationModel>
     {
+        private readonly SalesDbContext _dbContext;
         public FinishingPrintingCostCalculationLogic(IIdentityService IdentityService, SalesDbContext dbContext) : base(IdentityService, dbContext)
         {
+            _dbContext = dbContext;
         }
 
         public override ReadResponse<FinishingPrintingCostCalculationModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
@@ -92,15 +94,63 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
 
         public override void UpdateAsync(long id, FinishingPrintingCostCalculationModel model)
         {
-            foreach(var machine in model.Machines)
+            var addedMachines = model.Machines.Where(x =>  !_dbContext.FinishingPrintingCostCalculationMachines.Any(y => y.Id == x.Id));
+            var updateMachines = model.Machines.Where(x => _dbContext.FinishingPrintingCostCalculationMachines.Any(y => y.Id == x.Id));
+            var deletedMachines = _dbContext.FinishingPrintingCostCalculationMachines.Where(x => x.CostCalculationId == model.Id && !model.Machines.Any(y => y.Id == x.Id));
+
+            foreach (var item in addedMachines)
             {
-                EntityExtension.FlagForUpdate(machine, IdentityService.Username, "sales-service");
-                foreach(var chemical in machine.Chemicals)
+                EntityExtension.FlagForCreate(item, IdentityService.Username, "sales-service");
+                foreach (var chemical in item.Chemicals)
                 {
-                    EntityExtension.FlagForUpdate(chemical, IdentityService.Username, "sales-service");
+                    EntityExtension.FlagForCreate(chemical, IdentityService.Username, "sales-service");
 
                 }
             }
+
+            foreach (var item in updateMachines)
+            {
+                var addedChemicals = item.Chemicals.Where(x => !_dbContext.FinishingPrintingCostCalculationChemicals.Any(y => y.Id == x.Id));
+                var updatedChemicals = item.Chemicals.Where(x => _dbContext.FinishingPrintingCostCalculationChemicals.Any(y => y.Id == x.Id));
+                var deletedChemicals = _dbContext.FinishingPrintingCostCalculationChemicals.Where(x => x.CostCalculationMachineId == item.Id && !item.Chemicals.Any(y => y.Id == x.Id));
+
+                foreach (var chemical in addedChemicals)
+                {
+                    EntityExtension.FlagForCreate(chemical, IdentityService.Username, "sales-service");
+                }
+
+                foreach (var chemical in updatedChemicals)
+                {
+                    EntityExtension.FlagForUpdate(chemical, IdentityService.Username, "sales-service");
+                }
+
+                foreach (var chemical in deletedChemicals)
+                {
+                    EntityExtension.FlagForDelete(chemical, IdentityService.Username, "sales-service");
+                }
+
+                EntityExtension.FlagForUpdate(item, IdentityService.Username, "sales-service");
+            }
+
+            foreach (var item in deletedMachines)
+            {
+                EntityExtension.FlagForDelete(item, IdentityService.Username, "sales-service");
+                foreach (var chemical in item.Chemicals)
+                {
+                    EntityExtension.FlagForDelete(chemical, IdentityService.Username, "sales-service");
+
+                }
+            }
+
+            //foreach(var machine in model.Machines)
+            //{
+            //    EntityExtension.FlagForUpdate(machine, IdentityService.Username, "sales-service");
+            //    foreach(var chemical in machine.Chemicals)
+            //    {
+            //        EntityExtension.FlagForUpdate(chemical, IdentityService.Username, "sales-service");
+
+            //    }
+            //}
             base.UpdateAsync(id, model);
         }
 
