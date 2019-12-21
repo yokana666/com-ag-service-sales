@@ -15,8 +15,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 		{
 			BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
 			BaseFont bf_bold = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
-			Font normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 7);
-			Font bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 7);
+			Font normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 6);
+			Font bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 6);
 			DateTime now = DateTime.Now;
 
 			Document document = new Document(PageSize.A4, 10, 10, 10, 10);
@@ -281,7 +281,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			cell_ccm.Phrase = new Phrase("PO NUMBER", bold_font);
 			table_ccm.AddCell(cell_ccm);
 
-			float row2Y = row1Y - table_detail1.TotalHeight - 10;
+			float row2Y = row1Y - table_detail1.TotalHeight - 5;
 			float row3Height = table_detail2.TotalHeight > table_detail3.TotalHeight ? table_detail2.TotalHeight : table_detail3.TotalHeight;
 			float row2RemainingHeight = row2Y - 10 - row3Height - printedOnHeight - margin;
 			float row2AllowedHeight = row2Y - printedOnHeight - margin;
@@ -379,7 +379,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			#region Draw Others
 			table_ccm.WriteSelectedRows(0, -1, 10, row2Y, cb);
 
-			float row3Y = row2Y - table_ccm.TotalHeight - 10;
+			float row3Y = row2Y - table_ccm.TotalHeight - 5;
 			float row3RemainigHeight = row3Y - printedOnHeight - margin;
 			if (row3RemainigHeight < row3Height)
 			{
