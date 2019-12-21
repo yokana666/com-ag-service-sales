@@ -252,10 +252,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			#endregion
 
 			#region Cost Calculation Material
-			PdfPTable table_ccm = new PdfPTable(10);
+			PdfPTable table_ccm = new PdfPTable(11);
 			table_ccm.TotalWidth = 570f;
 
-			float[] ccm_widths = new float[] { 1f, 3f, 3f, 6f, 2f, 3f, 3f, 2f, 3f, 3f };
+			float[] ccm_widths = new float[] { 1f, 3f, 2f, 6f, 2f, 3f, 2f, 2f, 3f, 3f, 3f };
 			table_ccm.SetWidths(ccm_widths);
 
 			PdfPCell cell_ccm = new PdfPCell() { Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER, HorizontalAlignment = Element.ALIGN_CENTER, VerticalAlignment = Element.ALIGN_MIDDLE, Padding = 2 };
@@ -264,7 +264,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			table_ccm.AddCell(cell_ccm);
 			cell_ccm.Phrase = new Phrase("CATEGORIES", bold_font);
 			table_ccm.AddCell(cell_ccm);
-			cell_ccm.Phrase = new Phrase("KODE PRODUK", bold_font);
+			cell_ccm.Phrase = new Phrase("KODE", bold_font);
 			table_ccm.AddCell(cell_ccm);
 			cell_ccm.Phrase = new Phrase("DESCRIPTION", bold_font);
 			table_ccm.AddCell(cell_ccm);
@@ -272,13 +272,15 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			table_ccm.AddCell(cell_ccm);
 			cell_ccm.Phrase = new Phrase("PRICE", bold_font);
 			table_ccm.AddCell(cell_ccm);
-			cell_ccm.Phrase = new Phrase("QUANTITY", bold_font);
+			cell_ccm.Phrase = new Phrase("QTY", bold_font);
 			table_ccm.AddCell(cell_ccm);
 			cell_ccm.Phrase = new Phrase("UNIT", bold_font);
 			table_ccm.AddCell(cell_ccm);
 			cell_ccm.Phrase = new Phrase("AMOUNT", bold_font);
 			table_ccm.AddCell(cell_ccm);
 			cell_ccm.Phrase = new Phrase("PO NUMBER", bold_font);
+			table_ccm.AddCell(cell_ccm);
+			cell_ccm.Phrase = new Phrase("BEA KIRIM", bold_font);
 			table_ccm.AddCell(cell_ccm);
 
 			float row2Y = row1Y - table_detail1.TotalHeight - 5;
@@ -309,7 +311,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				cell_ccm.HorizontalAlignment = Element.ALIGN_RIGHT;
 
 				double usage = viewModel.CostCalculationGarment_Materials[i].Quantity ?? 0;
-				cell_ccm.Phrase = new Phrase(usage.ToString(), normal_font);
+				cell_ccm.Phrase = new Phrase(Number.ToRupiahWithoutSymbol(usage), normal_font);
 				table_ccm.AddCell(cell_ccm);
 
 				double price = viewModel.CostCalculationGarment_Materials[i].Price ?? 0;
@@ -327,7 +329,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				}
 				double totalQuantity = viewModel.Quantity ?? 0;
 				double quantity = (100 + factor) / 100 * usage * totalQuantity;
-				cell_ccm.Phrase = new Phrase(Math.Ceiling(viewModel.CostCalculationGarment_Materials[i].BudgetQuantity).ToString(), normal_font);
+                var budgetQuantity = Number.ToRupiahWithoutSymbol(Math.Ceiling(viewModel.CostCalculationGarment_Materials[i].BudgetQuantity));
+                cell_ccm.Phrase = new Phrase(budgetQuantity.Substring(0, budgetQuantity.Length - 3), normal_font);
 				table_ccm.AddCell(cell_ccm);
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -351,6 +354,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_CENTER;
 				cell_ccm.Phrase = new Phrase(viewModel.CostCalculationGarment_Materials[i].PO_SerialNumber, normal_font);
+				table_ccm.AddCell(cell_ccm);
+
+				cell_ccm.HorizontalAlignment = Element.ALIGN_RIGHT;
+                var beaKirim = Number.ToRupiahWithoutSymbol(Math.Ceiling(viewModel.CostCalculationGarment_Materials[i].TotalShippingFee));
+                cell_ccm.Phrase = new Phrase(beaKirim.Substring(0, beaKirim.Length - 3), normal_font);
 				table_ccm.AddCell(cell_ccm);
 
 				float currentHeight = table_ccm.TotalHeight;
