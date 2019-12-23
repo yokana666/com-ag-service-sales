@@ -546,7 +546,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                     Details = new List<ProductionOrder_DetailViewModel>{
                         new ProductionOrder_DetailViewModel{
                             ColorRequest = "A",
-                            Quantity = 5.48,
+                            Quantity = 5.4,
                             Uom = new UomViewModel{
                                 Id = 1,
                                 Unit = "MTR"
