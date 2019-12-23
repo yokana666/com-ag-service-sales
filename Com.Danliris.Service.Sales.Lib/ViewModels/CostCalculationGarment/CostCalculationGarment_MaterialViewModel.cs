@@ -30,5 +30,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public bool IsPosted { get; set; }
 
         public bool? IsPRMaster { get; set; } // Terisi waktu validasi RO, cek apakah barang dibuat PR Master
+
+        public long PRMasterId { get; set; }
+        public long PRMasterItemId { get; set; }
+        public string POMaster { get; set; }
     }
 }
