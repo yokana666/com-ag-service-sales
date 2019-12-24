@@ -244,7 +244,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 FOB = 0;
                 var b = Convert.ToDouble(viewModel.Rate.Value);
-                double a = (1.05 * CM_Price / Convert.ToDouble(viewModel.Rate.Value));
+                double a = (1.05 * CM_Price / Convert.ToDouble(viewModel.Rate.Value)) - (viewModel.Insurance.GetValueOrDefault() + viewModel.Freight.GetValueOrDefault());
                 FOB_Remark = ConfirmPrice + a;
             }
 			string FOB_Price = this.GetCurrencyValue(FOB, isDollar);
