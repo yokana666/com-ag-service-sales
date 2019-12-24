@@ -547,7 +547,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				cell_ccm_right.Phrase = new Phrase(String.Format("{0} {1}", viewModel.CostCalculationGarment_Materials[i].Quantity, viewModel.CostCalculationGarment_Materials[i].UOMQuantity.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
-				cell_ccm_right.Phrase = new Phrase(String.Format("{0} / {1}", string.Format("{0:n2}", viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
+				cell_ccm_right.Phrase = new Phrase(String.Format("{0} / {1}", string.Format("{0:n2}", viewModel.CostCalculationGarment_Materials[i].isFabricCM ? 0 : viewModel.CostCalculationGarment_Materials[i].Price), viewModel.CostCalculationGarment_Materials[i].UOMPrice.Unit), normal_font);
 				table_ccm.AddCell(cell_ccm_right);
 
 				cell_ccm_right.Phrase = new Phrase(string.Format("{0:n2}",viewModel.CostCalculationGarment_Materials[i].Total), normal_font);
