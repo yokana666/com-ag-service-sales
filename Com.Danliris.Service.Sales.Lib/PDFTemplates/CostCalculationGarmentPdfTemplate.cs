@@ -432,7 +432,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 
 
-            var DESC = fabric + "\n" + "FOB PRICE : $ "+ Number.ToRupiahWithoutSymbol(FOB_Remark);
+            var DESC = "FOB PRICE : $ "+ Number.ToRupiahWithoutSymbol(FOB_Remark) + "\n\n" + fabric;
    //         cell_bottom_column3_1.Phrase = new Phrase("DESCRIPTION", normal_font);
    //table_bottom_column3_1.AddCell(cell_bottom_column3_1);
    //cell_bottom_column3_1.Phrase = new Phrase($"{viewModel.SizeRange + "\n" + viewModel.FabricAllowance + " - " + viewModel.AccessoriesAllowance + "\n" + fabric}", normal_font);
@@ -589,7 +589,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 Border = Rectangle.TOP_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER | Rectangle.RIGHT_BORDER,
                 HorizontalAlignment = Element.ALIGN_LEFT,
-                VerticalAlignment = Element.ALIGN_MIDDLE,
+                VerticalAlignment = Element.ALIGN_TOP,
                 Padding = 2
             };
             cell_breakDown_center.Phrase = new Phrase("REMARK : \n\n" + DESC, normal_font);
