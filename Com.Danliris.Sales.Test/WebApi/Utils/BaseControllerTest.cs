@@ -163,7 +163,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         }
 
         [Fact]
-        public async Task GetById_NotNullModel_ReturnOK()
+        public virtual async Task GetById_NotNullModel_ReturnOK()
         {
             var mocks = this.GetMocks();
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(this.Model);
@@ -174,7 +174,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         }
 
         [Fact]
-        public async Task GetById_NullModel_ReturnNotFound()
+        public virtual async Task GetById_NullModel_ReturnNotFound()
         {
             var mocks = this.GetMocks();
             mocks.Mapper.Setup(f => f.Map<TViewModel>(It.IsAny<TModel>())).Returns(this.ViewModel);
@@ -185,7 +185,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         }
 
         [Fact]
-        public async Task GetById_ThrowException_ReturnInternalServerError()
+        public virtual async Task GetById_ThrowException_ReturnInternalServerError()
         {
             var mocks = this.GetMocks();
             mocks.Facade.Setup(f => f.ReadByIdAsync(It.IsAny<int>())).ThrowsAsync(new Exception());

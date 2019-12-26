@@ -77,5 +77,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
             return await DbContext.SaveChangesAsync();
         }
 
+        public async Task<FinishingPrintingCostCalculationModel> ReadParent(long id)
+        {
+            return await finishingPrintingCostCalculationLogic.ReadParent(id);
+        }
     }
 }

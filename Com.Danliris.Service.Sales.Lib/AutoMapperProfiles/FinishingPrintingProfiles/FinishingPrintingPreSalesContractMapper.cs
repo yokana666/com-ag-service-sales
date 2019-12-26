@@ -16,6 +16,7 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingPro
                 .ForPath(d => d.Buyer.Id, opt => opt.MapFrom(s => s.BuyerId))
                 .ForPath(d => d.Buyer.Code, opt => opt.MapFrom(s => s.BuyerCode))
                 .ForPath(d => d.Buyer.Name, opt => opt.MapFrom(s => s.BuyerName))
+                .ForPath(d => d.Buyer.Type, opt => opt.MapFrom(s => s.BuyerType))
 
                 .ForPath(d => d.Unit.Id, opt => opt.MapFrom(s => s.UnitId))
                 .ForPath(d => d.Unit.Code, opt => opt.MapFrom(s => s.UnitCode))

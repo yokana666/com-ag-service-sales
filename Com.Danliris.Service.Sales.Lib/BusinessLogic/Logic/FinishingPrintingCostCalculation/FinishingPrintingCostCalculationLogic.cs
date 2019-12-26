@@ -33,7 +33,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Search(query, SearchAttributes, keyword);
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "ConfirmPrice", "IsPosted"
+                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "ConfirmPrice", "IsPosted", "Material", "UOM"
             };
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Filter(query, FilterDictionary);
@@ -51,6 +51,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
         public override Task<FinishingPrintingCostCalculationModel> ReadByIdAsync(long id)
         {
             return DbSet.Include(x => x.Machines).ThenInclude(y => y.Chemicals).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
+        }
+
+        public Task<FinishingPrintingCostCalculationModel> ReadParent(long id)
+        {
+            return DbSet.FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
         }
 
         public override void Create(FinishingPrintingCostCalculationModel model)
@@ -138,7 +143,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
             dbModel.UnitName = model.UnitName;
             dbModel.UomId = model.UomId;
             dbModel.UomUnit = model.UomUnit;
-            
+
 
             var addedMachines = model.Machines.Where(x => !dbModel.Machines.Any(y => y.Id == x.Id));
             var updateMachines = dbModel.Machines.Where(x => model.Machines.Any(y => y.Id == x.Id));
@@ -174,7 +179,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
                 item.StepId = specificMachineModel.StepId;
                 item.StepProcess = specificMachineModel.StepProcess;
                 item.StepProcessArea = specificMachineModel.StepProcessArea;
-                
+
 
                 var addedChemicals = specificMachineModel.Chemicals.Where(x => !item.Chemicals.Any(y => y.Id == x.Id));
                 var updatedChemicals = item.Chemicals.Where(x => specificMachineModel.Chemicals.Any(y => y.Id == x.Id));
@@ -197,7 +202,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
                     chemical.ChemicalPrice = specificChemical.ChemicalPrice;
                     chemical.ChemicalQuantity = specificChemical.ChemicalQuantity;
                     chemical.ChemicalUom = specificChemical.ChemicalUom;
-                    
+
 
                     EntityExtension.FlagForUpdate(chemical, IdentityService.Username, "sales-service");
                 }
@@ -220,7 +225,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
                 }
             }
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
-            
+
         }
 
         public async Task CCPost(List<long> listId)
