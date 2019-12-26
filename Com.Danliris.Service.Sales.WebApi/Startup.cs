@@ -107,6 +107,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IRate, RateFacade>()
                 .AddTransient<IEfficiency, EfficiencyFacade>()
                 .AddTransient<IAzureImageFacade, AzureImageFacade>()
+                .AddTransient<IAzureDocumentFacade, AzureDocumentFacade>()
                 .AddTransient<IGarment_BudgetValidationPPIC, Garment_BudgetValidationPPICFacade>()
                 .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
                 .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>()

@@ -109,7 +109,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Utilities
             }
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
