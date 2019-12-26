@@ -88,6 +88,11 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTimeOffset>("ApprovedIEDate");
 
+                    b.Property<string>("ApprovedKadivMDBy")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTimeOffset>("ApprovedKadivMDDate");
+
                     b.Property<string>("ApprovedMDBy")
                         .HasMaxLength(50);
 
@@ -194,6 +199,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsApprovedIE");
 
+                    b.Property<bool>("IsApprovedKadivMD");
+
                     b.Property<bool>("IsApprovedMD");
 
                     b.Property<bool>("IsApprovedPPIC");
@@ -209,6 +216,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<bool>("IsROAvailable");
 
                     b.Property<bool>("IsRODistributed");
+
+                    b.Property<bool>("IsValidatedROMD");
 
                     b.Property<bool>("IsValidatedROPPIC");
 
@@ -320,10 +329,21 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("UnitName")
                         .HasMaxLength(255);
 
+                    b.Property<string>("ValidationMDBy")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTimeOffset>("ValidationMDDate");
+
+
                     b.Property<string>("ValidationPPICBy")
                         .HasMaxLength(50);
 
                     b.Property<DateTimeOffset>("ValidationPPICDate");
+
+                    b.Property<string>("ValidationSampleBy")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTimeOffset>("ValidationSampleDate");
 
                     b.Property<int>("WageId");
 
@@ -2664,6 +2684,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("DeletedUtc");
 
+                    b.Property<string>("DocumentsFileName")
+                        .HasMaxLength(255);
+
                     b.Property<string>("DocumentsPath")
                         .HasMaxLength(1000);
 
@@ -3403,6 +3426,22 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasForeignKey("FinishingPrintingSalesContractId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
+
+            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationChemicalModel", b =>
+            {
+                b.HasOne("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationMachineModel", "FinishingPrintingCostCalculationMachine")
+                    .WithMany("Chemicals")
+                    .HasForeignKey("CostCalculationMachineId")
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationMachineModel", b =>
+            {
+                b.HasOne("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationModel", "FinishingPrintingCostCalculation")
+                    .WithMany("Machines")
+                    .HasForeignKey("CostCalculationId")
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrderItem", b =>
                 {
