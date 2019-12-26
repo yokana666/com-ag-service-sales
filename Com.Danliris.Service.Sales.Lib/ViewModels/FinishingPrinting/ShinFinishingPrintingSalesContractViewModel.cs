@@ -113,7 +113,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
                 yield return new ValidationResult("Tujuan Kirim harus diisi", new List<string> { "DeliveredTo" });
             }
 
-            if (DeliverySchedule == null || DeliverySchedule <= DateTimeOffset.Now)
+            if (DeliverySchedule == null || DeliverySchedule.GetValueOrDefault().Date <= DateTimeOffset.Now.Date)
             {
                 yield return new ValidationResult("Jadwal Pengiriman harus diisi", new List<string> { "DeliverySchedule" });
             }
