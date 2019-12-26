@@ -29,8 +29,50 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
             _facade = salesInvoiceFacade;
         }
 
-        [HttpGet("pdf/{Id}")]
-        public async Task<IActionResult> GetPDF([FromRoute] int Id)
+        [HttpGet("deliveryOrderPdf/{Id}")]
+        public async Task<IActionResult> GetDeliveryOrderPDF([FromRoute] int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var indexAcceptPdf = Request.Headers["Accept"].ToList().IndexOf("application/pdf");
+                int timeoffsset = Convert.ToInt32(Request.Headers["x-timezone-offset"]);
+                SalesInvoiceModel model = await Facade.ReadByIdAsync(Id);
+
+                if (model == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.NOT_FOUND_STATUS_CODE, Common.NOT_FOUND_MESSAGE)
+                        .Fail();
+                    return NotFound(Result);
+                }
+                else
+                {
+                    SalesInvoiceViewModel viewModel = Mapper.Map<SalesInvoiceViewModel>(model);
+
+                    DeliveryOrderPdfTemplate PdfTemplate = new DeliveryOrderPdfTemplate();
+                    MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel, timeoffsset);
+                    return new FileStreamResult(stream, "application/pdf")
+                    {
+                        FileDownloadName = "Surat_Jalan/" + viewModel.DeliveryOrderNo + ".pdf"
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpGet("salesInvoicePdf/{Id}")]
+        public async Task<IActionResult> GetSalesInvoicePDF([FromRoute] int Id)
         {
             if (!ModelState.IsValid)
             {
@@ -58,7 +100,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel, timeoffsset);
                     return new FileStreamResult(stream, "application/pdf")
                     {
-                        FileDownloadName = "SalesInvoice" + viewModel.SalesInvoiceNo + ".pdf"
+                        FileDownloadName = "Faktur_Penjualan - " + viewModel.SalesInvoiceNo + ".pdf"
                     };
                 }
             }

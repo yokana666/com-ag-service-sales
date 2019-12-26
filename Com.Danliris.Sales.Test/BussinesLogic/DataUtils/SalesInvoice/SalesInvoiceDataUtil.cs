@@ -17,28 +17,31 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
         {
             return new SalesInvoiceModel()
             {
+                Code = "code",
                 Id = 1,
-                Code = "Code",
+                AutoIncreament = 1,
                 SalesInvoiceNo = "SalesInvoiceNo",
+                SalesInvoiceType = "BPF",
                 SalesInvoiceDate = DateTimeOffset.UtcNow,
+                DueDate = DateTimeOffset.UtcNow,
                 DeliveryOrderNo = "DeliveryOrderNo",
+                DebtorIndexNo = "DebtorIndexNo",
                 DOSalesId = 1,
                 DOSalesNo = "DOSalesNo",
                 BuyerId = 1,
                 BuyerName = "BuyerName",
+                BuyerAddress = "BuyerAddress",
                 BuyerNPWP = "BuyerNPWP",
+                IDNo = "IDNo",
                 CurrencyId = 1,
                 CurrencyCode = "IDR",
-                CurrencySymbol = "Rp.",
-                NPWP = "NPWP",
-                NPPKP = "NPPKP",
-                DebtorIndexNo = "DebtorIndexNo",
-                DueDate = DateTimeOffset.UtcNow,
+                CurrencySymbol = "Rp",
+                CurrencyRate = 14000,
                 Disp = "Disp",
                 Op = "Op",
                 Sc = "Sc",
                 UseVat = true,
-                Notes = "Notes",
+                Remark = "Remark",
 
                 SalesInvoiceDetails = new List<SalesInvoiceDetailModel>()
                 {
@@ -47,10 +50,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
                         UnitCode = "UnitCode",
                         Quantity = "Quantity",
                         Total = 1,
+                        UomId = 1,
                         UomUnit = "PCS",
                         UnitName = "UnitName",
                         UnitPrice = 1,
-                        Amount = 100
+                        Amount = 1
                     }
                 }
             };

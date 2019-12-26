@@ -7,9 +7,9 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
 {
     public class SalesInvoiceDetailViewModel : BaseViewModel, IValidatableObject
     {
-        [MaxLength(25)]
+        [MaxLength(255)]
         public string UnitCode { get; set; }
-        [MaxLength(250)]
+        [MaxLength(255)]
         public string Quantity { get; set; }
         public double? Total { get; set; }
 
@@ -18,14 +18,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
         [MaxLength(255)]
         public string UomUnit { get; set; }
 
-
-        [MaxLength(250)]
+        [MaxLength(255)]
         public string UnitName { get; set; }
         public double? UnitPrice { get; set; }
-
-
         public double Amount { get; set; }
-
         public int? SalesInvoiceId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

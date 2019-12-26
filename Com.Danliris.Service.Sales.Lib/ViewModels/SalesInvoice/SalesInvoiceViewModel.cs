@@ -8,25 +8,36 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
 {
     public class SalesInvoiceViewModel : BaseViewModel, IValidatableObject
     {
-        [MaxLength(25)]
+        [MaxLength(255)]
         public string Code { get; set; }
-        [MaxLength(25)]
+        public long? AutoIncreament { get; set; }
+        [MaxLength(255)]
         public string SalesInvoiceNo { get; set; }
-        public DateTimeOffset SalesInvoiceDate { get; set; }
-        [MaxLength(25)]
+        [MaxLength(255)]
+        public string SalesInvoiceType { get; set; }
+        public DateTimeOffset? SalesInvoiceDate { get; set; }
+        public DateTimeOffset? DueDate { get; set; }
+
+        [MaxLength(255)]
         public string DeliveryOrderNo { get; set; }
+        [MaxLength(255)]
+        public string DebtorIndexNo { get; set; }
 
         /*DO Sales*/
         public int? DOSalesId { get; set; }
-        [MaxLength(25)]
+        [MaxLength(255)]
         public string DOSalesNo { get; set; }
 
         /*Buyer*/
         public int? BuyerId { get; set; }
-        [MaxLength(250)]
+        [MaxLength(255)]
         public string BuyerName { get; set; }
-        [MaxLength(100)]
+        [MaxLength(1000)]
+        public string BuyerAddress { get; set; }
+        [MaxLength(255)]
         public string BuyerNPWP { get; set; }
+        [MaxLength(255)]
+        public string IDNo { get; set; }
 
         /*Currency*/
         public int? CurrencyId { get; set; }
@@ -34,66 +45,51 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
         public string CurrencyCode { get; set; }
         [MaxLength(255)]
         public string CurrencySymbol { get; set; }
+        public double CurrencyRate { get; set; }
 
-
-        [MaxLength(100)]
-        public string NPWP { get; set; }
-        [MaxLength(100)]
-        public string NPPKP { get; set; }
-        [MaxLength(25)]
-        public string DebtorIndexNo { get; set; }
-        public DateTimeOffset DueDate { get; set; }
-        [MaxLength(25)]
+        [MaxLength(255)]
         public string Disp { get; set; }
-        [MaxLength(25)]
+        [MaxLength(255)]
         public string Op { get; set; }
-        [MaxLength(25)]
+        [MaxLength(255)]
         public string Sc { get; set; }
         public bool? UseVat { get; set; }
-        [MaxLength(500)]
-        public string Notes { get; set; }
+        [MaxLength(1000)]
+        public string Remark { get; set; }
+
 
         public ICollection<SalesInvoiceDetailViewModel> SalesInvoiceDetails { get; set; }
 
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (string.IsNullOrWhiteSpace(SalesInvoiceNo))
-                yield return new ValidationResult("No. Faktur Penjualan harus diisi", new List<string> { "SalesInvoiceNo" });
+            if (string.IsNullOrWhiteSpace(SalesInvoiceType))
+                yield return new ValidationResult("Kode Faktur Penjualan harus diisi", new List<string> { "SalesInvoiceType" });
 
-            if (SalesInvoiceDate == null || SalesInvoiceDate > DateTimeOffset.Now)
-                yield return new ValidationResult("Tgl faktur penjualan harus diisi & lebih kecil sama dengan hari ini", new List<string> { "SalesInvoiceDate" });
+            if (!SalesInvoiceDate.HasValue || SalesInvoiceDate.Value > DateTimeOffset.Now)
+                yield return new ValidationResult("Tgl faktur penjualan harus diisi & lebih kecil  atau sama dengan hari ini", new List<string> { "SalesInvoiceDate" });
 
             if (string.IsNullOrWhiteSpace(DeliveryOrderNo))
-                yield return new ValidationResult("No. Surat Jalan harus diisi", new List<string> { "DeliveryOrderNo" });
+                yield return new ValidationResult("No. Surat Jalan harus diisi", new List<string> { "DeliveryOrder" });
 
             if (string.IsNullOrWhiteSpace(DOSalesNo))
             {
-                yield return new ValidationResult("DO Penjualan harus di isi", new List<string> { "DOSalesNo" });
+                yield return new ValidationResult("DO Penjualan harus di isi", new List<string> { "DOSales" });
             }
 
             if (string.IsNullOrWhiteSpace(CurrencyCode))
             {
-                yield return new ValidationResult("Kurs harus di isi", new List<string> { "CurrencyCode" });
+                yield return new ValidationResult("Kurs harus di isi", new List<string> { "Currency" });
             }
 
             if (string.IsNullOrWhiteSpace(BuyerName))
                 yield return new ValidationResult("Buyer harus diisi", new List<string> { "BuyerName" });
 
-            if (string.IsNullOrWhiteSpace(BuyerNPWP))
-                yield return new ValidationResult("NPWP harus diisi", new List<string> { "BuyerNPWP" });
-
-            if (string.IsNullOrWhiteSpace(NPWP))
-                yield return new ValidationResult("NPWP harus diisi", new List<string> { "NPWP" });
-
-            if (string.IsNullOrWhiteSpace(NPPKP))
-                yield return new ValidationResult("NPPKP harus diisi", new List<string> { "NPPKP" });
-
             if (string.IsNullOrWhiteSpace(DebtorIndexNo))
                 yield return new ValidationResult("No. Index Debitur harus diisi", new List<string> { "DebtorIndexNo" });
 
-            if (DueDate == null || DueDate <= DateTimeOffset.Now)
-                yield return new ValidationResult("Tanggal jatuh tempo harus diisi & lebih besar sama dengan hari ini", new List<string> { "DueDate" });
+            if (!DueDate.HasValue || DueDate.Value < DateTimeOffset.Now)
+                yield return new ValidationResult("Tanggal jatuh tempo harus diisi & lebih besar dari hari ini", new List<string> { "DueDate" });
 
             if (string.IsNullOrWhiteSpace(Disp))
                 yield return new ValidationResult("Disp harus diisi", new List<string> { "Disp" });

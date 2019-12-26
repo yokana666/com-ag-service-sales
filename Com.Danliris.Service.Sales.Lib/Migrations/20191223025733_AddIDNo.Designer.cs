@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191223025733_AddIDNo")]
+    partial class AddIDNo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2466,7 +2468,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<string>("Quantity")
-                        .HasMaxLength(255);
+                        .HasMaxLength(250);
 
                     b.Property<int>("SalesInvoiceId");
 
@@ -2478,14 +2480,15 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<string>("UnitCode")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("UnitName")
-                        .HasMaxLength(255);
+                        .HasMaxLength(250);
 
                     b.Property<double>("UnitPrice");
 
-                    b.Property<int>("UomId");
+                    b.Property<int>("UomId")
+                        .HasMaxLength(25);
 
                     b.Property<string>("UomUnit")
                         .HasMaxLength(255);
@@ -2505,21 +2508,21 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<long>("AutoIncreament");
+                    b.Property<int>("AutoIncrementNumber");
 
                     b.Property<string>("BuyerAddress")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(500);
 
                     b.Property<int>("BuyerId");
 
                     b.Property<string>("BuyerNPWP")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("BuyerName")
-                        .HasMaxLength(255);
+                        .HasMaxLength(250);
 
                     b.Property<string>("Code")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("CreatedAgent")
                         .IsRequired()
@@ -2544,10 +2547,10 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<int>("DOSalesId");
 
                     b.Property<string>("DOSalesNo")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("DebtorIndexNo")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("DeletedAgent")
                         .IsRequired()
@@ -2560,15 +2563,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("DeletedUtc");
 
                     b.Property<string>("DeliveryOrderNo")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("Disp")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<DateTimeOffset>("DueDate");
 
-                    b.Property<string>("IDNo")
-                        .HasMaxLength(255);
+                    b.Property<int>("IDNo");
 
                     b.Property<bool>("IsDeleted");
 
@@ -2583,21 +2585,18 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<string>("Op")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("Remark")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(500);
 
                     b.Property<DateTimeOffset>("SalesInvoiceDate");
 
                     b.Property<string>("SalesInvoiceNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("SalesInvoiceType")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("Sc")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);

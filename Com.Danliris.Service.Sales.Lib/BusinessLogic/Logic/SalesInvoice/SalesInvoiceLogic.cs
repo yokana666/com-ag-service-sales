@@ -39,8 +39,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id","Code","SalesInvoiceNo","SalesInvoiceDate","DeliveryOrderNo","DOSalesId","DOSalesNo","CurrencyId","CurrencyCode","CurrencySymbol",
-                "BuyerId","BuyerName","BuyerNPWP","NPWP","NPPKP","DebtorIndexNo","DueDate","Disp","Op","Sc","UseVat","Notes"
+                "Id","Code","SalesInvoiceNo","SalesInvoiceType","SalesInvoiceDate","DeliveryOrderNo","DOSalesId","DOSalesNo","CurrencyId","CurrencyCode","CurrencyRate","CurrencySymbol",
+                "BuyerId","BuyerName","BuyerAddress","BuyerNPWP","IDNo","DebtorIndexNo","DueDate","Disp","Op","Sc","UseVat","Remark"
 
             };
 
@@ -50,25 +50,27 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice
                     Id = field.Id,
                     Code = field.Code,
                     SalesInvoiceNo = field.SalesInvoiceNo,
+                    SalesInvoiceType = field.SalesInvoiceType,
                     SalesInvoiceDate = field.SalesInvoiceDate,
+                    DueDate = field.DueDate,
                     DeliveryOrderNo = field.DeliveryOrderNo,
+                    DebtorIndexNo = field.DebtorIndexNo,
                     DOSalesId = field.DOSalesId,
                     DOSalesNo = field.DOSalesNo,
                     BuyerId = field.BuyerId,
                     BuyerName = field.BuyerName,
+                    BuyerAddress = field.BuyerAddress,
                     BuyerNPWP = field.BuyerNPWP,
+                    IDNo = field.IDNo,
                     CurrencyId = field.CurrencyId,
                     CurrencyCode = field.CurrencyCode,
                     CurrencySymbol = field.CurrencySymbol,
-                    NPWP = field.NPWP,
-                    NPPKP = field.NPPKP,
-                    DebtorIndexNo = field.DebtorIndexNo,
-                    DueDate = field.DueDate,
+                    CurrencyRate = field.CurrencyRate,
                     Disp = field.Disp,
                     Op = field.Op,
                     Sc = field.Sc,
                     UseVat = field.UseVat,
-                    Notes = field.Notes,
+                    Remark = field.Remark,
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);

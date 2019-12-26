@@ -5,23 +5,20 @@ namespace Com.Danliris.Service.Sales.Lib.Models.SalesInvoice
 {
     public class SalesInvoiceDetailModel : BaseModel
     {
-        [MaxLength(25)]
+        [MaxLength(255)]
         public string UnitCode { get; set; }
-        [MaxLength(250)]
+        [MaxLength(255)]
         public string Quantity { get; set; }
         public double Total { get; set; }
-        [MaxLength(25)]
 
         /*Uom*/
         public int UomId { get; set; }
         [MaxLength(255)]
         public string UomUnit { get; set; }
 
-
-        [MaxLength(250)]
+        [MaxLength(255)]
         public string UnitName { get; set; }
         public double UnitPrice { get; set; }
-
         public double Amount { get; set; }
         public int SalesInvoiceId { get; set; }
 
