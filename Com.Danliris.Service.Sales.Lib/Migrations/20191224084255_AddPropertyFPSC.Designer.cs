@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191224084255_AddPropertyFPSC")]
+    partial class AddPropertyFPSC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,6 +89,11 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(50);
 
                     b.Property<DateTimeOffset>("ApprovedIEDate");
+
+                    b.Property<string>("ApprovedKadivMDBy")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTimeOffset>("ApprovedKadivMDDate");
 
                     b.Property<string>("ApprovedMDBy")
                         .HasMaxLength(50);
@@ -194,6 +201,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsApprovedIE");
 
+                    b.Property<bool>("IsApprovedKadivMD");
+
                     b.Property<bool>("IsApprovedMD");
 
                     b.Property<bool>("IsApprovedPPIC");
@@ -209,6 +218,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<bool>("IsROAvailable");
 
                     b.Property<bool>("IsRODistributed");
+
+                    b.Property<bool>("IsValidatedROMD");
 
                     b.Property<bool>("IsValidatedROPPIC");
 
@@ -320,10 +331,20 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("UnitName")
                         .HasMaxLength(255);
 
+                    b.Property<string>("ValidationMDBy")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTimeOffset>("ValidationMDDate");
+
                     b.Property<string>("ValidationPPICBy")
                         .HasMaxLength(50);
 
                     b.Property<DateTimeOffset>("ValidationPPICDate");
+
+                    b.Property<string>("ValidationSampleBy")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTimeOffset>("ValidationSampleDate");
 
                     b.Property<int>("WageId");
 
@@ -2664,6 +2685,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("DeletedUtc");
 
+                    b.Property<string>("DocumentsFileName")
+                        .HasMaxLength(255);
+
                     b.Property<string>("DocumentsPath")
                         .HasMaxLength(1000);
 
@@ -2824,192 +2848,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasIndex("RO_Garment_SizeBreakdownId");
 
                     b.ToTable("RO_Garment_SizeBreakdown_Details");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.SalesInvoice.SalesInvoiceDetailModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<double>("Amount");
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<string>("Quantity")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("SalesInvoiceId");
-
-                    b.Property<long?>("SalesInvoiceModelId");
-
-                    b.Property<double>("Total");
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UnitCode")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(255);
-
-                    b.Property<double>("UnitPrice");
-
-                    b.Property<int>("UomId");
-
-                    b.Property<string>("UomUnit")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SalesInvoiceModelId");
-
-                    b.ToTable("SalesInvoiceDetails");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.SalesInvoice.SalesInvoiceModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<long>("AutoIncreament");
-
-                    b.Property<string>("BuyerAddress")
-                        .HasMaxLength(1000);
-
-                    b.Property<int>("BuyerId");
-
-                    b.Property<string>("BuyerNPWP")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("BuyerName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("CurrencyCode")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("CurrencyId");
-
-                    b.Property<double>("CurrencyRate");
-
-                    b.Property<string>("CurrencySymbol")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("DOSalesId");
-
-                    b.Property<string>("DOSalesNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DebtorIndexNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<string>("DeliveryOrderNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Disp")
-                        .HasMaxLength(255);
-
-                    b.Property<DateTimeOffset>("DueDate");
-
-                    b.Property<string>("IDNo")
-                        .HasMaxLength(255);
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<string>("Op")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(1000);
-
-                    b.Property<DateTimeOffset>("SalesInvoiceDate");
-
-                    b.Property<string>("SalesInvoiceNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("SalesInvoiceType")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Sc")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.Property<bool>("UseVat");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SalesInvoices");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.Spinning.SpinningSalesContractModel", b =>
@@ -3404,6 +3242,22 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationChemicalModel", b =>
+                {
+                    b.HasOne("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationMachineModel", "FinishingPrintingCostCalculationMachine")
+                        .WithMany("Chemicals")
+                        .HasForeignKey("CostCalculationMachineId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationMachineModel", b =>
+                {
+                    b.HasOne("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationModel", "FinishingPrintingCostCalculation")
+                        .WithMany("Machines")
+                        .HasForeignKey("CostCalculationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrderItem", b =>
                 {
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrder", "GarmentBookingOrder")
@@ -3481,14 +3335,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.ROGarments.RO_Garment_SizeBreakdown", "RO_Garment_SizeBreakdown")
                         .WithMany("RO_Garment_SizeBreakdown_Details")
                         .HasForeignKey("RO_Garment_SizeBreakdownId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.SalesInvoice.SalesInvoiceDetailModel", b =>
-                {
-                    b.HasOne("Com.Danliris.Service.Sales.Lib.Models.SalesInvoice.SalesInvoiceModel", "SalesInvoiceModel")
-                        .WithMany("SalesInvoiceDetails")
-                        .HasForeignKey("SalesInvoiceModelId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

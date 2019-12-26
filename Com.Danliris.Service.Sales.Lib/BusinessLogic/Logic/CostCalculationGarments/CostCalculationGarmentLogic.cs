@@ -44,24 +44,24 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
 
-            var checkAllUser = false;
-
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
 
-            if (FilterDictionary.ContainsKey("AllUser"))
-            {
-                try
-                {
-                    checkAllUser = (bool)FilterDictionary.GetValueOrDefault("AllUser");
-                }
-                catch (Exception) { }
-                FilterDictionary.Remove("AllUser");
-            }
+            //var checkAllUser = false;
 
-            if (!checkAllUser)
-            {
-                Query = Query.Where(w => w.CreatedBy == IdentityService.Username);
-            }
+            //if (FilterDictionary.ContainsKey("AllUser"))
+            //{
+            //    try
+            //    {
+            //        checkAllUser = (bool)FilterDictionary.GetValueOrDefault("AllUser");
+            //    }
+            //    catch (Exception) { }
+            //    FilterDictionary.Remove("AllUser");
+            //}
+
+            //if (!checkAllUser)
+            //{
+            //    Query = Query.Where(w => w.CreatedBy == IdentityService.Username);
+            //}
 
             Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
 
