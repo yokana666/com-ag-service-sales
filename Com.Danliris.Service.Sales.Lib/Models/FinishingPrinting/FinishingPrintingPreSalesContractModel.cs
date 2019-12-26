@@ -24,6 +24,9 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting
         [MaxLength(512)]
         public string BuyerName { get; set; }
 
+        [MaxLength(512)]
+        public string BuyerType { get; set; }
+
         public int UnitId { get; set; }
         
         [MaxLength(128)]

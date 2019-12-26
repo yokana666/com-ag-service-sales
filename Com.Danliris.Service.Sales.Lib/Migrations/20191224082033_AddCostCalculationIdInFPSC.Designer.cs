@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191224082033_AddCostCalculationIdInFPSC")]
+    partial class AddCostCalculationIdInFPSC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -936,9 +938,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<int>("PointSystem");
 
-                    b.Property<string>("ProductionOrderNo")
-                        .HasMaxLength(64);
-
                     b.Property<string>("QualityCode")
                         .HasMaxLength(25);
 
@@ -981,9 +980,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<string>("UOMUnit")
                         .HasMaxLength(255);
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(512);
 
                     b.Property<bool>("UseIncomeTax");
 
