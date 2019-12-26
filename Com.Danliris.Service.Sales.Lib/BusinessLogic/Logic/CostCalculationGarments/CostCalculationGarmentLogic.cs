@@ -68,7 +68,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             List<string> SelectedFields = new List<string>()
             {
                   "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
-                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "ApprovalMD", "ApprovalPurchasing", "ApprovalIE", "ApprovalPPIC",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "ApprovalMD", "ApprovalPurchasing", "ApprovalIE", "ApprovalKadivMD", "ApprovalPPIC",
                     "IsPosted"
             };
 
@@ -104,6 +104,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      IsApprovedMD = ccg.IsApprovedMD,
                      IsApprovedPurchasing = ccg.IsApprovedPurchasing,
                      IsApprovedIE = ccg.IsApprovedIE,
+                     IsApprovedKadivMD = ccg.IsApprovedKadivMD,
                      IsApprovedPPIC = ccg.IsApprovedPPIC,
 
                      IsPosted = ccg.IsPosted,
@@ -494,6 +495,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             model.IsApprovedMD = false;
             model.IsApprovedPurchasing = false;
             model.IsApprovedIE = false;
+            model.IsApprovedKadivMD = false;
             model.IsApprovedPPIC = false;
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
         }
