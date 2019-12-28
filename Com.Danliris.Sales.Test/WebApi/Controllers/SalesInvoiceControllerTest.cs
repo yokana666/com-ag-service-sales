@@ -1,4 +1,6 @@
-﻿using Com.Danliris.Sales.Test.WebApi.Utils;
+﻿using AutoMapper;
+using Com.Danliris.Sales.Test.WebApi.Utils;
+using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.SalesInvoiceProfiles;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.SalesInvoice;
 using Com.Danliris.Service.Sales.Lib.Models.SalesInvoice;
 using Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice;
@@ -6,6 +8,7 @@ using Com.Danliris.Service.Sales.WebApi.Controllers;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Xunit;
 
@@ -73,9 +76,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
         }
 
-
         [Fact]
-        public void Get_Sales_Invoice_PDF_Success()
+        public void Get_Sales_Invoice_PDF_UseVat_Is_True_And_CurrencySymbol_Is_IDR()
         {
             var vm = new SalesInvoiceViewModel()
             {
@@ -84,11 +86,53 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 BuyerNPWP = "BuyerNPWP",
                 SalesInvoiceNo = "SalesInvoiceNo",
                 SalesInvoiceDate = DateTimeOffset.Now,
-                DueDate  = DateTimeOffset.Now,
+                DueDate = DateTimeOffset.Now,
                 DebtorIndexNo = "DebtorIndexNo",
                 IDNo = "IDNo",
                 CurrencySymbol = "Rp",
                 Remark = "Remark",
+                UseVat = true,
+                SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>()
+                {
+                    new SalesInvoiceDetailViewModel()
+                    {
+                        UnitCode = "UnitCode",
+                        Quantity = "Quantity",
+                        UomUnit = "PACKS",
+                        UnitName = "UnitName",
+                        Total = 1,
+                        UnitPrice = 1,
+                        Amount = 1,
+                    }
+                }
+
+            };
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(s => s.Map<SalesInvoiceViewModel>(It.IsAny<SalesInvoiceModel>()))
+                .Returns(vm);
+            var controller = GetController(mocks);
+            var response = controller.GetSalesInvoicePDF(1).Result;
+
+            Assert.NotNull(response);
+
+        }
+        [Fact]
+        public void Get_Sales_Invoice_PDF_UseVat_Is_False_And_CurrencySymbol_Is_USD()
+        {
+            var vm = new SalesInvoiceViewModel()
+            {
+                BuyerName = "BuyerName",
+                BuyerAddress = "BuyerAddress",
+                BuyerNPWP = "BuyerNPWP",
+                SalesInvoiceNo = "SalesInvoiceNo",
+                SalesInvoiceDate = DateTimeOffset.Now,
+                DueDate = DateTimeOffset.Now,
+                DebtorIndexNo = "DebtorIndexNo",
+                IDNo = "IDNo",
+                CurrencySymbol = "$",
+                Remark = "Remark",
+                UseVat = false,
                 SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>()
                 {
                     new SalesInvoiceDetailViewModel()
@@ -116,6 +160,25 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         }
 
         [Fact]
+        public void Get_Sales_Invoice_PDF__Other_CurrencySymbol()
+        {
+            var vm = new SalesInvoiceViewModel()
+            {
+                CurrencySymbol = "Rp",
+            };
+            var mocks = GetMocks();
+            mocks.Facade.Setup(x => x.ReadByIdAsync(It.IsAny<int>())).ReturnsAsync(Model);
+            mocks.Mapper.Setup(s => s.Map<SalesInvoiceViewModel>(It.IsAny<SalesInvoiceModel>()))
+                .Returns(vm);
+            var controller = GetController(mocks);
+            var response = controller.GetSalesInvoicePDF(1).Result;
+
+            Assert.NotNull(response);
+
+        }
+
+
+        [Fact]
         public void Get_Sales_Invoice_PDF_NotFound()
         {
             var mocks = GetMocks();
@@ -139,6 +202,107 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             int statusCode = this.GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
 
+        }
+
+        [Fact]
+        public void Mapping_With_AutoMapper_Profiles()
+        {
+            var configuration = new MapperConfiguration(cfg => {
+                cfg.AddProfile<SalesInvoiceMapper>();
+                cfg.AddProfile<SalesInvoiceDetailMapper>();
+            });
+            var mapper = configuration.CreateMapper();
+
+            SalesInvoiceViewModel salesInvoiceViewModel = new SalesInvoiceViewModel { Id = 1 };
+            SalesInvoiceModel salesInvoiceModel = mapper.Map<SalesInvoiceModel>(salesInvoiceViewModel);
+
+            Assert.Equal(salesInvoiceViewModel.Id, salesInvoiceModel.Id);
+
+            SalesInvoiceDetailViewModel salesInvoiceDetailViewModel = new SalesInvoiceDetailViewModel { Id = 1 };
+            SalesInvoiceDetailModel salesInvoiceDetailModel = mapper.Map<SalesInvoiceDetailModel>(salesInvoiceDetailViewModel);
+
+            Assert.Equal(salesInvoiceDetailViewModel.Id, salesInvoiceDetailModel.Id);
+        }
+
+        [Fact]
+        public void Validate_Validation_ViewModel()
+        {
+            List<SalesInvoiceViewModel> viewModels = new List<SalesInvoiceViewModel>
+            {
+                new SalesInvoiceViewModel{
+                    SalesInvoiceType = "",
+                    SalesInvoiceDate = DateTimeOffset.UtcNow.AddDays(1),
+                    DeliveryOrderNo = "",
+                    DOSalesId = 0,
+                    DOSalesNo = "",
+                    CurrencyId = 0,
+                    CurrencyCode = "",
+                    CurrencyRate = 0,
+                    BuyerId = 0,
+                    BuyerName = "",
+                    DebtorIndexNo = "",
+                    DueDate = DateTimeOffset.UtcNow.AddDays(-1),
+                    Disp = "",
+                    Op = "",
+                    Sc = "",
+                    SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>{
+                        new SalesInvoiceDetailViewModel{
+                            UnitCode = "",
+                            Quantity = "",
+                            Total = 0,
+                            UomId = 0,
+                            UomUnit = "",
+                            UnitName = "",
+                            UnitPrice = 0,
+                            Amount = 0,
+                        }
+                    }
+                }
+            };
+            foreach (var viewModel in viewModels)
+            {
+                var defaultValidationResult = viewModel.Validate(null);
+                Assert.True(defaultValidationResult.Count() > 0);
+            }
+        }
+
+        [Fact]
+        public void Validate_Duplicate_DetailViewModel()
+        {
+            List<SalesInvoiceViewModel> viewModels = new List<SalesInvoiceViewModel>
+            {
+                new SalesInvoiceViewModel{
+                    SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>{
+                        new SalesInvoiceDetailViewModel{
+                            SalesInvoiceId = 0,
+                            UnitCode = "UnitCode",
+                            Quantity = "Quantity",
+                            Total = 10,
+                            UomId = 10,
+                            UomUnit = "PCS",
+                            UnitName = "UnitName",
+                            UnitPrice = 100,
+                            Amount = 100,
+                        },
+                        new SalesInvoiceDetailViewModel{
+                            SalesInvoiceId = 0,
+                            UnitCode = "UnitCode",
+                            Quantity = "Quantity",
+                            Total = 10,
+                            UomId = 10,
+                            UomUnit = "PCS",
+                            UnitName = "UnitName",
+                            UnitPrice = 100,
+                            Amount = 100,
+                        }
+                    }
+                }
+            };
+            foreach (var viewModel in viewModels)
+            {
+                var defaultValidationResult = viewModel.Validate(null);
+                Assert.True(defaultValidationResult.Count() > 0);
+            }
         }
     }
 }

@@ -127,7 +127,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
                     {
                         Count++;
                         rowErrorCount++;
-                        DetailErrors += "Total : 'Jumlah harus lebih besar dari 0 & tidak boleh kosong',";
+                        DetailErrors += "Total : 'Jumlah harus lebih besar dari 0',";
                     }
                     if (string.IsNullOrWhiteSpace(detail.UomUnit))
                     {
@@ -145,7 +145,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
                     {
                         Count++;
                         rowErrorCount++;
-                        DetailErrors += "UnitPrice : 'Harga barang harus lebih besar dari 0 & tidak boleh kosong',";
+                        DetailErrors += "UnitPrice : 'Harga barang harus lebih besar dari 0',";
                     }
                     if (detail.Amount <= 0)
                     {

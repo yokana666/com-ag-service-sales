@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
 {
-    public class SalesInvoiceDetailViewModel : BaseViewModel, IValidatableObject
+    public class SalesInvoiceDetailViewModel : BaseViewModel
     {
         [MaxLength(255)]
         public string UnitCode { get; set; }
@@ -23,10 +23,5 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
         public double? UnitPrice { get; set; }
         public double Amount { get; set; }
         public int? SalesInvoiceId { get; set; }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

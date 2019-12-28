@@ -293,7 +293,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             cellHeaderFooter.Phrase = new Phrase(": " + viewModel.CurrencySymbol + " " + result.ToString("N2"), normal_font);
             footerTable3.AddCell(cellHeaderFooter);
 
-            if(viewModel.UseVat == true)
+            if(viewModel.UseVat.Equals(true))
             {
                 cellHeaderFooter.Phrase = new Phrase("PPN 10%", normal_font);
                 footerTable3.AddCell(cellHeaderFooter);

@@ -8,7 +8,8 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.SalesInvoiceProfiles
     {
         public SalesInvoiceMapper()
         {
-            CreateMap<SalesInvoiceModel, SalesInvoiceViewModel>().ReverseMap();
+            CreateMap<SalesInvoiceModel, SalesInvoiceViewModel>()
+                .ReverseMap();
         }
     }
 }

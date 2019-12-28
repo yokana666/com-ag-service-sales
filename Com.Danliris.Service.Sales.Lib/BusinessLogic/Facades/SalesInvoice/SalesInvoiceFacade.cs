@@ -83,19 +83,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesInvoice
                             SalesInvoiceDetails = new List<SalesInvoiceDetailModel>
                             {item}
                         };
+
+                        do
+                        {
+                            model.Code = CodeGenerator.Generate();
+                        }
+                        while (DbSet.Any(d => d.Code.Equals(model.Code)));
+
+                        SalesInvoiceNumberGenerator(model, index);
+                        salesInvoiceLogic.Create(model);
+                        index++;
                     }
-
-                    do
-                    {
-                        model.Code = CodeGenerator.Generate();
-                    }
-                    while (DbSet.Any(d => d.Code.Equals(model.Code)));
-
-                    SalesInvoiceNumberGenerator(model, index);
-
-                    salesInvoiceLogic.Create(model);
-                    index++;
-
                     result = await DbContext.SaveChangesAsync();
                     transaction.Commit();
                 }
@@ -105,6 +103,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesInvoice
                     throw new Exception(e.Message);
                 }
             }
+
             return result;
         }
 
@@ -190,19 +189,19 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesInvoice
                     index = 0;
                 }
                 model.AutoIncreament = 1 + index;
-                model.SalesInvoiceNo = $"{model.SalesInvoiceType}/{model.AutoIncreament.ToString().PadLeft(6, '0')}";
+                model.SalesInvoiceNo = $"{model.SalesInvoiceType}/{YearNow}/{model.AutoIncreament.ToString().PadLeft(6, '0')}";
             }
             else
             {
                 if (YearNow > lastData.CreatedUtc.Year)
                 {
                     model.AutoIncreament = 1 + index;
-                    model.SalesInvoiceNo = $"{model.SalesInvoiceType}/{model.AutoIncreament.ToString().PadLeft(6, '0')}";
+                    model.SalesInvoiceNo = $"{model.SalesInvoiceType}/{YearNow}/{model.AutoIncreament.ToString().PadLeft(6, '0')}";
                 }
                 else
                 {
                     model.AutoIncreament = lastData.AutoIncreament + (1 + index);
-                    model.SalesInvoiceNo = $"{model.SalesInvoiceType}/{model.AutoIncreament.ToString().PadLeft(6, '0')}";
+                    model.SalesInvoiceNo = $"{model.SalesInvoiceType}/{YearNow}/{model.AutoIncreament.ToString().PadLeft(6, '0')}";
                 }
             }
         }

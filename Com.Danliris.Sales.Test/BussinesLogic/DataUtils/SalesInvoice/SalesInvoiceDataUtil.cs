@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
 {
-    class SalesInvoiceDataUtil : BaseDataUtil<SalesInvoiceFacade, SalesInvoiceModel>
+    public class SalesInvoiceDataUtil : BaseDataUtil<SalesInvoiceFacade, SalesInvoiceModel>
     {
         public SalesInvoiceDataUtil(SalesInvoiceFacade facade) : base(facade)
         {
