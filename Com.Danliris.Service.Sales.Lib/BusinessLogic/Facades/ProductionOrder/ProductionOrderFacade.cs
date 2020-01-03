@@ -332,12 +332,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
 
         private void ProductionOrderNumberGenerator(ProductionOrderModel model, int index)
         {
-            ProductionOrderModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.OrderTypeName.Equals(model.OrderTypeName)).OrderByDescending(o => o.AutoIncreament).FirstOrDefault();
-
             string DocumentType = model.OrderTypeName.ToLower().Equals("printing") ? "P" : "F";
 
             int YearNow = DateTime.Now.Year;
             int MonthNow = DateTime.Now.Month;
+
+            DateTime createdDateFilter = new DateTime(YearNow, 1, 1);
+            ProductionOrderModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.OrderTypeName.Equals(model.OrderTypeName) && w.CreatedUtc >= createdDateFilter).OrderByDescending(o => o.AutoIncreament).FirstOrDefault();
 
             if (lastData == null)
             {
