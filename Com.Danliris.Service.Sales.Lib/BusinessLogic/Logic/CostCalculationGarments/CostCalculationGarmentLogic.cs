@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
+using Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,31 +44,31 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
 			Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
 
-            var checkAllUser = false;
-
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
 
-            if (FilterDictionary.ContainsKey("AllUser"))
-            {
-                try
-                {
-                    checkAllUser = (bool)FilterDictionary.GetValueOrDefault("AllUser");
-                }
-                catch (Exception) { }
-                FilterDictionary.Remove("AllUser");
-            }
+            //var checkAllUser = false;
 
-            if (!checkAllUser)
-            {
-                Query = Query.Where(w => w.CreatedBy == IdentityService.Username);
-            }
+            //if (FilterDictionary.ContainsKey("AllUser"))
+            //{
+            //    try
+            //    {
+            //        checkAllUser = (bool)FilterDictionary.GetValueOrDefault("AllUser");
+            //    }
+            //    catch (Exception) { }
+            //    FilterDictionary.Remove("AllUser");
+            //}
+
+            //if (!checkAllUser)
+            //{
+            //    Query = Query.Where(w => w.CreatedBy == IdentityService.Username);
+            //}
 
             Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
 
             List<string> SelectedFields = new List<string>()
             {
                   "Id", "Code", "PreSCNo", "RO_Number", "Quantity", "ConfirmPrice", "Article", "Unit", "LastModifiedUtc","UnitName",
-                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "ApprovalMD", "ApprovalPurchasing", "ApprovalIE", "ApprovalPPIC",
+                    "Comodity", "UOM", "Buyer", "DeliveryDate", "BuyerBrand", "ApprovalMD", "ApprovalPurchasing", "ApprovalIE", "ApprovalKadivMD", "ApprovalPPIC",
                     "IsPosted"
             };
 
@@ -103,6 +104,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      IsApprovedMD = ccg.IsApprovedMD,
                      IsApprovedPurchasing = ccg.IsApprovedPurchasing,
                      IsApprovedIE = ccg.IsApprovedIE,
+                     IsApprovedKadivMD = ccg.IsApprovedKadivMD,
                      IsApprovedPPIC = ccg.IsApprovedPPIC,
 
                      IsPosted = ccg.IsPosted,
@@ -493,6 +495,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             model.IsApprovedMD = false;
             model.IsApprovedPurchasing = false;
             model.IsApprovedIE = false;
+            model.IsApprovedKadivMD = false;
             model.IsApprovedPPIC = false;
             EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
         }
@@ -511,7 +514,18 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             reasonDbSet.Add(costCalculationGarmentUnpostReason);
         }
 
-        internal List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
+		internal CostCalculationGarmentDataProductionReport GetComodityQtyOrderHoursBuyerByRo(string ro)
+		{
+			CostCalculationGarmentDataProductionReport costCalculationGarmentDataProductionReport = new CostCalculationGarmentDataProductionReport();
+			var costCalculation = DbSet.Single(m => m.RO_Number == ro);
+			costCalculationGarmentDataProductionReport.ro = costCalculation.RO_Number;
+			costCalculationGarmentDataProductionReport.buyerCode = costCalculation.BuyerCode;
+			costCalculationGarmentDataProductionReport.hours = costCalculation.SMV_Cutting;
+			costCalculationGarmentDataProductionReport.comodityName = costCalculation.Commodity;
+			costCalculationGarmentDataProductionReport.qtyOrder = costCalculation.Quantity;
+			return costCalculationGarmentDataProductionReport;
+		}
+		internal List<string> ReadUnpostReasonCreators(string keyword, int page, int size)
         {
             IQueryable<CostCalculationGarmentUnpostReason> Query = DbContext.Set<CostCalculationGarmentUnpostReason>();
 

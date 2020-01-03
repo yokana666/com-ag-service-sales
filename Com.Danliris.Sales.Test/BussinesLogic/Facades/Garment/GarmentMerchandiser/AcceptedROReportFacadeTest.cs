@@ -111,8 +111,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 section = data.Section,
                 roNo = data.RO_Number,
                 buyer = data.BuyerBrandCode,
-                acceptedDateStart = data.ROAcceptedDate,
-                acceptedDateEnd = data.ROAcceptedDate,
+                acceptedDateStart = data.ROAcceptedDate.AddDays(-30),
+                acceptedDateEnd = data.ROAcceptedDate.AddDays(30),
             };
 
             var facade = new AcceptedROReportFacade(serviceProvider);
@@ -138,8 +138,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 section = data.Section,
                 roNo = data.RO_Number,
                 buyer = data.BuyerBrandCode,
-                acceptedDateStart = data.ROAcceptedDate,
-                acceptedDateEnd = data.ROAcceptedDate,
+                acceptedDateStart = data.ROAcceptedDate.AddDays(-30),
+                acceptedDateEnd = data.ROAcceptedDate.AddDays(30),
             };
 
             var facade = new AcceptedROReportFacade(serviceProvider);

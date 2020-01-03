@@ -49,16 +49,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentSalesContr
             //costCal.SCGarmentId=
             garmentSalesContractLogic.Create(model);
 
-            await DbContext.SaveChangesAsync();
-            return await UpdateCostCalAsync(costCal, (int)model.Id);
+            int result =  await DbContext.SaveChangesAsync();
+            return result += await UpdateCostCalAsync(costCal, (int)model.Id);
         }
 
         public async Task<int> UpdateCostCalAsync(CostCalculationGarment costCalculationGarment, int Id)
         {
             costCalculationGarment.SCGarmentId = Id;
-            await costCalGarmentLogic.UpdateAsync((int)costCalculationGarment.Id, costCalculationGarment);
+            int result = await costCalGarmentLogic.UpdateAsync((int)costCalculationGarment.Id, costCalculationGarment);
 
-            return await DbContext.SaveChangesAsync();
+            return result += await DbContext.SaveChangesAsync();
         }
 
         public async Task<int> DeleteAsync(int id)

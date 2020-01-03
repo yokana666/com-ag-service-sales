@@ -74,21 +74,6 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
         }
 
         [Fact]
-        public async Task Get_All_User_Success()
-        {
-            var dbContext = DbContext(GetCurrentMethod());
-            var serviceProvider = GetServiceProviderMock(dbContext).Object;
-
-            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
-
-            var data = await DataUtil(facade, dbContext).GetTestData();
-
-            var Response = facade.Read(1, 25, "{}", new List<string>(), "", "{\"AllUser\" : true}");
-
-            Assert.NotEqual(Response.Data.Count, 0);
-        }
-
-        [Fact]
         public virtual async void Get_ROAcceptance_Success()
         {
             var dbContext = DbContext(GetCurrentMethod());
@@ -202,7 +187,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             Assert.NotEqual(Response, 0);
 
             var ResultData = await facade.ReadByIdAsync((int)data.Id);
-            Assert.Equal(ResultData.IsPosted || ResultData.IsApprovedMD || ResultData.IsApprovedPurchasing || ResultData.IsApprovedIE || ResultData.IsApprovedPPIC, false);
+            Assert.Equal(ResultData.IsPosted || ResultData.IsApprovedMD || ResultData.IsApprovedPurchasing || ResultData.IsApprovedIE || ResultData.IsApprovedKadivMD || ResultData.IsApprovedPPIC, false);
         }
 
         [Fact]
@@ -266,5 +251,21 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             Assert.NotEmpty(Response);
         }
-    }
+
+		[Fact]
+		public virtual async void CostCalculationGarmentDataProductionReport_Success()
+		{
+			var dbContext = DbContext(GetCurrentMethod());
+			var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+			CostCalculationGarmentFacade facade = Activator.CreateInstance(typeof(CostCalculationGarmentFacade), serviceProvider, dbContext) as CostCalculationGarmentFacade;
+
+			var data = await DataUtil(facade, dbContext).GetTestData();
+
+			var Response = facade.GetComodityQtyOrderHoursBuyerByRo(data.RO_Number);
+
+			Assert.NotNull(Response);
+		}
+
+	}
 }

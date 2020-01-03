@@ -69,6 +69,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.GarmentOmzetTargetI
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.GarmentOmzetTargetFacades;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentOmzetTargetLogics;
 using Swashbuckle.AspNetCore.Swagger;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -101,11 +104,15 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ICostCalculationGarmentBySectionReport, CostCalculationGarmentBySectionReportFacade>()
                 .AddTransient<ICostCalculationGarmentByBuyer1Report, CostCalculationGarmentByBuyer1ReportFacade>()
                 .AddTransient<ICostCalculationGarmentByBuyer2Report, CostCalculationGarmentByBuyer2ReportFacade>()
+                .AddTransient<ISMVGarmentByUnitReport, SMVGarmentByUnitReportFacade>()
+                .AddTransient<IDetailCMGarmentByUnitReport, DetailCMGarmentByUnitReportFacade>()
+                .AddTransient<IDistributionROGarmentReport, DistributionROGarmentReportFacade>()
                 .AddTransient<IROGarment, ROGarmentFacade>()
                 .AddTransient<IArticleColor, ArticleColorFacade>()
                 .AddTransient<IRate, RateFacade>()
                 .AddTransient<IEfficiency, EfficiencyFacade>()
                 .AddTransient<IAzureImageFacade, AzureImageFacade>()
+                .AddTransient<IAzureDocumentFacade, AzureDocumentFacade>()
                 .AddTransient<IGarment_BudgetValidationPPIC, Garment_BudgetValidationPPICFacade>()
                 .AddTransient<IGarmentBookingOrder, GarmentBookingOrderFacade>()
                 .AddTransient<IWeeklyPlanFacade, WeeklyPlanFacade>()
@@ -127,7 +134,10 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IMonitoringPreSalesContractFacade, MonitoringPreSalesContractFacade>()
                 .AddTransient<IGarmentPreSalesContract, GarmentPreSalesContractFacade>()
                 .AddTransient<IGarmentPurchasingQualityObjectiveReportFacade, GarmentPurchasingQualityObjectiveReportFacade>()
-                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>();
+                .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>()
+                .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>()
+                .AddTransient<IFinishingPrintingCostCalculationService, FinishingPrintingCostCalculationFacade>()
+                .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -148,6 +158,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<CostCalculationBySectionReportLogic>()
                 .AddTransient<CostCalculationByBuyer1ReportLogic>()
                 .AddTransient<CostCalculationByBuyer2ReportLogic>()
+                .AddTransient<SMVGarmentByUnitReportLogic>()
+                .AddTransient<DetailCMGarmentByUnitReportLogic>()
+                .AddTransient<DistributionROGarmentReportLogic>()
                 .AddTransient<GarmentSalesContractLogic>()
                 .AddTransient<GarmentSalesContractItemLogic>()
                 .AddTransient<ArticleColorLogic>()
@@ -176,7 +189,10 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<MonitoringPreSalesContractLogic>()
                 .AddTransient<GarmentPreSalesContractLogic>()
                 .AddTransient<GarmentPurchasingQualityObjectiveReportLogic>()
-                .AddTransient<GarmentOmzetTargetLogic>();            
+                .AddTransient<GarmentOmzetTargetLogic>()
+                .AddTransient<FinishingPrintingPreSalesContractLogic>()
+                .AddTransient<FinishingPrintingCostCalculationLogic>()
+                .AddTransient<ShinFinishingPrintingSalesContractLogic>();            
         }
 
         private void RegisterServices(IServiceCollection services)

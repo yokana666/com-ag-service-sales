@@ -117,8 +117,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var filter = new
             {
               unitName = data.UnitName, 
-              dateFrom = data.ConfirmDate,
-              dateTo = data.ConfirmDate,
+              dateFrom = data.ConfirmDate.AddDays(-30),
+              dateTo = data.ConfirmDate.AddDays(30),
             };
 
             var Response = costCalculationGarmentByUnitReport.Read(filter: JsonConvert.SerializeObject(filter));
@@ -165,8 +165,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var filter = new
             {
                 unitName = data.UnitName,
-                dateFrom = data.ConfirmDate,
-                dateTo = data.ConfirmDate
+                dateFrom = data.ConfirmDate.AddDays(-30),
+                dateTo = data.ConfirmDate.AddDays(30)
             };
 
             var Response = costCalculationGarmentByUnitReport.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
