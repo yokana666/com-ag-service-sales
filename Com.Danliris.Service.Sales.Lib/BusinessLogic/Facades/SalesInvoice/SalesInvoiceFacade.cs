@@ -16,9 +16,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesInvoice
     {
         private readonly SalesDbContext DbContext;
         private readonly DbSet<SalesInvoiceModel> DbSet;
-        private readonly IIdentityService identityService;
+        private IdentityService identityService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly SalesInvoiceLogic salesInvoiceLogic;
+        private SalesInvoiceLogic salesInvoiceLogic;
         public SalesInvoiceFacade(IServiceProvider serviceProvider, SalesDbContext dbContext)
         {
             this.DbContext = dbContext;
@@ -26,7 +26,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesInvoice
             this.DbSet = DbContext.Set<SalesInvoiceModel>();
             this.identityService = serviceProvider.GetService<IdentityService>();
             this.salesInvoiceLogic = serviceProvider.GetService<SalesInvoiceLogic>();
-            this.identityService = serviceProvider.GetService<IIdentityService>();
         }
 
         public async Task<int> CreateAsync(SalesInvoiceModel model)

@@ -29,7 +29,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice
 
             List<string> SearchAttributes = new List<string>()
             {
-                "SalesInvoiceNo","SalesInvoiceDate","DeliveryOrderNo","DOSalesNo"
+                "SalesInvoiceNo","DeliveryOrderNo","DOSalesNo"
             };
 
             Query = QueryHelper<SalesInvoiceModel>.Search(Query, SearchAttributes, keyword);
@@ -147,10 +147,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice
 
         public override async Task<SalesInvoiceModel> ReadByIdAsync(long id)
         {
-            var ProductionOrder = await DbSet.Where(p => p.SalesInvoiceDetails.Select(d => d.SalesInvoiceModel.Id)
+            var SalesInvoice = await DbSet.Where(p => p.SalesInvoiceDetails.Select(d => d.SalesInvoiceModel.Id)
             .Contains(p.Id)).Include(p => p.SalesInvoiceDetails).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
-            ProductionOrder.SalesInvoiceDetails = ProductionOrder.SalesInvoiceDetails.OrderBy(s => s.Id).ToArray();
-            return ProductionOrder;
+            SalesInvoice.SalesInvoiceDetails = SalesInvoice.SalesInvoiceDetails.OrderBy(s => s.Id).ToArray();
+            return SalesInvoice;
         }
     }
 }
