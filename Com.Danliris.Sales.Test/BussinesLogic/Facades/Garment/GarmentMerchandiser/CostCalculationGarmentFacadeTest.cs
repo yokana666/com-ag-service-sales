@@ -262,7 +262,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
 			var data = await DataUtil(facade, dbContext).GetTestData();
 
-			var Response = facade.GetComodityQtyOrderHoursBuyerByRo("1910001");
+			var Response = facade.GetComodityQtyOrderHoursBuyerByRo(data.RO_Number);
 
 			Assert.NotNull(Response);
 		}
