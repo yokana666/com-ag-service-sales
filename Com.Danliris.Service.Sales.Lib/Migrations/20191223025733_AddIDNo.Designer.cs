@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191223025733_AddIDNo")]
+    partial class AddIDNo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,11 +89,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(50);
 
                     b.Property<DateTimeOffset>("ApprovedIEDate");
-
-                    b.Property<string>("ApprovedKadivMDBy")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTimeOffset>("ApprovedKadivMDDate");
 
                     b.Property<string>("ApprovedMDBy")
                         .HasMaxLength(50);
@@ -199,8 +196,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsApprovedIE");
 
-                    b.Property<bool>("IsApprovedKadivMD");
-
                     b.Property<bool>("IsApprovedMD");
 
                     b.Property<bool>("IsApprovedPPIC");
@@ -216,8 +211,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<bool>("IsROAvailable");
 
                     b.Property<bool>("IsRODistributed");
-
-                    b.Property<bool>("IsValidatedROMD");
 
                     b.Property<bool>("IsValidatedROPPIC");
 
@@ -329,21 +322,10 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("UnitName")
                         .HasMaxLength(255);
 
-                    b.Property<string>("ValidationMDBy")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTimeOffset>("ValidationMDDate");
-
-
                     b.Property<string>("ValidationPPICBy")
                         .HasMaxLength(50);
 
                     b.Property<DateTimeOffset>("ValidationPPICDate");
-
-                    b.Property<string>("ValidationSampleBy")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTimeOffset>("ValidationSampleDate");
 
                     b.Property<int>("WageId");
 
@@ -439,15 +421,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("PO")
                         .HasMaxLength(50);
 
-                    b.Property<string>("POMaster")
-                        .HasMaxLength(50);
-
                     b.Property<string>("PO_SerialNumber")
                         .HasMaxLength(50);
-
-                    b.Property<long>("PRMasterId");
-
-                    b.Property<long>("PRMasterItemId");
 
                     b.Property<double>("Price");
 
@@ -612,96 +587,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.ToTable("Efficiencies");
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting.FinishingPrintingPreSalesContractModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("BuyerCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("BuyerId");
-
-                    b.Property<string>("BuyerName")
-                        .HasMaxLength(512);
-
-                    b.Property<string>("BuyerType")
-                        .HasMaxLength(512);
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<DateTimeOffset>("Date");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsPosted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<string>("No")
-                        .HasMaxLength(64);
-
-                    b.Property<double>("OrderQuantity");
-
-                    b.Property<string>("ProcessTypeCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("ProcessTypeId");
-
-                    b.Property<string>("ProcessTypeName")
-                        .HasMaxLength(512);
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(4096);
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(32);
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UnitCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("UnitId");
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(512);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FinishingPrintingPreSalesContracts");
-                });
-
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting.FinishingPrintingSalesContractDetailModel", b =>
                 {
                     b.Property<long>("Id")
@@ -846,8 +731,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("Condition")
                         .HasMaxLength(1000);
 
-                    b.Property<long>("CostCalculationId");
-
                     b.Property<string>("CreatedAgent")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -937,9 +820,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<int>("PointSystem");
 
-                    b.Property<string>("ProductionOrderNo")
-                        .HasMaxLength(64);
-
                     b.Property<string>("QualityCode")
                         .HasMaxLength(25);
 
@@ -983,9 +863,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("UOMUnit")
                         .HasMaxLength(255);
 
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(512);
-
                     b.Property<bool>("UseIncomeTax");
 
                     b.Property<string>("YarnMaterialCode")
@@ -1003,304 +880,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasFilter("[SalesContractNo] IS NOT NULL");
 
                     b.ToTable("FinishingPrintingSalesContracts");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationChemicalModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("ChemicalCurrency")
-                        .HasMaxLength(64);
-
-                    b.Property<long>("ChemicalId");
-
-                    b.Property<string>("ChemicalName")
-                        .HasMaxLength(1024);
-
-                    b.Property<double>("ChemicalPrice");
-
-                    b.Property<int>("ChemicalQuantity");
-
-                    b.Property<string>("ChemicalUom")
-                        .HasMaxLength(64);
-
-                    b.Property<long>("CostCalculationId");
-
-                    b.Property<long>("CostCalculationMachineId");
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CostCalculationMachineId");
-
-                    b.ToTable("FinishingPrintingCostCalculationChemicals");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationMachineModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<long>("CostCalculationId");
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<decimal>("Depretiation");
-
-                    b.Property<int>("Index");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<decimal>("MachineElectric");
-
-                    b.Property<long>("MachineId");
-
-                    b.Property<decimal>("MachineLPG");
-
-                    b.Property<string>("MachineName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("MachineProcess")
-                        .HasMaxLength(1024);
-
-                    b.Property<decimal>("MachineSolar");
-
-                    b.Property<decimal>("MachineSteam");
-
-                    b.Property<decimal>("MachineWater");
-
-                    b.Property<int>("StepId");
-
-                    b.Property<string>("StepProcess")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("StepProcessArea")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CostCalculationId");
-
-                    b.ToTable("FinishingPrintingCostCalculationMachines");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<decimal>("ActualPrice");
-
-                    b.Property<decimal>("BankMiscCost");
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(16);
-
-                    b.Property<string>("Color")
-                        .HasMaxLength(256);
-
-                    b.Property<decimal>("ConfirmPrice");
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<decimal>("CurrencyRate");
-
-                    b.Property<DateTimeOffset>("Date");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<decimal>("DirectorOfficeCost");
-
-                    b.Property<decimal>("Embalase");
-
-                    b.Property<decimal>("FreightCost");
-
-                    b.Property<decimal>("GeneralAdministrationCost");
-
-                    b.Property<long>("GreigeId");
-
-                    b.Property<string>("GreigeName")
-                        .HasMaxLength(1024);
-
-                    b.Property<decimal>("GreigePrice");
-
-                    b.Property<decimal>("HelperMaterial");
-
-                    b.Property<int>("InstructionId");
-
-                    b.Property<string>("InstructionName")
-                        .HasMaxLength(128);
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsPosted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<decimal>("Lubricant");
-
-                    b.Property<decimal>("MachineMaintenance");
-
-                    b.Property<decimal>("ManufacturingServiceCost");
-
-                    b.Property<long>("MaterialId");
-
-                    b.Property<string>("MaterialName")
-                        .HasMaxLength(1024);
-
-                    b.Property<decimal>("MiscMaterial");
-
-                    b.Property<long>("PreSalesContractId");
-
-                    b.Property<string>("PreSalesContractNo")
-                        .HasMaxLength(64);
-
-                    b.Property<double>("PreparationFabricWeight");
-
-                    b.Property<string>("ProductionOrderNo")
-                        .HasMaxLength(64);
-
-                    b.Property<decimal>("ProductionUnitValue");
-
-                    b.Property<double>("RFDFabricWeight");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(4096);
-
-                    b.Property<string>("SalesFirstName")
-                        .HasMaxLength(1024);
-
-                    b.Property<long>("SalesId");
-
-                    b.Property<string>("SalesLastName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("SalesUserName")
-                        .HasMaxLength(1024);
-
-                    b.Property<decimal>("ScreenCost");
-
-                    b.Property<string>("ScreenDocumentNo");
-
-                    b.Property<decimal>("SparePart");
-
-                    b.Property<decimal>("StructureMaintenance");
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("UnitId");
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(512);
-
-                    b.Property<long>("UomId");
-
-                    b.Property<string>("UomUnit")
-                        .HasMaxLength(128);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FinishingPrintingCostCalculations");
                 });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrder", b =>
@@ -2684,9 +2263,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("DeletedUtc");
 
-                    b.Property<string>("DocumentsFileName")
-                        .HasMaxLength(255);
-
                     b.Property<string>("DocumentsPath")
                         .HasMaxLength(1000);
 
@@ -2892,7 +2468,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<string>("Quantity")
-                        .HasMaxLength(255);
+                        .HasMaxLength(250);
 
                     b.Property<int>("SalesInvoiceId");
 
@@ -2904,14 +2480,15 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<string>("UnitCode")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("UnitName")
-                        .HasMaxLength(255);
+                        .HasMaxLength(250);
 
                     b.Property<double>("UnitPrice");
 
-                    b.Property<int>("UomId");
+                    b.Property<int>("UomId")
+                        .HasMaxLength(25);
 
                     b.Property<string>("UomUnit")
                         .HasMaxLength(255);
@@ -2931,21 +2508,21 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<long>("AutoIncreament");
+                    b.Property<int>("AutoIncrementNumber");
 
                     b.Property<string>("BuyerAddress")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(500);
 
                     b.Property<int>("BuyerId");
 
                     b.Property<string>("BuyerNPWP")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("BuyerName")
-                        .HasMaxLength(255);
+                        .HasMaxLength(250);
 
                     b.Property<string>("Code")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("CreatedAgent")
                         .IsRequired()
@@ -2970,10 +2547,10 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<int>("DOSalesId");
 
                     b.Property<string>("DOSalesNo")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("DebtorIndexNo")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("DeletedAgent")
                         .IsRequired()
@@ -2986,15 +2563,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("DeletedUtc");
 
                     b.Property<string>("DeliveryOrderNo")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("Disp")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<DateTimeOffset>("DueDate");
 
-                    b.Property<string>("IDNo")
-                        .HasMaxLength(255);
+                    b.Property<int>("IDNo");
 
                     b.Property<bool>("IsDeleted");
 
@@ -3009,21 +2585,18 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<string>("Op")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("Remark")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(500);
 
                     b.Property<DateTimeOffset>("SalesInvoiceDate");
 
                     b.Property<string>("SalesInvoiceNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("SalesInvoiceType")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("Sc")
-                        .HasMaxLength(255);
+                        .HasMaxLength(25);
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
@@ -3426,22 +2999,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasForeignKey("FinishingPrintingSalesContractId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationChemicalModel", b =>
-            {
-                b.HasOne("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationMachineModel", "FinishingPrintingCostCalculationMachine")
-                    .WithMany("Chemicals")
-                    .HasForeignKey("CostCalculationMachineId")
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationMachineModel", b =>
-            {
-                b.HasOne("Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation.FinishingPrintingCostCalculationModel", "FinishingPrintingCostCalculation")
-                    .WithMany("Machines")
-                    .HasForeignKey("CostCalculationId")
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
 
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.GarmentBookingOrderModel.GarmentBookingOrderItem", b =>
                 {
