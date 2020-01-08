@@ -10,7 +10,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting
 {
     public class ShinFinishingPrintingSalesContractViewModel : BaseViewModel, IValidatableObject
     {
-        
+        public DateTimeOffset Date { get; set; }
+
         public FinishingPrintingCostCalculationViewModel CostCalculation { get; set; }
 
         public AccountBankViewModel AccountBank { get; set; }

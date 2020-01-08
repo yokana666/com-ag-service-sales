@@ -33,7 +33,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Search(query, SearchAttributes, keyword);
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "ConfirmPrice", "IsPosted", "Material", "UOM"
+                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "ConfirmPrice", "IsPosted", "Material", "UOM", "ScreenCost"
             };
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Filter(query, FilterDictionary);
