@@ -542,6 +542,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
 
             var Query = (from a in DbContext.ProductionOrder
                          join b in DbContext.ProductionOrder_Details on a.Id equals b.ProductionOrderModel.Id
+                         join c in DbContext.FinishingPrintingSalesContracts on a.SalesContractNo equals c.SalesContractNo
+                         join d in DbContext.FinishingPrintingSalesContractDetails on c.Id equals d.FinishingPrintingSalesContract.Id
                          where a.IsDeleted == false
                              && b.IsDeleted == false
                              && a.SalesContractNo == (string.IsNullOrWhiteSpace(salesContractNo) ? a.SalesContractNo : salesContractNo)
@@ -560,6 +562,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                              buyerType = a.BuyerType,
                              colorRequest = b.ColorRequest,
                              orderQuantity = b.Quantity,
+                             NoSalesContract = a.SalesContractNo,
+                             Price = d.Price,
+                             CurrCode = d.CurrencyCode,
                              colorTemplate = b.ColorTemplate,
                              construction = a.MaterialName + " / " + a.MaterialConstructionName + " / " + a.MaterialWidth,
                              deliveryDate = a.DeliveryDate,
@@ -638,6 +643,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             result.Columns.Add(new DataColumn() { ColumnName = "Status", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Detail", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Nomor SPP", DataType = typeof(String) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Nomor Sales Kontrak", DataType = typeof(String) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Harga", DataType = typeof(Double) });
+            result.Columns.Add(new DataColumn() { ColumnName = "Mata Uang", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Panjang SPP (M)", DataType = typeof(double) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jenis Order", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Jenis Proses", DataType = typeof(String) });
@@ -652,7 +660,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             result.Columns.Add(new DataColumn() { ColumnName = "Tanggal Permintaan Pengiriman", DataType = typeof(String) });
 
             if (Query.ToArray().Count() == 0)
-                result.Rows.Add("", "", "", "", 0, "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
+                result.Rows.Add("", "", "", "", "", 0, "", 0, "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
             else
             {
                 int index = 0;
@@ -661,7 +669,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
                     index++;
                     string deliverySchedule = item.deliveryDate == null ? "-" : item.deliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                     string createdDate = item._createdDate == null ? "-" : item._createdDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                    result.Rows.Add(index, item.status, item.detail, item.orderNo, item.orderQuantity, item.orderType, item.processType, item.construction,
+                    result.Rows.Add(index, item.status, item.detail, item.orderNo, item.NoSalesContract, item.Price, item.CurrCode, item.orderQuantity, item.orderType, item.processType, item.construction,
                         item.designCode, item.colorTemplate, item.colorRequest, item.buyer, item.buyerType, item.staffName, createdDate, deliverySchedule);
                 }
             }
