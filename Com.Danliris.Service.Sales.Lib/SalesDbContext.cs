@@ -82,7 +82,8 @@ namespace Com.Danliris.Service.Sales.Lib
 
             modelBuilder.Entity<FinishingPrintingSalesContractModel>()
                 .HasIndex(h => h.SalesContractNo)
-                .IsUnique();
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
 
             modelBuilder.Entity<RO_Garment>()
             .Ignore(c => c.ImagesFile);

@@ -18,9 +18,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
     {
         private readonly string Agent = "new-sc-service-sales";
         private readonly FinishingPrintingSalesContractDetailLogic FinishingPrintingSalesContractDetailLogic;
+        private readonly SalesDbContext DbContext;
         public ShinFinishingPrintingSalesContractLogic(FinishingPrintingSalesContractDetailLogic finishingPrintingSalesContractDetailLogic, IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService, serviceProvider, dbContext)
         {
             FinishingPrintingSalesContractDetailLogic = finishingPrintingSalesContractDetailLogic;
+            DbContext = dbContext;
         }
 
         public override ReadResponse<FinishingPrintingSalesContractModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
@@ -62,6 +64,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             EntityExtension.FlagForCreate(model, IdentityService.Username, Agent);
             DbSet.Add(model);
+            UpdateFPCostCalculationIsSCCreated(model, true);
         }
 
         public override async Task<FinishingPrintingSalesContractModel> ReadByIdAsync(long id)
@@ -109,6 +112,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             EntityExtension.FlagForDelete(model, IdentityService.Username, Agent);
             DbSet.Update(model);
+
+            UpdateFPCostCalculationIsSCCreated(model, false);
+        }
+
+
+        private void UpdateFPCostCalculationIsSCCreated(FinishingPrintingSalesContractModel model, bool flagSC)
+        {
+            var relatedFPCC = DbContext.FinishingPrintingCostCalculations.FirstOrDefault(x => x.Id == model.CostCalculationId);
+            relatedFPCC.IsSCCreated = flagSC;
         }
     }
 }

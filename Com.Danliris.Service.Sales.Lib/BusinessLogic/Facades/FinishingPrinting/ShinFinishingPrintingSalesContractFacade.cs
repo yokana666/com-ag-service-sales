@@ -35,6 +35,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
             while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
 
             finishingPrintingSalesContractLogic.Create(model);
+
             return await DbContext.SaveChangesAsync();
         }
 
@@ -59,5 +60,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
             finishingPrintingSalesContractLogic.UpdateAsync(id, model);
             return await DbContext.SaveChangesAsync();
         }
+
     }
 }
