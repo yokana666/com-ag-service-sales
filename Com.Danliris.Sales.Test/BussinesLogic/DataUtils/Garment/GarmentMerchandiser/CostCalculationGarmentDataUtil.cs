@@ -64,6 +64,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.SMV_Finishing = 3.32;
             data.SMV_Total = 12.11;
             data.IsApprovedMD = false;
+            data.CreatedBy = "test";
+            data.IsApprovedMD = false;
+            data.IsApprovedIE = false;
+            data.IsApprovedPurchasing = false;
+            data.IsApprovedKadivMD = false;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {
                 new CostCalculationGarment_Material
