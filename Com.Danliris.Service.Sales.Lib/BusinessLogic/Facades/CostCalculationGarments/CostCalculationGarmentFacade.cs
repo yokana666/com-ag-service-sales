@@ -365,5 +365,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
         {
             return costCalculationGarmentLogic.ReadUnpostReasonCreators(keyword, page, size);
         }
+
+        public ReadResponse<dynamic> ReadDynamic(int page, int size, string order, string select, string keyword, string filter, string search)
+        {
+            return costCalculationGarmentLogic.ReadDynamic(page, size, order, select, keyword, filter, search);
+        }
+
+        public ReadResponse<dynamic> ReadMaterials(int page, int size, string order, string select, string keyword, string filter, string search)
+        {
+            CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic = ServiceProvider.GetService<CostCalculationGarmentMaterialLogic>();
+            return costCalculationGarmentMaterialLogic.ReadMaterials(page, size, order, select, keyword, filter, search);
+        }
     }
 }

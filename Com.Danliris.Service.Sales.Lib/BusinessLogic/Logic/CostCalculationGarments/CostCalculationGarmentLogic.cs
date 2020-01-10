@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -352,6 +353,39 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
             int totalData = pageable.TotalCount;
 
             return new ReadResponse<CostCalculationGarment>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        internal ReadResponse<dynamic> ReadDynamic(int page, int size, string order, string select, string keyword, string filter, string search)
+        {
+            IQueryable<CostCalculationGarment> Query = DbSet;
+
+            List<string> SearchAttributes = JsonConvert.DeserializeObject<List<string>>(search);
+            if (SearchAttributes.Count < 1)
+            {
+                SearchAttributes = new List<string>() { "Code", "RO_Number", "Article" };
+            }
+            Query = QueryHelper<CostCalculationGarment>.Search(Query, SearchAttributes, keyword);
+
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<CostCalculationGarment>.Filter(Query, FilterDictionary);
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<CostCalculationGarment>.Order(Query, OrderDictionary);
+
+            IQueryable SelectedQuery = Query;
+            if (!string.IsNullOrWhiteSpace(select))
+            {
+                SelectedQuery = QueryHelper<CostCalculationGarment>.Select(Query, select);
+            }
+
+            int totalData = SelectedQuery.Count();
+
+            List<dynamic> Data = SelectedQuery
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToDynamicList();
+
+            return new ReadResponse<dynamic>(Data, totalData, OrderDictionary, new List<string>());
         }
 
         public ReadResponse<CostCalculationGarment> ReadForROAvailable(int page, int size, string order, List<string> select, string keyword, string filter)
