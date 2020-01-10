@@ -139,7 +139,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 			double freightCost = 0;
 			foreach (CostCalculationGarment_MaterialViewModel item in viewModel.CostCalculationGarment_Materials)
 			{
-				freightCost += item.TotalShippingFee;
+				freightCost += item.TotalShippingFee * viewModel.Quantity.GetValueOrDefault();
 			}
 
 			cell_detail3.Border = Rectangle.LEFT_BORDER;
@@ -357,7 +357,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 				table_ccm.AddCell(cell_ccm);
 
 				cell_ccm.HorizontalAlignment = Element.ALIGN_RIGHT;
-                var beaKirim = Number.ToRupiahWithoutSymbol(Math.Ceiling(viewModel.CostCalculationGarment_Materials[i].TotalShippingFee));
+                var beaKirim = Number.ToRupiahWithoutSymbol(Math.Ceiling(viewModel.CostCalculationGarment_Materials[i].TotalShippingFee * viewModel.Quantity.GetValueOrDefault()));
                 cell_ccm.Phrase = new Phrase(beaKirim.Substring(0, beaKirim.Length - 3), normal_font);
 				table_ccm.AddCell(cell_ccm);
 
