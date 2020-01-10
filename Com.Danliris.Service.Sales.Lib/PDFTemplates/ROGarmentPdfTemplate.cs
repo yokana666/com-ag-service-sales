@@ -322,7 +322,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             PdfPTable table_accessories = new PdfPTable(4);
             table_accessories.TotalWidth = 570f;
 
-            float[] accessories_widths = new float[] { 5f, 5f, 5f, 5f };
+            float[] accessories_widths = new float[] { 3f, 5f, 5f, 5f };
             table_accessories.SetWidths(accessories_widths);
 
             PdfPCell cell_acc_center = new PdfPCell()
