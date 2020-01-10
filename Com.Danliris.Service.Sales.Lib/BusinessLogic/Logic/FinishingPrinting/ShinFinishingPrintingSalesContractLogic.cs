@@ -41,7 +41,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "CostCalculation", "DeliverySchedule", "YarnMaterial", "LastModifiedUtc", "MaterialWidth", "Details"
+                "Id", "Code", "CostCalculation", "DeliverySchedule", "YarnMaterial","MaterialConstruction","Quality","Packing","ShippingQuantityTolerance", "LastModifiedUtc", "MaterialWidth", "Details"
             };
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -51,7 +51,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             List<FinishingPrintingSalesContractModel> data = pageable.Data.ToList();
             int totalData = pageable.TotalCount;
 
-            return new ReadResponse<FinishingPrintingSalesContractModel>(data, totalData, OrderDictionary, SelectedFields);
+            return new ReadResponse<FinishingPrintingSalesContractModel>(data, totalData, OrderDictionary, SelectedFields.OrderBy(x => x).ToList());
         }
 
         public override void Create(FinishingPrintingSalesContractModel model)

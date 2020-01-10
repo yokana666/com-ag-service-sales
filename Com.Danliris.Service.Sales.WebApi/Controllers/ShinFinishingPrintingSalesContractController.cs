@@ -39,6 +39,45 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
         }
 
 
+        public override IActionResult Get(int page = 1, int size = 25, string order = "{}", [Bind(Prefix = "Select[]")]List<string> select = null, string keyword = null, string filter = "{}")
+        {
+            try
+            {
+                ValidateUser();
+
+                ReadResponse<FinishingPrintingSalesContractModel> read = Facade.Read(page, size, order, select, keyword, filter);
+
+                //Tuple<List<TModel>, int, Dictionary<string, string>, List<string>> Data = Facade.Read(page, size, order, select, keyword, filter);
+                List<ShinFinishingPrintingSalesContractViewModel> DataVM = Mapper.Map<List<ShinFinishingPrintingSalesContractViewModel>>(read.Data);
+
+                foreach(var data in DataVM)
+                {
+                    var fpCCModel = finishingPrintingCostCalculationService.ReadParent(data.CostCalculation.Id).Result;
+                    if(fpCCModel != null)
+                    {
+
+                        var fpCCVM = Mapper.Map<FinishingPrintingCostCalculationViewModel>(fpCCModel);
+                        var preSalesContractModel = fpPreSalesContractFacade.ReadByIdAsync((int)fpCCVM.PreSalesContract.Id).Result;
+                        fpCCVM.PreSalesContract = Mapper.Map<FinishingPrintingPreSalesContractViewModel>(preSalesContractModel);
+                        data.CostCalculation = fpCCVM;
+                    }
+                }
+
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                    .Ok<ShinFinishingPrintingSalesContractViewModel>(Mapper, DataVM, page, size, read.Count, DataVM.Count, read.Order, read.Selected);
+                return Ok(Result);
+
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
         public override async Task<IActionResult> GetById([FromRoute] int id)
         {
             try
@@ -56,10 +95,15 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 {
                     ShinFinishingPrintingSalesContractViewModel viewModel = Mapper.Map<ShinFinishingPrintingSalesContractViewModel>(model);
                     var fpCCModel = await finishingPrintingCostCalculationService.ReadParent(viewModel.CostCalculation.Id);
-                    var fpCCVM = Mapper.Map<FinishingPrintingCostCalculationViewModel>(fpCCModel);
-                    var preSalesContractModel = await fpPreSalesContractFacade.ReadByIdAsync((int)fpCCVM.PreSalesContract.Id);
-                    fpCCVM.PreSalesContract = Mapper.Map<FinishingPrintingPreSalesContractViewModel>(preSalesContractModel);
-                    viewModel.CostCalculation = fpCCVM;
+
+                    if(fpCCModel != null)
+                    {
+
+                        var fpCCVM = Mapper.Map<FinishingPrintingCostCalculationViewModel>(fpCCModel);
+                        var preSalesContractModel = await fpPreSalesContractFacade.ReadByIdAsync((int)fpCCVM.PreSalesContract.Id);
+                        fpCCVM.PreSalesContract = Mapper.Map<FinishingPrintingPreSalesContractViewModel>(preSalesContractModel);
+                        viewModel.CostCalculation = fpCCVM;
+                    }
 
                     Dictionary<string, object> Result =
                         new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
