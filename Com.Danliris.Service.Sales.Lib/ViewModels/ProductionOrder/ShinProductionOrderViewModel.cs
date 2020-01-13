@@ -218,11 +218,6 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
                         CountDetailsError++;
                         DetailsError += "{ 'Quantity harus lebih dari 0' }, ";
                     }
-                    if (detail.Uom.Id.Equals(0))
-                    {
-                        CountDetailsError++;
-                        DetailsError += "{ 'satuan harus di isi' }, ";
-                    }
                     if (string.IsNullOrWhiteSpace(detail.ColorTemplate))
                     {
                         CountDetailsError++;

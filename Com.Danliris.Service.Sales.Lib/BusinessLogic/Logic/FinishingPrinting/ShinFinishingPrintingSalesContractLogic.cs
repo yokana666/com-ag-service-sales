@@ -74,6 +74,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             return finishingPrintingSalesContract;
         }
 
+        public Task<FinishingPrintingSalesContractModel> ReadParent(long id)
+        {
+            var finishingPrintingSalesContract = DbSet.Include(p => p.Details).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
+            return finishingPrintingSalesContract;
+        }
+
         public override async void UpdateAsync(long id, FinishingPrintingSalesContractModel model)
         {
             if (model.Details != null)

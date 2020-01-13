@@ -135,7 +135,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ISalesInvoiceContract, SalesInvoiceFacade>()
                 .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>()
                 .AddTransient<IFinishingPrintingCostCalculationService, FinishingPrintingCostCalculationFacade>()
-                .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>();
+                .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>()
+                .AddTransient<IShinProductionOrder, ShinProductionOrderFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -193,7 +194,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<SalesInvoiceDetailLogic>()            
                 .AddTransient<FinishingPrintingPreSalesContractLogic>()
                 .AddTransient<FinishingPrintingCostCalculationLogic>()
-                .AddTransient<ShinFinishingPrintingSalesContractLogic>();            
+                .AddTransient<ShinFinishingPrintingSalesContractLogic>()
+                .AddTransient<ShinProductionOrderLogic>(); ;
         }
 
         private void RegisterServices(IServiceCollection services)

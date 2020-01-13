@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.PDFTemplates;
@@ -12,6 +14,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting;
+using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalculation;
 
 namespace Com.Danliris.Service.Sales.WebApi.Controllers
 {
@@ -22,10 +28,64 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
     public class ShinProductionOrderController : BaseController<ProductionOrderModel, ShinProductionOrderViewModel, IShinProductionOrder>
     {
         private readonly IShinProductionOrder _facade;
+        private readonly IShinFinishingPrintingSalesContractFacade finishingPrintingSalesContractFacade;
+        private readonly IFinishingPrintingCostCalculationService finishingPrintingCostCalculationService;
+        private readonly IFinishingPrintingPreSalesContractFacade fpPreSalesContractFacade;
         private readonly static string apiVersion = "1.0";
         public ShinProductionOrderController(IIdentityService identityService, IValidateService validateService, IShinProductionOrder facade, IMapper mapper, IServiceProvider serviceProvider) : base(identityService, validateService, facade, mapper, apiVersion)
         {
             _facade = facade;
+            finishingPrintingSalesContractFacade = serviceProvider.GetService<IShinFinishingPrintingSalesContractFacade>();
+            finishingPrintingCostCalculationService = serviceProvider.GetService<IFinishingPrintingCostCalculationService>();
+            fpPreSalesContractFacade = serviceProvider.GetService<IFinishingPrintingPreSalesContractFacade>();
+        }
+
+        public override async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            try
+            {
+                ProductionOrderModel model = await Facade.ReadByIdAsync(id);
+
+                if (model == null)
+                {
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.NOT_FOUND_STATUS_CODE, Common.NOT_FOUND_MESSAGE)
+                        .Fail();
+                    return NotFound(Result);
+                }
+                else
+                {
+                    ShinProductionOrderViewModel viewModel = Mapper.Map<ShinProductionOrderViewModel>(model);
+                    var fpSCModel = await finishingPrintingSalesContractFacade.ReadParent(viewModel.FinishingPrintingSalesContract.Id);
+                    if(fpSCModel != null)
+                    {
+                        var fpSCVM = Mapper.Map<ShinFinishingPrintingSalesContractViewModel>(fpSCModel);
+                        var fpCCModel = await finishingPrintingCostCalculationService.ReadParent(fpSCVM.CostCalculation.Id);
+
+                        if(fpCCModel != null)
+                        {
+                            var fpCCVM = Mapper.Map<FinishingPrintingCostCalculationViewModel>(fpCCModel);
+                            var preSalesContractModel = await fpPreSalesContractFacade.ReadByIdAsync((int)fpCCVM.PreSalesContract.Id);
+                            fpCCVM.PreSalesContract = Mapper.Map<FinishingPrintingPreSalesContractViewModel>(preSalesContractModel);
+                            fpSCVM.CostCalculation = fpCCVM;
+
+                            viewModel.FinishingPrintingSalesContract = fpSCVM;
+                        }
+                       
+                    }
+                    Dictionary<string, object> Result =
+                        new ResultFormatter(ApiVersion, Common.OK_STATUS_CODE, Common.OK_MESSAGE)
+                        .Ok<ShinProductionOrderViewModel>(viewModel);
+                    return Ok(Result);
+                }
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
         }
 
         [HttpPut("update-requested-true")]

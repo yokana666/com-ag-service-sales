@@ -58,7 +58,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             ccFacade.Setup(s => s.ReadParent(It.IsAny<long>())).ReturnsAsync(new FinishingPrintingCostCalculationModel());
             user.Setup(u => u.Claims).Returns(claims);
             mocks.ServiceProvider.Setup(s => s.GetService(typeof(IHttpClientService))).Returns(new HttpClientTestService());
-
+            mocks.Mapper.Setup(x => x.Map<FinishingPrintingCostCalculationViewModel>(It.IsAny<FinishingPrintingCostCalculationModel>())).Returns(new FinishingPrintingCostCalculationViewModel() { PreSalesContract = new FinishingPrintingPreSalesContractViewModel() { Id = 1 } });
+            mocks.Mapper.Setup(x => x.Map<FinishingPrintingPreSalesContractViewModel>(It.IsAny<FinishingPrintingPreSalesContractModel>())).Returns(new FinishingPrintingPreSalesContractViewModel());
             mocks.ServiceProvider.Setup(s => s.GetService(typeof(IFinishingPrintingCostCalculationService))).Returns(ccFacade.Object);
             mocks.ServiceProvider.Setup(s => s.GetService(typeof(IFinishingPrintingPreSalesContractFacade))).Returns(preSCFacade.Object);
             ShinFinishingPrintingSalesContractController controller = (ShinFinishingPrintingSalesContractController)Activator.CreateInstance(typeof(ShinFinishingPrintingSalesContractController), mocks.IdentityService.Object, mocks.ValidateService.Object, mocks.Facade.Object, mocks.Mapper.Object, mocks.ServiceProvider.Object);
@@ -73,6 +74,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             controller.ControllerContext.HttpContext.Request.Path = new PathString("/v1/unit-test");
             return controller;
         }
+
         [Fact]
         public void Get_PDF_NotFound()
         {

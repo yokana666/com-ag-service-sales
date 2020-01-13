@@ -10,6 +10,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Com.Moonlay.NetCore.Lib;
+using Com.Moonlay.Models;
+using System.Threading.Tasks;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 {
@@ -18,6 +20,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
         private ProductionOrder_DetailLogic productionOrder_DetailLogic;
         private ProductionOrder_LampStandardLogic productionOrder_LampStandardLogic;
         private ProductionOrder_RunWidthLogic productionOrder_RunWidthLogic;
+        private readonly string Agent = "new-po-service-sales";
+
 
         public ShinProductionOrderLogic(IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService, serviceProvider, dbContext)
         {
@@ -32,7 +36,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
 
             List<string> SearchAttributes = new List<string>()
             {
-              "OrderNo", "SalesContractNo", "BuyerType", "BuyerName", "ProcessTypeName"
+              "OrderNo", "SalesContractNo", "UnitName", "BuyerName"
             };
 
             Query = QueryHelper<ProductionOrderModel>.Search(Query, SearchAttributes, keyword);
@@ -43,8 +47,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
             List<string> SelectedFields = new List<string>()
             {
 
-                "Id", "Code", "Buyer", "ProcessType", "LastModifiedUtc", "FinishingPrintingSalesContract", "OrderNo", "Details", "OrderType", "HandlingStandard", "Material", "YarnMaterial", "DeliveryDate", "SalesContractNo", "MaterialConstruction", "FinishWidth", "DesignCode", "DesignNumber", "OrderQuantity", "Uom",
-                "DistributedQuantity", "IsCompleted", "IsClosed", "IsCalculated", "Account"
+                "Id", "Code", "FinishingPrintingSalesContract", "DeliveryDate", "IsClosed", "LastModifiedUtc"
 
             };
 
@@ -58,6 +61,152 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
             int totalData = pageable.TotalCount;
 
             return new ReadResponse<ProductionOrderModel>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        public override async void UpdateAsync(long id, ProductionOrderModel model)
+        {
+            try
+            {
+                if (model.Details != null)
+                {
+                    HashSet<long> detailIds = productionOrder_DetailLogic.GetIds(id);
+                    foreach (var itemId in detailIds)
+                    {
+                        ProductionOrder_DetailModel data = model.Details.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        if (data == null)
+                            await productionOrder_DetailLogic.DeleteAsync(itemId);
+                        else
+                        {
+                            productionOrder_DetailLogic.UpdateAsync(itemId, data);
+                        }
+
+
+                    }
+                    foreach (ProductionOrder_DetailModel item in model.Details)
+                    {
+                        if (item.Id == 0)
+                            productionOrder_DetailLogic.Create(item);
+                    }
+
+                    HashSet<long> LampStandardIds = productionOrder_LampStandardLogic.GetIds(id);
+                    foreach (var itemId in LampStandardIds)
+                    {
+                        ProductionOrder_LampStandardModel data = model.LampStandards.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                        if (data == null)
+                            await productionOrder_LampStandardLogic.DeleteAsync(itemId);
+                        else
+                        {
+                            productionOrder_LampStandardLogic.UpdateAsync(itemId, data);
+                        }
+                    }
+
+                    foreach (ProductionOrder_LampStandardModel item in model.LampStandards)
+                    {
+                        if (item.Id == 0)
+                            productionOrder_LampStandardLogic.Create(item);
+                    }
+
+                    if (model.RunWidths.Count > 0)
+                    {
+                        HashSet<long> RunWidthIds = productionOrder_RunWidthLogic.GetIds(id);
+                        foreach (var itemId in RunWidthIds)
+                        {
+                            ProductionOrder_RunWidthModel data = model.RunWidths.FirstOrDefault(prop => prop.Id.Equals(itemId));
+                            if (data == null)
+                                await productionOrder_RunWidthLogic.DeleteAsync(itemId);
+                            else
+                            {
+                                productionOrder_RunWidthLogic.UpdateAsync(itemId, data);
+                            }
+
+
+                        }
+                        foreach (ProductionOrder_RunWidthModel item in model.RunWidths)
+                        {
+                            if (item.Id == 0)
+                                productionOrder_RunWidthLogic.Create(item);
+                        }
+
+                    }
+
+                }
+
+                EntityExtension.FlagForUpdate(model, IdentityService.Username, Agent);
+                DbSet.Update(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public override void Create(ProductionOrderModel model)
+        {
+            if (model.Details.Count > 0)
+            {
+                foreach (var detail in model.Details)
+                {
+                    productionOrder_DetailLogic.Create(detail);
+                }
+            }
+
+            if (model.LampStandards.Count > 0)
+            {
+                foreach (var lampStandards in model.LampStandards)
+                {
+                    lampStandards.Id = 0;
+                    productionOrder_LampStandardLogic.Create(lampStandards);
+                }
+            }
+
+            if (model.RunWidths.Count > 0)
+            {
+                foreach (var runWidths in model.RunWidths)
+                {
+                    productionOrder_RunWidthLogic.Create(runWidths);
+                }
+            }
+
+            EntityExtension.FlagForCreate(model, IdentityService.Username, Agent);
+            DbSet.Add(model);
+        }
+
+        public override async Task DeleteAsync(long id)
+        {
+            ProductionOrderModel model = await ReadByIdAsync(id);
+
+            foreach (var detail in model.Details)
+            {
+                await productionOrder_DetailLogic.DeleteAsync(detail.Id);
+            }
+
+            foreach (var lampStandards in model.LampStandards)
+            {
+                await productionOrder_LampStandardLogic.DeleteAsync(lampStandards.Id);
+            }
+
+
+            if (model.RunWidths.Count > 0)
+            {
+                foreach (var runWidths in model.RunWidths)
+                {
+                    await productionOrder_RunWidthLogic.DeleteAsync(runWidths.Id);
+                }
+            }
+
+            EntityExtension.FlagForDelete(model, IdentityService.Username, Agent, true);
+            DbSet.Update(model);
+        }
+
+        public override async Task<ProductionOrderModel> ReadByIdAsync(long id)
+        {
+            var ProductionOrder = await DbSet.Include(p => p.Details).Include(p => p.LampStandards).Include(p => p.RunWidths)
+               .Where(p => p.Details.Select(d => d.ProductionOrderModel.Id).Contains(p.Id))
+               .FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
+            ProductionOrder.Details = ProductionOrder.Details.OrderBy(s => s.Id).ToArray();
+            ProductionOrder.LampStandards = ProductionOrder.LampStandards.OrderBy(s => s.Id).ToArray();
+            ProductionOrder.RunWidths = ProductionOrder.RunWidths.OrderBy(s => s.Id).ToArray();
+            return ProductionOrder;
         }
     }
 }
