@@ -24,8 +24,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             //set content configuration
             BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
             BaseFont bf_bold = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
-            Font normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 7);
-            Font bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 7);
+            Font normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 6);
+            Font bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 6);
             Font bold_font_8 = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 8);
             Font font_9 = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 9);
             DateTime now = DateTime.Now;
@@ -322,7 +322,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             PdfPTable table_accessories = new PdfPTable(4);
             table_accessories.TotalWidth = 570f;
 
-            float[] accessories_widths = new float[] { 5f, 5f, 5f, 5f };
+            float[] accessories_widths = new float[] { 3f, 5f, 5f, 5f };
             table_accessories.SetWidths(accessories_widths);
 
             PdfPCell cell_acc_center = new PdfPCell()
@@ -686,10 +686,10 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             #endregion
 
             #region Signature
-            PdfPTable table_signature = new PdfPTable(6);
+            PdfPTable table_signature = new PdfPTable(2);
             table_signature.TotalWidth = 570f;
 
-            float[] signature_widths = new float[] { 1f, 1f, 1f, 1f, 1f, 1f };
+            float[] signature_widths = new float[] { 1f, 1f };
             table_signature.SetWidths(signature_widths);
 
             PdfPCell cell_signature = new PdfPCell()
@@ -709,30 +709,14 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 PaddingTop = 50
             };
 
-            cell_signature.Phrase = new Phrase("Dibuat", normal_font);
+            cell_signature.Phrase = new Phrase("Bagian Penjualan", normal_font);
             table_signature.AddCell(cell_signature);
-            cell_signature.Phrase = new Phrase("Kasie Merchandiser", normal_font);
-            table_signature.AddCell(cell_signature);
-            cell_signature.Phrase = new Phrase("R & D", normal_font);
-            table_signature.AddCell(cell_signature);
-            cell_signature.Phrase = new Phrase("Ka Produksi", normal_font);
-            table_signature.AddCell(cell_signature);
-            cell_signature.Phrase = new Phrase("Mengetahui", normal_font);
-            table_signature.AddCell(cell_signature);
-            cell_signature.Phrase = new Phrase("Menyetujui", normal_font);
+            cell_signature.Phrase = new Phrase("Kasie/Kabag Penjualan", normal_font);
             table_signature.AddCell(cell_signature);
 
-            cell_signature_noted.Phrase = new Phrase("(                           )", normal_font);
+            cell_signature_noted.Phrase = new Phrase("(                                         )", normal_font);
             table_signature.AddCell(cell_signature_noted);
-            cell_signature_noted.Phrase = new Phrase("(                           )", normal_font);
-            table_signature.AddCell(cell_signature_noted);
-            cell_signature_noted.Phrase = new Phrase("(                           )", normal_font);
-            table_signature.AddCell(cell_signature_noted);
-            cell_signature_noted.Phrase = new Phrase("(                           )", normal_font);
-            table_signature.AddCell(cell_signature_noted);
-            cell_signature_noted.Phrase = new Phrase("(                           )", normal_font);
-            table_signature.AddCell(cell_signature_noted);
-            cell_signature_noted.Phrase = new Phrase("(Michelle Tjokrosaputro)", normal_font);
+            cell_signature_noted.Phrase = new Phrase("(                                         )", normal_font);
             table_signature.AddCell(cell_signature_noted);
 
             float table_signatureY = rowYRoImage - imageRoHeight - 10;
