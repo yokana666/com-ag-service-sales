@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200113022121_Ignore_CostCalculationGarment_ImageFile")]
+    partial class Ignore_CostCalculationGarment_ImageFile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -668,14 +670,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(64);
 
                     b.Property<double>("OrderQuantity");
-
-                    b.Property<string>("OrderTypeCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("OrderTypeId");
-
-                    b.Property<string>("OrderTypeName")
-                        .HasMaxLength(512);
 
                     b.Property<string>("ProcessTypeCode")
                         .HasMaxLength(128);
