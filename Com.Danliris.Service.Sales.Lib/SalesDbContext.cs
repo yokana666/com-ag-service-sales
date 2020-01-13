@@ -85,8 +85,11 @@ namespace Com.Danliris.Service.Sales.Lib
                 .IsUnique()
                 .HasFilter("[IsDeleted]=(0)");
 
+            modelBuilder.Entity<CostCalculationGarment>()
+                .Ignore(c => c.ImageFile);
+
             modelBuilder.Entity<RO_Garment>()
-            .Ignore(c => c.ImagesFile);
+                .Ignore(c => c.ImagesFile);
 
             modelBuilder.Entity<RO_Garment>()
                 .Ignore(c => c.DocumentsFile);
