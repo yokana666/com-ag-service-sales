@@ -84,9 +84,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                     }
                     while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
 
-                    model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
                     costCalculationGarmentLogic.Create(model);
-                    if (model.ImagePath != null)
+                    if (!string.IsNullOrWhiteSpace(model.ImageFile))
                     {
                         model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
                     }
@@ -148,9 +147,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
 
 		public async Task<int> UpdateAsync(int id, CostCalculationGarment model)
 		{
-            model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
             costCalculationGarmentLogic.UpdateAsync(id, model);
-            if (model.ImagePath != null)
+            if (!string.IsNullOrWhiteSpace(model.ImageFile))
             {
                 model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
             }
