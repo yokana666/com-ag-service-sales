@@ -69,6 +69,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.IsApprovedIE = false;
             data.IsApprovedPurchasing = false;
             data.IsApprovedKadivMD = false;
+            data.ApprovedKadivMDDate = DateTimeOffset.Now;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {
                 new CostCalculationGarment_Material

@@ -65,22 +65,25 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             result.Columns.Add(new DataColumn() { ColumnName = "Valid Bagian Engineering", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Valid Kabag Pucrhasing", DataType = typeof(String) });
             result.Columns.Add(new DataColumn() { ColumnName = "Valid Kadiv Merchandiser", DataType = typeof(String) });
-     
+            result.Columns.Add(new DataColumn() { ColumnName = "Tgl Valid Kadiv Merchandiser", DataType = typeof(String) });
+
+
             Dictionary<string, string> Rowcount = new Dictionary<string, string>();
             if (Query.ToArray().Count() == 0)
-                     result.Rows.Add("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
+                     result.Rows.Add("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""); // to allow column name to be generated properly for empty data as template
             else
             {
                 int index = 0;
                 foreach (CostCalculationGarmentValidationReportViewModel item in data)
                 {
                             index++;
-                            string CfrmDate = item.ConfirmDate == new DateTime(1970, 1, 1) ? "-" : item.ConfirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                            string ShipDate = item.DeliveryDate == new DateTime(1970, 1, 1) ? "-" : item.DeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                            string CfrmDate = item.ConfirmDate == DateTimeOffset.MinValue ? "-" : item.ConfirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                            string ShipDate = item.DeliveryDate == DateTimeOffset.MinValue ? "-" : item.DeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                            string ValidDate = item.ValidatedDate == DateTimeOffset.MinValue ? "-" : item.ValidatedDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                             string QtyOrder = string.Format("{0:N2}", item.Quantity);
                     
                     result.Rows.Add(index, item.RO_Number, item.StaffName, item.UnitName, CfrmDate, item.Section, item.BuyerCode, item.BuyerName, item.BrandCode, item.BrandName,
-                                    item.Comodity, item.Article, ShipDate, QtyOrder, item.UOMUnit, item.ValidatedMD, item.ValidatedIE, item.ValidatedPurch, item.ValidatedKadiv);
+                                    item.Comodity, item.Article, ShipDate, QtyOrder, item.UOMUnit, item.ValidatedMD, item.ValidatedIE, item.ValidatedPurch, item.ValidatedKadiv, ValidDate);
                 }
             }
             ExcelPackage package = new ExcelPackage();
