@@ -77,8 +77,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                 foreach (CostCalculationGarmentValidationReportViewModel item in data)
                 {
                             index++;
-                            string CfrmDate = item.ConfirmDate == DateTimeOffset.MinValue ? "-" : item.ConfirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
-                            string ShipDate = item.DeliveryDate == DateTimeOffset.MinValue ? "-" : item.DeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                            string CfrmDate = item.ConfirmDate == new DateTime(1970, 1, 1) ? "-" : item.ConfirmDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
+                            string ShipDate = item.DeliveryDate == new DateTime(1970, 1, 1) ? "-" : item.DeliveryDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                             string ValidDate = item.ValidatedDate == DateTimeOffset.MinValue ? "-" : item.ValidatedDate.ToOffset(new TimeSpan(offset, 0, 0)).ToString("dd MMM yyyy", new CultureInfo("id-ID"));
                             string QtyOrder = string.Format("{0:N2}", item.Quantity);
                     
