@@ -202,12 +202,12 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			cell_bottom_column1_1.Phrase = new Phrase("BUYER AGENT", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
-			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Buyer.Name}", normal_font);
+			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Buyer.Code}" + " - " + $"{viewModel.Buyer.Name}", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
 
             cell_bottom_column1_1.Phrase = new Phrase("BUYER BRAND", normal_font);
             table_bottom_column1_1.AddCell(cell_bottom_column1_1);
-            cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.BuyerBrand.Name}", normal_font);
+            cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.BuyerBrand.Code}" + " - "+ $"{viewModel.BuyerBrand.Name}", normal_font);
             table_bottom_column1_1.AddCell(cell_bottom_column1_1);
 
             cell_bottom_column1_1.Phrase = new Phrase("DELIVERY", normal_font);

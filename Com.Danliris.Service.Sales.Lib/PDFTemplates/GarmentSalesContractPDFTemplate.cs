@@ -200,7 +200,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("", normal_font);
             tableBody.AddCell(bodyContentLeft);
-            bodyContentLeft.Phrase = new Phrase("ADDRESS : KELURAHAN BANARAN, KECAMATAN GROGOL \n                    KABUPATEN SUKOHARJO, JAWA TENGAH, INDONESIA", normal_font);
+            bodyContentLeft.Phrase = new Phrase("ADDRESS : JL. MERAPI NO. 23, KELURAHAN BANARAN, KECAMATAN GROGOL \n                    KABUPATEN SUKOHARJO, JAWA TENGAH 57552, INDONESIA", normal_font);
             tableBody.AddCell(bodyContentLeft);
             bodyContentLeft.Phrase = new Phrase("Bank Detail", normal_font);
             tableBody.AddCell(bodyContentLeft);
@@ -377,7 +377,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
                 cell_loc.Phrase = new Phrase("D.", normal_font);
                 LocList.AddCell(cell_loc);
-                cell_loc.Phrase = new Phrase(" BENEFICIARY      : PT. DAN LIRIS \n                                 ADDRESS    : KELURAHAN BANARAN, KECAMATAN GROGOL \n                                                        KABUPATEN SUKOHARJO, JAWA TENGAH, INDONESIA", normal_font);
+                cell_loc.Phrase = new Phrase(" BENEFICIARY      : PT. DAN LIRIS \n                                 ADDRESS    : JL. MERAPI No. 23, KELURAHAN BANARAN, KECAMATAN GROGOL \n                                                        KABUPATEN SUKOHARJO, JAWA TENGAH 57552, INDONESIA", normal_font);
                 LocList.AddCell(cell_loc);
 
 
@@ -563,7 +563,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             cb.AddImage(image, inlineImage: true);
 
             string[] headOffices = {
-                "Head Office : KELURAHAN BANARAN, KECAMATAN GROGOL, SUKOHARJO 57193 - INDONESIA",
+                "Head Office : JL. MERAPI NO. 23, BANARAN, GROGOL, SUKOHARJO JAWA TENGAH 57552 - INDONESIA",
                 "TELP. 0271-740888, 714400 (HUNTING), FAX. : 0271-735222, 740777, PO BOX 166 SOLO 57100",
                 "Website : www.danliris.com",
             };

@@ -72,6 +72,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                         ValidatedIE = a.IsApprovedIE.Equals(true) ? "SUDAH" : "BELUM",
                         ValidatedPurch = a.IsApprovedPurchasing.Equals(true) ? "SUDAH" : "BELUM",
                         ValidatedKadiv = a.IsApprovedKadivMD.Equals(true) ? "SUDAH" : "BELUM",
+                        ValidatedDate = a.ApprovedKadivMDDate,
                     });
 
             return newQ;
