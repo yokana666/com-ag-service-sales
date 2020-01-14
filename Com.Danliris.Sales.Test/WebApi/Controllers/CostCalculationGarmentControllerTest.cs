@@ -171,6 +171,13 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                         },
                         new CostCalculationGarment_MaterialViewModel
                         {
+                            PRMasterItemId = 1,
+                            Category = new CategoryViewModel { code = "CategoryCode" },
+                            Quantity = 2,
+                            AvailableQuantity = 1
+                        },
+                        new CostCalculationGarment_MaterialViewModel
+                        {
                             Category = new CategoryViewModel { code = "CategoryCode" },
                             UOMPrice = new UOMViewModel() { Unit = "Unit" },
                             UOMQuantity = new UOMViewModel() { Unit = "Unit" },
