@@ -774,5 +774,57 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 			var statusCode = GetStatusCode(response);
 			Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
 		}
-	}
+
+        [Fact]
+        public void Get_Dynamic_WithoutException_ReturnOK()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadDynamic(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<dynamic>(new List<dynamic>(), 0, new Dictionary<string, string>(), new List<string>()));
+
+            CostCalculationGarmentController controller = GetController(mocks);
+            IActionResult response = controller.GetDynamic();
+            
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Get_Dynamic_ReadThrowException_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadDynamic(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
+
+            CostCalculationGarmentController controller = GetController(mocks);
+            IActionResult response = controller.GetDynamic();
+
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+
+        [Fact]
+        public void Get_Materials_WithoutException_ReturnOK()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadMaterials(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<dynamic>(new List<dynamic>(), 0, new Dictionary<string, string>(), new List<string>()));
+
+            CostCalculationGarmentController controller = GetController(mocks);
+            IActionResult response = controller.GetMaterials();
+            
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Get_Materials_ReadThrowException_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadMaterials(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
+
+            CostCalculationGarmentController controller = GetController(mocks);
+            IActionResult response = controller.GetMaterials();
+
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
+    }
 }

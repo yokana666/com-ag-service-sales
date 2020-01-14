@@ -108,5 +108,7 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation
         public string Remark { get; set; }
         
         public bool IsPosted { get; set; }
+
+        public bool IsSCCreated { get; set; }
     }
 }

@@ -61,6 +61,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 .Setup(x => x.GetService(typeof(IdentityService)))
                 .Returns(identityService);
             serviceProviderMock
+                .Setup(x => x.GetService(typeof(CostCalculationGarmentMaterialLogic)))
+                .Returns(costCalculationGarmentMaterialLogic);
+            serviceProviderMock
                 .Setup(x => x.GetService(typeof(CostCalculationGarmentLogic)))
                 .Returns(costCalculationGarmentLogic);
             serviceProviderMock
@@ -267,5 +270,34 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 			Assert.NotNull(Response);
 		}
 
-	}
+        [Fact]
+        public virtual async void Get_Dynamic_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = facade.ReadDynamic(1, 25, "{}", "new(Id)", null, "{}", "[]");
+
+            Assert.NotEqual(Response.Data.Count, 0);
+        }
+
+        [Fact]
+        public virtual async void Get_Material_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = facade.ReadMaterials(1, 25, "{}", "new(Id)", null, "{}", "[]");
+
+            Assert.NotEqual(Response.Data.Count, 0);
+        }
+    }
 }
