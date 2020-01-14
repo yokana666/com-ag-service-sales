@@ -156,13 +156,16 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             PdfPTable bodyTable = new PdfPTable(7);
             PdfPCell bodyCell = new PdfPCell();
 
-            float[] widthsBody = new float[] { 5f, 7f, 7f, 5f, 10f, 10f, 10f };
+            float[] widthsBody = new float[] { 5f, 12f, 7f, 7f, 5f, 10f, 10f };
             bodyTable.SetWidths(widthsBody);
             bodyTable.WidthPercentage = 100;
 
             bodyCell.HorizontalAlignment = Element.ALIGN_CENTER;
 
             bodyCell.Phrase = new Phrase("Kode", bold_font);
+            bodyTable.AddCell(bodyCell);
+
+            bodyCell.Phrase = new Phrase("Nama Barang", bold_font);
             bodyTable.AddCell(bodyCell);
 
             bodyCell.Phrase = new Phrase("Banyak", bold_font);
@@ -172,9 +175,6 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             bodyTable.AddCell(bodyCell);
 
             bodyCell.Phrase = new Phrase("Sat", bold_font);
-            bodyTable.AddCell(bodyCell);
-
-            bodyCell.Phrase = new Phrase("Nama Barang", bold_font);
             bodyTable.AddCell(bodyCell);
 
             bodyCell.Phrase = new Phrase("Harga Satuan", bold_font);
@@ -190,7 +190,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 bodyTable.AddCell(bodyCell);
 
                 bodyCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                bodyCell.Phrase = new Phrase(item.Quantity, normal_font);
+                bodyCell.Phrase = new Phrase(item.UnitName, normal_font);
+                bodyTable.AddCell(bodyCell);
+
+                bodyCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                bodyCell.Phrase = new Phrase(item.Quantity + " " + item.UomUnit, normal_font);
                 bodyTable.AddCell(bodyCell);
 
                 bodyCell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -198,11 +202,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 bodyTable.AddCell(bodyCell);
 
                 bodyCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                bodyCell.Phrase = new Phrase(item.UomUnit, normal_font);
-                bodyTable.AddCell(bodyCell);
-
-                bodyCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                bodyCell.Phrase = new Phrase(item.UnitName, normal_font);
+                bodyCell.Phrase = new Phrase("Yard(s)", normal_font);
                 bodyTable.AddCell(bodyCell);
 
                 bodyCell.HorizontalAlignment = Element.ALIGN_CENTER;

@@ -68,6 +68,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesReceipt;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.SalesReceipt;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesReceipt;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -133,6 +136,7 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IGarmentPurchasingQualityObjectiveReportFacade, GarmentPurchasingQualityObjectiveReportFacade>()
                 .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>()
                 .AddTransient<ISalesInvoiceContract, SalesInvoiceFacade>()
+                .AddTransient<ISalesReceiptContract, SalesReceiptFacade>()
                 .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>()
                 .AddTransient<IFinishingPrintingCostCalculationService, FinishingPrintingCostCalculationFacade>()
                 .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>()
@@ -191,7 +195,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<GarmentPurchasingQualityObjectiveReportLogic>()
                 .AddTransient<GarmentOmzetTargetLogic>()
                 .AddTransient<SalesInvoiceLogic>()
-                .AddTransient<SalesInvoiceDetailLogic>()            
+                .AddTransient<SalesInvoiceDetailLogic>()
+                .AddTransient<SalesReceiptLogic>()
+                .AddTransient<SalesReceiptDetailLogic>()
                 .AddTransient<FinishingPrintingPreSalesContractLogic>()
                 .AddTransient<FinishingPrintingCostCalculationLogic>()
                 .AddTransient<ShinFinishingPrintingSalesContractLogic>()
