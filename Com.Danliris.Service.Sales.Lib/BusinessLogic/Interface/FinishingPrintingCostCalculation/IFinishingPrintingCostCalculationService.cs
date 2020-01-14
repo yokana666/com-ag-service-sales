@@ -11,5 +11,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrinti
     {
         Task<int> CCPost(List<long> listId);
         Task<FinishingPrintingCostCalculationModel> ReadParent(long id);
+        Task<int> CCApproveMD(long id);
+        Task<int> CCApprovePPIC(long id);
     }
 }

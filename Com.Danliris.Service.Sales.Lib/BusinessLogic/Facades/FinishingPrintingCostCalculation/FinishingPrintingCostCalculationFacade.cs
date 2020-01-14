@@ -81,5 +81,17 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting
         {
             return await finishingPrintingCostCalculationLogic.ReadParent(id);
         }
+
+        public async Task<int> CCApproveMD(long id)
+        {
+            await finishingPrintingCostCalculationLogic.ApproveMD(id);
+            return await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> CCApprovePPIC(long id)
+        {
+            await finishingPrintingCostCalculationLogic.ApprovePPIC(id);
+            return await DbContext.SaveChangesAsync();
+        }
     }
 }

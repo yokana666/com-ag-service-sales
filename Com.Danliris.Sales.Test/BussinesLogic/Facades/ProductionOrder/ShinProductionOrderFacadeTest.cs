@@ -1,7 +1,9 @@
-﻿using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSalesContract;
+﻿using AutoMapper;
+using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSalesContract;
 using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.ProductionOrder;
 using Com.Danliris.Sales.Test.BussinesLogic.Utils;
 using Com.Danliris.Service.Sales.Lib;
+using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.ProductionOrderProfiles;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
@@ -10,6 +12,7 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCa
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.ViewModels.Report;
 using Moq;
 using Newtonsoft.Json;
@@ -361,6 +364,25 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var tuple = await facade.GenerateExcel(data.SalesContractNo, null, null, null, null, null, DateTime.UtcNow.AddDays(-2), DateTime.UtcNow.AddDays(3), 7);
             Assert.IsType<System.IO.MemoryStream>(tuple);
 
+
+        }
+
+        [Fact]
+        public void Mapping_With_AutoMapper_Profiles()
+        {
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<ShinProductionOrderMapper>();
+                cfg.AddProfile<ProductionOrderRunWidthMapper>();
+                cfg.AddProfile<ProductionOrderLampStandardMapper>();
+                cfg.AddProfile<ProductionOrderDetailMapper>();
+            });
+            var mapper = configuration.CreateMapper();
+
+            ShinProductionOrderViewModel vm = new ShinProductionOrderViewModel { Id = 1 };
+            ProductionOrderModel model = mapper.Map<ProductionOrderModel>(vm);
+
+            Assert.Equal(vm.Id, model.Id);
 
         }
     }
