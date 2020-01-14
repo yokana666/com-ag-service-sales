@@ -84,12 +84,12 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			cell_detail2.Phrase = new Phrase("BUYER AGENT", normal_font);
 			table_detail2.AddCell(cell_detail2);
-			cell_detail2.Phrase = new Phrase($"{viewModel.Buyer.Name}", normal_font);
+			cell_detail2.Phrase = new Phrase($"{viewModel.Buyer.Code}" + " - "+ $"{viewModel.Buyer.Name}", normal_font);
 			table_detail2.AddCell(cell_detail2);
 
 			cell_detail2.Phrase = new Phrase("BUYER BRAND", normal_font);
 			table_detail2.AddCell(cell_detail2);
-			cell_detail2.Phrase = new Phrase($"{viewModel.BuyerBrand.Name}", normal_font);
+			cell_detail2.Phrase = new Phrase($"{viewModel.BuyerBrand.Code}" + " - " +$"{viewModel.BuyerBrand.Name}", normal_font);
 			table_detail2.AddCell(cell_detail2);
 
 			cell_detail2.Phrase = new Phrase("ARTICLE", normal_font);
