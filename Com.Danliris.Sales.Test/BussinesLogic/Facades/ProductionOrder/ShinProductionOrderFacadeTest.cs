@@ -293,10 +293,23 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
             ShinProductionOrderFacade facade = Activator.CreateInstance(typeof(ShinProductionOrderFacade), serviceProvider, dbContext) as ShinProductionOrderFacade;
             var data = await DataUtil(facade, dbContext).GetTestData();
-
-            var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Month, (int)data.OrderTypeId, 0);
+            var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Month, (int)data.OrderTypeId, 0); 
 
             Assert.NotEqual(result.Count, 0);
+        }
+
+        [Fact]
+        public async Task Should_Success_GetDetailReport()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ShinProductionOrderFacade facade = Activator.CreateInstance(typeof(ShinProductionOrderFacade), serviceProvider, dbContext) as ShinProductionOrderFacade;
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var all = facade.Read(1, 25, "{}", new List<string>(), null, "{}");
+            var result = await facade.GetDetailReport(all.Data.FirstOrDefault().Id);
+
+            Assert.NotNull(result);
         }
 
         [Fact]
