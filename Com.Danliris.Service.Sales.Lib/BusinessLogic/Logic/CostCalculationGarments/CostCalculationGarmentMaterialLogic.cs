@@ -92,5 +92,46 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
 
             return new ReadResponse<dynamic>(Data, totalData, OrderDictionary, new List<string>());
         }
+
+        internal ReadResponse<dynamic> ReadMaterialsByPRMasterItemIds(int page, int size, string order, string select, string keyword, string filter, string search, string prmasteritemids)
+        {
+            IQueryable<CostCalculationGarment_Material> Query = DbSet;
+
+            List<long> PRMasterItemIds = JsonConvert.DeserializeObject<List<long>>(prmasteritemids);
+            Query = Query.Where(w => PRMasterItemIds.Contains(w.PRMasterItemId));
+
+            List<string> SearchAttributes = JsonConvert.DeserializeObject<List<string>>(search);
+            if (SearchAttributes.Count < 1)
+            {
+                SearchAttributes = new List<string>() { "Code", "PO_SerialNumber" };
+            }
+            Query = QueryHelper<CostCalculationGarment_Material>.Search(Query, SearchAttributes, keyword);
+
+            Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
+            Query = QueryHelper<CostCalculationGarment_Material>.Filter(Query, FilterDictionary);
+
+            Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
+            Query = QueryHelper<CostCalculationGarment_Material>.Order(Query, OrderDictionary);
+
+            IQueryable SelectedQuery = Query;
+            if (!string.IsNullOrWhiteSpace(select))
+            {
+                SelectedQuery = QueryHelper<CostCalculationGarment_Material>.Select(Query, select);
+            }
+
+            int totalData = SelectedQuery.Count();
+
+            if (size > 0)
+            {
+                SelectedQuery = SelectedQuery
+                    .Skip((page - 1) * size)
+                    .Take(size);
+            }
+
+            List<dynamic> Data = SelectedQuery
+                .ToDynamicList();
+
+            return new ReadResponse<dynamic>(Data, totalData, OrderDictionary, new List<string>());
+        }
     }
 }
