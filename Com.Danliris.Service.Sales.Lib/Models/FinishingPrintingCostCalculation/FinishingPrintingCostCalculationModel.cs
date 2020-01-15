@@ -110,5 +110,19 @@ namespace Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation
         public bool IsPosted { get; set; }
 
         public bool IsSCCreated { get; set; }
+
+        public bool IsApprovedPPIC { get; set; }
+
+        public DateTimeOffset ApprovedPPICDate { get; set; }
+        
+        [MaxLength(512)]
+        public string ApprovedPPICBy { get; set; }
+
+        public bool IsApprovedMD { get; set; }
+
+        public DateTimeOffset ApprovedMDDate { get; set; }
+
+        [MaxLength(512)]
+        public string ApprovedMDBy { get; set; }
     }
 }

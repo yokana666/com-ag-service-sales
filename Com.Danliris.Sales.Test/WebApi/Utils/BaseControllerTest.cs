@@ -94,7 +94,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Utils
         }
 
         [Fact]
-        public void Get_WithoutException_ReturnOK()
+        public virtual void Get_WithoutException_ReturnOK()
         {
             var mocks = this.GetMocks();
             mocks.Facade.Setup(f => f.Read(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<TModel>(new List<TModel>(), 0, new Dictionary<string, string>(), new List<string>()));

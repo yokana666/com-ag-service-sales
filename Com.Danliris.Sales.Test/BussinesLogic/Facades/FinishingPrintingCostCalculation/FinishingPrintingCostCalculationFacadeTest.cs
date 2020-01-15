@@ -175,6 +175,32 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
         }
 
         [Fact]
+        public async void CCApprovePPIC_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            FinishingPrintingCostCalculationFacade facade = new FinishingPrintingCostCalculationFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+            
+            var Response = await facade.CCApprovePPIC(data.Id);
+            Assert.NotEqual(Response, 0);
+        }
+
+        [Fact]
+        public async void CCApproveMD_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            FinishingPrintingCostCalculationFacade facade = new FinishingPrintingCostCalculationFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+
+            var Response = await facade.CCApproveMD(data.Id);
+            Assert.NotEqual(Response, 0);
+        }
+
+        [Fact]
         public void ValidateVM()
         {
             var vm = new FinishingPrintingCostCalculationViewModel()

@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200113093524_AddUnitInPO")]
+    partial class AddUnitInPO
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1175,16 +1177,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<decimal>("ActualPrice");
 
-                    b.Property<string>("ApprovedMDBy")
-                        .HasMaxLength(512);
-
-                    b.Property<DateTimeOffset>("ApprovedMDDate");
-
-                    b.Property<string>("ApprovedPPICBy")
-                        .HasMaxLength(512);
-
-                    b.Property<DateTimeOffset>("ApprovedPPICDate");
-
                     b.Property<decimal>("BankMiscCost");
 
                     b.Property<string>("Code")
@@ -1240,10 +1232,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<string>("InstructionName")
                         .HasMaxLength(128);
-
-                    b.Property<bool>("IsApprovedMD");
-
-                    b.Property<bool>("IsApprovedPPIC");
 
                     b.Property<bool>("IsDeleted");
 
@@ -3068,173 +3056,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.ToTable("SalesInvoices");
                 });
 
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.SalesReceipt.SalesReceiptDetailModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("CurrencyCode")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("CurrencyId");
-
-                    b.Property<double>("CurrencyRate");
-
-                    b.Property<string>("CurrencySymbol")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<DateTimeOffset>("DueDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<double>("Nominal");
-
-                    b.Property<double>("Paid");
-
-                    b.Property<int>("SalesInvoiceId");
-
-                    b.Property<string>("SalesInvoiceNo")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("SalesReceiptId");
-
-                    b.Property<long?>("SalesReceiptModelId");
-
-                    b.Property<double>("TotalAmount");
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.Property<double>("Unpaid");
-
-                    b.Property<bool>("UseVat");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SalesReceiptModelId");
-
-                    b.ToTable("SalesReceiptDetails");
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.SalesReceipt.SalesReceiptModel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AccountCOA")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("AccountName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("AccountNumber")
-                        .HasMaxLength(255);
-
-                    b.Property<bool>("Active");
-
-                    b.Property<long>("AutoIncreament");
-
-                    b.Property<string>("BankCode")
-                        .HasMaxLength(255);
-
-                    b.Property<int>("BankId");
-
-                    b.Property<string>("BankName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("BuyerAddress")
-                        .HasMaxLength(1000);
-
-                    b.Property<int>("BuyerId");
-
-                    b.Property<string>("BuyerName")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<string>("DeletedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("DeletedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("DeletedUtc");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastModifiedAgent")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(255);
-
-                    b.Property<DateTime>("LastModifiedUtc");
-
-                    b.Property<DateTimeOffset>("SalesReceiptDate");
-
-                    b.Property<string>("SalesReceiptNo")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("SalesReceiptType")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("UId")
-                        .HasMaxLength(255);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SalesReceipts");
-                });
-
             modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.Spinning.SpinningSalesContractModel", b =>
                 {
                     b.Property<long>("Id")
@@ -3728,14 +3549,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.HasOne("Com.Danliris.Service.Sales.Lib.Models.SalesInvoice.SalesInvoiceModel", "SalesInvoiceModel")
                         .WithMany("SalesInvoiceDetails")
                         .HasForeignKey("SalesInvoiceModelId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Com.Danliris.Service.Sales.Lib.Models.SalesReceipt.SalesReceiptDetailModel", b =>
-                {
-                    b.HasOne("Com.Danliris.Service.Sales.Lib.Models.SalesReceipt.SalesReceiptModel", "SalesReceiptModel")
-                        .WithMany("SalesReceiptDetails")
-                        .HasForeignKey("SalesReceiptModelId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618

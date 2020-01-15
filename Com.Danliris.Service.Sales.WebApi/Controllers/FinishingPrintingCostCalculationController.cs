@@ -113,5 +113,45 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
             }
         }
+
+        [HttpPost("approve/md/{id}")]
+        public async Task<IActionResult> CCApproveByMD([FromRoute] long id)
+        {
+            try
+            {
+                ValidateUser();
+
+                var result = await Facade.CCApproveMD(id);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPost("approve/ppic/{id}")]
+        public async Task<IActionResult> CCApproveByPPIC([FromRoute] long id)
+        {
+            try
+            {
+                ValidateUser();
+
+                var result = await Facade.CCApprovePPIC(id);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
     }
 }
