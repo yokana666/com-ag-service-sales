@@ -374,5 +374,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic = ServiceProvider.GetService<CostCalculationGarmentMaterialLogic>();
             return costCalculationGarmentMaterialLogic.ReadMaterials(page, size, order, select, keyword, filter, search);
         }
+
+        public ReadResponse<dynamic> ReadMaterialsByPRMasterItemIds(int page, int size, string order, string select, string keyword, string filter, string search, string prmasteritemids)
+        {
+            CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic = ServiceProvider.GetService<CostCalculationGarmentMaterialLogic>();
+            return costCalculationGarmentMaterialLogic.ReadMaterialsByPRMasterItemIds(page, size, order, select, keyword, filter, search, prmasteritemids);
+        }
     }
 }
