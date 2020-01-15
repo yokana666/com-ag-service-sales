@@ -826,5 +826,31 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             int statusCode = GetStatusCode(response);
             Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
         }
+
+        [Fact]
+        public void Get_MaterialsByPRMasterItemIds_WithoutException_ReturnOK()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadMaterialsByPRMasterItemIds(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new ReadResponse<dynamic>(new List<dynamic>(), 0, new Dictionary<string, string>(), new List<string>()));
+
+            CostCalculationGarmentController controller = GetController(mocks);
+            IActionResult response = controller.GetMaterialsByPRMasterItemIds();
+            
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.OK, statusCode);
+        }
+
+        [Fact]
+        public void Get_MaterialsByPRMasterItemIds_ReadThrowException_ReturnInternalServerError()
+        {
+            var mocks = GetMocks();
+            mocks.Facade.Setup(f => f.ReadMaterialsByPRMasterItemIds(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception());
+
+            CostCalculationGarmentController controller = GetController(mocks);
+            IActionResult response = controller.GetMaterialsByPRMasterItemIds();
+
+            int statusCode = GetStatusCode(response);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, statusCode);
+        }
     }
 }
