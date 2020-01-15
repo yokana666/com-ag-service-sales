@@ -106,12 +106,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             var Query = CostCalculationGarmentValidationReportLogic.GetQuery(filter);
             var data = Query.ToList();
 
-            Pageable<CostCalculationGarmentValidationReportViewModel> pageable = new Pageable<CostCalculationGarmentValidationReportViewModel>(data, page - 1, size);
-            List<CostCalculationGarmentValidationReportViewModel> Data_ = pageable.Data.ToList<CostCalculationGarmentValidationReportViewModel>();
-
-            int TotalData = pageable.TotalCount;
-
-            return Tuple.Create(Data_, TotalData);
+            int TotalData = data.Count();
+            return Tuple.Create(data, TotalData);
         }     
     }
 }
