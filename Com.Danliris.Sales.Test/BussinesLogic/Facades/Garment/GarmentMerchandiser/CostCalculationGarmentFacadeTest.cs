@@ -14,8 +14,10 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -296,6 +298,23 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var data = await DataUtil(facade, dbContext).GetTestData();
 
             var Response = facade.ReadMaterials(1, 25, "{}", "new(Id)", null, "{}", "[]");
+
+            Assert.NotEqual(Response.Data.Count, 0);
+        }
+
+        [Fact]
+        public virtual async void Get_Materials_By_PRMasterItemIds_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+
+            CostCalculationGarmentFacade facade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var prMasterItemIds = JsonConvert.SerializeObject(data.CostCalculationGarment_Materials.Select(s => s.PRMasterItemId));
+
+            var Response = facade.ReadMaterialsByPRMasterItemIds(1, 25, "{}", "new(Id)", null, "{}", "[]", prMasterItemIds);
 
             Assert.NotEqual(Response.Data.Count, 0);
         }
