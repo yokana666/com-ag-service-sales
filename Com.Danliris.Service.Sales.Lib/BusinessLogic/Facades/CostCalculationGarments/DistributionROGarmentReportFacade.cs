@@ -105,12 +105,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
             var Query = DistributionROGarmentReportLogic.GetQuery(filter);
             var data = Query.ToList();
 
-            Pageable<DistributionROGarmentReportViewModel> pageable = new Pageable<DistributionROGarmentReportViewModel>(data, page - 1, size);
-            List<DistributionROGarmentReportViewModel> Data_ = pageable.Data.ToList<DistributionROGarmentReportViewModel>();
-
-            int TotalData = pageable.TotalCount;
-
-            return Tuple.Create(Data_, TotalData);
+            int TotalData = data.Count();
+            return Tuple.Create(data, TotalData);
         }     
     }
 }
