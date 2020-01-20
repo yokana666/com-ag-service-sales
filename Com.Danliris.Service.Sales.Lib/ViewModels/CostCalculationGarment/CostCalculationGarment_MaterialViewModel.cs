@@ -35,6 +35,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public long PRMasterItemId { get; set; }
         public string POMaster { get; set; }
 
-        public double AvailableQuantity { get; set; }
+        public double AvailableQuantity { get; set; } // untuk validasi
+
+        public bool IsOpenPO { get; set; }
+        public bool IsApprovedOpenPOMD { get; set; }
+        public bool IsApprovedOpenPOPurchasing { get; set; }
     }
 }
