@@ -84,7 +84,6 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.CostCalculationGa
                     }
                     while (this.DbSet.Any(d => d.Code.Equals(model.Code)));
 
-                    costCalculationGarmentLogic.Create(model);
                     if (!string.IsNullOrWhiteSpace(model.ImageFile))
                     {
                         model.ImagePath = await this.AzureImageFacade.UploadImage(model.GetType().Name, model.Id, model.CreatedUtc, model.ImageFile);
