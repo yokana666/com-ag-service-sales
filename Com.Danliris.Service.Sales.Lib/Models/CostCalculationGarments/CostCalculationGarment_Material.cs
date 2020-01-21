@@ -71,9 +71,5 @@ namespace Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments
         public long PRMasterItemId { get; set; }
         [MaxLength(50)]
         public string POMaster { get; set; }
-
-        public bool IsOpenPO { get; set; }
-        public bool IsApprovedOpenPOMD { get; set; }
-        public bool IsApprovedOpenPOPurchasing { get; set; }
     }
 }
