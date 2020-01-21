@@ -174,6 +174,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             PRMasterItemId = 1,
                             Category = new CategoryViewModel { code = "CategoryCode" },
                             Quantity = 2,
+                            Conversion = 1,
+                            BudgetQuantity = 2,
                             AvailableQuantity = 1
                         },
                         new CostCalculationGarment_MaterialViewModel
