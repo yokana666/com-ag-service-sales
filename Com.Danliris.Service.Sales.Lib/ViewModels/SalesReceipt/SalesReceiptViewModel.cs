@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
 {
@@ -38,6 +37,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
         [MaxLength(1000)]
         public string BuyerAddress { get; set; }
 
+        public double TotalPaid { get; set; }
+
         public ICollection<SalesReceiptDetailViewModel> SalesReceiptDetails { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -45,16 +46,20 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
             if (string.IsNullOrWhiteSpace(SalesReceiptType))
                 yield return new ValidationResult("Tipe Kwitansi harus diisi", new List<string> { "SalesReceiptType" });
 
-            if (!SalesReceiptDate.HasValue || SalesReceiptDate.Value <= DateTimeOffset.Now)
-                yield return new ValidationResult("Tgl kwitansi harus diisi atau lebih kecil sama dengan hari ini", new List<string> { "SalesReceiptDate" });
+            if (!SalesReceiptDate.HasValue || SalesReceiptDate.Value < DateTimeOffset.Now.AddDays(-1))
+                yield return new ValidationResult("Tgl kwitansi harus diisi dan lebih besar atau sama dengan hari ini", new List<string> { "SalesReceiptDate" });
 
-            if (string.IsNullOrWhiteSpace(BankCode))
-                yield return new ValidationResult("No. Surat Jalan harus diisi", new List<string> { "BankCode" });
-
+            if (string.IsNullOrWhiteSpace(AccountName))
+            {
+                yield return new ValidationResult("Nama bank harus diisi", new List<string> { "Bank" });
+            }
             if (string.IsNullOrWhiteSpace(BuyerName))
             {
-                yield return new ValidationResult("DO Penjualan harus di isi", new List<string> { "BuyerName" });
+                yield return new ValidationResult("Nama buyer harus di isi", new List<string> { "Buyer" });
             }
+
+            if (TotalPaid <= 0)
+                yield return new ValidationResult("Total Paid kosong", new List<string> { "TotalPaid" });
 
             int Count = 0;
             string DetailErrors = "[";
@@ -71,15 +76,15 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
                     {
                         Count++;
                         rowErrorCount++;
-                        DetailErrors += "SalesInvoiceNo : 'Kode Faktur harus diisi',";
+                        DetailErrors += "SalesInvoice : 'Kode Faktur harus diisi',";
                     }
-                    if (detail.TotalAmount <= 0)
+                    if (detail.TotalPayment <= 0)
                     {
                         Count++;
                         rowErrorCount++;
-                        DetailErrors += "TotalAmount : 'Kode Faktur harus diisi untuk memperoleh jumlah pembayaran',";
+                        DetailErrors += "TotalPayment : 'Kode Faktur harus diisi untuk memperoleh jumlah pembayaran',";
                     }
-                    if (detail.Paid <= 0)
+                    if (detail.Paid < 0)
                     {
                         Count++;
                         rowErrorCount++;
@@ -91,7 +96,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
                         rowErrorCount++;
                         DetailErrors += "Nominal : 'Nominal tidak boleh kosong & harus lebih besar dari 0',";
                     }
-                    if (detail.Unpaid <= 0)
+                    if (detail.Unpaid < 0)
                     {
                         Count++;
                         rowErrorCount++;
@@ -101,7 +106,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
                     if (rowErrorCount == 0)
                     {
                         var duplicateDetails = SalesReceiptDetails.Where(f =>
-                                f.SalesInvoiceNo.Equals(detail.SalesInvoiceNo)
+                                f.SalesInvoiceNo.Equals(detail.SalesInvoiceNo) &&
+                                f.SalesInvoiceId.GetValueOrDefault().Equals(detail.SalesInvoiceId.GetValueOrDefault())
                             ).ToList();
 
                         if (duplicateDetails.Count > 1)

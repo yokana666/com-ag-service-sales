@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,63 +36,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesInvoice
                 try
                 {
                     int index = 0;
-                    foreach (var item in model.SalesInvoiceDetails)
+                    do
                     {
-
-                        SalesInvoiceModel salesInvoice = new SalesInvoiceModel()
-                        {
-                            Id = model.Id,
-                            Code = model.Code,
-                            AutoIncreament = model.AutoIncreament,
-                            SalesInvoiceNo = model.SalesInvoiceNo,
-                            SalesInvoiceType = model.SalesInvoiceType,
-                            SalesInvoiceDate = model.SalesInvoiceDate,
-                            DueDate = model.DueDate,
-                            DeliveryOrderNo = model.DeliveryOrderNo,
-                            DebtorIndexNo = model.DebtorIndexNo,
-                            DOSalesId = model.DOSalesId,
-                            DOSalesNo = model.DOSalesNo,
-                            BuyerId = model.BuyerId,
-                            BuyerName = model.BuyerName,
-                            BuyerAddress = model.BuyerAddress,
-                            BuyerNPWP = model.BuyerNPWP,
-                            IDNo = model.IDNo,
-                            CurrencyId = model.CurrencyId,
-                            CurrencyCode = model.CurrencyCode,
-                            CurrencySymbol = model.CurrencySymbol,
-                            CurrencyRate = model.CurrencyRate,
-                            Disp = model.Disp,
-                            Op = model.Op,
-                            Sc = model.Sc,
-                            UseVat = model.UseVat,
-                            Remark = model.Remark,
-
-                            Active = model.Active,
-                            CreatedAgent = model.CreatedAgent,
-                            CreatedBy = model.CreatedBy,
-                            CreatedUtc = model.CreatedUtc,
-                            DeletedAgent = model.DeletedAgent,
-                            DeletedBy = model.DeletedBy,
-                            DeletedUtc = model.DeletedUtc,
-                            LastModifiedAgent = model.LastModifiedAgent,
-                            LastModifiedBy = model.LastModifiedBy,
-                            LastModifiedUtc = model.LastModifiedUtc,
-                            UId = model.UId,
-
-                            SalesInvoiceDetails = new List<SalesInvoiceDetailModel>
-                            {item}
-                        };
-
-                        do
-                        {
-                            model.Code = CodeGenerator.Generate();
-                        }
-                        while (DbSet.Any(d => d.Code.Equals(model.Code)));
-
-                        SalesInvoiceNumberGenerator(model, index);
-                        salesInvoiceLogic.Create(model);
-                        index++;
+                        model.Code = CodeGenerator.Generate();
                     }
+                    while (DbSet.Any(d => d.Code.Equals(model.Code)));
+
+                    SalesInvoiceNumberGenerator(model, index);
+                    salesInvoiceLogic.Create(model);
+                    index++;
+
                     result = await DbContext.SaveChangesAsync();
                     transaction.Commit();
                 }

@@ -58,7 +58,7 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                     MemoryStream stream = PdfTemplate.GeneratePdfTemplate(viewModel, timeoffsset);
                     return new FileStreamResult(stream, "application/pdf")
                     {
-                        FileDownloadName = "Kwitansi - " + viewModel.SalesReceiptNo + ".pdf"
+                        FileDownloadName = "Kuitansi - " + viewModel.SalesReceiptNo + ".pdf"
                     };
                 }
             }

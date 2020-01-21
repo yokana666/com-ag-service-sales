@@ -17,9 +17,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
         [MaxLength(255)]
         public string CurrencySymbol { get; set; }
         public double CurrencyRate { get; set; }
-        public bool UseVat { get; set; }
-
-        public double TotalAmount { get; set; }
+        public double TotalPayment { get; set; }
 
         public double Paid { get; set; }
         public double Nominal { get; set; }

@@ -32,22 +32,20 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesReceipt
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id","SalesInvoiceId","SalesInvoiceNo","DueDate","CurrencyCode","UseVat","TotalAmount","Paid","Nominal","Unpaid","LastModifiedUtc"
+                "Id","SalesInvoiceNo","DueDate","CurrencyCode","UseVat","TotalAmount","Paid","Nominal","Unpaid","LastModifiedUtc"
             };
 
             Query = Query
                 .Select(field => new SalesReceiptDetailModel
                 {
                     Id = field.Id,
-                    SalesInvoiceId = field.SalesInvoiceId,
                     SalesInvoiceNo = field.SalesInvoiceNo,
                     DueDate = field.DueDate,
                     CurrencyId = field.CurrencyId,
                     CurrencyCode = field.CurrencyCode,
                     CurrencySymbol = field.CurrencySymbol,
                     CurrencyRate = field.CurrencyRate,
-                    UseVat = field.UseVat,
-                    TotalAmount = field.TotalAmount,
+                    TotalPayment = field.TotalPayment,
                     Paid = field.Paid,
                     Nominal = field.Nominal,
                     Unpaid = field.Unpaid,

@@ -40,6 +40,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
                 Op = "Op",
                 Sc = "Sc",
                 UseVat = true,
+                TotalPayment = 100,
+                TotalPaid = 0,
                 Remark = "Remark",
 
                 SalesInvoiceDetails = new List<SalesInvoiceDetailModel>()

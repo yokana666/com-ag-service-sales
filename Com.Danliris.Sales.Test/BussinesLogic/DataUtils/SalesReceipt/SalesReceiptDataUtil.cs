@@ -31,20 +31,19 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesReceipt
                 BuyerId = 1,
                 BuyerName = "BuyerName",
                 BuyerAddress = "BuyerAddress",
+                TotalPaid = 100,
                 
                 SalesReceiptDetails = new List<SalesReceiptDetailModel>()
                 {
                     new SalesReceiptDetailModel()
                     {
-                        SalesInvoiceId = 1,
                         SalesInvoiceNo = "SalesInvoiceNo",
                         DueDate = DateTimeOffset.UtcNow,
                         CurrencyId = 1,
                         CurrencyCode = "IDR",
                         CurrencySymbol = "Rp",
                         CurrencyRate = 14000,
-                        UseVat = true,
-                        TotalAmount = 1,
+                        TotalPayment = 1,
                         Paid = 1,
                         Nominal = 1,
                         Unpaid = 1
