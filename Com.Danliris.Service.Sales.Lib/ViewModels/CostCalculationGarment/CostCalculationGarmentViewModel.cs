@@ -183,11 +183,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
                         }
                         else if (costCalculation_Material.PRMasterItemId > 0)
                         {
-                            var filteredQuantity = CostCalculationGarment_Materials.Where(w => w.PRMasterItemId == costCalculation_Material.PRMasterItemId).Sum(s => s.Quantity);
+                            var filteredQuantity = CostCalculationGarment_Materials.Where(w => w.PRMasterItemId == costCalculation_Material.PRMasterItemId).Sum(s => s.BudgetQuantity);
                             if (filteredQuantity > costCalculation_Material.AvailableQuantity)
                             {
                                 Count++;
-                                costCalculationGarment_MaterialsError += $"Quantity: 'Kuantitas tidak boleh lebih dari Jumlah Tersedia ({costCalculation_Material.AvailableQuantity})', ";
+                                costCalculationGarment_MaterialsError += $"BudgetQuantity: 'Kuantitas Budget tidak boleh lebih dari Jumlah Tersedia ({costCalculation_Material.AvailableQuantity})', ";
                             }
                         }
                         if (costCalculation_Material.Price == null)
