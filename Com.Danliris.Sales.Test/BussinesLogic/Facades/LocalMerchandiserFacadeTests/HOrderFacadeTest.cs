@@ -2,6 +2,7 @@
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.LocalMerchandiserFacades;
 using Com.Danliris.Service.Sales.WebApi.Controllers.LocalMerchandiserControllers;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,7 +14,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers.LocalMerchandiserController
     public class HOrderFacadeTest
     {
         [Fact]
-        public void Get_Kode_By_No()
+        public void Get_Kode_By_No_Success()
         {
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Kode", typeof(string));
@@ -27,6 +28,24 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers.LocalMerchandiserController
 
             var result = facade.GetKodeByNo();
 
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void Get_Kode_By_No_Error()
+        {
+            ILocalMerchandiserDbContext dbContext = new LocalMerchandiserDbContext("Server=server;Database=test;");
+
+            HOrderFacade facade = new HOrderFacade(dbContext);
+
+            var result = Assert.ThrowsAny<Exception>(() => facade.GetKodeByNo());
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void Create_Connection_Error()
+        {
+            var result = Assert.ThrowsAny<Exception>(() => new LocalMerchandiserDbContext(""));
             Assert.NotNull(result);
         }
     }
