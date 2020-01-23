@@ -3,7 +3,6 @@ using Com.Danliris.Service.Sales.Lib.Models.Weaving;
 using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
 using Com.Moonlay.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
@@ -15,6 +14,10 @@ using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.WeeklyPlanModels;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentSewingBlockingPlanModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentMasterPlan.MaxWHConfirmModel;
 using Com.Danliris.Service.Sales.Lib.Models.GarmentPreSalesContractModel;
+using Com.Danliris.Service.Sales.Lib.Models.GarmentOmzetTargetModel;
+using Com.Danliris.Service.Sales.Lib.Models.SalesInvoice;
+using Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.Models.SalesReceipt;
 
 namespace Com.Danliris.Service.Sales.Lib
 {
@@ -57,6 +60,18 @@ namespace Com.Danliris.Service.Sales.Lib
 
         public DbSet<MaxWHConfirm> MaxWHConfirms { get; set; }
         public DbSet<GarmentPreSalesContract> GarmentPreSalesContracts { get; set; }
+        public DbSet<CostCalculationGarmentUnpostReason> CostCalculationGarmentUnpostReasons { get; set; }
+        public DbSet<GarmentOmzetTarget> GarmentOmzetTargets { get; set; }
+        public DbSet<FinishingPrintingPreSalesContractModel> FinishingPrintingPreSalesContracts { get; set; }
+
+        public DbSet<FinishingPrintingCostCalculationModel> FinishingPrintingCostCalculations { get; set; }
+        public DbSet<FinishingPrintingCostCalculationMachineModel> FinishingPrintingCostCalculationMachines { get; set; }
+        public DbSet<FinishingPrintingCostCalculationChemicalModel> FinishingPrintingCostCalculationChemicals { get; set; }
+
+        public DbSet<SalesInvoiceModel> SalesInvoices { get; set; }
+        public DbSet<SalesInvoiceDetailModel> SalesInvoiceDetails { get; set; }
+        public DbSet<SalesReceiptModel> SalesReceipts { get; set; }
+        public DbSet<SalesReceiptDetailModel> SalesReceiptDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -70,10 +85,32 @@ namespace Com.Danliris.Service.Sales.Lib
 
             modelBuilder.Entity<FinishingPrintingSalesContractModel>()
                 .HasIndex(h => h.SalesContractNo)
-                .IsUnique();
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
+
+            modelBuilder.Entity<CostCalculationGarment>()
+                .Ignore(c => c.ImageFile);
 
             modelBuilder.Entity<RO_Garment>()
-            .Ignore(c => c.ImagesFile);
+                .Ignore(c => c.ImagesFile);
+
+            modelBuilder.Entity<RO_Garment>()
+                .Ignore(c => c.DocumentsFile);
+
+            modelBuilder.Entity<GarmentPreSalesContract>()
+                .HasIndex(i => i.SCNo)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
+
+            modelBuilder.Entity<CostCalculationGarment>()
+                .HasIndex(i => i.RO_Number)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
+
+            modelBuilder.Entity<GarmentSalesContract>()
+                .HasIndex(i => i.SalesContractNo)
+                .IsUnique()
+                .HasFilter("[IsDeleted]=(0)");
         }
     }
 }

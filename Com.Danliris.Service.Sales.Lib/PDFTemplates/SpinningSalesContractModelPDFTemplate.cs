@@ -45,7 +45,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             {
                 uomLocal = viewModel.UomUnit;
             }
-            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", viewModel.Price) + " / " + ppn;
+            var detailprice = viewModel.AccountBank.Currency.Symbol + " " + string.Format("{0:n2}", viewModel.Price) + " / " + uomLocal + " " + ppn;
 
             var appxLocal = "";
             var date = (viewModel.DeliverySchedule.Value.Day);

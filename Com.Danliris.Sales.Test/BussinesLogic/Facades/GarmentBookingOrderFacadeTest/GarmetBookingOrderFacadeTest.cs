@@ -51,7 +51,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.GarmentBookingOrderFacad
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
             GarmentBookingOrderFacade facade = new GarmentBookingOrderFacade(serviceProvider, dbContext);
             
-            var data = await DataUtil(facade).GetTestData();
+            var data = await DataUtil(facade, dbContext).GetTestData();
 
             var Response = await facade.BOCancel((int)data.Id, data);
             Assert.NotEqual(Response, 0);

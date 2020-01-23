@@ -52,6 +52,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
         public bool? IsClosed { get; set; }
         public bool? IsRequested { get; set; }
         public bool? IsCompleted { get; set; }
+        public bool? IsCalculated { get; set; }
         public long? AutoIncreament { get; set; }
         public string SalesContractNo { get; set; }
 
@@ -233,7 +234,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder
                         totalqty += (double)data.Quantity;
                     }
 
-                    if (!this.OrderQuantity.Equals(totalqty))
+                    if (!this.OrderQuantity.Equals(Math.Round(totalqty,3)))
                     {
                         yield return new ValidationResult("OrderQuantity tidak sama", new List<string> { "OrderQuantity" });
                     }

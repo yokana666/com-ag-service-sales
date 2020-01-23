@@ -4,6 +4,7 @@ using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.Utilities.BaseClass;
 using Com.Moonlay.Models;
 using Com.Moonlay.NetCore.Lib;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -38,7 +39,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "SectionId", "SectionCode", "BuyerBrandId", "BuyerBrandName", "BuyerBrandCode", "SCNo", "SCDate", "SCType", "LastModifiedUtc", "CreatedUtc", "BuyerAgentId", "BuyerAgentName", "BuyerAgentCode", "OrderQuantity"
+                "Id", "SectionId", "SectionCode", "BuyerBrandId", "BuyerBrandName", "BuyerBrandCode", "SCNo", "SCDate", "SCType", "LastModifiedUtc", "CreatedUtc", "BuyerAgentId", "BuyerAgentName", "BuyerAgentCode", "OrderQuantity", "IsPosted"
             };
 
             Query = Query
@@ -59,7 +60,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
                     BuyerAgentName = sc.BuyerAgentName,
                     BuyerAgentCode = sc.BuyerAgentCode,
                     OrderQuantity = sc.OrderQuantity,
-                    IsDeleted = sc.IsDeleted
+                    IsDeleted = sc.IsDeleted,
+                    IsPosted = sc.IsPosted,
                 }).OrderByDescending(s => s.LastModifiedUtc);
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -70,6 +72,16 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
             int totalData = pageable.TotalCount;
 
             return new ReadResponse<GarmentPreSalesContract>(data, totalData, OrderDictionary, SelectedFields);
+        }
+
+        internal void Patch(long id, JsonPatchDocument<GarmentPreSalesContract> jsonPatch)
+        {
+            var data = DbSet.Where(d => d.Id == id)
+                .Single();
+
+            EntityExtension.FlagForUpdate(data, IdentityService.Username, "sales-service");
+
+            jsonPatch.ApplyTo(data);
         }
 
         public override void Create(GarmentPreSalesContract model)
@@ -88,7 +100,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesCont
             string no = $"SC-{model.SectionCode}-{model.BuyerBrandCode}-{Year}-";
             int Padding = 5;
 
-            var lastData = DbSet.IgnoreQueryFilters().Where(w => w.SCNo.StartsWith(no) && !w.IsDeleted).OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+            var lastData = DbSet.IgnoreQueryFilters().Where(w => w.SCNo.StartsWith(no) && w.SCType == model.SCType && !w.IsDeleted).OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
 
             //string DocumentType = model.BuyerType.ToLower().Equals("ekspor") || model.BuyerType.ToLower().Equals("export") ? "FPE" : "FPL";
 

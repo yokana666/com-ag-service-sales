@@ -14,7 +14,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.MaxW
         {
         }
 
-        public override async Task<MaxWHConfirm> GetNewData()
+        public override Task<MaxWHConfirm> GetNewData()
         {
             var wh = new MaxWHConfirm
             {
@@ -22,7 +22,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.GarmentMasterPlan.MaxW
                 SKMaxValue=2
             };
             
-            return wh;
+            return Task.FromResult(wh);
         }
     }
 }

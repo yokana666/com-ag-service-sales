@@ -28,7 +28,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             List<string> SearchAttributes = new List<string>()
             {
-                "SalesContractNo"
+                "SalesContractNo","BuyerName"
             };
 
             Query = QueryHelper<FinishingPrintingSalesContractModel>.Search(Query, SearchAttributes, keyword);
@@ -38,7 +38,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "Buyer", "DeliverySchedule","OrderType", "SalesContractNo","YarnMaterial", "LastModifiedUtc","Material","DesignMotive","MaterialWidth"
+                "Id", "Code", "Buyer", "DeliverySchedule","OrderType", "SalesContractNo","YarnMaterial", "LastModifiedUtc","Material","DesignMotive","MaterialWidth", "Details"
             };
 
             Query = Query
@@ -66,7 +66,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
                     YarnMaterialCode = field.YarnMaterialCode,
                     YarnMaterialName = field.YarnMaterialName,
                     MaterialWidth = field.MaterialWidth,
-                    LastModifiedUtc = field.LastModifiedUtc
+                    LastModifiedUtc = field.LastModifiedUtc,
+                    Details = field.Details
                 });
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -157,7 +158,19 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
         private void SalesContractNumberGenerator(FinishingPrintingSalesContractModel model)
         {
-            FinishingPrintingSalesContractModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.BuyerType.Equals(model.BuyerType, StringComparison.OrdinalIgnoreCase)).OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+            FinishingPrintingSalesContractModel lastData;
+            if (model.BuyerType.Equals("ekspor", StringComparison.OrdinalIgnoreCase) || model.BuyerType.Equals("export", StringComparison.OrdinalIgnoreCase))
+            {
+                lastData = DbSet.IgnoreQueryFilters()
+                    .Where(w => w.BuyerType == "ekspor" || w.BuyerType == "export")
+                    .OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+            }
+            else
+            {
+                lastData = DbSet.IgnoreQueryFilters()
+                    .Where(w => w.BuyerType != "ekspor" && w.BuyerType != "export")
+                    .OrderByDescending(o => o.CreatedUtc).FirstOrDefault();
+            }
 
             string DocumentType = model.BuyerType.ToLower().Equals("ekspor") || model.BuyerType.ToLower().Equals("export") ? "FPE" : "FPL";
 

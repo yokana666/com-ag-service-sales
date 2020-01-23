@@ -56,32 +56,52 @@ namespace Com.Danliris.Service.Sales.WebApi.Controllers
                 }
                 else
                 {
-                    patch.ApplyTo(model);
+                    ValidateUser();
 
-                    var viewModel = Mapper.Map<GarmentPreSalesContractViewModel>(model);
-                    ValidateService.Validate(viewModel);
-
-                    IdentityService.Username = User.Claims.ToArray().SingleOrDefault(p => p.Type.Equals("username")).Value;
-                    IdentityService.Token = Request.Headers["Authorization"].FirstOrDefault().Replace("Bearer ", "");
-
-                    if (id != viewModel.Id)
-                    {
-                        Dictionary<string, object> Result =
-                            new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
-                            .Fail();
-                        return BadRequest(Result);
-                    }
-                    await Facade.UpdateAsync(id, model);
+                    await Facade.Patch(id, patch);
 
                     return NoContent();
                 }
             }
-            catch (ServiceValidationException e)
+            catch (Exception e)
             {
                 Dictionary<string, object> Result =
-                    new ResultFormatter(ApiVersion, Common.BAD_REQUEST_STATUS_CODE, Common.BAD_REQUEST_MESSAGE)
-                    .Fail(e);
-                return BadRequest(Result);
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPost("post")]
+        public async Task<IActionResult> PreSalesPost([FromBody]List<long> listId)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+                await Facade.PreSalesPost(listId, IdentityService.Username);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Dictionary<string, object> Result =
+                    new ResultFormatter(ApiVersion, Common.INTERNAL_ERROR_STATUS_CODE, e.Message)
+                    .Fail();
+                return StatusCode(Common.INTERNAL_ERROR_STATUS_CODE, Result);
+            }
+        }
+
+        [HttpPut("unpost/{id}")]
+        public async Task<IActionResult> PreSalesUnpost([FromRoute]long id)
+        {
+            try
+            {
+                IdentityService.Username = User.Claims.Single(p => p.Type.Equals("username")).Value;
+
+                await Facade.PreSalesUnpost(id, IdentityService.Username);
+
+                return Ok();
             }
             catch (Exception e)
             {
