@@ -338,7 +338,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             int MonthNow = DateTime.Now.Month;
 
             DateTime createdDateFilter = new DateTime(YearNow, 1, 1);
-            ProductionOrderModel lastData = DbSet.IgnoreQueryFilters().Where(w => w.OrderTypeName.Equals(model.OrderTypeName) && w.CreatedUtc >= createdDateFilter).OrderByDescending(o => o.AutoIncreament).FirstOrDefault();
+            ProductionOrderModel lastData = model.OrderTypeName.ToLower().Equals("printing") ? DbSet.IgnoreQueryFilters().Where(w => w.OrderTypeName.ToLower().Equals("printing") && w.CreatedUtc >= createdDateFilter).OrderByDescending(o => o.AutoIncreament).FirstOrDefault() :
+                DbSet.IgnoreQueryFilters().Where(w => !w.OrderTypeName.ToLower().Equals("printing") && w.CreatedUtc >= createdDateFilter).OrderByDescending(o => o.AutoIncreament).FirstOrDefault();
 
             if (lastData == null)
             {
