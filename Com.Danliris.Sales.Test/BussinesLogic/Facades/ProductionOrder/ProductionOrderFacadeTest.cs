@@ -78,7 +78,17 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var response = await facade.CreateAsync(data);
 
             Assert.NotEqual(response, 0);
+
+            var salesData2 = await finisihingPrintingSalesContractDataUtil.GetTestData();
+            var data2 = await DataUtil(facade).GetNewData();
+            data2.OrderTypeName = "PRINTING";
+            data2.SalesContractId = salesData2.Id;
+            var response2 = await facade.CreateAsync(data2);
+
+            Assert.NotEqual(response2, 0);
         }
+
+        
 
         public override async void Delete_Success()
         {
