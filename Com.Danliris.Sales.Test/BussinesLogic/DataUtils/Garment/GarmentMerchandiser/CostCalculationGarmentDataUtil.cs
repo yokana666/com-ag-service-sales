@@ -69,6 +69,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.IsApprovedIE = false;
             data.IsApprovedPurchasing = false;
             data.IsApprovedKadivMD = false;
+            data.ApprovedKadivMDDate = DateTimeOffset.Now;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {
                 new CostCalculationGarment_Material
@@ -76,7 +77,13 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
                     ProductId = "1",
                     CategoryName = "FABRIC",
                     Total = 109375,
-                    CM_Price = 172450
+                    CM_Price = 172450,
+                    ProductCode = "Test001",
+                    Description = "Test Description",
+                    BudgetQuantity = 1000,
+                    UOMPriceName = "Test Sat",
+                    Price = 10000,
+                    PO_SerialNumber = "Test PO",
                 }
             };
 

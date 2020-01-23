@@ -18,7 +18,6 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
             return new SalesInvoiceModel()
             {
                 Code = "code",
-                //Id = 1,
                 AutoIncreament = 1,
                 SalesInvoiceNo = "SalesInvoiceNo",
                 SalesInvoiceType = "BPF",

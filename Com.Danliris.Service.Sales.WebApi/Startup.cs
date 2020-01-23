@@ -68,6 +68,11 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesReceipt;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.SalesReceipt;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesReceipt;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.LocalMerchandiserInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.LocalMerchandiserFacades;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -133,9 +138,12 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<IGarmentPurchasingQualityObjectiveReportFacade, GarmentPurchasingQualityObjectiveReportFacade>()
                 .AddTransient<IGarmentOmzetTarget, GarmentOmzetTargetFacade>()
                 .AddTransient<ISalesInvoiceContract, SalesInvoiceFacade>()
+                .AddTransient<ISalesReceiptContract, SalesReceiptFacade>()
                 .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>()
                 .AddTransient<IFinishingPrintingCostCalculationService, FinishingPrintingCostCalculationFacade>()
-                .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>();
+                .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>()
+                .AddTransient<IShinProductionOrder, ShinProductionOrderFacade>()
+                .AddTransient<IHOrderFacade, HOrderFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -190,10 +198,13 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<GarmentPurchasingQualityObjectiveReportLogic>()
                 .AddTransient<GarmentOmzetTargetLogic>()
                 .AddTransient<SalesInvoiceLogic>()
-                .AddTransient<SalesInvoiceDetailLogic>()            
+                .AddTransient<SalesInvoiceDetailLogic>()
+                .AddTransient<SalesReceiptLogic>()
+                .AddTransient<SalesReceiptDetailLogic>()
                 .AddTransient<FinishingPrintingPreSalesContractLogic>()
                 .AddTransient<FinishingPrintingCostCalculationLogic>()
-                .AddTransient<ShinFinishingPrintingSalesContractLogic>();            
+                .AddTransient<ShinFinishingPrintingSalesContractLogic>()
+                .AddTransient<ShinProductionOrderLogic>(); ;
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -223,10 +234,12 @@ namespace Com.Danliris.Service.Sales.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection") ?? Configuration["DefaultConnection"];
+            string connectionStringLocalMerchandiser = Configuration.GetConnectionString("LocalMerchandiserConnection") ?? Configuration["LocalMerchandiserConnection"];
 
             Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.ConnectionString = connectionString;
             /* Register */
             services.AddDbContext<SalesDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddTransient<ILocalMerchandiserDbContext>(s => new LocalMerchandiserDbContext(connectionStringLocalMerchandiser));
             RegisterFacades(services);
             RegisterLogic(services);
             RegisterServices(services);
