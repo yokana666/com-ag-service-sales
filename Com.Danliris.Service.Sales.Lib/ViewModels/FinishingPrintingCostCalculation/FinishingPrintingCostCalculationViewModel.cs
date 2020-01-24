@@ -76,6 +76,10 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
 
         public bool IsPosted { get; set; }
 
+        public Approval ApprovalMD { get; set; }
+
+        public Approval ApprovalPPIC { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (PreSalesContract == null)
@@ -197,5 +201,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
                 }
             }
         }
+    }
+    public class Approval
+    {
+        public bool IsApproved { get; set; }
+        public DateTimeOffset ApprovedDate { get; set; }
+        public string ApprovedBy { get; set; }
     }
 }

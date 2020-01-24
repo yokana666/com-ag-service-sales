@@ -1,5 +1,7 @@
-﻿using Com.Danliris.Sales.Test.BussinesLogic.Utils;
+﻿using Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinishingPrintingCostCalculation;
+using Com.Danliris.Sales.Test.BussinesLogic.Utils;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
 using System;
 using System.Collections.Generic;
@@ -10,19 +12,24 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSale
 {
     public class ShinFinisihingPrintingSalesContractDataUtil : BaseDataUtil<ShinFinishingPrintingSalesContractFacade, FinishingPrintingSalesContractModel>
     {
-        public ShinFinisihingPrintingSalesContractDataUtil(ShinFinishingPrintingSalesContractFacade facade) : base(facade)
+        private readonly FinishingPrintingCostCalculationFacade finishingPrintingCostCalculationFacade;
+        public ShinFinisihingPrintingSalesContractDataUtil(ShinFinishingPrintingSalesContractFacade facade, FinishingPrintingCostCalculationFacade costCalculationFacade) : base(facade)
         {
+            finishingPrintingCostCalculationFacade = costCalculationFacade;
         }
 
-        public override Task<FinishingPrintingSalesContractModel> GetNewData()
+        public override async Task<FinishingPrintingSalesContractModel> GetNewData()
         {
-            return Task.FromResult(new FinishingPrintingSalesContractModel()
+            FinishingPrintingCostCalculationDataUtils ccDU = new FinishingPrintingCostCalculationDataUtils(finishingPrintingCostCalculationFacade);
+            var ccData = await ccDU.GetTestData();
+
+            return new FinishingPrintingSalesContractModel()
             {
                 AgentCode = "c",
                 AgentID = 1,
                 AgentName = "name",
                 Amount = 1,
-                CostCalculationId = 1,
+                CostCalculationId = ccData.Id,
                 DesignMotiveID = 1,
                 SalesContractNo = "np",
                 UnitName = "np",
@@ -43,11 +50,12 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.FinisihingPrintingSale
                     {
                         Color = "c",
                         UseIncomeTax = true,
-                        Price = 1
+                        Price = 1,
+                        ScreenCost = 1
                     }
                 },
                 BuyerType = "type"
-            });
+            };
 
         }
     }

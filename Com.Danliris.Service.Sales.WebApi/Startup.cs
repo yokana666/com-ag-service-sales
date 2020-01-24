@@ -71,6 +71,8 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCost
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesReceipt;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.SalesReceipt;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesReceipt;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.LocalMerchandiserInterfaces;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.LocalMerchandiserFacades;
 
 namespace Com.Danliris.Service.Sales.WebApi
 {
@@ -105,6 +107,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ICostCalculationGarmentByBuyer2Report, CostCalculationGarmentByBuyer2ReportFacade>()
                 .AddTransient<ISMVGarmentByUnitReport, SMVGarmentByUnitReportFacade>()
                 .AddTransient<IDetailCMGarmentByUnitReport, DetailCMGarmentByUnitReportFacade>()
+                .AddTransient<IDistributionROGarmentReport, DistributionROGarmentReportFacade>()
+                .AddTransient<ICostCalculationGarmentValidationReport, CostCalculationGarmentValidationReportFacade>()
                 .AddTransient<IROGarment, ROGarmentFacade>()
                 .AddTransient<IArticleColor, ArticleColorFacade>()
                 .AddTransient<IRate, RateFacade>()
@@ -137,7 +141,9 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<ISalesReceiptContract, SalesReceiptFacade>()
                 .AddTransient<IFinishingPrintingPreSalesContractFacade, FinishingPrintingPreSalesContractFacade>()
                 .AddTransient<IFinishingPrintingCostCalculationService, FinishingPrintingCostCalculationFacade>()
-                .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>();
+                .AddTransient<IShinFinishingPrintingSalesContractFacade, ShinFinishingPrintingSalesContractFacade>()
+                .AddTransient<IShinProductionOrder, ShinProductionOrderFacade>()
+                .AddTransient<IHOrderFacade, HOrderFacade>();
         }
 
         private void RegisterLogic(IServiceCollection services)
@@ -160,6 +166,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<CostCalculationByBuyer2ReportLogic>()
                 .AddTransient<SMVGarmentByUnitReportLogic>()
                 .AddTransient<DetailCMGarmentByUnitReportLogic>()
+                .AddTransient<DistributionROGarmentReportLogic>()
+                .AddTransient<CostCalculationGarmentValidationReportLogic>()
                 .AddTransient<GarmentSalesContractLogic>()
                 .AddTransient<GarmentSalesContractItemLogic>()
                 .AddTransient<ArticleColorLogic>()
@@ -195,7 +203,8 @@ namespace Com.Danliris.Service.Sales.WebApi
                 .AddTransient<SalesReceiptDetailLogic>()
                 .AddTransient<FinishingPrintingPreSalesContractLogic>()
                 .AddTransient<FinishingPrintingCostCalculationLogic>()
-                .AddTransient<ShinFinishingPrintingSalesContractLogic>();            
+                .AddTransient<ShinFinishingPrintingSalesContractLogic>()
+                .AddTransient<ShinProductionOrderLogic>(); ;
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -225,10 +234,12 @@ namespace Com.Danliris.Service.Sales.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("DefaultConnection") ?? Configuration["DefaultConnection"];
+            string connectionStringLocalMerchandiser = Configuration.GetConnectionString("LocalMerchandiserConnection") ?? Configuration["LocalMerchandiserConnection"];
 
             Com.Danliris.Service.Sales.Lib.Helpers.APIEndpoint.ConnectionString = connectionString;
             /* Register */
             services.AddDbContext<SalesDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddTransient<ILocalMerchandiserDbContext>(s => new LocalMerchandiserDbContext(connectionStringLocalMerchandiser));
             RegisterFacades(services);
             RegisterLogic(services);
             RegisterServices(services);

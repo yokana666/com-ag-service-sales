@@ -18,9 +18,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
     {
         private readonly string Agent = "new-sc-service-sales";
         private readonly FinishingPrintingSalesContractDetailLogic FinishingPrintingSalesContractDetailLogic;
+        private readonly SalesDbContext DbContext;
         public ShinFinishingPrintingSalesContractLogic(FinishingPrintingSalesContractDetailLogic finishingPrintingSalesContractDetailLogic, IServiceProvider serviceProvider, IIdentityService identityService, SalesDbContext dbContext) : base(identityService, serviceProvider, dbContext)
         {
             FinishingPrintingSalesContractDetailLogic = finishingPrintingSalesContractDetailLogic;
+            DbContext = dbContext;
         }
 
         public override ReadResponse<FinishingPrintingSalesContractModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
@@ -39,7 +41,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "Code", "CostCalculation", "DeliverySchedule", "YarnMaterial", "LastModifiedUtc", "MaterialWidth", "Details"
+                "Id", "Code", "CostCalculation", "DeliverySchedule", "YarnMaterial","MaterialConstruction","Quality","Packing","ShippingQuantityTolerance", "LastModifiedUtc", "MaterialWidth", "Details"
             };
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
@@ -49,7 +51,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
             List<FinishingPrintingSalesContractModel> data = pageable.Data.ToList();
             int totalData = pageable.TotalCount;
 
-            return new ReadResponse<FinishingPrintingSalesContractModel>(data, totalData, OrderDictionary, SelectedFields);
+            return new ReadResponse<FinishingPrintingSalesContractModel>(data, totalData, OrderDictionary, SelectedFields.OrderBy(x => x).ToList());
         }
 
         public override void Create(FinishingPrintingSalesContractModel model)
@@ -62,12 +64,19 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             EntityExtension.FlagForCreate(model, IdentityService.Username, Agent);
             DbSet.Add(model);
+            UpdateFPCostCalculationIsSCCreated(model, true);
         }
 
         public override async Task<FinishingPrintingSalesContractModel> ReadByIdAsync(long id)
         {
             var finishingPrintingSalesContract = await DbSet.Include(p => p.Details).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
             finishingPrintingSalesContract.Details = finishingPrintingSalesContract.Details.OrderBy(s => s.Id).ToArray();
+            return finishingPrintingSalesContract;
+        }
+
+        public Task<FinishingPrintingSalesContractModel> ReadParent(long id)
+        {
+            var finishingPrintingSalesContract = DbSet.Include(p => p.Details).FirstOrDefaultAsync(d => d.Id.Equals(id) && d.IsDeleted.Equals(false));
             return finishingPrintingSalesContract;
         }
 
@@ -109,6 +118,15 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting
 
             EntityExtension.FlagForDelete(model, IdentityService.Username, Agent);
             DbSet.Update(model);
+
+            UpdateFPCostCalculationIsSCCreated(model, false);
+        }
+
+
+        private void UpdateFPCostCalculationIsSCCreated(FinishingPrintingSalesContractModel model, bool flagSC)
+        {
+            var relatedFPCC = DbContext.FinishingPrintingCostCalculations.FirstOrDefault(x => x.Id == model.CostCalculationId);
+            relatedFPCC.IsSCCreated = flagSC;
         }
     }
 }

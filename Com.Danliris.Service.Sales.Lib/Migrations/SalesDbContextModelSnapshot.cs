@@ -188,8 +188,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<double>("FreightCost");
 
-                    b.Property<string>("ImageFile");
-
                     b.Property<string>("ImagePath")
                         .HasMaxLength(1000);
 
@@ -671,6 +669,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<double>("OrderQuantity");
 
+                    b.Property<string>("OrderTypeCode")
+                        .HasMaxLength(128);
+
+                    b.Property<int>("OrderTypeId");
+
+                    b.Property<string>("OrderTypeName")
+                        .HasMaxLength(512);
+
                     b.Property<string>("ProcessTypeCode")
                         .HasMaxLength(128);
 
@@ -757,6 +763,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<double>("Price");
+
+                    b.Property<decimal>("ScreenCost");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
@@ -856,6 +864,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<DateTime>("CreatedUtc");
+
+                    b.Property<DateTimeOffset>("Date");
 
                     b.Property<string>("DeletedAgent")
                         .IsRequired()
@@ -999,7 +1009,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.HasIndex("SalesContractNo")
                         .IsUnique()
-                        .HasFilter("[SalesContractNo] IS NOT NULL");
+                        .HasFilter("[IsDeleted]=(0)");
 
                     b.ToTable("FinishingPrintingSalesContracts");
                 });
@@ -1165,6 +1175,16 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<decimal>("ActualPrice");
 
+                    b.Property<string>("ApprovedMDBy")
+                        .HasMaxLength(512);
+
+                    b.Property<DateTimeOffset>("ApprovedMDDate");
+
+                    b.Property<string>("ApprovedPPICBy")
+                        .HasMaxLength(512);
+
+                    b.Property<DateTimeOffset>("ApprovedPPICDate");
+
                     b.Property<decimal>("BankMiscCost");
 
                     b.Property<string>("Code")
@@ -1221,9 +1241,15 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("InstructionName")
                         .HasMaxLength(128);
 
+                    b.Property<bool>("IsApprovedMD");
+
+                    b.Property<bool>("IsApprovedPPIC");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<bool>("IsPosted");
+
+                    b.Property<bool>("IsSCCreated");
 
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
@@ -2564,6 +2590,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
+
+                    b.Property<string>("UnitCode")
+                        .HasMaxLength(128);
+
+                    b.Property<int>("UnitId");
+
+                    b.Property<string>("UnitName")
+                        .HasMaxLength(512);
 
                     b.Property<long>("UomId");
 

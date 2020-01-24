@@ -34,5 +34,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.CostCalculationGarment
         public long PRMasterId { get; set; }
         public long PRMasterItemId { get; set; }
         public string POMaster { get; set; }
+
+        public double AvailableQuantity { get; set; } // untuk validasi
     }
 }

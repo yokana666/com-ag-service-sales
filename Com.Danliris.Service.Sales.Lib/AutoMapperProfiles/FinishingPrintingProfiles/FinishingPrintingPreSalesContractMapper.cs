@@ -26,6 +26,10 @@ namespace Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingPro
                 .ForPath(d => d.ProcessType.Code, opt => opt.MapFrom(s => s.ProcessTypeCode))
                 .ForPath(d => d.ProcessType.Name, opt => opt.MapFrom(s => s.ProcessTypeName))
 
+                .ForPath(d => d.ProcessType.OrderType.Id, opt => opt.MapFrom(s => s.OrderTypeId))
+                .ForPath(d => d.ProcessType.OrderType.Code, opt => opt.MapFrom(s => s.OrderTypeCode))
+                .ForPath(d => d.ProcessType.OrderType.Name, opt => opt.MapFrom(s => s.OrderTypeName))
+
                 .ReverseMap();
         }
     }

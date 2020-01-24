@@ -202,12 +202,12 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 			cell_bottom_column1_1.Phrase = new Phrase("BUYER AGENT", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
-			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Buyer.Name}", normal_font);
+			cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.Buyer.Code}" + " - " + $"{viewModel.Buyer.Name}", normal_font);
 			table_bottom_column1_1.AddCell(cell_bottom_column1_1);
 
             cell_bottom_column1_1.Phrase = new Phrase("BUYER BRAND", normal_font);
             table_bottom_column1_1.AddCell(cell_bottom_column1_1);
-            cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.BuyerBrand.Name}", normal_font);
+            cell_bottom_column1_1.Phrase = new Phrase($"{viewModel.BuyerBrand.Code}" + " - "+ $"{viewModel.BuyerBrand.Name}", normal_font);
             table_bottom_column1_1.AddCell(cell_bottom_column1_1);
 
             cell_bottom_column1_1.Phrase = new Phrase("DELIVERY", normal_font);
@@ -432,7 +432,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
 
 
-            var DESC = "FOB PRICE : $ "+ Number.ToRupiahWithoutSymbol(FOB_Remark) + "\n\n" + fabric;
+            var DESC = (viewModel.CostCalculationGarment_Materials.Any(m => m.isFabricCM) ? "FOB PRICE : $ "+ Number.ToRupiahWithoutSymbol(FOB_Remark) + "\n\n" : string.Empty) + fabric;
    //         cell_bottom_column3_1.Phrase = new Phrase("DESCRIPTION", normal_font);
    //table_bottom_column3_1.AddCell(cell_bottom_column3_1);
    //cell_bottom_column3_1.Phrase = new Phrase($"{viewModel.SizeRange + "\n" + viewModel.FabricAllowance + " - " + viewModel.AccessoriesAllowance + "\n" + fabric}", normal_font);

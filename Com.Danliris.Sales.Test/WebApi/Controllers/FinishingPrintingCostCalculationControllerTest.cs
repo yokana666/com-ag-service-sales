@@ -127,5 +127,57 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             var response = await controller.CCPost(listId);
             Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
         }
+
+        [Fact]
+        public async Task Should_Success_CCApprovePPIC()
+        {
+            var mocks = GetMocks();
+            
+            var id = 1;
+            mocks.Facade.Setup(f => f.CCApprovePPIC(It.IsAny<long>())).ReturnsAsync(1);
+            
+            var controller = GetController(mocks);
+            var response = await controller.CCApproveByPPIC(id);
+            Assert.Equal((int)HttpStatusCode.NoContent, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_Fail_CCApprovePPIC()
+        {
+            var mocks = GetMocks();
+
+            var id = 1;
+            mocks.Facade.Setup(f => f.CCApprovePPIC(It.IsAny<long>())).ThrowsAsync(new Exception("err"));
+
+            var controller = GetController(mocks);
+            var response = await controller.CCApproveByPPIC(id);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_Success_CCApproveMD()
+        {
+            var mocks = GetMocks();
+
+            var id = 1;
+            mocks.Facade.Setup(f => f.CCApproveMD(It.IsAny<long>())).ReturnsAsync(1);
+
+            var controller = GetController(mocks);
+            var response = await controller.CCApproveByMD(id);
+            Assert.Equal((int)HttpStatusCode.NoContent, GetStatusCode(response));
+        }
+
+        [Fact]
+        public async Task Should_Fail_CCApproveMD()
+        {
+            var mocks = GetMocks();
+
+            var id = 1;
+            mocks.Facade.Setup(f => f.CCApproveMD(It.IsAny<long>())).ThrowsAsync(new Exception("err"));
+
+            var controller = GetController(mocks);
+            var response = await controller.CCApproveByMD(id);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, GetStatusCode(response));
+        }
     }
 }

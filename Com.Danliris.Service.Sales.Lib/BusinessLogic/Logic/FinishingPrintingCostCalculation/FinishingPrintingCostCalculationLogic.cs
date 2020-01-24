@@ -33,7 +33,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Search(query, SearchAttributes, keyword);
             List<string> SelectedFields = new List<string>()
             {
-                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "ConfirmPrice", "IsPosted", "Material", "UOM"
+                "Id", "CreatedUtc", "LastModifiedUtc", "ProductionOrderNo", "PreSalesContract", "ConfirmPrice", "IsPosted", "Material", "UOM", "ScreenCost",
+                "ApprovalMD", "ApprovalPPIC"
             };
             Dictionary<string, object> FilterDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(filter);
             query = QueryHelper<FinishingPrintingCostCalculationModel>.Filter(query, FilterDictionary);
@@ -232,10 +233,30 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCo
         {
             foreach (var id in listId)
             {
-                var model = await ReadByIdAsync(id);
+                var model = await DbSet.FirstOrDefaultAsync(d => d.Id == id);
                 model.IsPosted = true;
-                UpdateAsync(id, model);
+                EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
             }
+        }
+
+        public async Task ApproveMD(long id)
+        {
+            var model = await DbSet.FirstOrDefaultAsync(d => d.Id == id);
+            model.IsApprovedMD = true;
+            model.ApprovedMDBy = IdentityService.Username;
+            model.ApprovedMDDate = DateTimeOffset.UtcNow;
+
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
+        }
+
+        public async Task ApprovePPIC(long id)
+        {
+            var model = await DbSet.FirstOrDefaultAsync(d => d.Id == id);
+            model.IsApprovedPPIC = true;
+            model.ApprovedPPICBy = IdentityService.Username;
+            model.ApprovedPPICDate = DateTimeOffset.UtcNow;
+
+            EntityExtension.FlagForUpdate(model, IdentityService.Username, "sales-service");
         }
 
         private void ProductionOrderNumberGenerator(FinishingPrintingCostCalculationModel model)
