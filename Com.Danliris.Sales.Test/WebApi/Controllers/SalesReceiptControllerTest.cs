@@ -26,6 +26,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 {
                     new SalesReceiptDetailViewModel()
                     {
+                        CurrencyCode = "IDR",
+                        CurrencySymbol = "Rp",
                     }
                 }
 
@@ -158,8 +160,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             DueDate = DateTimeOffset.UtcNow,
                             Tempo = 10,
                             CurrencyId = 10,
-                            CurrencyCode = "CurrencyCode",
-                            CurrencySymbol = "CurrencySymbol",
+                            CurrencyCode = "USD",
+                            CurrencySymbol = "$",
                             CurrencyRate = 10,
                             TotalPayment = 10,
                             TotalPaid = 10,
@@ -176,8 +178,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             DueDate = DateTimeOffset.UtcNow,
                             Tempo = 10,
                             CurrencyId = 10,
-                            CurrencyCode = "CurrencyCode",
-                            CurrencySymbol = "CurrencySymbol",
+                            CurrencyCode = "USD",
+                            CurrencySymbol = "$",
                             CurrencyRate = 10,
                             TotalPayment = 10,
                             TotalPaid = 10,
