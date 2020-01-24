@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Com.Danliris.Sales.Test.WebApi.Controllers
@@ -117,9 +116,11 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             CurrencySymbol = "",
                             CurrencyRate = 0,
                             TotalPayment = -1,
+                            TotalPaid = -1,
                             Paid = -1,
                             Nominal = -1,
                             Unpaid = -1,
+                            IsPaidOff = false
                         }
                     }
                 }
@@ -155,28 +156,36 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             SalesInvoiceId = 10,
                             SalesInvoiceNo = "SalesInvoiceNo",
                             DueDate = DateTimeOffset.UtcNow,
+                            Tempo = 10,
                             CurrencyId = 10,
                             CurrencyCode = "CurrencyCode",
                             CurrencySymbol = "CurrencySymbol",
                             CurrencyRate = 10,
                             TotalPayment = 10,
+                            TotalPaid = 10,
                             Paid = 10,
                             Nominal = 10,
                             Unpaid = 10,
+                            OverPaid = 10,
+                            IsPaidOff = true
                         },
                         new SalesReceiptDetailViewModel{
                             SalesReceiptId = 10,
                             SalesInvoiceId = 10,
                             SalesInvoiceNo = "SalesInvoiceNo",
                             DueDate = DateTimeOffset.UtcNow,
+                            Tempo = 10,
                             CurrencyId = 10,
                             CurrencyCode = "CurrencyCode",
                             CurrencySymbol = "CurrencySymbol",
                             CurrencyRate = 10,
                             TotalPayment = 10,
+                            TotalPaid = 10,
                             Paid = 10,
                             Nominal = 10,
                             Unpaid = 10,
+                            OverPaid = 10,
+                            IsPaidOff = true
                         }
                     }
                 }

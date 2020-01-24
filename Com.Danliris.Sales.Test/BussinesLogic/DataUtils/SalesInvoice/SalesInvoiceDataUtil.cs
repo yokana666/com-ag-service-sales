@@ -22,7 +22,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
                 SalesInvoiceNo = "SalesInvoiceNo",
                 SalesInvoiceType = "BPF",
                 SalesInvoiceDate = DateTimeOffset.UtcNow,
-                DueDate = DateTimeOffset.UtcNow,
+                DueDate = DateTimeOffset.UtcNow.AddDays(-2),
                 DeliveryOrderNo = "DeliveryOrderNo",
                 DebtorIndexNo = "DebtorIndexNo",
                 DOSalesId = 1,

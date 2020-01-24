@@ -39,8 +39,9 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id","Code","SalesInvoiceNo","SalesInvoiceType","SalesInvoiceDate","DeliveryOrderNo","DOSalesId","DOSalesNo","CurrencyId","CurrencyCode","CurrencyRate","CurrencySymbol",
-                "BuyerId","BuyerName","BuyerAddress","BuyerNPWP","IDNo","DebtorIndexNo","DueDate","Disp","Op","Sc","UseVat","TotalPayment","TotalPaid","Remark", "SalesInvoiceDetails"
+                "Id","Code","SalesInvoiceNo","SalesInvoiceType","SalesInvoiceDate","DueDate","DeliveryOrderNo","DebtorIndexNo","DOSalesId","DOSalesNo","BuyerId","BuyerName","BuyerAddress","BuyerNPWP","IDNo",
+                "CurrencyId","CurrencyCode","CurrencyRate","CurrencySymbol",
+                "Disp","Op","Sc","UseVat","TotalPayment","TotalPaid","Remark", "SalesInvoiceDetails"
 
             };
 

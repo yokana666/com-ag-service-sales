@@ -32,7 +32,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesReceipt
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id","SalesInvoiceNo","DueDate","CurrencyCode","UseVat","TotalAmount","Paid","Nominal","Unpaid","LastModifiedUtc"
+                "Id","SalesInvoiceNo","DueDate","Tempo","CurrencyCode","TotalPayment","TotalPaid","Paid","Nominal","Unpaid","OverPaid","IsPaidOff","LastModifiedUtc"
             };
 
             Query = Query
@@ -41,14 +41,18 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesReceipt
                     Id = field.Id,
                     SalesInvoiceNo = field.SalesInvoiceNo,
                     DueDate = field.DueDate,
+                    Tempo =field.Tempo,
                     CurrencyId = field.CurrencyId,
                     CurrencyCode = field.CurrencyCode,
                     CurrencySymbol = field.CurrencySymbol,
                     CurrencyRate = field.CurrencyRate,
                     TotalPayment = field.TotalPayment,
+                    TotalPaid = field.TotalPaid,
                     Paid = field.Paid,
                     Nominal = field.Nominal,
                     Unpaid = field.Unpaid,
+                    OverPaid = field.OverPaid,
+                    IsPaidOff = field.IsPaidOff,
                     LastModifiedUtc = field.LastModifiedUtc,
                 }) ;
 

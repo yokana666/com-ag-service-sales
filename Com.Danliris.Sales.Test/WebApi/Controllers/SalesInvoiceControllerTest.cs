@@ -272,9 +272,10 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             List<SalesInvoiceViewModel> viewModels = new List<SalesInvoiceViewModel>
             {
                 new SalesInvoiceViewModel{
+                    DueDate = DateTimeOffset.Now,
                     SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>{
                         new SalesInvoiceDetailViewModel{
-                            SalesInvoiceId = 0,
+                            SalesInvoiceId = 2,
                             UnitCode = "UnitCode",
                             Quantity = "Quantity",
                             Total = 10,
@@ -285,7 +286,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             Amount = 100,
                         },
                         new SalesInvoiceDetailViewModel{
-                            SalesInvoiceId = 0,
+                            SalesInvoiceId = 2,
                             UnitCode = "UnitCode",
                             Quantity = "Quantity",
                             Total = 10,

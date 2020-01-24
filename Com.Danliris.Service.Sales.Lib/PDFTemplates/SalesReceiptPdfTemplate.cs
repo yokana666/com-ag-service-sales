@@ -2,7 +2,6 @@
 using Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -10,20 +9,37 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 {
     public class SalesReceiptPdfTemplate
     {
-        public MemoryStream GeneratePdfTemplate(SalesReceiptViewModel viewModel, int clientTimeZoneOffset)
+        public MemoryStream GeneratePdfTemplate(SalesReceiptViewModel viewModel, SalesReceiptDetailViewModel detailViewModel, int clientTimeZoneOffset)
         {
-            const int MARGIN = 30;
+            const int MARGIN = 25;
 
             Font header_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 18);
             Font normal_font = FontFactory.GetFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 8);
             Font bold_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 8);
+            Font bold_italic_font = FontFactory.GetFont(BaseFont.HELVETICA_BOLDOBLIQUE, BaseFont.CP1250, BaseFont.NOT_EMBEDDED, 9);
 
-            Document document = new Document(PageSize.A4, MARGIN, MARGIN, MARGIN, MARGIN);
+            Document document = new Document(PageSize.A5.Rotate(), MARGIN, MARGIN, MARGIN, MARGIN);
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = PdfWriter.GetInstance(document, stream);
             document.Open();
 
             #region Header
+
+            string TotalPaidString = NumberToTextIDN.terbilang(viewModel.TotalPaid);
+
+            var currencyLocal = "";
+            if (detailViewModel.CurrencySymbol == "Rp")
+            {
+                currencyLocal = "Rupiah";
+            }
+            else if (detailViewModel.CurrencySymbol == "$")
+            {
+                currencyLocal = "Dollar";
+            }
+            else
+            {
+                currencyLocal = detailViewModel.CurrencySymbol;
+            }
 
             PdfPTable headerTable = new PdfPTable(2);
             PdfPTable headerTable1 = new PdfPTable(1);
@@ -100,7 +116,7 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
             headerTable3.AddCell(cellHeaderBody);
             cellHeaderBody.Phrase = new Phrase(":", normal_font);
             headerTable3.AddCell(cellHeaderBody);
-            cellHeaderBody.Phrase = new Phrase("" + viewModel.TotalPaid, normal_font);
+            cellHeaderBody.Phrase = new Phrase("" + detailViewModel.CurrencyCode + " " + viewModel.TotalPaid, normal_font);
             headerTable3.AddCell(cellHeaderBody);
 
             cellHeaderBody.Phrase = new Phrase("Untuk pembayaran ", normal_font);
@@ -117,6 +133,13 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 headerTable3.AddCell(cellHeaderBody);
             }
             cellHeaderBody.Phrase = new Phrase(" ", normal_font);
+            headerTable3.AddCell(cellHeaderBody);
+
+            cellHeaderBody.Phrase = new Phrase("Terbilang ", bold_font);
+            headerTable3.AddCell(cellHeaderBody);
+            cellHeaderBody.Phrase = new Phrase("", normal_font);
+            headerTable3.AddCell(cellHeaderBody);
+            cellHeaderBody.Phrase = new Phrase("" + TotalPaidString + " " + currencyLocal, bold_italic_font);
             headerTable3.AddCell(cellHeaderBody);
 
             cellHeader3.AddElement(headerTable3);

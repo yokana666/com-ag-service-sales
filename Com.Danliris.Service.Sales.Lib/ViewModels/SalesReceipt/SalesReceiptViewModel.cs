@@ -78,11 +78,23 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
                         rowErrorCount++;
                         DetailErrors += "SalesInvoice : 'Kode Faktur harus diisi',";
                     }
+                    if (!detail.Tempo.HasValue)
+                    {
+                        Count++;
+                        rowErrorCount++;
+                        DetailErrors += "Tempo : 'Kode Faktur dan tanggal kuitansi harus diisi untuk memperoleh tempo',";
+                    }
                     if (detail.TotalPayment <= 0)
                     {
                         Count++;
                         rowErrorCount++;
                         DetailErrors += "TotalPayment : 'Kode Faktur harus diisi untuk memperoleh jumlah pembayaran',";
+                    }
+                    if (detail.TotalPaid < 0)
+                    {
+                        Count++;
+                        rowErrorCount++;
+                        DetailErrors += "TotalPaid : 'Kode Faktur harus diisi untuk memperoleh jumlah pembayaran sebelumnya',";
                     }
                     if (detail.Paid < 0)
                     {
@@ -101,6 +113,12 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
                         Count++;
                         rowErrorCount++;
                         DetailErrors += "Unpaid : 'Kode Faktur & Nominal harus diisi untuk memperoleh sisa pembayaran',";
+                    }
+                    if (!detail.OverPaid.HasValue)
+                    {
+                        Count++;
+                        rowErrorCount++;
+                        DetailErrors += "OverPaid : 'Kode Faktur & Nominal harus diisi untuk memperoleh kelebihan pembayaran',";
                     }
 
                     if (rowErrorCount == 0)

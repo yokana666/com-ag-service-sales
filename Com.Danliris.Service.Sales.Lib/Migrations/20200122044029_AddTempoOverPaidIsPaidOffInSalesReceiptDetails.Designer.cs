@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200122044029_AddTempoOverPaidIsPaidOffInSalesReceiptDetails")]
+    partial class AddTempoOverPaidIsPaidOffInSalesReceiptDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3080,8 +3082,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsPaidOff");
-
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -3109,14 +3109,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<double>("Tempo");
 
-                    b.Property<double>("TotalPaid");
-
                     b.Property<double>("TotalPayment");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
 
                     b.Property<double>("Unpaid");
+
+                    b.Property<bool>("isPaidOff");
 
                     b.HasKey("Id");
 
