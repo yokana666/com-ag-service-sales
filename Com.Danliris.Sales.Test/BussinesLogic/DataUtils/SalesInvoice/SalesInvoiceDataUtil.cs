@@ -22,7 +22,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
                 SalesInvoiceNo = "SalesInvoiceNo",
                 SalesInvoiceType = "BPF",
                 SalesInvoiceDate = DateTimeOffset.UtcNow,
-                DueDate = DateTimeOffset.UtcNow,
+                DueDate = DateTimeOffset.UtcNow.AddDays(-2),
                 DeliveryOrderNo = "DeliveryOrderNo",
                 DebtorIndexNo = "DebtorIndexNo",
                 DOSalesId = 1,
@@ -40,6 +40,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesInvoice
                 Op = "Op",
                 Sc = "Sc",
                 UseVat = true,
+                TotalPayment = 100,
+                TotalPaid = 0,
                 Remark = "Remark",
 
                 SalesInvoiceDetails = new List<SalesInvoiceDetailModel>()

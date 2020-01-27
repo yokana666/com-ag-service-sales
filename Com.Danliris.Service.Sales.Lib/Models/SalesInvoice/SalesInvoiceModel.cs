@@ -53,6 +53,8 @@ namespace Com.Danliris.Service.Sales.Lib.Models.SalesInvoice
         [MaxLength(255)]
         public string Sc { get; set; }
         public bool UseVat { get; set; }
+        public double TotalPayment { get; set; }
+        public double TotalPaid { get; set; }
         [MaxLength(1000)]
         public string Remark { get; set; }
 

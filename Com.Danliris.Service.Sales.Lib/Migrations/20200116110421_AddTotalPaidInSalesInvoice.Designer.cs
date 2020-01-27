@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200116110421_AddTotalPaidInSalesInvoice")]
+    partial class AddTotalPaidInSalesInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,6 +189,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<double>("Freight");
 
                     b.Property<double>("FreightCost");
+
+                    b.Property<string>("ImageFile");
 
                     b.Property<string>("ImagePath")
                         .HasMaxLength(1000);
@@ -669,14 +673,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<double>("OrderQuantity");
 
-                    b.Property<string>("OrderTypeCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("OrderTypeId");
-
-                    b.Property<string>("OrderTypeName")
-                        .HasMaxLength(512);
-
                     b.Property<string>("ProcessTypeCode")
                         .HasMaxLength(128);
 
@@ -763,8 +759,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<double>("Price");
-
-                    b.Property<decimal>("ScreenCost");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
@@ -864,8 +858,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<DateTime>("CreatedUtc");
-
-                    b.Property<DateTimeOffset>("Date");
 
                     b.Property<string>("DeletedAgent")
                         .IsRequired()
@@ -1009,7 +1001,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.HasIndex("SalesContractNo")
                         .IsUnique()
-                        .HasFilter("[IsDeleted]=(0)");
+                        .HasFilter("[SalesContractNo] IS NOT NULL");
 
                     b.ToTable("FinishingPrintingSalesContracts");
                 });
@@ -1175,16 +1167,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<decimal>("ActualPrice");
 
-                    b.Property<string>("ApprovedMDBy")
-                        .HasMaxLength(512);
-
-                    b.Property<DateTimeOffset>("ApprovedMDDate");
-
-                    b.Property<string>("ApprovedPPICBy")
-                        .HasMaxLength(512);
-
-                    b.Property<DateTimeOffset>("ApprovedPPICDate");
-
                     b.Property<decimal>("BankMiscCost");
 
                     b.Property<string>("Code")
@@ -1241,15 +1223,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("InstructionName")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("IsApprovedMD");
-
-                    b.Property<bool>("IsApprovedPPIC");
-
                     b.Property<bool>("IsDeleted");
 
                     b.Property<bool>("IsPosted");
-
-                    b.Property<bool>("IsSCCreated");
 
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
@@ -2591,14 +2567,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("UId")
                         .HasMaxLength(255);
 
-                    b.Property<string>("UnitCode")
-                        .HasMaxLength(128);
-
-                    b.Property<int>("UnitId");
-
-                    b.Property<string>("UnitName")
-                        .HasMaxLength(512);
-
                     b.Property<long>("UomId");
 
                     b.Property<string>("UomUnit")
@@ -3114,8 +3082,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsPaidOff");
-
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -3128,8 +3094,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<double>("Nominal");
 
-                    b.Property<double>("OverPaid");
-
                     b.Property<double>("Paid");
 
                     b.Property<int>("SalesInvoiceId");
@@ -3140,10 +3104,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<int>("SalesReceiptId");
 
                     b.Property<long?>("SalesReceiptModelId");
-
-                    b.Property<double>("Tempo");
-
-                    b.Property<double>("TotalPaid");
 
                     b.Property<double>("TotalPayment");
 
