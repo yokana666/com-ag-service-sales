@@ -208,5 +208,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder
             ProductionOrder.RunWidths = ProductionOrder.RunWidths.OrderBy(s => s.Id).ToArray();
             return ProductionOrder;
         }
+
+        public double GetTotalQuantityBySalesContractId(long id)
+        {
+            return DbSet.Include(x => x.Details).Where(x => x.SalesContractId == id).SelectMany(x => x.Details).Sum(x => x.Quantity);
+        }
     }
 }

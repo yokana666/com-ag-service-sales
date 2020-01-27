@@ -5,6 +5,7 @@ using Com.Danliris.Service.Sales.Lib;
 using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.FinishingPrintingProfiles;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.Models.FinishingPrinting;
@@ -18,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingSalesContract
@@ -51,6 +53,19 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingSalesCo
             serviceProviderMock
                 .Setup(s => s.GetService(typeof(FinishingPrintingCostCalculationLogic)))
                 .Returns(ccLogic);
+
+            var azureImageFacadeMock = new Mock<IAzureImageFacade>();
+            azureImageFacadeMock
+                .Setup(s => s.DownloadImage(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync("");
+
+            azureImageFacadeMock
+                .Setup(s => s.UploadImage(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<string>()))
+                .ReturnsAsync("");
+
+            serviceProviderMock
+               .Setup(x => x.GetService(typeof(IAzureImageFacade)))
+               .Returns(azureImageFacadeMock.Object);
 
             return serviceProviderMock;
         }

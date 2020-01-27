@@ -1,4 +1,5 @@
-﻿using Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation;
+﻿using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.Models.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.Utilities;
 using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalculation
 {
@@ -80,10 +82,25 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
 
         public Approval ApprovalPPIC { get; set; }
 
+        public string ImageFile { get; set; }
+
+        public string ImagePath { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (PreSalesContract == null)
+            {
+
                 yield return new ValidationResult("Sales Contract harus diisi!", new List<string> { "PreSalesContract" });
+            }
+            else
+            {
+                var fpCCService = validationContext.GetService<IFinishingPrintingCostCalculationService>();
+                if (fpCCService.ValidatePreSalesContractId(PreSalesContract.Id).Result)
+                {
+                    yield return new ValidationResult("Sales Contract Sudah Dibuat!", new List<string> { "PreSalesContract" });
+                }
+            }
 
             if (Instruction == null)
                 yield return new ValidationResult("Instruksi harus diisi!", new List<string> { "Instruction" });

@@ -462,6 +462,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder
             return Tuple.Create(Data, TotalData);
         }
 
+        public double GetTotalQuantityBySalesContractId(long id)
+        {
+            return productionOrderLogic.GetTotalQuantityBySalesContractId(id);
+        }
+
         public ReadResponse<ProductionOrderModel> Read(int page, int size, string order, List<string> select, string keyword, string filter)
         {
             return productionOrderLogic.Read(page, size, order, select, keyword, filter);
