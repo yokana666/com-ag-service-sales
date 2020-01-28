@@ -81,10 +81,11 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
         [Fact]
         public async void Validate_ViewModel()
         {
+            var dbContext = DbContext(GetCurrentMethod());
             var vm = new ShinProductionOrderViewModel();
             var sp = GetServiceProviderMock(DbContext(GetCurrentMethod()));
 
-            var facade = new ShinProductionOrderFacade(sp.Object, DbContext(GetCurrentMethod()));
+            var facade = new ShinProductionOrderFacade(sp.Object, dbContext);
             sp.Setup(s => s.GetService(typeof(IShinProductionOrder)))
                 .Returns(facade);
 
@@ -157,7 +158,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             response = vm.Validate(validationContext);
             Assert.NotEmpty(response);
 
-            var data = await DataUtil(facade, DbContext(GetCurrentMethod())).GetTestData();
+            var data = await DataUtil(facade, dbContext).GetTestData();
             vm.OrderQuantity = 1;
             vm.FinishingPrintingSalesContract.Id = data.SalesContractId;
             vm.Details = new List<ProductionOrder_DetailViewModel>()
@@ -167,6 +168,29 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
                     Quantity = 1
                 }
             };
+            vm.LampStandards = new List<ProductionOrder_LampStandardViewModel>();
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.LampStandards.Add(new ProductionOrder_LampStandardViewModel()
+            {
+
+            });
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.LampStandards.FirstOrDefault().Name = "a";
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.Details = new List<ProductionOrder_DetailViewModel>();
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.Details = new List<ProductionOrder_DetailViewModel>()
+            {
+                new ProductionOrder_DetailViewModel()
+            }; 
             response = vm.Validate(validationContext);
             Assert.NotEmpty(response);
 

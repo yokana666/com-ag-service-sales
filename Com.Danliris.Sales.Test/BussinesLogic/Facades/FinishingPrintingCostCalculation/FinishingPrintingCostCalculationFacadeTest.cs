@@ -223,6 +223,19 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingCostCal
         }
 
         [Fact]
+        public async void ReadParent_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            FinishingPrintingCostCalculationFacade facade = new FinishingPrintingCostCalculationFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade).GetTestData();
+
+            var Response = await facade.ReadParent(data.Id);
+            Assert.NotNull(Response);
+        }
+
+        [Fact]
         public async void ValidateVM()
         {
 

@@ -94,6 +94,19 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingSalesCo
         }
 
         [Fact]
+        public async void ReadParent_Success()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var serviceProvider = GetServiceProviderMock(dbContext).Object;
+            ShinFinishingPrintingSalesContractFacade facade = new ShinFinishingPrintingSalesContractFacade(serviceProvider, dbContext);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+
+            var Response = await facade.ReadParent(data.Id);
+            Assert.NotNull(Response);
+        }
+
+        [Fact]
         public void Mapping_With_AutoMapper_Profiles()
         {
             var configuration = new MapperConfiguration(cfg =>
