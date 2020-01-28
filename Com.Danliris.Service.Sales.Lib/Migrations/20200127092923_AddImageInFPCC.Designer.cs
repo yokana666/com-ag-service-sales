@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200127092923_AddImageInFPCC")]
+    partial class AddImageInFPCC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3063,10 +3065,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("Sc")
                         .HasMaxLength(255);
 
-                    b.Property<double>("TotalPaid");
-
-                    b.Property<double>("TotalPayment");
-
                     b.Property<string>("UId")
                         .HasMaxLength(255);
 
@@ -3119,8 +3117,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsPaidOff");
-
                     b.Property<string>("LastModifiedAgent")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -3133,8 +3129,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<double>("Nominal");
 
-                    b.Property<double>("OverPaid");
-
                     b.Property<double>("Paid");
 
                     b.Property<int>("SalesInvoiceId");
@@ -3146,16 +3140,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<long?>("SalesReceiptModelId");
 
-                    b.Property<double>("Tempo");
-
-                    b.Property<double>("TotalPaid");
-
-                    b.Property<double>("TotalPayment");
+                    b.Property<double>("TotalAmount");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
 
                     b.Property<double>("Unpaid");
+
+                    b.Property<bool>("UseVat");
 
                     b.HasKey("Id");
 
@@ -3241,8 +3233,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<string>("SalesReceiptType")
                         .HasMaxLength(255);
-
-                    b.Property<double>("TotalPaid");
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);

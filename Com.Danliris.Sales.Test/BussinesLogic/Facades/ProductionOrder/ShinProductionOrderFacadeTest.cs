@@ -7,11 +7,16 @@ using Com.Danliris.Service.Sales.Lib.AutoMapperProfiles.ProductionOrderProfiles;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.ProductionOrder;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
+using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrinting;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.FinishingPrintingCostCalculation;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Models.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrinting;
+using Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalculation;
+using Com.Danliris.Service.Sales.Lib.ViewModels.IntegrationViewModel;
 using Com.Danliris.Service.Sales.Lib.ViewModels.ProductionOrder;
 using Com.Danliris.Service.Sales.Lib.ViewModels.Report;
 using Moq;
@@ -32,6 +37,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
         public ShinProductionOrderFacadeTest() : base(ENTITY)
         {
         }
+
 
         public override async void Get_All_Success()
         {
@@ -70,6 +76,124 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var response = await facade.CreateAsync(data);
 
             Assert.NotEqual(response, 0);
+        }
+
+        [Fact]
+        public async void Validate_ViewModel()
+        {
+            var dbContext = DbContext(GetCurrentMethod());
+            var vm = new ShinProductionOrderViewModel();
+            var sp = GetServiceProviderMock(DbContext(GetCurrentMethod()));
+
+            var facade = new ShinProductionOrderFacade(sp.Object, dbContext);
+            sp.Setup(s => s.GetService(typeof(IShinProductionOrder)))
+                .Returns(facade);
+
+            var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(vm, sp.Object, null);
+            var response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.FinishingPrintingSalesContract = new ShinFinishingPrintingSalesContractViewModel()
+            {
+                Id = 1,
+                CostCalculation = new FinishingPrintingCostCalculationViewModel()
+                {
+                    PreSalesContract = new FinishingPrintingPreSalesContractViewModel()
+                    {
+                        Unit = new UnitViewModel()
+                        {
+                            Name = "printing"
+                        }
+                    }
+                }
+            };
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.Run = "1 run";
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.RunWidth = new List<ProductionOrder_RunWidthViewModel>()
+            {
+                new ProductionOrder_RunWidthViewModel()
+                {
+                    Value = -1
+                }
+            };
+
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.RunWidth = new List<ProductionOrder_RunWidthViewModel>()
+            {
+                new ProductionOrder_RunWidthViewModel()
+                {
+                    Value = 1
+                }
+            };
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.StandardTests = new StandardTestsViewModel()
+            {
+                Id = 1
+            };
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.Account = new AccountViewModel();
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.MaterialOrigin = "a";
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.HandlingStandard = "e";
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.ShrinkageStandard = "e";
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            var data = await DataUtil(facade, dbContext).GetTestData();
+            vm.OrderQuantity = 1;
+            vm.FinishingPrintingSalesContract.Id = data.SalesContractId;
+            vm.Details = new List<ProductionOrder_DetailViewModel>()
+            {
+                new ProductionOrder_DetailViewModel()
+                {
+                    Quantity = 1
+                }
+            };
+            vm.LampStandards = new List<ProductionOrder_LampStandardViewModel>();
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.LampStandards.Add(new ProductionOrder_LampStandardViewModel()
+            {
+
+            });
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.LampStandards.FirstOrDefault().Name = "a";
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.Details = new List<ProductionOrder_DetailViewModel>();
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
+            vm.Details = new List<ProductionOrder_DetailViewModel>()
+            {
+                new ProductionOrder_DetailViewModel()
+            }; 
+            response = vm.Validate(validationContext);
+            Assert.NotEmpty(response);
+
         }
 
         public override async void Delete_Success()
@@ -192,6 +316,19 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
                 .Setup(x => x.GetService(typeof(ShinProductionOrderLogic)))
                 .Returns(productionOrderLogic);
 
+            var azureImageFacadeMock = new Mock<IAzureImageFacade>();
+            azureImageFacadeMock
+                .Setup(s => s.DownloadImage(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync("");
+
+            azureImageFacadeMock
+                .Setup(s => s.UploadImage(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<string>()))
+                .ReturnsAsync("");
+
+            serviceProviderMock
+                .Setup(x => x.GetService(typeof(IAzureImageFacade)))
+                .Returns(azureImageFacadeMock.Object);
+
             return serviceProviderMock;
         }
 
@@ -296,7 +433,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
             var serviceProvider = GetServiceProviderMock(dbContext).Object;
             ShinProductionOrderFacade facade = Activator.CreateInstance(typeof(ShinProductionOrderFacade), serviceProvider, dbContext) as ShinProductionOrderFacade;
             var data = await DataUtil(facade, dbContext).GetTestData();
-            var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Month, (int)data.OrderTypeId, 0); 
+            var result = facade.GetMonthlyOrderIdsByOrderType(data.DeliveryDate.Year, data.DeliveryDate.Month, (int)data.OrderTypeId, 0);
 
             Assert.NotEqual(result.Count, 0);
         }
@@ -342,7 +479,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
         {
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProviderMock = GetServiceProviderMock(dbContext);
-            
+
             ShinProductionOrderFacade facade = Activator.CreateInstance(typeof(ShinProductionOrderFacade), serviceProviderMock.Object, dbContext) as ShinProductionOrderFacade;
             var data = await DataUtil(facade, dbContext).GetTestData();
 
@@ -357,7 +494,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.ProductionOrder
         {
             var dbContext = DbContext(GetCurrentMethod());
             var serviceProviderMock = GetServiceProviderMock(dbContext);
-            
+
             ShinProductionOrderFacade facade = Activator.CreateInstance(typeof(ShinProductionOrderFacade), serviceProviderMock.Object, dbContext) as ShinProductionOrderFacade;
             var data = await DataUtil(facade, dbContext).GetTestData();
 
