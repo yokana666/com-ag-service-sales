@@ -54,6 +54,8 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
         [MaxLength(255)]
         public string Sc { get; set; }
         public bool? UseVat { get; set; }
+        public double TotalPayment { get; set; }
+        public double TotalPaid { get; set; }
         [MaxLength(1000)]
         public string Remark { get; set; }
 
@@ -88,7 +90,7 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
             if (string.IsNullOrWhiteSpace(DebtorIndexNo))
                 yield return new ValidationResult("No. Index Debitur harus diisi", new List<string> { "DebtorIndexNo" });
 
-            if (!DueDate.HasValue || DueDate.Value < DateTimeOffset.Now)
+            if (!DueDate.HasValue && DueDate.Value < DateTimeOffset.Now.AddDays(-1))
                 yield return new ValidationResult("Tanggal jatuh tempo harus diisi & lebih besar dari hari ini", new List<string> { "DueDate" });
 
             if (string.IsNullOrWhiteSpace(Disp))
@@ -99,6 +101,12 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesInvoice
 
             if (string.IsNullOrWhiteSpace(Sc))
                 yield return new ValidationResult("Sc harus diisi", new List<string> { "Sc" });
+
+            if (TotalPayment <= 0)
+                yield return new ValidationResult("Total Payment kosong", new List<string> { "TotalPayment" });
+
+            if (TotalPaid < 0)
+                yield return new ValidationResult("Total Paid lebih harus lebih besar atau sama dengan 0", new List<string> { "TotalPayment" });
 
             int Count = 0;
             string DetailErrors = "[";

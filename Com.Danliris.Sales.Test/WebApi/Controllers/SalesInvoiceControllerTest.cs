@@ -242,6 +242,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                     BuyerName = "",
                     DebtorIndexNo = "",
                     DueDate = DateTimeOffset.UtcNow.AddDays(-1),
+                    TotalPayment = 0,
+                    TotalPaid = -1,
                     Disp = "",
                     Op = "",
                     Sc = "",
@@ -249,11 +251,9 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                         new SalesInvoiceDetailViewModel{
                             UnitCode = "",
                             Quantity = "",
-                            Total = 0,
                             UomId = 0,
                             UomUnit = "",
                             UnitName = "",
-                            UnitPrice = 0,
                             Amount = 0,
                         }
                     }
@@ -272,9 +272,10 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
             List<SalesInvoiceViewModel> viewModels = new List<SalesInvoiceViewModel>
             {
                 new SalesInvoiceViewModel{
+                    DueDate = DateTimeOffset.Now,
                     SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>{
                         new SalesInvoiceDetailViewModel{
-                            SalesInvoiceId = 0,
+                            SalesInvoiceId = 2,
                             UnitCode = "UnitCode",
                             Quantity = "Quantity",
                             Total = 10,
@@ -285,7 +286,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             Amount = 100,
                         },
                         new SalesInvoiceDetailViewModel{
-                            SalesInvoiceId = 0,
+                            SalesInvoiceId = 2,
                             UnitCode = "UnitCode",
                             Quantity = "Quantity",
                             Total = 10,
@@ -298,6 +299,18 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                     }
                 }
             };
+            foreach (var viewModel in viewModels)
+            {
+                var defaultValidationResult = viewModel.Validate(null);
+                Assert.True(defaultValidationResult.Count() > 0);
+            }
+        }
+
+        [Fact]
+        public void Validate_Null_Model_and_DetailViewModel()
+        {
+            List<SalesInvoiceViewModel> viewModels = new List<SalesInvoiceViewModel>
+            {};
             foreach (var viewModel in viewModels)
             {
                 var defaultValidationResult = viewModel.Validate(null);
