@@ -42,6 +42,9 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.RO_Number = "Test";
             data.Description = "Test";
             data.ComodityCode = "Test";
+            data.CommodityDescription = "Test";
+            data.RateValue = 1;
+            data.NETFOBP = 10;
             data.Quantity = 1;
             data.ConfirmPrice = 1;
             data.UOMUnit = "Test";
@@ -68,7 +71,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.IsApprovedMD = false;
             data.IsApprovedIE = false;
             data.IsApprovedPurchasing = false;
-            data.IsApprovedKadivMD = false;
+            data.IsApprovedKadivMD = true;
             data.ApprovedKadivMDDate = DateTimeOffset.Now;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {

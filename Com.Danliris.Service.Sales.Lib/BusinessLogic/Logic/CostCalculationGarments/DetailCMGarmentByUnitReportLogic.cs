@@ -78,10 +78,13 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                             Commission = G.Key.CommissionRate,
                             Insurance = G.Key.Insurance,
                             Freight = G.Key.Freight,
-                            FOB_Price = G.Key.ConfirmPrice,
+                            ConfirmPrice = G.Key.ConfirmPrice,
                             CurrencyRate = G.Key.RateValue,
                             BudgetAmount = Math.Round(G.Sum(m => m.BgtAmt), 2),
                             CMPrice = Math.Round(G.Sum(m => m.CMP), 2),
+                            CMIDR = (G.Key.ConfirmPrice * G.Key.RateValue) - G.Key.CommissionRate - (Math.Round(G.Sum(m => m.BgtAmt), 2) / G.Key.Quantity),
+                            CM = ((G.Key.ConfirmPrice * G.Key.RateValue) - G.Key.CommissionRate - (Math.Round(G.Sum(m => m.BgtAmt), 2) / G.Key.Quantity)) / G.Key.RateValue,
+                            FOB_Price = G.Key.ConfirmPrice + ((Math.Round(G.Sum(m => m.CMP), 2) / G.Key.RateValue) * 1.05),
                         });
             return newQ;
         }
