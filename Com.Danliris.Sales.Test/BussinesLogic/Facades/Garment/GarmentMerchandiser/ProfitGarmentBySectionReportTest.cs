@@ -27,9 +27,9 @@ using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandiser
 {
-    public class DistributionROGarmentReportTest 
-   {
-        private const string ENTITY = "DistributionROGarmentReport";
+    public class ProfitGarmentBySectionReportTest
+    {
+        private const string ENTITY = "CostCalculationBySectionReport";
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private string GetCurrentMethod()
@@ -60,7 +60,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             CostCalculationGarmentMaterialLogic costCalculationGarmentMaterialLogic = new CostCalculationGarmentMaterialLogic(serviceProviderMock.Object, identityService, dbContext);
             CostCalculationGarmentLogic costCalculationGarmentLogic = new CostCalculationGarmentLogic(costCalculationGarmentMaterialLogic, serviceProviderMock.Object, identityService, dbContext);
-            DistributionROGarmentReportLogic distributionroGarmentReportLogic = new DistributionROGarmentReportLogic(identityService, dbContext);
+            ProfitGarmentBySectionReportLogic profitgarmentBySectionReportLogic = new ProfitGarmentBySectionReportLogic(identityService, dbContext);
 
             GarmentPreSalesContractLogic garmentPreSalesContractLogic = new GarmentPreSalesContractLogic(identityService, dbContext);
 
@@ -80,8 +80,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 .Returns(garmentPreSalesContractLogic);
 
             serviceProviderMock
-                .Setup(x => x.GetService(typeof(DistributionROGarmentReportLogic)))
-                .Returns(distributionroGarmentReportLogic);
+                .Setup(x => x.GetService(typeof(ProfitGarmentBySectionReportLogic)))
+                .Returns(profitgarmentBySectionReportLogic);
 
             serviceProviderMock
                 .Setup(x => x.GetService(typeof(IAzureImageFacade)))
@@ -112,16 +112,16 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var data = await DataUtil(facade, dbContext).GetTestData();
 
-            IDistributionROGarmentReport distributionroGarmentReport = new DistributionROGarmentReportFacade(serviceProvider, dbContext);
+            IProfitGarmentBySectionReport profitgarmentBySectionReportLogic = new ProfitGarmentBySectionReportFacade(serviceProvider, dbContext);
 
             var filter = new
             {
-                unitName = data.UnitName,
-                dateFrom = data.RODistributionDate,
-                dateTo = data.RODistributionDate,
+                section = data.Section,
+                dateFrom = data.DeliveryDate,
+                dateTo = data.DeliveryDate,
             };
 
-            var Response = distributionroGarmentReport.Read(filter: JsonConvert.SerializeObject(filter));
+            var Response = profitgarmentBySectionReportLogic.Read(filter: JsonConvert.SerializeObject(filter));
 
             Assert.NotEqual(Response.Item2, 0);
         }
@@ -136,16 +136,16 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var data = await DataUtil(facade, dbContext).GetTestData();
 
-            IDistributionROGarmentReport distributionroGarmentReport = new DistributionROGarmentReportFacade(serviceProvider, dbContext);
+            IProfitGarmentBySectionReport profitgarmentBySectionReportLogic = new ProfitGarmentBySectionReportFacade(serviceProvider, dbContext);
 
             var filter = new
             {
-                unitName = data.UnitName,
-                dateFrom = data.RODistributionDate.AddDays(30),
-                dateTo = data.RODistributionDate.AddDays(30),
+                section = data.Section,
+                dateFrom = data.DeliveryDate.AddDays(30),
+                dateTo = data.DeliveryDate.AddDays(30),
             };
 
-            var Response = distributionroGarmentReport.Read(filter: JsonConvert.SerializeObject(filter));
+            var Response = profitgarmentBySectionReportLogic.Read(filter: JsonConvert.SerializeObject(filter));
 
             Assert.Equal(Response.Item2, 0);
         }
@@ -160,17 +160,17 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var data = await DataUtil(facade, dbContext).GetTestData();
 
-            IDistributionROGarmentReport distributionroGarmentReport = new DistributionROGarmentReportFacade(serviceProvider, dbContext);
+            IProfitGarmentBySectionReport profitgarmentBySectionReportLogic = new ProfitGarmentBySectionReportFacade(serviceProvider, dbContext);
 
             var filter = new
             {
-                unitName = data.UnitName,
-                dateFrom = data.RODistributionDate,
-                dateTo = data.RODistributionDate,
+                section = data.Section,
+                dateFrom = data.DeliveryDate,
+                dateTo = data.DeliveryDate,
             };
 
-            var Response = distributionroGarmentReport.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
-           
+            var Response = profitgarmentBySectionReportLogic.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
+
             Assert.NotNull(Response.Item2);
         }
         [Fact]
@@ -183,16 +183,16 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             var data = await DataUtil(facade, dbContext).GetTestData();
 
-            IDistributionROGarmentReport distributionroGarmentReport = new DistributionROGarmentReportFacade(serviceProvider, dbContext);
+            IProfitGarmentBySectionReport profitgarmentBySectionReportLogic = new ProfitGarmentBySectionReportFacade(serviceProvider, dbContext);
 
             var filter = new
             {
-                unitName = data.UnitName,
-                dateFrom = data.RODistributionDate.AddDays(30),
-                dateTo = data.RODistributionDate.AddDays(30),
+                section = data.Section,
+                dateFrom = data.DeliveryDate.AddDays(30),
+                dateTo = data.DeliveryDate.AddDays(30)
             };
 
-            var Response = distributionroGarmentReport.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
+            var Response = profitgarmentBySectionReportLogic.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
 
             Assert.NotNull(Response.Item2);
         }
