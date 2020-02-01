@@ -33,6 +33,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.Article = "test";
             data.ConfirmDate = DateTimeOffset.Now;
             data.DeliveryDate = DateTimeOffset.Now;
+            data.CreatedUtc = DateTime.Now;
+            data.LeadTime = 25;
             data.BuyerId = "1";
             data.BuyerCode = "Test";
             data.BuyerName = "Text";
@@ -73,6 +75,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.IsApprovedPurchasing = false;
             data.IsApprovedKadivMD = true;
             data.ApprovedKadivMDDate = DateTimeOffset.Now;
+            data.ValidationSampleDate = DateTimeOffset.Now;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
             {
                 new CostCalculationGarment_Material
