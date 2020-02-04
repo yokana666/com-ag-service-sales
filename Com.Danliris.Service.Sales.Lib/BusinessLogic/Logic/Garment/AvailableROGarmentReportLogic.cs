@@ -9,12 +9,12 @@ using System.Text;
 
 namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 {
-    public class AvailableBudgetReportLogic : BaseMonitoringLogic<CostCalculationGarment>
+    public class AvailableROGarmentReportLogic : BaseMonitoringLogic<CostCalculationGarment>
     {
         private SalesDbContext dbContext;
         private readonly IIdentityService identityService;
 
-        public AvailableBudgetReportLogic(SalesDbContext dbContext, IIdentityService identityService)
+        public AvailableROGarmentReportLogic(SalesDbContext dbContext, IIdentityService identityService)
         {
             this.dbContext = dbContext;
             this.identityService = identityService;
@@ -62,8 +62,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
 
             var result = Query.Select(cc => new CostCalculationGarment
             {
-                CreatedUtc = cc.CreatedUtc,
-                ApprovedKadivMDDate = cc.ApprovedKadivMDDate,
+                ValidationSampleDate = cc.ValidationSampleDate,
                 DeliveryDate = cc.DeliveryDate,
                 RO_Number = cc.RO_Number,
                 Article = cc.Article,
@@ -80,11 +79,11 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment
         private class Filter
         {
             public string section { get; set; }
-            //public string roNo { get; set; }
-            //public string buyer { get; set; }
+            public string roNo { get; set; }
+            public string buyer { get; set; }
             public DateTimeOffset? dateStart { get; set; }
             public DateTimeOffset? dateEnd { get; set; }
-            //public string status { get; set; }
+            public string status { get; set; }
         }
     }
 }

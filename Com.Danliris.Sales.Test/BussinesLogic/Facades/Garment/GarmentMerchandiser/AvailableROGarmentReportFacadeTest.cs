@@ -8,7 +8,9 @@ using Com.Danliris.Service.Sales.Lib.BusinessLogic.Interface;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.Garment;
 using Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.GarmentPreSalesContractLogics;
+using Com.Danliris.Service.Sales.Lib.Models.CostCalculationGarments;
 using Com.Danliris.Service.Sales.Lib.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Moq;
@@ -22,9 +24,9 @@ using Xunit;
 
 namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandiser
 {
-    public class AvailableROReportFacadeTest
+    public class AvailableROGarmentReportFacadeTest
     {
-        private const string ENTITY = "AvailableROReport";
+        private const string ENTITY = "AvailableROGarmentReport";
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private string GetCurrentMethod()
@@ -71,8 +73,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
                 .Returns(new CostCalculationGarmentLogic(costCalculationGarmentMaterialLogic, serviceProviderMock.Object, identityService, dbContext));
 
             serviceProviderMock
-                .Setup(x => x.GetService(typeof(AvailableROReportLogic)))
-                .Returns(new AvailableROReportLogic(dbContext, identityService));
+                .Setup(x => x.GetService(typeof(AvailableROGarmentReportLogic)))
+                .Returns(new AvailableROGarmentReportLogic(dbContext, identityService));
 
             var azureImageFacadeMock = new Mock<IAzureImageFacade>();
             azureImageFacadeMock
@@ -106,18 +108,23 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
             var AvailableBy = "AvailableBy";
             await costCalculationGarmentFacade.AcceptanceCC(new List<long> { data.Id }, AvailableBy);
             await costCalculationGarmentFacade.AvailableCC(new List<long> { data.Id }, AvailableBy);
+            JsonPatchDocument<CostCalculationGarment> jsonPatch = new JsonPatchDocument<CostCalculationGarment>();
+            jsonPatch.Replace(m => m.IsApprovedKadivMD, true);
+            jsonPatch.Replace(m => m.ApprovedKadivMDBy, "Super Man");
+            jsonPatch.Replace(m => m.ApprovedKadivMDDate, DateTimeOffset.Now);
+            await costCalculationGarmentFacade.Patch(data.Id, jsonPatch);
 
             var filter = new
             {
                 section = data.Section,
                 //roNo = data.RO_Number,
                 //buyer = data.BuyerBrandCode,
-                availableDateStart = data.ROAvailableDate.AddDays(-30),
-                availableDateEnd = data.ROAvailableDate.AddDays(30),
-                //status = "OK"
+                availableDateStart = data.DeliveryDate,
+                availableDateEnd = data.DeliveryDate,
+                //status = "NOT OK"
             };
 
-            var facade = new AvailableROReportFacade(serviceProvider);
+            var facade = new AvailableROGarmentReportFacade(serviceProvider);
             var Response = facade.Read(filter: JsonConvert.SerializeObject(filter));
 
             Assert.NotEqual(Response.Item2, 0);
@@ -131,22 +138,31 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
 
             CostCalculationGarmentFacade costCalculationGarmentFacade = new CostCalculationGarmentFacade(serviceProvider, dbContext);
 
-            var data = await DataUtil(costCalculationGarmentFacade, serviceProvider, dbContext).GetTestData();
+            var data = await DataUtil(costCalculationGarmentFacade, serviceProvider, dbContext).GetNewData();
+            await costCalculationGarmentFacade.CreateAsync(data);
+            var data1 = await DataUtil(costCalculationGarmentFacade, serviceProvider, dbContext).GetNewData();
+            data1.LeadTime = 35;
+            await costCalculationGarmentFacade.CreateAsync(data1);
             var AvailableBy = "AvailableBy";
             await costCalculationGarmentFacade.AcceptanceCC(new List<long> { data.Id }, AvailableBy);
             await costCalculationGarmentFacade.AvailableCC(new List<long> { data.Id }, AvailableBy);
+            JsonPatchDocument<CostCalculationGarment> jsonPatch = new JsonPatchDocument<CostCalculationGarment>();
+            jsonPatch.Replace(m => m.IsApprovedKadivMD, true);
+            jsonPatch.Replace(m => m.ApprovedKadivMDBy, "Super Man");
+            jsonPatch.Replace(m => m.ApprovedKadivMDDate, DateTimeOffset.Now);
+            await costCalculationGarmentFacade.Patch(data.Id, jsonPatch);
 
             var filter = new
             {
                 section = data.Section,
                 //roNo = data.RO_Number,
                 //buyer = data.BuyerBrandCode,
-                availableDateStart = data.ROAvailableDate,
-                availableDateEnd = data.ROAvailableDate,
+                availableDateStart = data.DeliveryDate.AddDays(-30),
+                availableDateEnd = data.DeliveryDate.AddDays(30),
                 //status = "OK"
             };
 
-            var facade = new AvailableROReportFacade(serviceProvider);
+            var facade = new AvailableROGarmentReportFacade(serviceProvider);
             var Response = facade.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
 
             Assert.NotNull(Response.Item2);
@@ -163,7 +179,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.Garment.GarmentMerchandi
         //        status = "NOT OK"
         //    };
 
-        //    var facade = new AvailableROReportFacade(serviceProvider);
+        //    var facade = new AvailableBudgetReportFacade(serviceProvider);
 
         //    var Response = facade.GenerateExcel(filter: JsonConvert.SerializeObject(filter));
 
