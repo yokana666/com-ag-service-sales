@@ -44,19 +44,16 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrWhiteSpace(SalesReceiptType))
-                yield return new ValidationResult("Tipe Kwitansi harus diisi", new List<string> { "SalesReceiptType" });
+                yield return new ValidationResult("Tipe Kuitansi harus diisi", new List<string> { "SalesReceiptType" });
 
-            if (!SalesReceiptDate.HasValue || SalesReceiptDate.Value < DateTimeOffset.Now.AddDays(-1))
-                yield return new ValidationResult("Tgl kwitansi harus diisi dan lebih besar atau sama dengan hari ini", new List<string> { "SalesReceiptDate" });
+            if (!SalesReceiptDate.HasValue || SalesReceiptDate.Value > DateTimeOffset.Now)
+                yield return new ValidationResult("Tgl Kuitansi harus diisi & lebih kecil atau sama dengan hari ini", new List<string> { "SalesReceiptDate" });
 
             if (string.IsNullOrWhiteSpace(AccountName))
-            {
-                yield return new ValidationResult("Nama bank harus diisi", new List<string> { "Bank" });
-            }
+                yield return new ValidationResult("Nama Bank harus diisi", new List<string> { "AccountName" });
+
             if (string.IsNullOrWhiteSpace(BuyerName))
-            {
-                yield return new ValidationResult("Nama buyer harus di isi", new List<string> { "Buyer" });
-            }
+                yield return new ValidationResult("Nama Buyer harus di isi", new List<string> { "BuyerName" });
 
             if (TotalPaid <= 0)
                 yield return new ValidationResult("Total Paid kosong", new List<string> { "TotalPaid" });
@@ -72,11 +69,23 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
 
                     var rowErrorCount = 0;
 
-                    if (string.IsNullOrWhiteSpace(detail.SalesInvoiceNo))
+                    if (!detail.SalesInvoiceId.HasValue || string.IsNullOrWhiteSpace(detail.SalesInvoiceNo))
                     {
                         Count++;
                         rowErrorCount++;
-                        DetailErrors += "SalesInvoice : 'Kode Faktur harus diisi',";
+                        DetailErrors += "SalesInvoiceNo : 'Kode Faktur harus diisi',";
+                    }
+                    if (!detail.CurrencyId.HasValue || string.IsNullOrWhiteSpace(detail.CurrencyCode))
+                    {
+                        Count++;
+                        rowErrorCount++;
+                        DetailErrors += "CurrencyCode : 'Kurs harus diisi',";
+                    }
+                    if (string.IsNullOrWhiteSpace(detail.VatType))
+                    {
+                        Count++;
+                        rowErrorCount++;
+                        DetailErrors += "VatType : 'Type PPN kosong',";
                     }
                     if (!detail.Tempo.HasValue)
                     {
@@ -121,6 +130,14 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
                         DetailErrors += "OverPaid : 'Kode Faktur & Nominal harus diisi untuk memperoleh kelebihan pembayaran',";
                     }
 
+                    var mustSameType = SalesReceiptDetails.Where(f => f.CurrencyCode != detail.CurrencyCode).ToList();
+                    
+                    if (mustSameType.Count > 0)
+                    {
+                        Count++;
+                        DetailErrors += "CurrencyCode : 'Tiap No. Jual harus memiliki kurs yang sama',";
+                    }
+
                     if (rowErrorCount == 0)
                     {
                         var duplicateDetails = SalesReceiptDetails.Where(f =>
@@ -131,9 +148,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
                         if (duplicateDetails.Count > 1)
                         {
                             Count++;
-                            DetailErrors += "SalesInvoiceNo : 'Nomor Faktur penjualan tidak boleh duplikat',";
+                            DetailErrors += "SalesInvoiceNo : 'Nomor Faktur Penjualan tidak boleh duplikat',";
                         }
                     }
+
+
                     DetailErrors += "}, ";
                 }
             }

@@ -45,6 +45,7 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.SalesReceipt
                     {
                         SalesInvoiceId = Convert.ToInt32(salesInvoiceData.Id),
                         SalesInvoiceNo = salesInvoiceData.SalesInvoiceNo,
+                        VatType = "PPN BUMN",
                         DueDate = salesInvoiceData.DueDate,
                         Tempo = 16,
                         CurrencyId = 1,

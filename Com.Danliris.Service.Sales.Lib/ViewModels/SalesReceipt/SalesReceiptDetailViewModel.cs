@@ -11,7 +11,11 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.SalesReceipt
         [MaxLength(255)]
         public string SalesInvoiceNo { get; set; }
         public DateTimeOffset? DueDate { get; set; }
+        [MaxLength(255)]
+        public string VatType { get; set; }
         public double? Tempo { get; set; }
+
+        /*Currency*/
         public int? CurrencyId { get; set; }
         [MaxLength(255)]
         public string CurrencyCode { get; set; }

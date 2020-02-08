@@ -113,6 +113,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             SalesInvoiceId = 0,
                             SalesInvoiceNo = "",
                             DueDate = DateTimeOffset.UtcNow.AddDays(-1),
+                            VatType = "",
                             CurrencyId = 0,
                             CurrencyCode = "",
                             CurrencySymbol = "",
@@ -158,6 +159,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             SalesInvoiceId = 10,
                             SalesInvoiceNo = "SalesInvoiceNo",
                             DueDate = DateTimeOffset.UtcNow,
+                            VatType = "PPN Kawasan Berikat",
                             Tempo = 10,
                             CurrencyId = 10,
                             CurrencyCode = "USD",
@@ -176,6 +178,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             SalesInvoiceId = 10,
                             SalesInvoiceNo = "SalesInvoiceNo",
                             DueDate = DateTimeOffset.UtcNow,
+                            VatType = "PPN Kawasan Berikat",
                             Tempo = 10,
                             CurrencyId = 10,
                             CurrencyCode = "USD",
@@ -188,6 +191,26 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                             Unpaid = 10,
                             OverPaid = 10,
                             IsPaidOff = true
+                        }
+                    }
+                }
+            };
+            foreach (var viewModel in viewModels)
+            {
+                var defaultValidationResult = viewModel.Validate(null);
+                Assert.True(defaultValidationResult.Count() > 0);
+            }
+        }
+
+        [Fact]
+        public void Validate_VatType_DetailViewModel()
+        {
+            List<SalesReceiptViewModel> viewModels = new List<SalesReceiptViewModel>
+            {
+                new SalesReceiptViewModel{
+                    SalesReceiptDetails = new List<SalesReceiptDetailViewModel>{
+                        new SalesReceiptDetailViewModel{
+                            VatType = "PPN Umum",
                         }
                     }
                 }
