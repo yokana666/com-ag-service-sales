@@ -93,14 +93,14 @@ namespace Com.Danliris.Service.Sales.Lib.ViewModels.FinishingPrintingCostCalcula
 
                 yield return new ValidationResult("Sales Contract harus diisi!", new List<string> { "PreSalesContract" });
             }
-            else
-            {
-                var fpCCService = validationContext.GetService<IFinishingPrintingCostCalculationService>();
-                if (fpCCService.ValidatePreSalesContractId(PreSalesContract.Id).Result)
-                {
-                    yield return new ValidationResult("Sales Contract Sudah Dibuat!", new List<string> { "PreSalesContract" });
-                }
-            }
+            //else
+            //{
+            //    var fpCCService = validationContext.GetService<IFinishingPrintingCostCalculationService>();
+            //    if (fpCCService.ValidatePreSalesContractId(PreSalesContract.Id).Result)
+            //    {
+            //        yield return new ValidationResult("Sales Contract Sudah Dibuat!", new List<string> { "PreSalesContract" });
+            //    }
+            //}
 
             if (Instruction == null)
                 yield return new ValidationResult("Instruksi harus diisi!", new List<string> { "Instruction" });

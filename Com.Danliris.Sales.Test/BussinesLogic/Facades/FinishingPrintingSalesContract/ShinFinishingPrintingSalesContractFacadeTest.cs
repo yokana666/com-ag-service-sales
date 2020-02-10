@@ -234,6 +234,10 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.Facades.FinishingPrintingSalesCo
             response = vm.Validate(null);
             Assert.NotEmpty(response);
 
+            vm.DeliverySchedule = DateTimeOffset.UtcNow.AddDays(-1);
+            response = vm.Validate(null);
+            Assert.NotEmpty(response);
+
             vm.DeliverySchedule = DateTimeOffset.UtcNow.AddDays(1);
             response = vm.Validate(null);
             Assert.NotEmpty(response);
