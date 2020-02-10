@@ -111,8 +111,8 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.CostCalculationGarm
                      IsPosted = ccg.IsPosted,
 
                      LastModifiedUtc = ccg.LastModifiedUtc,
-                     SectionName=ccg.SectionName
-				 });
+                     SectionName = ccg.SectionName
+                 });
 
 			Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);
 			Query = QueryHelper<CostCalculationGarment>.Order(Query, OrderDictionary);
