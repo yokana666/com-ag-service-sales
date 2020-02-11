@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200210095600_EnhanceModelSCCCFP")]
+    partial class EnhanceModelSCCCFP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2923,14 +2925,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
-                    b.Property<double>("Price");
-
-                    b.Property<string>("ProductCode")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("ProductName")
-                        .HasMaxLength(255);
-
                     b.Property<string>("Quantity")
                         .HasMaxLength(255);
 
@@ -2942,6 +2936,14 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<string>("UId")
                         .HasMaxLength(255);
+
+                    b.Property<string>("UnitCode")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("UnitName")
+                        .HasMaxLength(255);
+
+                    b.Property<double>("UnitPrice");
 
                     b.Property<int>("UomId");
 
@@ -2999,6 +3001,11 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("CurrencySymbol")
                         .HasMaxLength(255);
 
+                    b.Property<int>("DOSalesId");
+
+                    b.Property<string>("DOSalesNo")
+                        .HasMaxLength(255);
+
                     b.Property<string>("DebtorIndexNo")
                         .HasMaxLength(255);
 
@@ -3013,6 +3020,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<DateTime>("DeletedUtc");
 
                     b.Property<string>("DeliveryOrderNo")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Disp")
                         .HasMaxLength(255);
 
                     b.Property<DateTimeOffset>("DueDate");
@@ -3032,6 +3042,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
+                    b.Property<string>("Op")
+                        .HasMaxLength(255);
+
                     b.Property<string>("Remark")
                         .HasMaxLength(1000);
 
@@ -3043,10 +3056,8 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("SalesInvoiceType")
                         .HasMaxLength(255);
 
-                    b.Property<string>("ShipmentDocumentCode")
+                    b.Property<string>("Sc")
                         .HasMaxLength(255);
-
-                    b.Property<int>("ShipmentDocumentId");
 
                     b.Property<double>("TotalPaid");
 
@@ -3055,8 +3066,7 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("UId")
                         .HasMaxLength(255);
 
-                    b.Property<string>("VatType")
-                        .HasMaxLength(255);
+                    b.Property<bool>("UseVat");
 
                     b.HasKey("Id");
 
@@ -3142,9 +3152,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<double>("Unpaid");
-
-                    b.Property<string>("VatType")
-                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
