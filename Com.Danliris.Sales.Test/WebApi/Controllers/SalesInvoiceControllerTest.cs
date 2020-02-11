@@ -31,7 +31,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 {
                     new SalesInvoiceDetailViewModel()
                     {
-                        UnitName = "UnitName",
+                        ProductName = "ProductName",
                         UomUnit = "PACKS",
                         Quantity = "Quantity",
                         Total = 1,
@@ -77,7 +77,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
         }
 
         [Fact]
-        public void Get_Sales_Invoice_PDF_UseVat_Is_True_And_CurrencySymbol_Is_IDR()
+        public void Get_Sales_Invoice_PDF_VatType_Is_PPN_Umum_And_CurrencySymbol_Is_IDR()
         {
             var vm = new SalesInvoiceViewModel()
             {
@@ -91,17 +91,17 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 IDNo = "IDNo",
                 CurrencySymbol = "Rp",
                 Remark = "Remark",
-                UseVat = true,
+                VatType = "PPN Umum",
                 SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>()
                 {
                     new SalesInvoiceDetailViewModel()
                     {
-                        UnitCode = "UnitCode",
+                        ProductCode = "ProductCode",
                         Quantity = "Quantity",
                         UomUnit = "PACKS",
-                        UnitName = "UnitName",
+                        ProductName = "ProductName",
                         Total = 1,
-                        UnitPrice = 1,
+                        Price = 1,
                         Amount = 1,
                     }
                 }
@@ -118,7 +118,7 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
 
         }
         [Fact]
-        public void Get_Sales_Invoice_PDF_UseVat_Is_False_And_CurrencySymbol_Is_USD()
+        public void Get_Sales_Invoice_PDF_VatType_Is_PPN_BUMN_And_CurrencySymbol_Is_USD()
         {
             var vm = new SalesInvoiceViewModel()
             {
@@ -132,17 +132,17 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                 IDNo = "IDNo",
                 CurrencySymbol = "$",
                 Remark = "Remark",
-                UseVat = false,
+                VatType = "PPN BUMN",
                 SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>()
                 {
                     new SalesInvoiceDetailViewModel()
                     {
-                        UnitCode = "UnitCode",
+                        ProductCode = "ProductCode",
                         Quantity = "Quantity",
                         UomUnit = "PACKS",
-                        UnitName = "UnitName",
+                        ProductName = "ProductName",
                         Total = 1,
-                        UnitPrice = 1,
+                        Price = 1,
                         Amount = 1,
                     }
                 }
@@ -233,8 +233,8 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                     SalesInvoiceType = "",
                     SalesInvoiceDate = DateTimeOffset.UtcNow.AddDays(1),
                     DeliveryOrderNo = "",
-                    DOSalesId = 0,
-                    DOSalesNo = "",
+                    ShipmentDocumentId = 0,
+                    ShipmentDocumentCode = "",
                     CurrencyId = 0,
                     CurrencyCode = "",
                     CurrencyRate = 0,
@@ -244,16 +244,13 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                     DueDate = DateTimeOffset.UtcNow.AddDays(-1),
                     TotalPayment = 0,
                     TotalPaid = -1,
-                    Disp = "",
-                    Op = "",
-                    Sc = "",
                     SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>{
                         new SalesInvoiceDetailViewModel{
-                            UnitCode = "",
+                            ProductCode = "",
                             Quantity = "",
                             UomId = 0,
                             UomUnit = "",
-                            UnitName = "",
+                            ProductName = "",
                             Amount = 0,
                         }
                     }
@@ -276,24 +273,24 @@ namespace Com.Danliris.Sales.Test.WebApi.Controllers
                     SalesInvoiceDetails = new List<SalesInvoiceDetailViewModel>{
                         new SalesInvoiceDetailViewModel{
                             SalesInvoiceId = 2,
-                            UnitCode = "UnitCode",
+                            ProductCode = "ProductCode",
                             Quantity = "Quantity",
                             Total = 10,
                             UomId = 10,
                             UomUnit = "PCS",
-                            UnitName = "UnitName",
-                            UnitPrice = 100,
+                            ProductName = "ProductName",
+                            Price = 100,
                             Amount = 100,
                         },
                         new SalesInvoiceDetailViewModel{
                             SalesInvoiceId = 2,
-                            UnitCode = "UnitCode",
+                            ProductCode = "ProductCode",
                             Quantity = "Quantity",
                             Total = 10,
                             UomId = 10,
                             UomUnit = "PCS",
-                            UnitName = "UnitName",
-                            UnitPrice = 100,
+                            ProductName = "ProductName",
+                            Price = 100,
                             Amount = 100,
                         }
                     }

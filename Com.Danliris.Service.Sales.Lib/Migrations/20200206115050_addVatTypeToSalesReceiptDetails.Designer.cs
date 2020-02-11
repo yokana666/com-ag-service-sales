@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200206115050_addVatTypeToSalesReceiptDetails")]
+    partial class addVatTypeToSalesReceiptDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1235,11 +1237,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<decimal>("GreigePrice");
 
                     b.Property<decimal>("HelperMaterial");
-
-                    b.Property<string>("ImageFile");
-
-                    b.Property<string>("ImagePath")
-                        .HasMaxLength(1000);
 
                     b.Property<int>("InstructionId");
 

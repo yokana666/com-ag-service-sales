@@ -29,7 +29,7 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice
 
             List<string> SearchAttributes = new List<string>()
             {
-                "SalesInvoiceNo","DeliveryOrderNo","DOSalesNo"
+                "SalesInvoiceNo","DeliveryOrderNo","DeliveryOrderNo","ShipmentDocumentCode"
             };
 
             Query = QueryHelper<SalesInvoiceModel>.Search(Query, SearchAttributes, keyword);
@@ -39,10 +39,10 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Logic.SalesInvoice
 
             List<string> SelectedFields = new List<string>()
             {
-                "Id","Code","SalesInvoiceNo","SalesInvoiceType","SalesInvoiceDate","DueDate","DeliveryOrderNo","DebtorIndexNo","DOSalesId","DOSalesNo","BuyerId","BuyerName","BuyerAddress","BuyerNPWP","IDNo",
-                "CurrencyId","CurrencyCode","CurrencyRate","CurrencySymbol",
-                "Disp","Op","Sc","UseVat","TotalPayment","TotalPaid","Remark", "SalesInvoiceDetails"
-
+                "Id","Code","SalesInvoiceNo","SalesInvoiceType","SalesInvoiceDate","DueDate","DeliveryOrderNo","DebtorIndexNo",
+                "ShipmentDocumentId","ShipmentDocumentCode","BuyerId","BuyerName","BuyerAddress","BuyerNPWP","IDNo",
+                "CurrencyId","CurrencyCode","CurrencySymbol","CurrencyRate","VatType","TotalPayment","TotalPaid","Remark", 
+                "SalesInvoiceDetails"
             };
 
             Dictionary<string, string> OrderDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(order);

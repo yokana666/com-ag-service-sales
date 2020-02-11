@@ -4,14 +4,16 @@ using Com.Danliris.Service.Sales.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Com.Danliris.Service.Sales.Lib.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    partial class SalesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200205002710_UpdateAfterUATSalesInvoiceAndSalesReceipt")]
+    partial class UpdateAfterUATSalesInvoiceAndSalesReceipt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1235,11 +1237,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<decimal>("GreigePrice");
 
                     b.Property<decimal>("HelperMaterial");
-
-                    b.Property<string>("ImageFile");
-
-                    b.Property<string>("ImagePath")
-                        .HasMaxLength(1000);
 
                     b.Property<int>("InstructionId");
 
@@ -3021,6 +3018,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                     b.Property<string>("DeliveryOrderNo")
                         .HasMaxLength(255);
 
+                    b.Property<string>("Disp")
+                        .HasMaxLength(255);
+
                     b.Property<DateTimeOffset>("DueDate");
 
                     b.Property<string>("IDNo")
@@ -3038,6 +3038,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
+                    b.Property<string>("Op")
+                        .HasMaxLength(255);
+
                     b.Property<string>("Remark")
                         .HasMaxLength(1000);
 
@@ -3047,6 +3050,9 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<string>("SalesInvoiceType")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Sc")
                         .HasMaxLength(255);
 
                     b.Property<string>("ShipmentDocumentCode")
@@ -3148,9 +3154,6 @@ namespace Com.Danliris.Service.Sales.Lib.Migrations
                         .HasMaxLength(255);
 
                     b.Property<double>("Unpaid");
-
-                    b.Property<string>("VatType")
-                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 

@@ -76,6 +76,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesReceipt
                     {
                         SalesReceiptModel salesReceiptModel = new SalesReceiptModel();
 
+                        foreach (var item in model.SalesReceiptDetails)
+                        {
+                            var updateTotalPaid = DbContext.SalesInvoices.FirstOrDefault(x => x.Id == item.SalesInvoiceId);
+                            updateTotalPaid.TotalPaid = updateTotalPaid.TotalPaid - item.Nominal;
+                        }
+
                         salesReceiptModel = model;
                         await salesReceiptLogic.DeleteAsync(id);
                     }
@@ -106,6 +112,12 @@ namespace Com.Danliris.Service.Sales.Lib.BusinessLogic.Facades.SalesReceipt
             {
                 try
                 {
+                    foreach (var item in model.SalesReceiptDetails)
+                    {
+                        var updateTotalPaid = DbContext.SalesInvoices.FirstOrDefault(x => x.Id == item.SalesInvoiceId);
+                        updateTotalPaid.TotalPaid = item.Paid;
+                    }
+
                     salesReceiptLogic.UpdateAsync(id, model);
                 }
                 catch (Exception e)
