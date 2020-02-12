@@ -74,6 +74,8 @@ namespace Com.Danliris.Sales.Test.BussinesLogic.DataUtils.Garment.GarmentMerchan
             data.IsApprovedIE = false;
             data.IsApprovedPurchasing = false;
             data.IsApprovedKadivMD = true;
+            data.IsValidatedROSample = true;
+            data.ApprovedKadivMDBy = "Test";
             data.ApprovedKadivMDDate = DateTimeOffset.Now;
             data.ValidationSampleDate = DateTimeOffset.Now;
             data.CostCalculationGarment_Materials = new List<CostCalculationGarment_Material>()
