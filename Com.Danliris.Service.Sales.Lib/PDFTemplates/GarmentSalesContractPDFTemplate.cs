@@ -62,6 +62,8 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
 
             bool isIncludePPN = viewModel.IsIncludePPN; //condition parameter
             bool isDollar = rate.Equals("1");
+            double PriceTotal = viewModel.Price;
+            double AmountTotal = viewModel.Amount;
 
             
                 #region Header
@@ -190,7 +192,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 }
                 else
                 {
-                    bodyContentLeft.Phrase = new Phrase(viewModel.FOB + " " + string.Format("{0:n2}", GetCurrencyValue(viewModel.Price, isDollar)) + " /" + viewModel.Uom.Unit + " " + IsIncludePPN(isIncludePPN), normal_font);
+                    if (isIncludePPN)
+                    {
+                        PriceTotal += viewModel.Price * 10 / 100;
+                    }
+                    bodyContentLeft.Phrase = new Phrase(viewModel.FOB + " " + string.Format("{0:n2}", GetCurrencyValue(PriceTotal, isDollar)) + " /" + viewModel.Uom.Unit + " " + IsIncludePPN(isIncludePPN), normal_font);
                     tableBody.AddCell(bodyContentLeft);
                 }
 
@@ -205,15 +211,19 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                         tableBody.AddCell(bodyContentLeft);
                         bodyContentLeft.Phrase = new Phrase(item.Description + "  : " + item.Quantity + " " + viewModel.Uom.Unit + " | " + string.Format("{0:n2}", GetCurrencyValue(item.Price, isDollar)) + " / " + viewModel.Uom.Unit, normal_font);
                         tableBody.AddCell(bodyContentLeft);
-
                     }
+                }
+
+                if (isIncludePPN)
+                {
+                    AmountTotal += viewModel.Amount * 10 / 100;
                 }
 
                 bodyContentLeft.Phrase = new Phrase("Total Amount", normal_font);
                 tableBody.AddCell(bodyContentLeft);
                 bodyContentLeft.Phrase = new Phrase(": ", normal_font);
                 tableBody.AddCell(bodyContentLeft);
-                bodyContentLeft.Phrase = new Phrase(string.Format("{0:n2}", GetCurrencyValue(viewModel.Amount, isDollar) + " " + IsIncludePPN(isIncludePPN)), normal_font);
+                bodyContentLeft.Phrase = new Phrase(string.Format("{0:n2}", GetCurrencyValue(AmountTotal, isDollar) + " " + IsIncludePPN(isIncludePPN)), normal_font);
                 tableBody.AddCell(bodyContentLeft);
                 bodyContentLeft.Phrase = new Phrase("Shipment/Delivery", normal_font);
                 tableBody.AddCell(bodyContentLeft);
@@ -628,7 +638,11 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 }
                 else
                 {
-                    bodyContentLeft.Phrase = new Phrase(viewModel.FOB + " " + string.Format("{0:n2}", GetCurrencyValue(viewModel.Price, isDollar)) + " /" + viewModel.Uom.Unit + " " + IsIncludePPN(isIncludePPN), normal_font);
+                    if (isIncludePPN)
+                    {
+                        PriceTotal += viewModel.Price * 10 / 100;
+                    }
+                    bodyContentLeft.Phrase = new Phrase(viewModel.FOB + " " + string.Format("{0:n2}", GetCurrencyValue(PriceTotal, isDollar)) + " /" + viewModel.Uom.Unit + " " + IsIncludePPN(isIncludePPN), normal_font);
                     tableBody.AddCell(bodyContentLeft);
                 }
 
@@ -647,11 +661,16 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                     }
                 }
 
+                if (isIncludePPN)
+                {
+                    AmountTotal += viewModel.Amount * 10 / 100;
+                }
+
                 bodyContentLeft.Phrase = new Phrase("TOTAL", normal_font);
                 tableBody.AddCell(bodyContentLeft);
                 bodyContentLeft.Phrase = new Phrase(": ", normal_font);
                 tableBody.AddCell(bodyContentLeft);
-                bodyContentLeft.Phrase = new Phrase(string.Format("{0:n2}", GetCurrencyValue(viewModel.Amount, isDollar) + " " + IsIncludePPN(isIncludePPN)), normal_font);
+                bodyContentLeft.Phrase = new Phrase(string.Format("{0:n2}", GetCurrencyValue(AmountTotal, isDollar) + " " + IsIncludePPN(isIncludePPN)), normal_font);
                 tableBody.AddCell(bodyContentLeft);
                 bodyContentLeft.Phrase = new Phrase("PENGIRIMAN", normal_font);
                 tableBody.AddCell(bodyContentLeft);
