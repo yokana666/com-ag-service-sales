@@ -92,14 +92,12 @@ namespace Com.Danliris.Service.Sales.Lib.PDFTemplates
                 {
                     cellHeaderContentRight.Phrase = new Phrase("SURAKARTA, " + date.ToString("MMMM dd, yyyy"), normal_font);
                     tableHeader.AddCell(cellHeaderContentRight);
-                }
-                else {
+                } else {
 
                     CultureInfo culture = new CultureInfo("id-ID");
                     cellHeaderContentRight.Phrase = new Phrase("SURAKARTA, " + date.ToString("dd MMMM yyyy", culture), normal_font);
                     tableHeader.AddCell(cellHeaderContentRight); //16-06-2020
-
-            }
+                }
 
                 cellHeaderContentLeft.Phrase = new Phrase("MESSR.", normal_font);
                 tableHeader.AddCell(cellHeaderContentLeft);
